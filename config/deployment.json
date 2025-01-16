@@ -1,0 +1,15 @@
+{
+  "environments": {
+    "production": {
+      "primary": {
+        "region": "us-west1-b",
+        "minimum_instances": 1
+      },
+      "backup": {
+        "region": "us-central1",
+        "location": "Iowa",
+        "minimum_instances": 1
+      }
+    }
+  }
+}

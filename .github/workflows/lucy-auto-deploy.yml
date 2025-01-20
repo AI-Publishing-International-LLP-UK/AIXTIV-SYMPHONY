@@ -9,7 +9,7 @@ on:
 
 env:
   PROJECT_ID: api-for-warp-drive
-  REGION: us-west4
+  REGION: us-west1
   AGENT_NAME: lucy-auto
 
 jobs:

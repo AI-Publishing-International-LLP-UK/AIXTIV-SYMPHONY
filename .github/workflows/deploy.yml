@@ -1,24 +1,136 @@
-name: Multi-Region Deployment
+name: Deploy Infrastructure and Services
 
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
 
 env:
   PROJECT_ID: api-for-warp-drive
-  PRIMARY_REGION: us-west1-b
-  BACKUP_REGION: us-central1
+  REGION: us-west4
+  SERVICE: lucy-webhook
+  TF_STATE_BUCKET: ${{ secrets.TF_STATE_BUCKET }}
 
 jobs:
-  deploy:
+  validate:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Auth
-      uses: google-github-actions/auth@v2
-      with:
-        credentials_json: ${{ secrets.GCP_SA_KEY }}
-    - name: Deploy
-      run: |
-        echo "Deploying to Primary (US-WEST1-B)"
-        echo "Setting up Backup (Iowa)"
+      - uses: actions/checkout@v3
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: "1.5.0"
+      
+      - name: Terraform Format
+        run: terraform fmt -check
+        working-directory: ./terraform
+      
+      - name: Terraform Init
+        run: terraform init -backend-config="bucket=$TF_STATE_BUCKET"
+        working-directory: ./terraform
+      
+      - name: Terraform Validate
+        run: terraform validate -no-color
+        working-directory: ./terraform
+
+  plan:
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: 'projects/${{ env.PROJECT_ID }}/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+          service_account: 'lucy-webhook-sa@${{ env.PROJECT_ID }}.iam.gserviceaccount.com'
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: "1.5.0"
+      
+      - name: Terraform Init
+        run: terraform init -backend-config="bucket=$TF_STATE_BUCKET"
+        working-directory: ./terraform
+      
+      - name: Terraform Plan
+        run: terraform plan -no-color -input=false
+        working-directory: ./terraform
+        env:
+          TF_VAR_environment: ${{ github.event.inputs.environment || 'staging' }}
+  
+  deploy:
+    needs: plan
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'staging' }}
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: 'projects/${{ env.PROJECT_ID }}/locations/global/workloadIdentityPools/github-pool/providers/github-provider'
+          service_account: 'lucy-webhook-sa@${{ env.PROJECT_ID }}.iam.gserviceaccount.com'
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: "1.5.0"
+      
+      - name: Terraform Apply
+        run: |
+          terraform init -backend-config="bucket=$TF_STATE_BUCKET"
+          terraform apply -auto-approve -input=false
+        working-directory: ./terraform
+        env:
+          TF_VAR_environment: ${{ github.event.inputs.environment || 'staging' }}
+      
+      - name: Build and Deploy Service
+        run: |
+          gcloud builds submit \
+            --quiet \
+            --config=cloudbuild.yaml \
+            --substitutions=_REGION="${REGION}",_SERVICE="${SERVICE}",_ENVIRONMENT="${{ github.event.inputs.environment || 'staging' }}"
+      
+      - name: Health Check
+        run: |
+          echo "Waiting for deployment to stabilize..."
+          sleep 30
+          URL=$(gcloud run services describe $SERVICE --region $REGION --format='value(status.url)')/health
+          curl -s $URL | grep "healthy" || exit 1
+      
+      - name: Notify Deployment Status
+        if: always()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const status = '${{ job.status }}'
+            const env = '${{ github.event.inputs.environment || 'staging' }}'
+            const issue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              title: `Deployment to ${env} - ${status}`,
+              body: `Deployment to ${env} environment completed with status: ${status}`
+            })

@@ -1,0 +1,74 @@
+{
+"hosting": [
+    {
+    "target": "anthology",
+    "public": "anthology/build",
+    "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+    ],
+    "rewrites": [
+        {
+        "source": "**",
+        "destination": "/index.html"
+        }
+    ]
+    },
+    {
+    "target": "orchestrate",
+    "public": "orchestrate/build",
+    "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+    ],
+    "rewrites": [
+        {
+        "source": "**",
+        "destination": "/index.html"
+        }
+    ]
+    },
+    {
+    "target": "academy",
+    "public": "academy/build",
+    "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+    ],
+    "rewrites": [
+        {
+        "source": "**",
+        "destination": "/index.html"
+        }
+    ]
+    },
+    {
+    "target": "visualization",
+    "public": "visualization/build",
+    "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+    ],
+    "rewrites": [
+        {
+        "source": "**",
+        "destination": "/index.html"
+        }
+    ]
+    }
+],
+"firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+},
+"functions": {
+    "source": "functions"
+},
+"storage": {
+    "rules": "storage.rules"
+}
+}

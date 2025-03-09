@@ -1,5 +1,5 @@
 /**
- * Gateway Implementations for Dr. Memoria's Anthology Integration Gateway
+ * Gateway Implementations for Aixtiv Symphony Opus1 Integration Gateway
  * 
  * This file contains the implementations for tier-specific gateway classes:
  * - OwnerSubscriberGateway: Individual owners/subscribers with basic access
@@ -102,7 +102,7 @@ class OwnerSubscriberGateway extends IntegrationGateway {
    */
   async _customizeOnboarding(user, preferences) {
     return {
-      welcomeMessage: `Welcome to Dr. Memoria's Anthology, ${user.name}!`,
+      welcomeMessage: `Welcome to Aixtiv Symphony Opus1, ${user.name}!`,
       suggestedTemplates: ['personal_memoir', 'short_story', 'blog_content'],
       quickStartEnabled: true,
       guidedJourneySteps: [
@@ -268,7 +268,7 @@ class TeamGateway extends IntegrationGateway {
     const team = await this._getTeamDetails(user.teamId);
     
     return {
-      welcomeMessage: `Welcome to the ${team.name} workspace on Dr. Memoria's Anthology!`,
+      welcomeMessage: `Welcome to the ${team.name} workspace on Aixtiv Symphony Opus1!`,
       suggestedTemplates: ['team_project', 'collaborative_book', 'company_blog'],
       quickStartEnabled: true,
       guidedJourneySteps: [
@@ -468,7 +468,7 @@ class GroupGateway extends IntegrationGateway {
     return {
       welcomeMessage: department 
         ? `Welcome to the ${department.name} department at ${group.name}!` 
-        : `Welcome to ${group.name} on Dr. Memoria's Anthology!`,
+        : `Welcome to ${group.name} on Aixtiv Symphony Opus1!`,
       suggestedTemplates: [
         'department_knowledge_base',
         'group_publication',
@@ -483,5 +483,12 @@ class GroupGateway extends IntegrationGateway {
         'approval_chains',
         'publishing_channels'
       ],
-      tut
+      tutorialVideos: [
+        'group_administration',
+        'department_collaboration',
+        'publishing_workflow',
+        'analytics_for_groups'
+      ]
+    };
+  }
 

@@ -18,7 +18,7 @@ const { Logger } = require('../utils/logger');
 const logger = new Logger('GatewayFactory');
 
 /**
- * Tier types supported by the Dr. Memoria system
+ * Tier types supported by the Aixtiv Symphony Opus1 system
  * @enum {string}
  */
 const TierType = {

@@ -1,15 +1,15 @@
 /**
- * Dr. Memoria Integration Gateway System
+ * Aixtiv Symphony Opus1 Integration Gateway System
  * 
  * A multi-tiered gateway architecture supporting 5 levels of access and integration:
  * 1. Owner Subscriber - Individual content creators and publishers
  * 2. Team - Small collaborative groups within an organization
  * 3. Group - Department level or medium-sized organizational divisions
- * 4. Practitioner - Professional service providers integrating with Dr. Memoria
+ * 4. Practitioner - Professional service providers integrating with Aixtiv Symphony Opus1
  * 5. Enterprise - Organization-wide deployment with advanced integration needs
  * 
  * This system handles authentication, authorization, secrets management, and gateway 
- * interactions across the entire Dr. Memoria ecosystem.
+ * interactions across the entire Aixtiv Symphony Opus1 ecosystem.
  */
 
 const crypto = require('crypto');

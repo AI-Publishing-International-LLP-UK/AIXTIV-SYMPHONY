@@ -1,7 +1,7 @@
 /**
  * OnboardingService
  * Responsible for handling the various onboarding flows for different gateway tiers
- * in Dr. Memoria's Anthology System.
+ * in Aixtiv Symphony Opus1 System.
  */
 
 const { EventEmitter } = require('events');
@@ -393,7 +393,7 @@ class OnboardingService extends EventEmitter {
     const baseSteps = [
       {
         id: 'welcome',
-        title: 'Welcome to Dr. Memoria\'s Anthology',
+        title: 'Welcome to Aixtiv Symphony Opus1',
         description: 'Let\'s walk through the process of creating and publishing your content',
         action: 'display_welcome',
         required: true

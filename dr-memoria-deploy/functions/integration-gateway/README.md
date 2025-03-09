@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Integration Gateway system provides a secure and flexible way to connect Dr. Memoria's Anthology with external systems and services. It implements tier-specific access controls and functionality based on the user's subscription level (Owner Subscriber, Team, Group, Practitioner, or Enterprise).
+The Integration Gateway system provides a secure and flexible way to connect Aixtiv Symphony Opus1 with external systems and services. It implements tier-specific access controls and functionality based on the user's subscription level (Owner Subscriber, Team, Group, Practitioner, or Enterprise).
 
 Key features include:
 - Multi-tier authentication and authorization
@@ -227,3 +227,4 @@ class CustomGateway extends IntegrationGateway {
 }
 ```
 
+        title: 'Welcome to Aixtiv Symphony Opus1',

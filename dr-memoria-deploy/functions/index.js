@@ -1,6 +1,8 @@
-const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+admin.initializeApp();
+const functions = require('firebase-functions');
 const ethers = require('ethers');
+const axios = require('axios');
 const axios = require('axios');
 const { v4: uuidv4 } = require('uuid');
 

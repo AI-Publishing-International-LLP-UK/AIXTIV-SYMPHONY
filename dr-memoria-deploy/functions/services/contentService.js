@@ -2,7 +2,7 @@
  * Content Service
  * 
  * Integrates Roark 5.0 Authorship Model and CIG Framework for content 
- * validation, submission, and certification in the Dr. Memoria's Anthology system.
+ * validation, submission, and certification in the Aixtiv Symphony Opus1 system.
  */
 
 const admin = require('firebase-admin');

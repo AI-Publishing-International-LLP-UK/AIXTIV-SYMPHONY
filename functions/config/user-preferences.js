@@ -3,8 +3,14 @@
  * Provides functions for storing, retrieving, and updating user preferences in Firestore
  */
 const admin = require('firebase-admin');
-const db = admin.firestore();
 
+/**
+ * Get the Firestore database instance
+ * @returns {FirebaseFirestore.Firestore} The Firestore instance
+ */
+function getDb() {
+  return admin.firestore();
+}
 // Collection name for user preferences
 const PREFERENCES_COLLECTION = 'userPreferences';
 
@@ -103,7 +109,7 @@ function normalizeLanguageCode(languageCode) {
  */
 async function getUserPreferences(userId) {
   try {
-    const docRef = db.collection(PREFERENCES_COLLECTION).doc(userId);
+    const docRef = getDb().collection(PREFERENCES_COLLECTION).doc(userId);
     const doc = await docRef.get();
 
     if (doc.exists) {
@@ -136,7 +142,7 @@ async function getUserPreferences(userId) {
  */
 async function setUserPreferences(userId, preferences) {
   try {
-    const docRef = db.collection(PREFERENCES_COLLECTION).doc(userId);
+    const docRef = getDb().collection(PREFERENCES_COLLECTION).doc(userId);
     
     // Add updatedAt timestamp
     preferences.updatedAt = admin.firestore.FieldValue.serverTimestamp();
@@ -179,7 +185,7 @@ async function setLanguagePreference(userId, language) {
     // Normalize the language code to ensure it's in the correct format
     const normalizedLanguage = normalizeLanguageCode(language);
     
-    const docRef = db.collection(PREFERENCES_COLLECTION).doc(userId);
+    const docRef = getDb().collection(PREFERENCES_COLLECTION).doc(userId);
     await docRef.set({
       language: normalizedLanguage,
       updatedAt: admin.firestore.FieldValue.serverTimestamp()
@@ -216,7 +222,7 @@ async function getThemePreference(userId) {
  */
 async function setThemePreference(userId, theme) {
   try {
-    const docRef = db.collection(PREFERENCES_COLLECTION).doc(userId);
+    const docRef = getDb().collection(PREFERENCES_COLLECTION).doc(userId);
     await docRef.set({
       theme,
       updatedAt: admin.firestore.FieldValue.serverTimestamp()
@@ -257,7 +263,7 @@ async function getNotificationSettings(userId) {
  */
 async function updateNotificationSettings(userId, settings) {
   try {
-    const docRef = db.collection(PREFERENCES_COLLECTION).doc(userId);
+    const docRef = getDb().collection(PREFERENCES_COLLECTION).doc(userId);
     await docRef.set({
       notifications: settings,
       updatedAt: admin.firestore.FieldValue.serverTimestamp()

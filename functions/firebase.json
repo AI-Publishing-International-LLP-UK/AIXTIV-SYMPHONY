@@ -1,0 +1,22 @@
+{
+  "functions": {
+    "source": ".",
+    "runtime": "nodejs20",
+    "region": "us-west1"
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "function": "helloWorld"
+      }
+    ]
+  }
+}
+

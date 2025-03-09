@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Text-to-Speech Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="password"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        button {
+            background-color: #4285F4;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #3367D6;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .auth-section, .tts-section {
+            margin-bottom: 30px;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .audio-player {
+            margin-top: 20px;
+            width: 100%;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .loading:after {
+            content: " ";
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin: 0 0 0 10px;
+            border-radius: 50%;
+            border: 2px solid #4285F4;
+            border-color: #4285F4 transparent #4285F4 transparent;
+            animation: loading 1.2s linear infinite;
+        }
+        @keyframes loading {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Firebase Text-to-Speech Demo</h1>
+        
+        <!-- Authentication Section -->
+        <div class="auth-section">
+            <h2>Authentication</h2>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="text" id="email" placeholder="Enter your email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="Enter your password">
+            </div>
+            <button id="login-btn">Login</button>
+            <div id="auth-status" class="status"></div>
+        </div>
+        
+        <!-- Text-to-Speech Section -->
+        <div class="tts-section">
+            <h2>Text-to-Speech</h2>
+            <div class="form-group">
+                <label for="language">Language:</label>
+                <select id="language">
+                    <option value="en-US">English (US)</option>
+                    <option value="en-GB">English (UK)</option>
+                    <option value="es-ES">Spanish</option>
+                    <option value="fr-FR">French</option>
+                    <option value="de-DE">German</option>
+                    <option value="ja-JP">Japanese</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="voice">Voice:</label>
+                <select id="voice" disabled>
+                    <option value="">Loading voices...</option>
+                </select>
+                <button id="refresh-voices-btn" disabled>Refresh Voices</button>
+            </div>
+            <div class="form-group">
+                <label for="text">Text to Synthesize:</label>
+                <textarea id="text" placeholder="Enter text to convert to speech" disabled></textarea>
+            </div>
+            <button id="synthesize-btn" disabled>Synthesize Speech</button>
+            <div id="tts-status" class="status"></div>
+            <div id="loading" class="loading"></div>
+            
+            <!-- Audio Player -->
+            <div id="audio-container" style="display: none;">
+                <h3>Audio Output</h3>
+                <audio id="audio-player" controls class="audio-player"></audio>
+                <button id="download-btn">Download Audio</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Section -->
+    <script type="module">
+        // Import the functions from tts-simple-example.js
+        import { 
+            authenticateUser, 
+            getAvailableVoices, 
+            convertTextToSpeech, 
+            playAudio 
+        } from './tts-simple-example.js';
+
+        // DOM Elements
+        const loginBtn = document.getElementById('login-btn');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const authStatus = document.getElementById('auth-status');
+        const languageSelect = document.getElementById('language');
+        const voiceSelect = document.getElementById('voice');
+        const refreshVoicesBtn = document.getElementById('refresh-voices-btn');
+        const textArea = document.getElementById('text');
+        const synthesizeBtn = document.getElementById('synthesize-btn');
+        const ttsStatus = document.getElementById('tts-status');
+        const loading = document.getElementById('loading');
+        const audioContainer = document.getElementById('audio-container');
+        const audioPlayer = document.getElementById('audio-player');
+        const downloadBtn = document.getElementById('download-btn');
+
+        // User state
+        let currentUser = null;
+        let audioBlob = null;
+
+        // Check if user is already authenticated
+        document.addEventListener('DOMContentLoaded', () => {
+            // Firebase Auth state listener would normally go here
+            // For this demo, we'll just keep it simple
+        });
+
+        // Login button click handler
+        loginBtn.addEventListener('click', async () => {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            if (!email || !password) {
+                showStatus(authStatus, 'Please enter both email and password', 'error');
+                return;
+            }
+
+            try {
+                showLoading(true);
+                currentUser = await authenticateUser(email, password);
+                showStatus(authStatus, 'Authentication successful!', 'success');
+                
+                // Enable TTS controls
+                enableTtsControls();
+                
+                // Load available voices
+                loadVoices();
+            } catch (error) {
+                showStatus(authStatus, `Authentication failed: ${error.message}`, 'error');
+                console.error('Authentication error:', error);
+            } finally {
+                showLoading(false);
+            }
+        });
+
+        // Refresh voices button click handler
+        refreshVoicesBtn.addEventListener('click', () => {
+            loadVoices();
+        });
+
+        // Language select change handler
+        languageSelect.addEventListener('change', () => {
+            loadVoices();
+        });
+
+        // Synthesize button click handler
+        synthesizeBtn.addEventListener('click', async () => {
+            const text = textArea.value.trim();
+            const voice = voiceSelect.value;
+            
+            if (!text) {
+                showStatus(ttsStatus, 'Please enter text to synthesize', 'error');
+                return;
+            }
+            
+            try {
+                showLoading(true);
+                synthesizeBtn.disabled = true;
+                
+                // Hide previous audio
+                audioContainer.style.display = 'none';
+                
+                // Convert text to speech
+                const audioContent = await convertTextToSpeech(text, voice);
+                
+                // Create blob and URL
+                audioBlob = base64ToBlob(audioContent, 'audio/mp3');
+                const audioUrl = URL.createObjectURL(audioBlob);
+                
+                // Update audio player
+                audioPlayer.src = audioUrl;
+                audioContainer.style.display = 'block';
+                
+                showStatus(ttsStatus, 'Speech synthesized successfully!', 'success');
+            } catch (error) {
+                showStatus(ttsStatus, `Speech synthesis failed: ${error.message}`, 'error');
+                console.error('TTS error:', error);
+            } finally {
+                showLoading(false);
+                synthesizeBtn.disabled = false;
+            }
+        });
+
+        // Download button click handler
+        downloadBtn.addEventListener('click', () => {
+            if (audioBlob) {
+                const url = URL.createObjectURL(audioBlob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'synthesized-speech.mp3';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            }
+        });
+
+        // Helper Functions
+        async function loadVoices() {
+            if (!currentUser) return;
+            
+            const languageCode = languageSelect.value;
+            voiceSelect.innerHTML = '<option value="">Loading voices...</option>';
+            voiceSelect.disabled = true;
+            refreshVoicesBtn.disabled = true;
+            
+            try {
+                showLoading(true);
+                const voices = await getAvailableVoices(languageCode);
+                
+                // Clear and populate voice select
+                voiceSelect.innerHTML = '';
+                
+                if (voices && voices.length > 0) {
+                    voices.forEach(voice => {
+                        const option = document.createElement('option');
+                        option.value = voice.name;
+                        option.textContent = `${voice.name} (${voice.ssmlGender})`;
+                        voiceSelect.appendChild(option);
+                    });
+                } else {
+                    voiceSelect.innerHTML = '<option value="">No voices available</option>';
+                }
+            } catch (error) {
+                console.error('Error loading voices:', error);
+                voiceSelect.innerHTML = '<option value="">Error loading voices</option>';
+            } finally {
+                showLoading(false);
+                voiceSelect.disabled = false;
+                refreshVoicesBtn.disabled = false;
+            }
+        }
+
+        function enableTtsControls() {
+            voiceSelect.disabled = false;
+            refreshVoicesBtn.disabled = false;
+            textArea.disabled = false;
+            synthesizeBtn.disabled = false;
+        }
+
+        function showStatus(element, message, type) {
+            element.textContent = message;
+            element.className = 'status ' + type;
+            
+            // Clear success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    element.textContent = '';
+                    element.className = 'status';
+                }, 5000);
+            }
+        }
+
+        function showLoading(show) {
+            loading.style.display = show ? 'block' : 'none';
+        }
+
+        function base64ToBlob(base64, mimeType) {
+            const byteCharacters = atob(base64);
+            const byteArrays = [];
+            
+            for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+                const slice = byteCharacters.slice(offset, offset + 512);
+                
+                const byteNumbers = new Array(slice.length);
+                for (let i = 0; i < slice.length; i++) {
+                    byteNumbers[i] = slice.charCodeAt(i);
+                }
+                
+                const byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+            }
+            
+            return new Blob(byteArrays, { type: mimeType });
+        }
+    </script>
+</body>
+</html>
+

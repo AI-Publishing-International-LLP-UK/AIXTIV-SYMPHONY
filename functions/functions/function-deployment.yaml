@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firebase-function
+  labels:
+    app: firebase-function
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: firebase-function
+  template:
+    metadata:
+      labels:
+        app: firebase-function
+    spec:
+      containers:
+      - name: firebase-function
+        image: localhost:5000/my-function:v1
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: firebase-function-service
+  labels:
+    app: firebase-function
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30080
+    protocol: TCP
+  selector:
+    app: firebase-function
+

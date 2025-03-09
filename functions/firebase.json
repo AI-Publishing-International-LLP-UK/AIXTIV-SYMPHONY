@@ -1,6 +1,6 @@
 {
   "functions": {
-    "source": ".",
+    "source": "functions/",
     "runtime": "nodejs20",
     "region": "us-west1"
   },

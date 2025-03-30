@@ -1,0 +1,81 @@
+# Security Policy Configuration for Integration Gateway
+# Version: 1.0.0
+# Last Updated: 2025-03-30
+
+# Authentication Configuration
+authentication:
+  required: true
+  methods:
+    - type: oauth2
+      provider: google
+      audience: "integration-gateway-859242575175.us-west1.run.app"
+      issuer: "https://accounts.google.com"
+      
+    - type: api_key
+      header_name: "X-API-Key"
+      validation:
+        service: "firebase-auth"
+        
+    - type: jwt
+      header_name: "Authorization"
+      prefix: "Bearer "
+      secret_reference: "projects/api-for-warp-drive/secrets/jwt-secret"
+
+# Path-specific security overrides
+paths:
+  "/public/*":
+    authentication:
+      required: false
+      
+  "/admin/*":
+    authentication:
+      required: true
+      methods:
+        - type: oauth2
+          roles:
+            - admin
+            - superuser
+
+  "/api/v1/*":
+    authentication:
+      required: true
+    rate_limiting:
+      reference: "standard-api-limits"
+
+# IP Allowlisting
+ip_allowlist:
+  enabled: true
+  rules:
+    - name: "corporate-network"
+      cidr_ranges:
+        - "192.168.0.0/16"
+        - "10.0.0.0/8"
+        - "172.16.0.0/12"
+      
+    - name: "trusted-partners"
+      cidr_ranges:
+        - "203.0.113.0/24"
+        - "198.51.100.0/24"
+      
+    - name: "cloud-services"
+      cidr_ranges:
+        - "35.190.0.0/16"  # Google Cloud
+        - "35.191.0.0/16"  # Google Cloud
+
+# Security Headers Configuration
+security_headers:
+  content_security_policy: "default-src 'self'; script-src 'self' https://apis.google.com"
+  strict_transport_security: "max-age=31536000; includeSubDomains"
+  x_content_type_options: "nosniff"
+  x_frame_options: "DENY"
+  x_xss_protection: "1; mode=block"
+
+# Logging & Monitoring
+security_monitoring:
+  log_level: "INFO"
+  alert_on:
+    - unauthorized_access
+    - rate_limit_exceeded
+    - suspicious_ips
+  retention_period_days: 30
+

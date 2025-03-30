@@ -1,0 +1,83 @@
+# Integration Gateway Configuration
+apiVersion: v1
+kind: Gateway
+metadata:
+  name: integration-gateway
+spec:
+  # Basic gateway settings
+  displayName: "Integration Gateway Service"
+  description: "API Gateway for service integration and orchestration"
+  
+  # Service configuration
+  serviceAccount: drlucyautomation@api-for-warp-drive.iam.gserviceaccount.com
+  region: us-west1
+  
+  # API configurations
+  apis:
+    - name: warp-drive-config-v2
+      displayName: "Warp Drive API v2"
+      version: v2
+      path: /api/v2
+    - name: warp-drive-config-v1
+      displayName: "Warp Drive API v1"
+      version: v1
+      path: /api/v1
+    - name: publishing-config-v1
+      displayName: "Publishing API"
+      version: v1
+      path: /api/publishing
+  
+  # Endpoint configuration
+  endpoints:
+    - path: /health
+      method: GET
+      backend:
+        service: integration-gateway
+        path: /health
+    - path: /api/v2/**
+      backend:
+        service: warp-drive-service-v2
+    - path: /api/v1/**
+      backend:
+        service: warp-drive-service-v1
+    - path: /api/publishing/**
+      backend:
+        service: publishing-service
+  
+  # Authentication settings
+  authentication:
+    providers:
+      - id: firebase
+        type: firebase
+        audiences:
+          - "api-for-warp-drive"
+      - id: api-key
+        type: api_key
+        
+  # CORS configuration
+  cors:
+    allowOrigins:
+      - "https://*.example.com"
+      - "https://console.cloud.google.com"
+    allowMethods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - OPTIONS
+    allowHeaders:
+      - Authorization
+      - Content-Type
+    maxAge: 3600
+    
+  # Logging and monitoring
+  logging:
+    enabled: true
+    sampleRate: 1.0
+  monitoring:
+    enabled: true
+    metrics:
+      - requestCount
+      - latencies
+      - httpErrors
+

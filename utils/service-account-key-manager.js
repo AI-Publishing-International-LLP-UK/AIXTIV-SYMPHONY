@@ -144,13 +144,30 @@ function runGitCommand(command) {
 }
 
 /**
- * Check if the working directory is clean
+ * Check if the working directory is clean (ignoring .DS_Store files)
  * @returns {boolean} - True if clean, false otherwise
  */
 function isGitWorkingDirClean() {
   try {
     const status = runGitCommand('git status --porcelain');
-    return status === '';
+    
+    // If status is empty, directory is clean
+    if (status === '') {
+      return true;
+    }
+    
+    // Split by lines and check if there are changes other than .DS_Store files
+    const lines = status.split('\n');
+    for (const line of lines) {
+      // If this line doesn't mention .DS_Store, there are non-DS_Store changes
+      if (line !== '' && !line.includes('.DS_Store')) {
+        return false;
+      }
+    }
+    
+    // Only .DS_Store files were changed/untracked, consider it clean
+    console.log(chalk.yellow('⚠️ Note: Ignoring .DS_Store files in git status'));
+    return true;
   } catch (error) {
     console.error(chalk.red(`Error checking git status: ${error.message}`));
     return false;
@@ -289,4 +306,3 @@ function updateServiceAccountKey(newKeyPath) {
   const newKeyPath = process.argv[2] || CONFIG.envKeyPath;
   updateServiceAccountKey(newKeyPath);
 })();
-

@@ -1,0 +1,6 @@
+[submodule "aixtiv-cli"]
+	path = aixtiv-cli
+	url = https://github.com/AI-Publishing-International-LLP-UK/aixtiv-cli.git
+[submodule "DrLucy-5.0-Framework"]
+	path = DrLucy-5.0-Framework
+	url = https://github.com/AI-Publishing-International-LLP-UK/DrLucy-5.0-Framework.git

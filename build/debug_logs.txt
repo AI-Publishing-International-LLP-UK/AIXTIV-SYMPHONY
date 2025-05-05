@@ -1,0 +1,45 @@
++ set -e
++ APP_TYPE=node
++ '[' 1 -ge 1 ']'
++ '[' node == node ']'
++ APP_TYPE=node
++ echo '=== Starting deployment to Cloud Run ==='
+=== Starting deployment to Cloud Run ===
++ echo '=== Application type: node ==='
+=== Application type: node ===
++ PROJECT_ID=api-for-warp-drive
++ REGION=us-west1
++ CONFIG_FILE=./deployment/node/cloudbuild.yaml
++ SERVICE_ACCOUNT=drlucyautomation@api-for-warp-drive.iam.gserviceaccount.com
++ echo '=== Setting active service account ==='
+=== Setting active service account ===
++ gcloud config set account drlucyautomation@api-for-warp-drive.iam.gserviceaccount.com
+Updated property [core/account].
++ echo '=== Setting active project ==='
+=== Setting active project ===
++ gcloud config set project api-for-warp-drive
+Updated property [core/project].
++ echo '=== Submitting build to Cloud Build ==='
+=== Submitting build to Cloud Build ===
++ echo 'Using configuration file: ./deployment/node/cloudbuild.yaml'
+Using configuration file: ./deployment/node/cloudbuild.yaml
++ '[' '!' -f ./deployment/node/cloudbuild.yaml ']'
++ gcloud builds submit --config=./deployment/node/cloudbuild.yaml
+Creating temporary archive of 5646 file(s) totalling 58.3 MiB before compression.
+Some files were not included in the source upload.
+
+Check the gcloud log [/Users/as/.config/gcloud/logs/2025.03.13/13.55.15.040275.log] to see which files and the contents of the
+default gcloudignore file used (see `$ gcloud topic gcloudignore` to learn
+more).
+
+Uploading tarball of [.] to [gs://api-for-warp-drive_cloudbuild/source/1741895715.113996-25f570cd72324317bbdf6318e7d00d7d.tgz]
+Created [https://cloudbuild.googleapis.com/v1/projects/api-for-warp-drive/locations/global/builds/9a3091b2-50aa-4d67-8cf8-4e3bdeb10a1b].
+Logs are available at [ https://console.cloud.google.com/cloud-build/builds/9a3091b2-50aa-4d67-8cf8-4e3bdeb10a1b?project=859242575175 ].
+
+gcloud builds submit only displays logs from Cloud Storage. To view logs from Cloud Logging, run:
+gcloud beta builds submit
+
+Waiting for build to complete. Polling interval: 1 second(s).
+
+BUILD FAILURE: Build step failure: build step 0 "gcr.io/cloud-builders/docker" failed: step exited with non-zero status: 125
+ERROR: (gcloud.builds.submit) build 9a3091b2-50aa-4d67-8cf8-4e3bdeb10a1b completed with status "FAILURE"

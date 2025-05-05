@@ -1,0 +1,20 @@
+{
+  "agent_id": "dr-claude",
+  "version": "1.0.2",
+  "capabilities": [
+    {
+      "id": "task-delegation",
+      "description": "Delegates tasks across the Symphony ecosystem."
+    },
+    {
+      "id": "performance-monitoring",
+      "description": "Evaluates agents based on SLAs, load and feedback."
+    }
+  ],
+  "knowledge_domains": ["orchestration", "agent-performance", "workload-balancing"],
+  "integration_points": ["firestore", "gateway-api", "dr-grant-auth"],
+  "resource_requirements": {
+    "memory": "512Mi",
+    "cpu": "250m"
+  }
+}

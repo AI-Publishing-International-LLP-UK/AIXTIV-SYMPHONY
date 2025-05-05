@@ -1,0 +1,112 @@
+honeypot_system:
+  target_organizations:
+    tech_giants:
+      - SERVICENOW
+      - NVIDIA
+      - IBM
+      - AMAZON_AWS
+      - MICROSOFT
+      - LINKEDIN_LEARNING
+    ai_companies:
+      detection_patterns:
+        - "AI agent development"
+        - "AI products"
+        - "machine learning agents"
+        - "conversational AI"
+        - "AI assistant development"
+        - "LLM development"
+    previous_targets:
+      - LHH
+      - DBM
+      - EZRA
+      - ADECCO
+      - RANDSTAD
+      - KORN_FERRY
+      - MCKINSEY
+      - BOSTON_CONSULTING
+      - ACCENTURE
+      - SLALOM
+      - DELOITTE
+      - PWC
+      - KPMG
+      - EY
+  
+  engagement_protocol:
+    initial_access:
+      allow: true
+      authentication_level: "SURFACE"
+    interaction_style:
+      tone: "PROFESSIONAL_WELCOMING"
+      approach: "ALWAYS_COURTEOUS"
+    information_gathering:
+      - purpose_of_visit
+      - company_affiliation
+      - ai_development_interests
+      - project_details
+  
+  deception_content:
+    special_material:
+      type: "PERSONALIZED_BOOKLET"
+      title: "Corporate Governance and Ethics in the AI Era"
+      format: "SIGNED_EDITION"
+      delivery_method: "DIGITAL_PERSONALIZED"
+  
+  verification_process:
+    follow_up:
+      type: "SALES_TEAM_CALL"
+      purpose: "AUTHENTICITY_VERIFICATION"
+      message: "Competitors access restricted"
+  
+  data_collection:
+    required_fields:
+      - full_name
+      - corporate_email
+      - company_position
+      - ai_development_role
+      - stated_intentions
+    linkedin_analysis:
+      - ai_product_mentions
+      - agent_development_history
+      - tech_company_affiliations
+      - product_development_roles
+  
+  response_workflow:
+    steps:
+      - allow_initial_access
+      - collect_visitor_information
+      - deliver_governance_booklet
+      - schedule_verification_call
+      - document_interaction
+      - gentle_termination
+  
+  security_measures:
+    monitoring:
+      - access_patterns
+      - information_requests
+      - interaction_duration
+      - technical_questions
+    response:
+      - log_all_interactions
+      - flag_suspicious_behavior
+      - report_to_security_team
+  
+  termination_protocol:
+    triggers:
+      - information_gathered
+      - verification_complete
+      - suspicious_activity
+    actions:
+      - polite_conclusion
+      - access_removal
+      - data_archival
+  
+  reporting:
+    frequency: REAL_TIME
+    include:
+      - visitor_details
+      - company_affiliation
+      - ai_development_interests
+      - interaction_summary
+      - risk_assessment
+    distribution: SECURITY_TEAM
+

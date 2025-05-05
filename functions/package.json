@@ -1,0 +1,28 @@
+{
+  "name": "firebase-cloud-function",
+  "version": "1.0.0",
+  "description": "Firebase Cloud Function",
+  "main": "index.js",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "20"
+  },
+  "type": "module",
+  "functions": {
+    "runtime": "nodejs20",
+    "source": "."
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^7.15.2",
+    "@google-cloud/text-to-speech": "^5.8.1",
+    "firebase-admin": "^13.2.0",
+    "firebase-functions": "^6.3.2"
+  },
+  "private": true
+}

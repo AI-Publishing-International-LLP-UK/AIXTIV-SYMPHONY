@@ -1,0 +1,50 @@
+# Audiobook Template Structure
+
+version: '2.0'
+type: book-template
+security: TOP_SECRET
+
+audiobook_template:
+  technical_specs:
+    format:
+      - primary: M4B
+      - secondary: MP3
+    quality:
+      - bitrate: 192kbps
+      - sample_rate: 44.1kHz
+      - channels: stereo
+
+  structure:
+    opening_credits:
+      - book_title
+      - author_name
+      - narrator_name
+      - publisher_info
+
+    chapters:
+      - chapter_marker: required
+      - chapter_title: announced
+      - chapter_number: optional
+      - content: narrated
+
+    end_credits:
+      - copyright_notice
+      - production_credits
+      - publisher_info
+
+  production_requirements:
+    technical:
+      - noise_floor: -60db
+      - peak_level: -3db
+      - spacing: 2s_between_chapters
+
+    narration:
+      - pace: 150-160_wpm
+      - clarity: required
+      - consistency: monitored
+
+    post_production:
+      - noise_reduction
+      - eq_balancing
+      - compression
+      - mastering

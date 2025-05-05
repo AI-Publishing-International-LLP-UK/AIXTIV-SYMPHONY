@@ -1,0 +1,20 @@
+Creating temporary archive of 5645 file(s) totalling 58.3 MiB before compression.
+Some files were not included in the source upload.
+
+Check the gcloud log [/Users/as/.config/gcloud/logs/2025.03.13/13.52.43.358471.log] to see which files and the contents of the
+default gcloudignore file used (see `$ gcloud topic gcloudignore` to learn
+more).
+
+Uploading tarball of [.] to [gs://api-for-warp-drive_cloudbuild/source/1741895563.440897-d7454f58ac8b4f8085eb332a9387e3d6.tgz]
+Created [https://cloudbuild.googleapis.com/v1/projects/api-for-warp-drive/locations/global/builds/a6b34926-8ebd-4a26-88ff-6cec30e697d8].
+Logs are available at [ https://console.cloud.google.com/cloud-build/builds/a6b34926-8ebd-4a26-88ff-6cec30e697d8?project=859242575175 ].
+Waiting for build to complete. Polling interval: 1 second(s).
+
+BUILD FAILURE: Build step failure: build step 0 "gcr.io/cloud-builders/docker" failed: step exited with non-zero status: 125
+ERROR: (gcloud.beta.builds.submit) build a6b34926-8ebd-4a26-88ff-6cec30e697d8 completed with status "FAILURE"
+
+To live stream log output for this build, please ensure the grpc module is installed. Run:
+  pip install grpcio
+and set:
+  export CLOUDSDK_PYTHON_SITEPACKAGES=1
+

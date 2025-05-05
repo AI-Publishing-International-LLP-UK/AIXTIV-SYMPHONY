@@ -1,0 +1,82 @@
+{
+  "greeting": "नमस्ते {{email}}! हमारे एप्लिकेशन में आपका स्वागत है। आपकी यूजर आईडी {{uid}} है।",
+  "greetings": {
+    "welcome": "स्वागत है!",
+    "hello": "नमस्ते",
+    "goodbye": "अलविदा",
+    "welcomeBack": "वापसी पर स्वागत है, %s!",
+    "welcome_user": "नमस्ते, %s!"
+  },
+  "buttons": {
+    "submit": "सबमिट करें",
+    "cancel": "रद्द करें",
+    "save": "सहेजें",
+    "delete": "हटाएं",
+    "update": "अपडेट करें",
+    "close": "बंद करें",
+    "next": "अगला",
+    "previous": "पिछला"
+  },
+  "labels": {
+    "name": "नाम",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "username": "उपयोगकर्ता नाम",
+    "language": "भाषा",
+    "theme": "थीम",
+    "notifications": "सूचनाएँ"
+  },
+  "placeholders": {
+    "enterName": "अपना नाम दर्ज करें",
+    "enterEmail": "अपना ईमेल दर्ज करें",
+    "enterPassword": "अपना पासवर्ड दर्ज करें",
+    "search": "खोजें..."
+  },
+  "messages": {
+    "loading": "लोड हो रहा है...",
+    "error": "एक त्रुटि हुई",
+    "success": "सफलता!",
+    "confirmDelete": "क्या आप वाकई इसे हटाना चाहते हैं?",
+    "itemSaved": "आइटम सहेजा गया",
+    "itemDeleted": "आइटम हटा दिया गया",
+    "itemUpdated": "आइटम अपडेट किया गया"
+  },
+  "errors": {
+    "required": "यह फ़ील्ड आवश्यक है",
+    "invalidEmail": "अमान्य ईमेल पता",
+    "invalidPassword": "पासवर्ड में कम से कम 8 अक्षर होने चाहिए",
+    "serverError": "सर्वर त्रुटि, बाद में पुन: प्रयास करें"
+  },
+  "navigation": {
+    "home": "होम",
+    "profile": "प्रोफाइल",
+    "settings": "सेटिंग्स",
+    "logout": "लॉगआउट",
+    "dashboard": "डैशबोर्ड"
+  },
+  "dateTime": {
+    "today": "आज",
+    "yesterday": "कल",
+    "tomorrow": "कल",
+    "days": ["रविवार", "सोमवार", "मंगलवार", "बुधवार", "गुरुवार", "शुक्रवार", "शनिवार"],
+    "months": ["जनवरी", "फरवरी", "मार्च", "अप्रैल", "मई", "जून", "जुलाई", "अगस्त", "सितंबर", "अक्टूबर", "नवंबर", "दिसंबर"]
+  },
+  "preferences": {
+    "title": "उपयोगकर्ता प्राथमिकताएँ",
+    "languagePreference": "भाषा प्राथमिकता",
+    "themePreference": {
+      "title": "थीम प्राथमिकता",
+      "light": "हल्का",
+      "dark": "गहरा"
+    },
+    "notificationPreferences": {
+      "title": "सूचना प्राथमिकताएँ",
+      "email": "ईमेल सूचनाएँ",
+      "push": "पुश सूचनाएँ",
+      "sms": "एसएमएस सूचनाएँ"
+    },
+    "updateSuccess": "प्राथमिकताएँ अपडेट की गईं",
+    "updateError": "प्राथमिकताएँ अपडेट करने में त्रुटि"
+  }
+}
+

@@ -1,0 +1,84 @@
+# Ebook Template Structure
+
+version: '2.0'
+type: book-template
+security: TOP_SECRET
+
+ebook_template:
+  front_matter:
+    - title_page:
+        elements:
+          - book_title
+          - subtitle
+          - author_name
+          - publisher_info
+    - copyright_page:
+        elements:
+          - copyright_notice
+          - isbn_ebook
+          - rights_reserved
+          - edition_info
+    - dedication:
+        optional: true
+    - table_of_contents:
+        format: linked
+        depth: 3
+
+  main_content:
+    - foreword:
+        optional: true
+    - preface:
+        optional: true
+    - introduction:
+        optional: true
+    - chapters:
+        structure:
+          - chapter_title
+          - chapter_number
+          - chapter_content
+        formatting:
+          - chapter_breaks: page
+          - heading_style: h1
+          - subheading_style: h2
+    - parts:
+        optional: true
+        structure:
+          - part_title
+          - part_number
+          - chapters
+
+  back_matter:
+    - epilogue:
+        optional: true
+    - appendices:
+        optional: true
+    - glossary:
+        optional: true
+    - bibliography:
+        optional: true
+    - index:
+        optional: true
+    - about_author:
+        required: true
+
+  formatting:
+    text:
+      - font_family: [Bookerly, Ember]
+      - font_size: responsive
+      - line_spacing: 1.5
+      - paragraph_spacing: 1.0em
+    
+    headings:
+      - chapter_title: 24pt
+      - section_title: 18pt
+      - subsection: 14pt
+
+    images:
+      - format: jpeg/png
+      - resolution: 300dpi
+      - optimization: required
+
+    navigation:
+      - toc: enabled
+      - chapter_marks: required
+      - page_breaks: section

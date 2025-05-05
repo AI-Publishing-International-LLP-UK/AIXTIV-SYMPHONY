@@ -1,0 +1,48 @@
+{
+  "version": "1.0",
+  "communication_protocols": {
+    "sync": {
+      "method": "direct_message",
+      "priority_levels": ["critical", "high", "normal", "low"],
+      "rate_limiting": {
+        "enabled": true,
+        "max_requests": 100,
+        "window_seconds": 60
+      }
+    },
+    "async": {
+      "method": "event_stream",
+      "topics": ["task_updates", "system_status", "agent_lifecycle"]
+    }
+  },
+  "interaction_patterns": {
+    "task_delegation": {
+      "workflow": ["request", "accept", "execute", "verify", "complete"],
+      "roles": ["initiator", "executor", "validator"],
+      "timeout_seconds": 3600
+    },
+    "consensus_building": {
+      "method": "weighted_voting",
+      "threshold": 0.75,
+      "timeout_seconds": 1800
+    },
+    "error_handling": {
+      "retry_policy": {
+        "max_attempts": 3,
+        "backoff_seconds": 60
+      },
+      "fallback_strategy": "escalate_to_supervisor"
+    }
+  },
+  "coordination_mechanisms": {
+    "load_balancing": {
+      "strategy": "round_robin",
+      "health_check_interval": 300
+    },
+    "resource_management": {
+      "allocation_strategy": "priority_based",
+      "monitoring_interval": 60
+    }
+  }
+}
+

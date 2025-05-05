@@ -1,0 +1,116 @@
+{
+    "version": "1.0",
+    "integrations": {
+        "cloud_services": {
+            "gcp": {
+                "services": [
+                    {
+                        "name": "cloud_run",
+                        "config": {
+                            "region": "us-west1",
+                            "service_account": "drlucyautomation@api-for-warp-drive.iam.gserviceaccount.com",
+                            "allowed_audiences": ["asoos-service"]
+                        }
+                    },
+                    {
+                        "name": "cloud_build",
+                        "config": {
+                            "trigger_type": "github",
+                            "build_timeout": "1800s",
+                            "machine_type": "N1_HIGHCPU_8"
+                        }
+                    }
+                ]
+            }
+        },
+        "monitoring": {
+            "systems": [
+                {
+                    "name": "cloud_monitoring",
+                    "metrics": [
+                        "request_latency",
+                        "error_rate",
+                        "container_memory",
+                        "container_cpu"
+                    ],
+                    "alerts": {
+                        "error_threshold": "1%",
+                        "latency_threshold": "1000ms"
+                    }
+                }
+            ]
+        },
+        "security": {
+            "authentication": {
+                "method": "oauth2",
+                "scopes": [
+                    "https://www.googleapis.com/auth/cloud-platform",
+                    "https://www.googleapis.com/auth/cloudrun.admin"
+                ]
+            },
+            "authorization": {
+                "roles": [
+                    "roles/run.admin",
+                    "roles/run.invoker"
+                ]
+            }
+        },
+        "communication": {
+            "internal": {
+                "protocol": "grpc",
+                "timeout": "30s",
+                "retry_policy": {
+                    "max_attempts": 3,
+                    "initial_backoff": "1s",
+                    "max_backoff": "10s"
+                }
+            },
+            "external": {
+                "protocol": "rest",
+                "rate_limits": {
+                    "requests_per_second": 1000,
+                    "burst_size": 50
+                }
+            }
+        },
+        "data": {
+            "storage": {
+                "primary": {
+                    "type": "cloud_storage",
+                    "bucket": "asoos-service-data",
+                    "lifecycle_rules": {
+                        "archive_after_days": 30,
+                        "delete_after_days": 365
+                    }
+                },
+                "cache": {
+                    "type": "redis",
+                    "ttl": "3600s",
+                    "max_memory": "512MB"
+                }
+            }
+        },
+        "deployment": {
+            "strategies": {
+                "rollout": {
+                    "type": "gradual",
+                    "steps": [
+                        {"traffic": "0%", "validation_period": "5m"},
+                        {"traffic": "5%", "validation_period": "10m"},
+                        {"traffic": "20%", "validation_period": "15m"},
+                        {"traffic": "50%", "validation_period": "15m"},
+                        {"traffic": "100%", "validation_period": "15m"}
+                    ]
+                },
+                "rollback": {
+                    "automatic": true,
+                    "triggers": [
+                        "error_rate > 5%",
+                        "p99_latency > 2s"
+                    ]
+                }
+            }
+        }
+    }
+}
+

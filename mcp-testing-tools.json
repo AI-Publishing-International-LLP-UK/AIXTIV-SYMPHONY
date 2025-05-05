@@ -1,0 +1,193 @@
+{
+  "mcp_version": "0.1.0",
+  "server_info": {
+    "name": "DrClaude.live Testing MCP Server",
+    "description": "MCP server for ASOOS system testing",
+    "version": "1.0.0"
+  },
+  "resources": [
+    {
+      "id": "test/s2do_schema",
+      "name": "S2DO Test Schema",
+      "description": "Schema definition for S2DO test actions",
+      "content": {
+        "type": "object",
+        "properties": {
+          "stem": { "type": "string", "description": "The S2DO action category" },
+          "action": { "type": "string", "description": "The specific action to perform" },
+          "parameters": { "type": "object", "description": "Additional parameters for the action" },
+          "initiator": { "type": "string", "description": "Entity that initiated the action" }
+        },
+        "required": ["stem", "action", "initiator"]
+      }
+    },
+    {
+      "id": "test/copilot_scenarios",
+      "name": "Co-Pilot Test Scenarios",
+      "description": "Test scenarios for Co-Pilot interactions",
+      "content": {
+        "scenarios": [
+          {
+            "id": "client_onboarding",
+            "name": "Client Onboarding",
+            "description": "Test scenario for new client onboarding process",
+            "steps": [
+              "Initial greeting and introduction",
+              "Information collection",
+              "Needs assessment",
+              "Service recommendation",
+              "Initial plan creation",
+              "Next steps definition"
+            ]
+          },
+          {
+            "id": "project_creation",
+            "name": "Project Creation",
+            "description": "Test scenario for new project setup",
+            "steps": [
+              "Project requirement collection",
+              "Resource assessment",
+              "Timeline creation",
+              "Milestone definition",
+              "Task assignment",
+              "Project initiation"
+            ]
+          },
+          {
+            "id": "knowledge_sharing",
+            "name": "Knowledge Sharing",
+            "description": "Test scenario for cross-agency knowledge sharing",
+            "steps": [
+              "Knowledge identification",
+              "Relevance assessment",
+              "Formatting for sharing",
+              "Distribution",
+              "Integration verification",
+              "Feedback collection"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "test/validation_criteria",
+      "name": "Test Validation Criteria",
+      "description": "Criteria for validating test outcomes",
+      "content": {
+        "functional_criteria": [
+          "Correct data processing",
+          "Appropriate response generation",
+          "Proper error handling",
+          "Accurate information retrieval",
+          "Consistent behavior patterns"
+        ],
+        "performance_criteria": [
+          "Response time within acceptable limits",
+          "Resource utilization within constraints",
+          "Scaling with increased load",
+          "Stability over extended operation"
+        ],
+        "security_criteria": [
+          "Proper authentication enforcement",
+          "Correct authorization checks",
+          "Data protection measures active",
+          "Audit logging functional"
+        ]
+      }
+    }
+  ],
+  "tools": [
+    {
+      "id": "test/verify_s2do",
+      "name": "Verify S2DO Action",
+      "description": "Test tool for validating S2DO action processing",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "stem": { "type": "string", "description": "The S2DO action category" },
+          "action": { "type": "string", "description": "The specific action to perform" },
+          "parameters": { "type": "object", "description": "Additional parameters for the action" },
+          "initiator": { "type": "string", "description": "Entity that initiated the action" },
+          "expected_result": { "type": "string", "enum": ["success", "validation_error", "auth_error"] }
+        },
+        "required": ["stem", "action", "initiator", "expected_result"]
+      }
+    },
+    {
+      "id": "test/simulate_copilot",
+      "name": "Simulate Co-Pilot Response",
+      "description": "Test tool for simulating Co-Pilot interactions",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "scenario_id": { "type": "string", "description": "ID of the test scenario" },
+          "step_index": { "type": "number", "description": "Index of the step within the scenario" },
+          "user_input": { "type": "string", "description": "Simulated user input" },
+          "user_context": { "type": "object", "description": "Additional context for the user" }
+        },
+        "required": ["scenario_id", "user_input"]
+      }
+    },
+    {
+      "id": "test/validate_data_access",
+      "name": "Validate Data Access",
+      "description": "Test tool for checking information flow restrictions",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "data_type": { "type": "string", "description": "Type of data being accessed" },
+          "access_context": { "type": "object", "description": "Context of the access attempt" },
+          "expected_access": { "type": "boolean", "description": "Whether access should be granted" }
+        },
+        "required": ["data_type", "access_context", "expected_access"]
+      }
+    },
+    {
+      "id": "test/log_result",
+      "name": "Log Test Result",
+      "description": "Tool for logging test results",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "test_id": { "type": "string", "description": "Identifier for the test" },
+          "result": { "type": "string", "enum": ["pass", "fail", "partial", "inconclusive"] },
+          "details": { "type": "object", "description": "Detailed test results" },
+          "notes": { "type": "string", "description": "Additional notes about the test" }
+        },
+        "required": ["test_id", "result"]
+      }
+    },
+    {
+      "id": "test/generate_report",
+      "name": "Generate Test Report",
+      "description": "Tool for generating consolidated test reports",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "test_ids": { "type": "array", "items": { "type": "string" }, "description": "IDs of tests to include" },
+          "format": { "type": "string", "enum": ["summary", "detailed", "technical", "executive"] },
+          "include_metrics": { "type": "boolean", "description": "Whether to include performance metrics" }
+        },
+        "required": ["format"]
+      }
+    }
+  ],
+  "prompts": [
+    {
+      "id": "test/s2do_verification",
+      "name": "S2DO Verification Test",
+      "description": "Prompt for testing S2DO verification",
+      "content": {
+        "prompt": "You are testing the S2DO verification system. Create valid and invalid S2DO actions to test system behavior.\n\nFor this test, verify the following aspects:\n- Stem validation\n- Action validation\n- Parameter validation\n- Initiator authorization\n\nCreate S2DO actions that test both the happy path and various error conditions."
+      }
+    },
+    {
+      "id": "test/copilot_simulation",
+      "name": "Co-Pilot Simulation",
+      "description": "Prompt for simulating Co-Pilot interactions",
+      "content": {
+        "prompt": "You are simulating a Co-Pilot interaction with a client. Respond as the Co-Pilot would in the given scenario.\n\nClient: {user_input}\n\nScenario: {scenario_description}\nStep: {step_description}\n\nConsider the client's needs, maintain a supportive and professional tone, and guide them through the process effectively."
+      }
+    }
+  ]
+}

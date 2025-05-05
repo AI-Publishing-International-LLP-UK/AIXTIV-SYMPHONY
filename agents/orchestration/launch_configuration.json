@@ -1,0 +1,64 @@
+{
+  "version": "1.0",
+  "environment": {
+    "runtime": "distributed",
+    "scaling_policy": "dynamic",
+    "resource_allocation": {
+      "min_instances": 1,
+      "max_instances": 5,
+      "cpu_allocation": "2",
+      "memory_allocation": "4Gi"
+    }
+  },
+  "agents": {
+    "dream_commander": {
+      "role": "central_coordinator",
+      "startup_priority": 1,
+      "capabilities": ["system_oversight", "decision_making", "resource_allocation"],
+      "initialization_params": {
+        "confidence_threshold": 0.95,
+        "decision_cache_size": 1000,
+        "blockchain_verification": true
+      }
+    },
+    "architect": {
+      "role": "system_design",
+      "startup_priority": 2,
+      "capabilities": ["design_pattern_recognition", "system_modeling", "code_generation"],
+      "initialization_params": {
+        "model_version": "latest",
+        "pattern_library": "enhanced",
+        "verification_level": "strict"
+      }
+    },
+    "rix_manager": {
+      "role": "resource_coordination",
+      "startup_priority": 2,
+      "capabilities": ["resource_optimization", "workflow_management", "integration_handling"],
+      "initialization_params": {
+        "optimization_strategy": "balanced",
+        "resource_monitoring": true,
+        "alert_threshold": 0.8
+      }
+    }
+  },
+  "agent_squads": {
+    "development_squad": {
+      "members": ["architect", "code_specialist", "test_engineer"],
+      "coordination_protocol": "agile",
+      "communication_channel": "high_priority"
+    },
+    "operations_squad": {
+      "members": ["rix_manager", "deployment_specialist", "monitoring_agent"],
+      "coordination_protocol": "continuous",
+      "communication_channel": "real_time"
+    }
+  },
+  "integration_points": {
+    "academy": "../academy/academy_init.json",
+    "pilots_lounge": "../pilots-lounge/decision-log.json",
+    "capabilities": "../capabilities/core_capabilities.json",
+    "evolution": "../evolution/adaptive_learning.json"
+  }
+}
+

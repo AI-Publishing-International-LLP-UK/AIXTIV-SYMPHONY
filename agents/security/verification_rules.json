@@ -1,0 +1,60 @@
+{
+  "verification_rules": {
+    "version": "1.0",
+    "agent_integrity": {
+      "startup_verification": {
+        "signature_validation": true,
+        "config_validation": true,
+        "dependency_check": true
+      },
+      "runtime_verification": {
+        "heartbeat_interval": "1m",
+        "state_validation": "5m",
+        "integrity_check": "15m"
+      }
+    },
+    "communication_security": {
+      "encryption": {
+        "algorithm": "AES-256-GCM",
+        "key_rotation": "24h",
+        "secure_channel": true
+      },
+      "authentication": {
+        "method": "JWT",
+        "token_lifetime": "1h",
+        "refresh_enabled": true
+      },
+      "protocols": {
+        "allowed": ["HTTPS", "gRPC"],
+        "minimum_tls_version": "1.3"
+      }
+    },
+    "data_integrity": {
+      "blockchain_verification": {
+        "enabled": true,
+        "consensus_required": true,
+        "verification_nodes": 3
+      },
+      "checksum_validation": {
+        "algorithm": "SHA-256",
+        "validation_frequency": "10m"
+      }
+    },
+    "compliance": {
+      "audit_trail": {
+        "enabled": true,
+        "retention_period": "90d",
+        "encrypted": true
+      },
+      "reporting": {
+        "frequency": "1h",
+        "comprehensive_report": "24h",
+        "alert_threshold": {
+          "security_violations": 3,
+          "integrity_failures": 1
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,54 @@
+{
+  "version": "1.0",
+  "active_agents": {
+    "dream_commander": {
+      "role": "central_coordinator",
+      "status": "active",
+      "capabilities": ["strategic_planning", "task_delegation", "risk_assessment"],
+      "current_assignment": "system_oversight",
+      "availability": 1.0
+    },
+    "architect": {
+      "role": "system_design",
+      "status": "active",
+      "capabilities": ["architecture_planning", "system_optimization"],
+      "current_assignment": "infrastructure_development",
+      "availability": 0.8
+    },
+    "rix_manager": {
+      "role": "resource_coordinator",
+      "status": "active",
+      "capabilities": ["resource_allocation", "performance_monitoring"],
+      "current_assignment": "resource_optimization",
+      "availability": 0.9
+    },
+    "pilot_coordinator": {
+      "role": "team_leader",
+      "status": "active",
+      "capabilities": ["team_coordination", "workflow_management"],
+      "current_assignment": "team_supervision",
+      "availability": 1.0
+    }
+  },
+  "squad_assignments": {
+    "alpha_squad": {
+      "focus": "core_development",
+      "members": ["architect", "rix_manager"],
+      "active_mission": "system_expansion"
+    },
+    "beta_squad": {
+      "focus": "optimization",
+      "members": ["pilot_coordinator"],
+      "active_mission": "performance_tuning"
+    }
+  },
+  "status_tracking": {
+    "update_frequency": "5m",
+    "metrics": {
+      "performance": "float",
+      "reliability": "float",
+      "task_completion": "float"
+    }
+  }
+}
+

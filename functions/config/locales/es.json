@@ -1,0 +1,63 @@
+{
+  "greetings": {
+    "welcome": "¡Bienvenido a nuestra aplicación!",
+    "welcome_user": "¡Bienvenido, %s!",
+    "goodbye": "¡Adiós!",
+    "thank_you": "¡Gracias por usar nuestra aplicación!"
+  },
+  "greeting": "¡Hola {{email}}! Bienvenido a nuestra Aixtiv Symphony Opus1. Tu ID de usuario es {{uid}}.",
+  "ui": {
+    "buttons": {
+      "submit": "Enviar",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "delete": "Eliminar",
+      "edit": "Editar",
+      "back": "Atrás",
+      "next": "Siguiente"
+    },
+    "labels": {
+      "name": "Nombre",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "confirm_password": "Confirmar contraseña",
+      "username": "Nombre de usuario",
+      "search": "Buscar"
+    },
+    "placeholders": {
+      "enter_name": "Ingrese su nombre",
+      "enter_email": "Ingrese su correo electrónico",
+      "enter_password": "Ingrese su contraseña",
+      "search": "Buscar..."
+    },
+    "messages": {
+      "loading": "Cargando...",
+      "error": "Ha ocurrido un error",
+      "success": "Operación exitosa",
+      "no_results": "No se encontraron resultados",
+      "required_field": "Este campo es obligatorio"
+    }
+  },
+  "notifications": {
+    "info": "Información",
+    "success": "Éxito",
+    "warning": "Advertencia",
+    "error": "Error"
+  },
+  "errors": {
+    "not_found": "Recurso no encontrado",
+    "unauthorized": "Acceso no autorizado",
+    "invalid_credentials": "Correo electrónico o contraseña inválidos",
+    "server_error": "Error del servidor, por favor intente más tarde"
+  },
+  "date_time": {
+    "today": "Hoy",
+    "yesterday": "Ayer",
+    "tomorrow": "Mañana",
+    "days_ago": "hace %d días",
+    "days_from_now": "en %d días"
+  },
+  "preferences": {
+    "updateSuccess": "¡Tus preferencias han sido actualizadas exitosamente!"
+  }
+}

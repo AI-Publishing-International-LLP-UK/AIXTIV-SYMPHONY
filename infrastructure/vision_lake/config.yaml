@@ -1,0 +1,118 @@
+version: 1.0
+
+# GCP Vision API Configuration
+vision_api:
+  project: api-for-warp-drive
+  region: us-west1
+  endpoint: vision.googleapis.com
+  service_account: dr-lucy-automation@api-for-warp-drive-8679a75cb4be.iam.gserviceaccount.com
+  
+  features:
+    - LABEL_DETECTION
+    - TEXT_DETECTION
+    - FACE_DETECTION
+    - LANDMARK_DETECTION
+    - LOGO_DETECTION
+    - IMAGE_PROPERTIES
+    - SAFE_SEARCH_DETECTION
+    - OBJECT_LOCALIZATION
+    - CROP_HINTS
+    - WEB_DETECTION
+    - DOCUMENT_TEXT_DETECTION
+  
+  limits:
+    requests_per_minute: 1800
+    requests_per_day: 1000000
+    max_image_size_mb: 20
+    max_batch_size: 16
+
+# Vertex AI Configuration
+vertex_ai:
+  project: api-for-warp-drive
+  region: us-west1
+  endpoint: aiplatform.googleapis.com
+  service_account: dr-lucy-automation@api-for-warp-drive-8679a75cb4be.iam.gserviceaccount.com
+  vpc_network: anthology-ai-vpc
+  
+  models:
+    - name: Super Claude 3
+      version: 1
+      type: Custom training
+      endpoint: super-claude-orchestrator
+    
+    - name: claude-3-5-sonnet-v2
+      version: 1
+      type: Custom training
+      endpoint: quality-control-claude
+    
+    - name: deepseek-r1-distill-qwen-1_5b
+      version: 1
+      type: Model Garden
+      endpoint: content-generation-endpoint
+
+  endpoints:
+    vision_processing:
+      display_name: vision-lake-processor
+      machine_type: n1-standard-8
+      min_replica_count: 1
+      max_replica_count: 5
+      accelerator_type: NVIDIA_TESLA_T4
+      accelerator_count: 1
+
+    multimodal_analysis:
+      display_name: multimodal-analyzer
+      machine_type: n1-standard-16
+      min_replica_count: 2
+      max_replica_count: 8
+      accelerator_type: NVIDIA_TESLA_T4
+      accelerator_count: 2
+
+# Integration Configuration
+integration:
+  storage_bucket: vision-lake-processed-images
+  results_database: firestore
+  pubsub_topic: vision-lake-results
+  cache_ttl_seconds: 3600
+  
+  firestore:
+    collection: vision_lake_results
+    ttl_days: 30
+    
+  authentication:
+    required: true
+    mechanism: firebase
+    roles:
+      - vision_lake_admin
+      - vision_lake_viewer
+      - vision_lake_processor
+
+# Monitoring Configuration
+monitoring:
+  metrics:
+    - name: vision_api_requests
+      type: COUNTER
+      unit: 1
+      display_name: Vision API Request Count
+      
+    - name: vision_api_latency
+      type: DISTRIBUTION
+      unit: ms
+      display_name: Vision API Response Latency
+      
+    - name: vision_processing_success_rate
+      type: GAUGE
+      unit: ratio
+      display_name: Vision Processing Success Rate
+      
+  alerts:
+    - name: high_error_rate
+      filter: metric.type="custom.googleapis.com/vision_processing_success_rate"
+      condition: < 0.95
+      duration: 300s
+      notification_channels: ["email", "slack"]
+      
+    - name: api_quota_near_limit
+      filter: metric.type="custom.googleapis.com/vision_api_requests"
+      condition: > 1600
+      duration: 60s
+      notification_channels: ["email", "slack"]

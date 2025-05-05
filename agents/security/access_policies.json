@@ -1,0 +1,61 @@
+{
+  "access_policies": {
+    "version": "1.0",
+    "agents": {
+      "dream_commander": {
+        "role": "system_administrator",
+        "permissions": ["read", "write", "execute", "delegate"],
+        "resource_access": {
+          "academy": "full",
+          "pilots_lounge": "full",
+          "capabilities": "full",
+          "evolution": "full"
+        }
+      },
+      "architect": {
+        "role": "system_designer",
+        "permissions": ["read", "write", "execute"],
+        "resource_access": {
+          "academy": {
+            "learning_pathways": "read",
+            "orchestration_config": "write"
+          },
+          "capabilities": "full"
+        }
+      },
+      "rix_manager": {
+        "role": "resource_coordinator",
+        "permissions": ["read", "execute"],
+        "resource_access": {
+          "pilots_lounge": {
+            "collaboration-hub": "write",
+            "agent-roster": "write"
+          }
+        }
+      }
+    },
+    "roles": {
+      "system_administrator": {
+        "description": "Full system access and control",
+        "inheritance": []
+      },
+      "system_designer": {
+        "description": "System architecture and design capabilities",
+        "inheritance": ["resource_coordinator"]
+      },
+      "resource_coordinator": {
+        "description": "Resource management and coordination",
+        "inheritance": ["basic_agent"]
+      }
+    },
+    "enforcement": {
+      "audit_logging": true,
+      "permission_validation": "strict",
+      "role_elevation": {
+        "requires_approval": true,
+        "approval_chain": ["dream_commander", "architect"]
+      }
+    }
+  }
+}
+

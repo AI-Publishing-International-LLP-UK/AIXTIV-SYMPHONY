@@ -1,0 +1,115 @@
+# Memory Cost Allocation Configuration
+constants:
+  base_rate_per_gb_hour: 0.0425  # Standard cloud rate
+  hours_per_month: 720  # 24/7 operation
+  scaling_multiplier: 1.5  # Maximum scaling factor
+
+memory_costs:
+  r1_research:
+    dr_burby:
+      base_memory_gb: 8
+      base_cost_month: 244.80  # 8GB * $0.0425 * 720h
+      max_scaled_cost: 367.20  # 1.5x scaling
+      scaling_triggers:
+        - risk_analysis: +2GB
+        - project_tracking: +1GB
+    
+    dr_lucy:
+      base_memory_gb: 16
+      base_cost_month: 489.60  # 16GB * $0.0425 * 720h
+      max_scaled_cost: 734.40  # 1.5x scaling
+      scaling_triggers:
+        - content_generation: +4GB
+        - ai_training: +3GB
+    
+    prof_lee:
+      base_memory_gb: 16
+      base_cost_month: 489.60
+      max_scaled_cost: 734.40
+      scaling_triggers:
+        - knowledge_processing: +4GB
+        - prompt_optimization: +2GB
+
+  r2_deploy:
+    dr_claude:
+      base_memory_gb: 8
+      base_cost_month: 244.80
+      max_scaled_cost: 367.20
+      scaling_triggers:
+        - infrastructure_monitoring: +2GB
+        - security_analysis: +2GB
+    
+    dr_grant:
+      base_memory_gb: 8
+      base_cost_month: 244.80
+      max_scaled_cost: 367.20
+      scaling_triggers:
+        - deployment_management: +2GB
+        - security_operations: +2GB
+    
+    dr_cypriot:
+      base_memory_gb: 16
+      base_cost_month: 489.60
+      max_scaled_cost: 734.40
+      scaling_triggers:
+        - blockchain_operations: +4GB
+        - tower_management: +3GB
+    
+    dr_roark:
+      base_memory_gb: 8
+      base_cost_month: 244.80
+      max_scaled_cost: 367.20
+      scaling_triggers:
+        - innovation_tracking: +2GB
+        - project_coordination: +1GB
+
+  r3_engage_scale:
+    dr_memoria:
+      base_memory_gb: 32
+      base_cost_month: 979.20  # 32GB * $0.0425 * 720h
+      max_scaled_cost: 1468.80  # 1.5x scaling
+      scaling_triggers:
+        - knowledge_base: +8GB
+        - workflow_automation: +4GB
+        - content_indexing: +4GB
+    
+    dr_match:
+      base_memory_gb: 4
+      base_cost_month: 122.40
+      max_scaled_cost: 183.60
+      scaling_triggers:
+        - marketing_analysis: +1GB
+        - design_processing: +1GB
+    
+    dr_maria:
+      base_memory_gb: 8
+      base_cost_month: 244.80
+      max_scaled_cost: 367.20
+      scaling_triggers:
+        - cultural_processing: +2GB
+        - interaction_analysis: +2GB
+    
+    dr_sabina:
+      base_memory_gb: 8
+      base_cost_month: 244.80
+      max_scaled_cost: 367.20
+      scaling_triggers:
+        - engagement_tracking: +2GB
+        - strategy_analysis: +2GB
+
+summary:
+  total_base_memory_gb: 132
+  total_base_cost_month: 4039.20
+  total_max_scaled_cost: 6058.80
+  cost_breakdown_percentage:
+    r1_research: 30.2%  # Research phase agents
+    r2_deploy: 30.2%    # Deployment phase agents
+    r3_engage_scale: 39.6%  # Engagement phase agents
+
+optimization_recommendations:
+  - implement_auto_scaling_based_on_usage_patterns
+  - monitor_memory_utilization_for_cost_optimization
+  - consider_reserved_capacity_for_baseline_usage
+  - implement_garbage_collection_for_unused_memory
+  - schedule_batch_processing_during_off-peak_hours
+

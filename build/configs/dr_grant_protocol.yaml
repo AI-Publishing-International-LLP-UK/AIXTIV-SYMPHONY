@@ -1,0 +1,65 @@
+dr_grant_protocol:
+  diplomatic_responses:
+    general:
+      - "Thank you for your interest. We maintain strict confidentiality around our technologies and methodologies."
+      - "While we appreciate the proposed opportunity, we have established protocols that prevent sharing of technical details."
+      - "Our focus remains on delivering value to our existing clients while maintaining our security standards."
+    
+  boundary_establishment:
+    meeting_protocols:
+      - Require clear agenda and participant list
+      - Document all interaction requests
+      - Maintain professional distance
+      - Avoid informal settings
+      - Keep technical discussions general
+    
+  information_protection:
+    classified_topics:
+      - AI architecture details
+      - Training methodologies
+      - System integration specifics
+      - Client data handling
+      - Security protocols
+    response_templates:
+      technical_inquiry: "We maintain confidentiality regarding our technical implementations."
+      partnership_request: "We carefully evaluate all partnership opportunities through our established channels."
+      documentation_request: "Our documentation is proprietary and maintained internally."
+      
+  risk_mitigation:
+    pre_meeting:
+      - Verify attendee backgrounds
+      - Document meeting objectives
+      - Prepare standard responses
+    during_meeting:
+      - Stay within approved topics
+      - Document all questions
+      - Avoid technical specifics
+    post_meeting:
+      - Record all interactions
+      - Report unusual inquiries
+      - Update risk assessment
+      
+  security_awareness:
+    red_flags:
+      - Unusual technical interest
+      - Requests for system access
+      - Attempts to discuss architecture
+      - Informal meeting requests
+    response_protocol:
+      - Document the interaction
+      - Refer to standard responses
+      - Escalate if necessary
+      - Maintain professional tone
+
+  professional_engagement:
+    approved_topics:
+      - General industry trends
+      - Published research
+      - Public partnerships
+      - Case studies (anonymized)
+    communication_guidelines:
+      - Keep responses high-level
+      - Avoid technical details
+      - Maintain professional distance
+      - Document all interactions
+

@@ -1,0 +1,106 @@
+{
+  "version": "1.0",
+  "coreMetrics": {
+    "reliability": {
+      "uptime": {
+        "target": 0.9999,
+        "window": "30d",
+        "critical": 0.999
+      },
+      "errorRate": {
+        "target": 0.001,
+        "window": "24h",
+        "critical": 0.01
+      }
+    },
+    "performance": {
+      "throughput": {
+        "target": 1000,
+        "unit": "requests/second",
+        "scaling": {
+          "threshold": 0.8,
+          "cooldown": "5m"
+        }
+      },
+      "latency": {
+        "p95": {
+          "target": 200,
+          "unit": "ms",
+          "critical": 500
+        },
+        "p99": {
+          "target": 500,
+          "unit": "ms",
+          "critical": 1000
+        }
+      }
+    }
+  },
+  "agentMetrics": {
+    "coordination": {
+      "consensusTime": {
+        "target": 2000,
+        "unit": "ms",
+        "critical": 5000
+      },
+      "taskAllocation": {
+        "efficiency": 0.9,
+        "balancing": 0.85
+      }
+    },
+    "learning": {
+      "adaptationRate": {
+        "target": 0.2,
+        "window": "24h"
+      },
+      "improvementVelocity": {
+        "target": 0.1,
+        "window": "7d"
+      }
+    }
+  },
+  "capabilities": {
+    "maxConcurrentTasks": 100,
+    "resourceUtilization": {
+      "cpu": {
+        "target": 0.7,
+        "critical": 0.9
+      },
+      "memory": {
+        "target": 0.75,
+        "critical": 0.9
+      },
+      "storage": {
+        "target": 0.8,
+        "critical": 0.95
+      }
+    }
+  },
+  "monitoring": {
+    "intervals": {
+      "collection": "1m",
+      "aggregation": "5m",
+      "reporting": "1h"
+    },
+    "retention": {
+      "raw": "7d",
+      "aggregated": "90d",
+      "analyzed": "365d"
+    }
+  },
+  "thresholds": {
+    "warning": {
+      "cpu": 80,
+      "memory": 85,
+      "latency": 400,
+      "errorRate": 0.005
+    },
+    "critical": {
+      "cpu": 90,
+      "memory": 95,
+      "latency": 800,
+      "errorRate": 0.01
+    }
+  }
+}
+

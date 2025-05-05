@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warp Drive API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #3498db;
+            margin-top: 30px;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .endpoint {
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+            padding: 10px 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Warp Drive API</h1>
+    
+    <p>Welcome to the Warp Drive API. This is an API endpoint powered by Firebase Cloud Functions.</p>
+    
+    <h2>Available Endpoints</h2>
+    
+    <div class="endpoint">
+        <h3>Hello World</h3>
+        <p>A simple greeting endpoint to test the API.</p>
+        <p><strong>URL:</strong> <code>/helloWorld</code></p>
+        <p><strong>Method:</strong> <code>GET</code></p>
+        <p><strong>Example:</strong> <code>https://api-for-warp-drive.web.app/helloWorld</code></p>
+    </div>
+    
+    <div class="endpoint">
+        <h3>Update User Preferences</h3>
+        <p>Update a user's warp drive preferences.</p>
+        <p><strong>URL:</strong> <code>/updateUserPreferences</code></p>
+        <p><strong>Method:</strong> <code>POST</code></p>
+        <p><strong>Headers:</strong> <code>Content-Type: application/json</code></p>
+        <p><strong>Body Example:</strong></p>
+        <pre><code>{
+  "userId": "user123",
+  "preferences": {
+    "warpSpeed": 9.5,
+    "destination": "Alpha Centauri",
+    "safetyProtocols": true
+  }
+}</code></pre>
+        <p><strong>Example:</strong> <code>https://api-for-warp-drive.web.app/updateUserPreferences</code></p>
+    </div>
+    
+    <h2>API Usage Notes</h2>
+    <p>This API is for demonstration purposes. All requests are processed in the us-west1 region.</p>
+    <p>For more information, please refer to the API documentation or contact the Warp Drive engineering team.</p>
+    
+    <footer>
+        <p>&copy; 2023 Warp Drive Technologies</p>
+    </footer>
+</body>
+</html>
+

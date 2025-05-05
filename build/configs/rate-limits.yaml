@@ -1,0 +1,123 @@
+# Integration Gateway Rate Limits Configuration
+# This file defines rate limiting policies for the API Gateway
+
+# Global default rate limits
+default_limits:
+  requests_per_minute: 100
+  requests_per_hour: 2000
+  requests_per_day: 10000
+  burst_size: 20
+  
+# Rate limits by endpoint
+endpoint_limits:
+  - path: "/api/v1/users/**"
+    methods: ["GET", "POST", "PUT", "DELETE"]
+    limits:
+      requests_per_minute: 60
+      requests_per_hour: 1000
+    
+  - path: "/api/v1/accounts/**"
+    methods: ["GET"]
+    limits:
+      requests_per_minute: 120
+      requests_per_hour: 1500
+    
+  - path: "/api/v1/transactions/**"
+    methods: ["POST", "PUT"]
+    limits:
+      requests_per_minute: 30
+      requests_per_hour: 500
+      burst_size: 10
+    
+  - path: "/api/v1/reports/**"
+    methods: ["GET"]
+    limits:
+      requests_per_minute: 20
+      requests_per_hour: 100
+      
+  - path: "/api/v1/public/**"
+    methods: ["GET"]
+    limits:
+      requests_per_minute: 600
+      requests_per_hour: 10000
+
+# Rate limits by user role
+role_limits:
+  - role: "admin"
+    limits:
+      requests_per_minute: 200
+      requests_per_hour: 4000
+      override_endpoint_limits: true
+    
+  - role: "power_user"
+    limits:
+      requests_per_minute: 150
+      requests_per_hour: 3000
+      override_endpoint_limits: false
+    
+  - role: "regular_user"
+    limits:
+      requests_per_minute: 80
+      requests_per_hour: 1500
+      override_endpoint_limits: false
+    
+  - role: "guest"
+    limits:
+      requests_per_minute: 40
+      requests_per_hour: 500
+      override_endpoint_limits: false
+
+# Rate limits by client type
+client_limits:
+  - client_type: "internal_service"
+    limits:
+      requests_per_minute: 500
+      requests_per_hour: 8000
+      requests_per_day: 100000
+      
+  - client_type: "partner_api"
+    limits:
+      requests_per_minute: 200
+      requests_per_hour: 4000
+      requests_per_day: 50000
+    
+  - client_type: "mobile_app"
+    limits:
+      requests_per_minute: 60
+      requests_per_hour: 1000
+      requests_per_day: 10000
+    
+  - client_type: "web_client"
+    limits:
+      requests_per_minute: 120
+      requests_per_hour: 2000
+      requests_per_day: 20000
+
+# IP-based rate limits
+ip_limits:
+  - cidr: "10.0.0.0/8"  # Internal network
+    limits:
+      requests_per_minute: 1000
+      requests_per_hour: 20000
+    
+  - cidr: "0.0.0.0/0"  # All other IPs
+    limits:
+      requests_per_minute: 50
+      requests_per_hour: 1000
+
+# Advanced configuration
+advanced:
+  rate_limit_headers: true
+  response_headers:
+    include_limit: true
+    include_remaining: true
+    include_reset: true
+  rejection_response:
+    status_code: 429
+    content_type: "application/json"
+    body_template: '{"error": "rate_limit_exceeded", "message": "Rate limit exceeded. Please try again later.", "retry_after": {{ retry_after }}}'
+  storage:
+    type: "redis"
+    expiration: 3600  # seconds
+  distributed_tracing: true
+

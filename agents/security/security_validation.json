@@ -1,0 +1,60 @@
+{
+  "validation_config": {
+    "version": "1.0",
+    "components": {
+      "academy": {
+        "required_files": [
+          "academy_init.json",
+          "learning_pathways.json",
+          "orchestration_config.json"
+        ],
+        "validation_rules": {
+          "initialization": {
+            "schema_validation": true,
+            "required_fields": ["integration_points", "learning_paths", "orchestration"],
+            "integrity_checks": ["config_consistency", "path_validation"]
+          }
+        }
+      },
+      "pilots_lounge": {
+        "required_files": [
+          "decision-log.json",
+          "collaboration-hub.json",
+          "agent-roster.json"
+        ],
+        "validation_rules": {
+          "blockchain_verification": {
+            "enabled": true,
+            "consensus_required": true,
+            "verification_interval": "1h"
+          }
+        }
+      },
+      "capabilities": {
+        "files": [
+          "core_capabilities.json",
+          "workflow_definitions.json",
+          "integration_specs.json"
+        ],
+        "validation_rules": {
+          "capability_checks": {
+            "dependencies_resolved": true,
+            "version_compatibility": true
+          }
+        }
+      }
+    },
+    "runtime_validation": {
+      "healthchecks": {
+        "interval": "5m",
+        "timeout": "30s",
+        "failure_threshold": 3
+      },
+      "security_scans": {
+        "interval": "1h",
+        "comprehensive_scan": "24h"
+      }
+    }
+  }
+}
+

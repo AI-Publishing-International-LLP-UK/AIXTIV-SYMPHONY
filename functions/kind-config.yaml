@@ -1,0 +1,55 @@
+# kind-config.yaml
+# This configuration file defines a Kubernetes cluster with 3 nodes (1 control-plane and 2 workers)
+# to be created with the 'kind' tool. Kind (Kubernetes IN Docker) creates Kubernetes clusters
+# using Docker containers as nodes.
+
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: functions-cluster # Name of the cluster
+
+# Node configurations
+nodes:
+  # Control plane node configuration
+  - role: control-plane
+    # Optional: expose API server on host network
+    extraPortMappings:
+      - containerPort: 6443
+        hostPort: 6443
+        protocol: TCP
+    # Labels can be used for node selection in workload placement
+    labels:
+      node-role: master
+
+  # Worker node configurations
+  - role: worker
+    labels:
+      node-role: worker
+      workload-type: standard
+
+  - role: worker
+    labels:
+      node-role: worker
+      workload-type: standard
+
+# Networking configuration
+networking:
+  # Default service subnet CIDR
+  serviceSubnet: "10.96.0.0/12"
+  # Default pod subnet CIDR
+  podSubnet: "10.244.0.0/16"
+  # Disable default CNI and install your preferred one
+  disableDefaultCNI: false
+
+# Feature gates configuration
+featureGates:
+  # Enable features as needed
+  # IPv6DualStack: true
+
+# Runtime configuration
+containerdConfigPatches:
+  # Configure max concurrent downloads
+  - |-
+    [plugins."io.containerd.grpc.v1.cri".registry]
+      config_path = "/etc/containerd/certs.d"
+      max_concurrent_downloads = 10
+

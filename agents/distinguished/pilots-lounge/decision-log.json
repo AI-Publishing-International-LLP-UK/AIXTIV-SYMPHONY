@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "blockchain_verification": {
+    "enabled": true,
+    "provider": "ethereum",
+    "contract_address": "0x...",
+    "verification_method": "merkle_proof"
+  },
+  "log_structure": {
+    "decision_record": {
+      "id": "string",
+      "timestamp": "ISO8601",
+      "agent_id": "string",
+      "decision_type": "string",
+      "confidence_score": "float",
+      "context": "object",
+      "reasoning": "string",
+      "outcome": "string",
+      "verification_hash": "string"
+    }
+  },
+  "retention_policy": {
+    "storage_duration": "365d",
+    "backup_frequency": "24h",
+    "encryption_enabled": true
+  },
+  "audit_trail": {
+    "enabled": true,
+    "level": "detailed",
+    "include_metadata": true
+  },
+  "analytics": {
+    "enabled": true,
+    "metrics": [
+      "decision_confidence",
+      "response_time",
+      "success_rate",
+      "automation_level"
+    ]
+  }
+}
+

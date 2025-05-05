@@ -1,0 +1,32 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/api/**",
+        "function": "api"
+      },
+      {
+        "source": "/academy/**",
+        "destination": "/academy/index.html"
+      },
+      {
+        "source": "/giftshop/**",
+        "destination": "/giftshop/index.html"
+      },
+      {
+        "source": "/marketplace/**",
+        "destination": "/marketplace/index.html"
+      }
+    ]
+  },
+  "functions": {
+    "source": "functions"
+  }
+}
+

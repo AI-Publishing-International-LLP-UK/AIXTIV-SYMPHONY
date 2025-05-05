@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Text-to-Speech Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        button {
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #356ac3;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin: 10px 0;
+        }
+        .login-container {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .voice-item {
+            padding: 8px;
+            border: 1px solid #eee;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+        .audio-container {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f0f7ff;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Firebase Text-to-Speech Demo</h1>
+    
+    <!-- Authentication Section -->
+    <div class="container login-container" id="authContainer">
+        <h2>Firebase Authentication</h2>
+        <div id="unauthenticated">
+            <p>Sign in to use the Text-to-Speech functions:</p>
+            <input type="email" id="email" placeholder="Email" value="">
+            <input type="password" id="password" placeholder="Password" value="">
+            <button id="loginBtn">Sign In</button>
+            <p class="error" id="loginError"></p>
+        </div>
+        <div id="authenticated" class="hidden">
+            <p class="success">You are signed in as: <span id="userEmail"></span></p>
+            <button id="logoutBtn">Sign Out</button>
+        </div>
+    </div>
+
+    <!-- TTS Functions Section (hidden until authenticated) -->
+    <div id="ttsContainer" class="hidden">
+        <!-- Basic TTS Function -->
+        <div class="container">
+            <h2>Convert Text to Speech</h2>
+            <textarea id="ttsText" placeholder="Enter text to convert to speech"></textarea>
+            <button id="ttsBtn">Convert to Speech</button>
+            <div id="ttsLoading" class="hidden">Processing...</div>
+            <div id="ttsResult" class="result hidden"></div>
+            <div id="audioPlayer" class="audio-container hidden">
+                <p>Generated Audio:</p>
+                <audio id="ttsAudio" controls></audio>
+            </div>
+        </div>
+
+        <!-- List Voices Function -->
+        <div class="container">
+            <h2>List Available TTS Voices</h2>
+            <select id="languageSelect">
+                <option value="en-US">English (US)</option>
+                <option value="en-GB">English (UK)</option>
+                <option value="es-ES">Spanish</option>
+                <option value="fr-FR">French</option>
+                <option value="de-DE">German</option>
+                <option value="ja-JP">Japanese</option>
+            </select>
+            <button id="listVoicesBtn">List Voices</button>
+            <div id="voicesLoading" class="hidden">Loading available voices...</div>
+            <div id="voicesList" class="result hidden"></div>
+        </div>
+
+        <!-- Test Voice Function -->
+        <div class="container">
+            <h2>Test TTS with Specific Voice</h2>
+            <textarea id="testVoiceText" placeholder="Enter text to test with the selected voice"></textarea>
+            <div>
+                <p>Select Voice Settings:</p>
+                <select id="voiceSelect" disabled>
+                    <option value="">First list available voices above</option>
+                </select>
+                <select id="genderSelect">
+                    <option value="NEUTRAL">Neutral</option>
+                    <option value="MALE">Male</option>
+                    <option value="FEMALE">Female</option>
+                </select>
+            </div>
+            <button id="testVoiceBtn" disabled>Test Voice</button>
+            <div id="testVoiceLoading" class="hidden">Processing...</div>
+            <div id="testVoiceResult" class="result hidden"></div>
+            <div id="testAudioPlayer" class="audio-container hidden">
+                <p>Generated Audio:</p>
+                <audio id="testVoiceAudio" controls></audio>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK and App Config -->
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            signOut,
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-auth.js";
+        import { 
+            getFunctions, 
+            httpsCallable,
+            connectFunctionsEmulator 
+        } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-functions.js";
+
+        // Your Firebase configuration - REPLACE WITH YOUR PROJECT CONFIG
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const functions = getFunctions(app);
+        
+        // Uncomment the following line when testing with a local Firebase emulator
+        // connectFunctionsEmulator(functions, "localhost", 5001);
+
+        // DOM elements for authentication
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+        const loginError = document.getElementById('loginError');
+        const userEmail = document.getElementById('userEmail');
+        const unauthenticatedDiv = document.getElementById('unauthenticated');
+        const authenticatedDiv = document.getElementById('authenticated');
+        const ttsContainer = document.getElementById('ttsContainer');
+
+        // DOM elements for TTS
+        const ttsText = document.getElementById('ttsText');
+        const ttsBtn = document.getElementById('ttsBtn');
+        const ttsLoading = document.getElementById('ttsLoading');
+        const ttsResult = document.getElementById('ttsResult');
+        const ttsAudio = document.getElementById('ttsAudio');
+        const audioPlayer = document.getElementById('audioPlayer');
+
+        // DOM elements for listing voices
+        const languageSelect = document.getElementById('languageSelect');
+        const listVoicesBtn = document.getElementById('listVoicesBtn');
+        const voicesLoading = document.getElementById('voicesLoading');
+        const voicesList = document.getElementById('voicesList');
+        const voiceSelect = document.getElementById('voiceSelect');
+
+        // DOM elements for testing voices
+        const testVoiceText = document.getElementById('testVoiceText');
+        const testVoiceBtn = document.getElementById('testVoiceBtn');
+        const genderSelect = document.getElementById('genderSelect');
+        const testVoiceLoading = document.getElementById('testVoiceLoading');
+        const testVoiceResult = document.getElementById('testVoiceResult');
+        const testVoiceAudio = document.getElementById('testVoiceAudio');
+        const testAudioPlayer = document.getElementById('testAudioPlayer');
+
+        // Initialize the Firebase functions
+        const textToSpeech = httpsCallable(functions, 'textToSpeech');
+        const getTtsVoices = httpsCallable(functions, 'getTtsVoices');
+        const testTtsByVoice = httpsCallable(functions, 'testTtsByVoice');
+
+        // Authentication state observer
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                unauthenticatedDiv.classList.add('hidden');
+                authenticatedDiv.classList.remove('hidden');
+                ttsContainer.classList.remove('hidden');
+                userEmail.textContent = user.email;
+                
+                // Clear any previous error messages
+                loginError.textContent = '';
+            } else {
+                // User is signed out
+                unauthenticatedDiv.classList.remove('hidden');
+                authenticatedDiv.classList.add('hidden');
+                ttsContainer.classList.add('hidden');
+                userEmail.textContent = '';
+            }
+        });
+
+        // Sign in with email and password
+        loginBtn.addEventListener('click', () => {
+            const emailValue = email.value;
+            const passwordValue = password.value;
+            
+            if (!emailValue || !passwordValue) {
+                loginError.textContent = 'Please enter both email and password';
+                return;
+            }
+            
+            signInWithEmailAndPassword(auth, emailValue, passwordValue)
+                .catch((error) => {
+                    loginError.textContent = error.message;
+                });
+        });
+
+        // Sign out
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth).catch((error) => {
+                console.error('Sign out error:', error);
+            });
+        });
+
+        // Convert text to speech
+        ttsBtn.addEventListener('click', async () => {
+            const text = ttsText.value.trim();
+            
+            if (!text) {
+                ttsResult.textContent = 'Please enter some text to convert';
+                ttsResult.classList.remove('hidden');
+                return;
+            }
+            
+            try {
+                ttsBtn.disabled = true;
+                ttsLoading.classList.remove('hidden');
+                ttsResult.classList.add('hidden');
+                audioPlayer.classList.add('hidden');
+                
+                const result = await textToSpeech({
+                    text: text,
+                    voice: {
+                        languageCode: 'en-US',
+                        ssmlGender: 'NEUTRAL'
+                    }
+                });
+                
+                ttsResult.textContent = JSON.stringify(result.data, null, 2);
+                ttsResult.classList.remove('hidden');
+                
+                if (result.data.success && result.data.audioUrl) {
+                    ttsAudio.src = result.data.audioUrl;
+                    audioPlayer.classList.remove('hidden');
+                }
+            } catch (error) {
+                ttsResult.textContent = `Error: ${error.message}`;
+                ttsResult.classList.remove('hidden');
+                ttsResult.classList.add('error');
+            } finally {
+                ttsBtn.disabled = false;
+                ttsLoading.classList.add('hidden');
+            }
+        });
+
+        // List available voices
+        listVoicesBtn.addEventListener('click', async () => {
+            try {
+                listVoicesBtn.disabled = true;
+                voicesLoading.classList.remove('hidden');
+                voicesList.classList.add('hidden');
+                
+                const languageCode = languageSelect.value;
+                const result = await getTtsVoices({ languageCode });
+                
+                if (result.data.success && result.data.voices) {
+                    const voices = result.data.voices;
+                    
+                    // Clear previous list
+                    voicesList.innerHTML = '';
+                    
+                    // Clear voice selection dropdown
+                    voiceSelect.innerHTML = '';
+                    voiceSelect.disabled = false;
+                    
+                    if (voices.length === 0) {
+                        voicesList.textContent = `No voices found for language code: ${languageCode}`;
+                    } else {
+                        // Create a title for the voices list
+                        const titleElement = document.createElement('p');
+                        titleElement.textContent = `Found ${voices.length} voices for ${languageCode}:`;
+                        titleElement.style.fontWeight = 'bold';
+                        voicesList.appendChild(titleElement);
+                        
+                        // Add each voice to the list and to the dropdown
+                        voices.forEach(voice => {
+                            // Add to visual list
+                            const voiceItem = document.createElement('div');
+                            voiceItem.classList.add('voice-item');
+                            voiceItem.innerHTML = `
+                                <strong>Name:</strong> ${voice.name}<br>
+                                <strong>Gender:</strong> ${voice.ssmlGender}<br>
+                                <strong>Sample Rate:</strong> ${voice.naturalSampleRateHertz} Hz
+                            `;
+                            voicesList.appendChild(voiceItem);
+                            
+                            // Add to dropdown for selection
+                            const option = document.createElement('option');
+                            option.value = voice.name;
+                            option.textContent = `${voice.name} (${voice.ssmlGender})`;
+                            voiceSelect.appendChild(option);
+                        });
+                        
+                        // Enable the test voice button
+                        testVoiceBtn.disabled = false;
+                    }
+                    
+                    voicesList.classList.remove('hidden');
+                } else {
+                    voicesList.textContent = `Error: ${result.data.error || 'Failed to retrieve voices'}`;
+                    voicesList.classList.add('error');
+                    voicesList.classList.remove('hidden');
+

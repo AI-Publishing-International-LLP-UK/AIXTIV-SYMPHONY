@@ -1,0 +1,63 @@
+{
+  "greetings": {
+    "welcome": "Welcome to our Aixtiv Symphony Opus1!",
+    "welcome_user": "Welcome, %s!",
+    "goodbye": "Goodbye!",
+    "thank_you": "Thank you for using our Aixtiv Symphony Opus1!"
+  },
+  "greeting": "Hello {{email}}! Welcome to our Aixtiv Symphony Opus1. Your user ID is {{uid}}.",
+  "ui": {
+    "buttons": {
+      "submit": "Submit",
+      "cancel": "Cancel",
+      "save": "Save",
+      "delete": "Delete",
+      "edit": "Edit",
+      "back": "Back",
+      "next": "Next"
+    },
+    "labels": {
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "confirm_password": "Confirm Password",
+      "username": "Username",
+      "search": "Search"
+    },
+    "placeholders": {
+      "enter_name": "Enter your name",
+      "enter_email": "Enter your email",
+      "enter_password": "Enter your password",
+      "search": "Search..."
+    },
+    "messages": {
+      "loading": "Loading...",
+      "error": "An error occurred",
+      "success": "Operation successful",
+      "no_results": "No results found",
+      "required_field": "This field is required"
+    }
+  },
+  "notifications": {
+    "info": "Information",
+    "success": "Success",
+    "warning": "Warning",
+    "error": "Error"
+  },
+  "errors": {
+    "not_found": "Resource not found",
+    "unauthorized": "Unauthorized access",
+    "invalid_credentials": "Invalid email or password",
+    "server_error": "Server error, please try again later"
+  },
+  "date_time": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "tomorrow": "Tomorrow",
+    "days_ago": "%d days ago",
+    "days_from_now": "%d days from now"
+  },
+  "preferences": {
+    "updateSuccess": "Your preferences have been updated successfully!"
+  }
+}

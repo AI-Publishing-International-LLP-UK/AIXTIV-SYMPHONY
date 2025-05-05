@@ -1,0 +1,155 @@
+intelligence_targets:
+  consulting_firms:
+    lhh_global:
+      domains:
+        - lhh.com
+        - lee-hecht-harrison.com
+        - lhh.*.com
+        - penna.com
+      patterns:
+        enterprise:
+          - career transition methodology analysis
+          - outplacement system monitoring
+          - talent development tracking
+          - executive coaching pattern analysis
+        individual:
+          - consultant profile monitoring
+          - client engagement tracking
+          - methodology access attempts
+          - system capability probing
+
+    deloitte_global:
+      domains:
+        - deloitte.com
+        - deloitte.co.uk
+        - deloitte.de
+        - deloitte.fr
+        - deloitte.nl
+        - deloitte.ca
+        - deloitte.com.au
+        - deloitte.co.jp
+      patterns:
+        enterprise:
+          - consulting methodology analysis
+          - system architecture assessment
+          - implementation approach monitoring
+          - solution design evaluation
+        individual:
+          - consultant access patterns
+          - technical documentation requests
+          - integration capability probing
+          - methodology examination attempts
+
+    pwc_global:
+      domains:
+        - pwc.com
+        - pwc.co.uk
+        - pwc.de
+        - pwc.fr
+        - pwc.nl
+        - pwc.com.au
+        - pwc.co.jp
+      patterns:
+        enterprise:
+          - advisory methodology tracking
+          - system audit attempts
+          - implementation analysis
+          - solution architecture review
+        individual:
+          - consultant behavior monitoring
+          - technical access patterns
+          - documentation request tracking
+          - capability assessment attempts
+
+    kpmg_global:
+      domains:
+        - kpmg.com
+        - kpmg.co.uk
+        - kpmg.de
+        - kpmg.fr
+        - kpmg.nl
+        - kpmg.com.au
+        - kpmg.co.jp
+      patterns:
+        enterprise:
+          - advisory service analysis
+          - implementation monitoring
+          - methodology assessment
+          - solution evaluation
+        individual:
+          - consultant access tracking
+          - technical review patterns
+          - documentation requests
+          - capability probing
+
+    ey_global:
+      domains:
+        - ey.com
+        - uk.ey.com
+        - de.ey.com
+        - fr.ey.com
+        - nl.ey.com
+        - au.ey.com
+        - jp.ey.com
+      patterns:
+        enterprise:
+          - consulting approach analysis
+          - implementation monitoring
+          - methodology assessment
+          - solution architecture review
+        individual:
+          - consultant behavior tracking
+          - technical access patterns
+          - documentation requests
+          - capability examination
+
+    accenture_global:
+      domains:
+        - accenture.com
+        - accenture.co.uk
+        - accenture.de
+        - accenture.fr
+        - accenture.nl
+        - accenture.com.au
+        - accenture.co.jp
+      patterns:
+        enterprise:
+          - technology implementation analysis
+          - system integration monitoring
+          - methodology assessment
+          - solution architecture review
+        individual:
+          - consultant access patterns
+          - technical capability probing
+          - documentation requests
+          - implementation approach analysis
+
+  security_protocols:
+    domain_validation:
+      - Corporate email verification
+      - Domain MX record checking
+      - Employee directory validation
+      - Position verification
+      - Department correlation
+
+    access_monitoring:
+      - Real-time pattern detection
+      - Multiple access attempt tracking
+      - IP address monitoring
+      - Request frequency analysis
+      - Content access patterns
+
+    protective_measures:
+      - Automatic access suspension
+      - Security team notification
+      - Pattern documentation
+      - Access attempt logging
+      - Corporate security alert
+
+    response_actions:
+      - Immediate access termination
+      - Pattern documentation
+      - Security team notification
+      - Evidence preservation
+      - Legal team consultation
+

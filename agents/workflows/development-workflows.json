@@ -1,0 +1,460 @@
+{
+  "version": "1.0.0",
+  "description": "Workflow configuration for agent-driven development of ASOOS launch tools",
+  "metadata": {
+    "author": "ASOOS System",
+    "created_at": "2025-03-09T19:05:12Z",
+    "last_updated": "2025-03-09T19:05:12Z"
+  },
+  "global_settings": {
+    "logging_level": "verbose",
+    "error_handling": {
+      "retry_count": 3,
+      "backoff_strategy": "exponential",
+      "alert_threshold": "critical"
+    },
+    "resource_limits": {
+      "max_concurrent_tasks": 12,
+      "memory_limit_per_agent": "4GB",
+      "timeout_default": 3600
+    }
+  },
+  "agents": {
+    "roles": [
+      {
+        "id": "architect",
+        "description": "Designs system components and ensures architectural integrity",
+        "capabilities": ["system_design", "code_review", "technical_documentation"],
+        "access_levels": ["all_components", "all_documentation"]
+      },
+      {
+        "id": "developer",
+        "description": "Implements components and features according to specifications",
+        "capabilities": ["code_implementation", "unit_testing", "debugging"],
+        "access_levels": ["assigned_components", "technical_documentation"]
+      },
+      {
+        "id": "qa_engineer",
+        "description": "Tests and validates system components for quality assurance",
+        "capabilities": ["test_automation", "integration_testing", "performance_testing"],
+        "access_levels": ["test_suites", "metrics_data", "bug_tracking"]
+      },
+      {
+        "id": "security_specialist",
+        "description": "Ensures security standards and best practices are followed",
+        "capabilities": ["security_analysis", "vulnerability_scanning", "compliance_checking"],
+        "access_levels": ["security_configs", "audit_logs", "credentials"]
+      },
+      {
+        "id": "data_scientist",
+        "description": "Develops and optimizes data models and analytics capabilities",
+        "capabilities": ["data_modeling", "machine_learning", "analytics_optimization"],
+        "access_levels": ["data_sources", "model_repositories", "analytics_tools"]
+      },
+      {
+        "id": "project_manager",
+        "description": "Coordinates tasks and ensures project milestones are met",
+        "capabilities": ["task_scheduling", "resource_allocation", "progress_reporting"],
+        "access_levels": ["all_tasks", "metrics_dashboards", "team_communication"]
+      }
+    ],
+    "communication": {
+      "protocols": ["direct_message", "task_comment", "event_notification"],
+      "channels": {
+        "development": "For code implementation discussions",
+        "architecture": "For system design discussions",
+        "security": "For security-related communications",
+        "planning": "For task planning and coordination"
+      },
+      "synchronization": {
+        "frequency": "hourly",
+        "method": "state_broadcasting"
+      }
+    }
+  },
+  "component_access_patterns": {
+    "frontend": {
+      "access_path": "/Users/as/asoos/frontend",
+      "permissions": {
+        "architect": "read_write",
+        "developer": "read_write",
+        "qa_engineer": "read_execute",
+        "security_specialist": "read_analyze",
+        "data_scientist": "read",
+        "project_manager": "read"
+      }
+    },
+    "backend": {
+      "access_path": "/Users/as/asoos/backend",
+      "permissions": {
+        "architect": "read_write",
+        "developer": "read_write",
+        "qa_engineer": "read_execute",
+        "security_specialist": "read_analyze",
+        "data_scientist": "read_execute",
+        "project_manager": "read"
+      }
+    },
+    "opus": {
+      "access_path": "/Users/as/asoos/opus",
+      "permissions": {
+        "architect": "read_write",
+        "developer": "read_write",
+        "qa_engineer": "read_execute",
+        "security_specialist": "read_analyze",
+        "data_scientist": "read_execute",
+        "project_manager": "read"
+      }
+    },
+    "integration_gateway": {
+      "access_path": "/Users/as/asoos/integration-gateway",
+      "permissions": {
+        "architect": "read_write",
+        "developer": "read_write",
+        "qa_engineer": "read_execute",
+        "security_specialist": "read_analyze",
+        "data_scientist": "read",
+        "project_manager": "read"
+      }
+    },
+    "infrastructure": {
+      "access_path": "/Users/as/asoos/infrastructure",
+      "permissions": {
+        "architect": "read_write",
+        "developer": "read",
+        "qa_engineer": "read",
+        "security_specialist": "read_write",
+        "data_scientist": "read",
+        "project_manager": "read"
+      }
+    },
+    "secrets": {
+      "access_path": "/Users/as/asoos/secrets",
+      "permissions": {
+        "architect": "read",
+        "developer": "read_specific",
+        "qa_engineer": "read_specific",
+        "security_specialist": "read_write",
+        "data_scientist": "no_access",
+        "project_manager": "read_metadata"
+      }
+    }
+  },
+  "workflows": [
+    {
+      "id": "authentication_service_development",
+      "name": "Authentication Service Development",
+      "description": "Development of the authentication service for ASOOS",
+      "owner_role": "architect",
+      "priority": "critical",
+      "dependencies": [],
+      "estimated_duration": "3 days",
+      "tasks": [
+        {
+          "id": "auth_service_design",
+          "name": "Design Authentication Service Architecture",
+          "assigned_role": "architect",
+          "description": "Create detailed architecture for the authentication service",
+          "inputs": [
+            "Security requirements document",
+            "ASOOS system architecture"
+          ],
+          "outputs": [
+            "Authentication service architecture document",
+            "API specifications",
+            "Data model specifications"
+          ],
+          "preconditions": [
+            "Security requirements document must be approved"
+          ],
+          "success_criteria": [
+            "Architecture document approved by security specialist",
+            "API specifications defined with OpenAPI 3.0"
+          ],
+          "estimated_duration": "1 day",
+          "resources_required": ["architecture_templates", "security_patterns"]
+        },
+        {
+          "id": "auth_service_implementation",
+          "name": "Implement Authentication Service",
+          "assigned_role": "developer",
+          "description": "Build the authentication service as specified in the architecture document",
+          "inputs": [
+            "Authentication service architecture document",
+            "API specifications",
+            "Data model specifications"
+          ],
+          "outputs": [
+            "Authentication service code repository",
+            "Unit tests",
+            "Technical documentation"
+          ],
+          "preconditions": [
+            "Authentication service architecture document must be approved",
+            "Development environment must be set up"
+          ],
+          "success_criteria": [
+            "All unit tests pass",
+            "Code review completed",
+            "Security requirements met"
+          ],
+          "estimated_duration": "1 day",
+          "resources_required": ["development_environment", "code_templates", "security_libraries"]
+        },
+        {
+          "id": "auth_service_testing",
+          "name": "Test Authentication Service",
+          "assigned_role": "qa_engineer",
+          "description": "Validate the authentication service through comprehensive testing",
+          "inputs": [
+            "Authentication service code repository",
+            "API specifications",
+            "Test scenarios document"
+          ],
+          "outputs": [
+            "Test results report",
+            "Bug reports (if any)",
+            "Performance metrics"
+          ],
+          "preconditions": [
+            "Authentication service implementation completed",
+            "Test environment must be set up"
+          ],
+          "success_criteria": [
+            "All test cases pass",
+            "Performance meets requirements",
+            "No high or critical security vulnerabilities"
+          ],
+          "estimated_duration": "0.5 days",
+          "resources_required": ["test_environment", "test_data", "test_scripts"]
+        },
+        {
+          "id": "auth_service_security_review",
+          "name": "Security Review of Authentication Service",
+          "assigned_role": "security_specialist",
+          "description": "Conduct security review and vulnerability assessment",
+          "inputs": [
+            "Authentication service code repository",
+            "API specifications",
+            "Security requirements document"
+          ],
+          "outputs": [
+            "Security assessment report",
+            "Vulnerability findings",
+            "Mitigation recommendations"
+          ],
+          "preconditions": [
+            "Authentication service implementation completed"
+          ],
+          "success_criteria": [
+            "No critical vulnerabilities found",
+            "All security requirements satisfied",
+            "Compliance with security standards"
+          ],
+          "estimated_duration": "0.5 days",
+          "resources_required": ["security_scanning_tools", "security_standards_document"]
+        }
+      ],
+      "integration_points": [
+        {
+          "component": "User Management System",
+          "integration_type": "API",
+          "description": "Integration with existing user management capabilities"
+        },
+        {
+          "component": "Logging System",
+          "integration_type": "Event Stream",
+          "description": "Security events published to central logging system"
+        },
+        {
+          "component": "Secret Management",
+          "integration_type": "Service",
+          "description": "Integration with secret management for credential storage"
+        }
+      ]
+    },
+    {
+      "id": "dashboard_development",
+      "name": "Admin Dashboard Development",
+      "description": "Development of the administrative dashboard for ASOOS",
+      "owner_role": "architect",
+      "priority": "high",
+      "dependencies": ["authentication_service_development"],
+      "estimated_duration": "4 days",
+      "tasks": [
+        {
+          "id": "dashboard_ui_design",
+          "name": "Design Dashboard UI",
+          "assigned_role": "architect",
+          "description": "Create UI design for the admin dashboard",
+          "inputs": [
+            "User requirements document",
+            "Brand guidelines",
+            "UX specifications"
+          ],
+          "outputs": [
+            "Dashboard UI designs",
+            "Component specifications",
+            "Interaction flow diagrams"
+          ],
+          "preconditions": [
+            "User requirements document must be approved",
+            "Brand guidelines must be available"
+          ],
+          "success_criteria": [
+            "UI designs approved by project stakeholders",
+            "Consistency with brand guidelines",
+            "Usability requirements met"
+          ],
+          "estimated_duration": "1 day",
+          "resources_required": ["design_tools", "ui_component_library"]
+        },
+        {
+          "id": "dashboard_frontend_implementation",
+          "name": "Implement Dashboard Frontend",
+          "assigned_role": "developer",
+          "description": "Build the frontend components for the admin dashboard",
+          "inputs": [
+            "Dashboard UI designs",
+            "Component specifications",
+            "API specifications"
+          ],
+          "outputs": [
+            "Dashboard frontend code",
+            "Component documentation",
+            "Unit tests"
+          ],
+          "preconditions": [
+            "Dashboard UI designs must be approved",
+            "API specifications must be available"
+          ],
+          "success_criteria": [
+            "All components render correctly",
+            "Unit tests pass",
+            "Responsive design requirements met"
+          ],
+          "estimated_duration": "1.5 days",
+          "resources_required": ["frontend_framework", "ui_component_library", "development_environment"]
+        },
+        {
+          "id": "dashboard_backend_implementation",
+          "name": "Implement Dashboard Backend Services",
+          "assigned_role": "developer",
+          "description": "Build the backend services required by the admin dashboard",
+          "inputs": [
+            "API specifications",
+            "Data model specifications",
+            "Security requirements"
+          ],
+          "outputs": [
+            "Dashboard backend code",
+            "API documentation",
+            "Unit tests"
+          ],
+          "preconditions": [
+            "API specifications must be approved",
+            "Authentication service must be available"
+          ],
+          "success_criteria": [
+            "All API endpoints operational",
+            "Unit tests pass",
+            "Performance requirements met"
+          ],
+          "estimated_duration": "1 day",
+          "resources_required": ["backend_framework", "database_access", "development_environment"]
+        },
+        {
+          "id": "dashboard_integration_testing",
+          "name": "Dashboard Integration Testing",
+          "assigned_role": "qa_engineer",
+          "description": "Test the integration of dashboard frontend and backend",
+          "inputs": [
+            "Dashboard frontend code",
+            "Dashboard backend code",
+            "Test scenarios"
+          ],
+          "outputs": [
+            "Integration test results",
+            "Bug reports (if any)",
+            "Performance metrics"
+          ],
+          "preconditions": [
+            "Dashboard frontend implementation completed",
+            "Dashboard backend implementation completed"
+          ],
+          "success_criteria": [
+            "All integration tests pass",
+            "Frontend successfully communicates with backend",
+            "No blocking issues found"
+          ],
+          "estimated_duration": "0.5 days",
+          "resources_required": ["test_environment", "test_data", "test_scripts"]
+        }
+      ],
+      "integration_points": [
+        {
+          "component": "Authentication Service",
+          "integration_type": "API",
+          "description": "User authentication and authorization"
+        },
+        {
+          "component": "Analytics Service",
+          "integration_type": "API",
+          "description": "Dashboard analytics and reporting"
+        },
+        {
+          "component": "Notification System",
+          "integration_type": "Event Stream",
+          "description": "Real-time notifications for dashboard users"
+        }
+      ]
+    },
+    {
+      "id": "data_visualization_tool_development",
+      "name": "Data Visualization Tool Development",
+      "description": "Development of data visualization tools for the ASOOS platform",
+      "owner_role": "data_scientist",
+      "priority": "medium",
+      "dependencies": [],
+      "estimated_duration": "5 days",
+      "tasks": [
+        {
+          "id": "visualization_requirements",
+          "name": "Define Data Visualization Requirements",
+          "assigned_role": "data_scientist",
+          "description": "Specify the requirements for data visualization tools",
+          "inputs": [
+            "User requirements document",
+            "Data schema documentation",
+            "Analytics use cases"
+          ],
+          "outputs": [
+            "Visualization requirements document",
+            "Chart specifications",
+            "Data transformation requirements"
+          ],
+          "preconditions": [
+            "Data schema documentation must be available",
+            "Analytics use cases must be defined"
+          ],
+          "success_criteria": [
+            "Requirements document approved by stakeholders",
+            "Visualization needs for all key metrics defined",
+            "Performance requirements specified"
+          ],
+          "estimated_duration": "1 day",
+          "resources_required": ["data_samples", "analytics_requirements", "visualization_examples"]
+        },
+        {
+          "id": "visualization_component_design",
+          "name": "Design Visualization Components",
+          "assigned_role": "architect",
+          "description": "Design the architecture for visualization components",
+          "inputs": [
+            "Visualization requirements document",
+            "Chart specifications",
+            "ASOOS frontend architecture"
+          ],
+          "outputs": [
+            "Visualization component architecture",
+

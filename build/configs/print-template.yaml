@@ -1,0 +1,82 @@
+# Print Book Template Structure
+
+version: '2.0'
+type: book-template
+security: TOP_SECRET
+
+print_template:
+  trim_sizes:
+    paperback:
+      - size: 6x9
+        usage: standard
+      - size: 5.5x8.5
+        usage: fiction
+      - size: 8.5x11
+        usage: textbook
+    hardcover:
+      - size: 6x9
+        usage: standard
+      - size: 7x10
+        usage: premium
+
+  front_matter:
+    - half_title_page
+    - title_page:
+        elements:
+          - book_title
+          - subtitle
+          - author_name
+          - publisher_logo
+    - copyright_page:
+        elements:
+          - copyright_notice
+          - isbn_print
+          - library_congress
+          - printing_info
+    - dedication
+    - table_of_contents:
+        format: page_numbers
+        style: formatted
+
+  main_content:
+    - foreword
+    - preface
+    - introduction
+    - chapters:
+        structure:
+          - chapter_title
+          - chapter_number
+          - chapter_content
+        formatting:
+          - new_page_start: true
+          - running_headers: true
+          - page_numbers: true
+
+  back_matter:
+    - epilogue
+    - appendices
+    - glossary
+    - bibliography
+    - index
+    - about_author
+
+  formatting:
+    margins:
+      - top: 0.75in
+      - bottom: 0.75in
+      - inside: 0.875in
+      - outside: 0.75in
+
+    typography:
+      body_text:
+        - font: Garamond
+        - size: 11pt
+        - leading: 14pt
+      headings:
+        - chapter: 18pt
+        - section: 14pt
+
+    layout:
+      - running_headers: true
+      - page_numbers: true
+      - chapter_starts: recto

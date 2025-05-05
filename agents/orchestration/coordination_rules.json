@@ -1,0 +1,65 @@
+{
+  "version": "1.0",
+  "global_rules": {
+    "communication_protocol": {
+      "type": "event_driven",
+      "message_format": "structured_json",
+      "encryption": "end_to_end",
+      "retry_policy": {
+        "max_attempts": 3,
+        "backoff_multiplier": 1.5
+      }
+    },
+    "decision_making": {
+      "consensus_required": ["system_critical", "security_related"],
+      "autonomous_decisions": ["routine_tasks", "optimization"],
+      "escalation_path": ["squad_lead", "dream_commander"]
+    }
+  },
+  "interaction_patterns": {
+    "peer_to_peer": {
+      "enabled": true,
+      "trust_level": "high",
+      "verification_required": true
+    },
+    "hierarchical": {
+      "enabled": true,
+      "chain_of_command": ["dream_commander", "squad_lead", "squad_member"],
+      "bypass_allowed": "emergency_only"
+    }
+  },
+  "workflow_coordination": {
+    "task_assignment": {
+      "method": "capability_based",
+      "load_balancing": true,
+      "priority_levels": ["critical", "high", "normal", "low"]
+    },
+    "conflict_resolution": {
+      "strategy": "consensus_based",
+      "timeout": "5m",
+      "fallback": "dream_commander_decision"
+    }
+  },
+  "resource_management": {
+    "sharing_rules": {
+      "compute_resources": "fair_allocation",
+      "data_access": "role_based",
+      "api_rate_limits": "dynamic"
+    },
+    "optimization": {
+      "strategy": "adaptive",
+      "metrics": ["response_time", "resource_utilization", "task_completion_rate"]
+    }
+  },
+  "security_policies": {
+    "authentication": {
+      "method": "certificate_based",
+      "rotation_period": "24h"
+    },
+    "authorization": {
+      "model": "attribute_based",
+      "granularity": "task_level"
+    }
+  }
+}
+

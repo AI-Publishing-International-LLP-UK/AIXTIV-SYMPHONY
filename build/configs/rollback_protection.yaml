@@ -1,0 +1,45 @@
+# Rollback Protection Configuration  
+rollback:
+  # Core rollback configuration
+  core:
+    enabled: true
+    type: comprehensive
+    target: last_approved_state
+    verification: required
+
+  # Snapshot management
+  snapshots:
+    frequency: continuous
+    retention: 90d
+    verification: blockchain_hash
+
+  # Restoration process
+  restore:
+    validation:
+      - config_integrity
+      - security_baseline 
+      - owner_approval
+    process:
+      - snapshot_verify
+      - state_restore
+      - integrity_check
+      - owner_notify
+
+  # Protection mechanisms
+  protection:
+    isolation:
+      enabled: true
+      scope: full_system
+    verification:
+      type: multi_point
+      sources:
+        - blockchain
+        - system_state
+        - owner_auth
+    
+  # Audit trail
+  audit:
+    enabled: true
+    store: blockchain
+    retention: permanent
+

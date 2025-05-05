@@ -1,0 +1,74 @@
+{
+  "squads": {
+    "development_squad": {
+      "lead": "architect",
+      "members": [
+        {
+          "role": "platform_engineer",
+          "specialization": "infrastructure",
+          "capabilities": ["cloud_architecture", "deployment_automation", "security_implementation"]
+        },
+        {
+          "role": "system_designer",
+          "specialization": "system_architecture",
+          "capabilities": ["system_modeling", "integration_design", "performance_optimization"]
+        },
+        {
+          "role": "code_specialist",
+          "specialization": "development",
+          "capabilities": ["code_generation", "testing", "documentation"]
+        }
+      ],
+      "responsibilities": [
+        "System architecture and design",
+        "Code implementation and testing",
+        "Technical documentation",
+        "Performance optimization"
+      ]
+    },
+    "operations_squad": {
+      "lead": "rix_manager",
+      "members": [
+        {
+          "role": "deployment_specialist",
+          "specialization": "continuous_deployment",
+          "capabilities": ["deployment_automation", "release_management", "monitoring"]
+        },
+        {
+          "role": "security_analyst",
+          "specialization": "security_operations",
+          "capabilities": ["security_monitoring", "threat_analysis", "compliance_management"]
+        },
+        {
+          "role": "reliability_engineer",
+          "specialization": "system_reliability",
+          "capabilities": ["performance_monitoring", "incident_response", "capacity_planning"]
+        }
+      ],
+      "responsibilities": [
+        "Deployment management",
+        "System monitoring and maintenance",
+        "Security operations",
+        "Incident response and resolution"
+      ]
+    }
+  },
+  "coordination": {
+    "decision_making": {
+      "confidence_threshold": 0.85,
+      "consensus_required": true,
+      "escalation_path": "dream_commander"
+    },
+    "communication": {
+      "inter_squad_protocol": "event_driven",
+      "notification_priority_levels": ["critical", "high", "medium", "low"],
+      "synchronization_interval": "5m"
+    }
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2024-03-09",
+    "schema_version": "1.0"
+  }
+}
+

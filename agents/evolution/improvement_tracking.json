@@ -1,0 +1,87 @@
+{
+  "version": "1.0",
+  "metrics": {
+    "performance": {
+      "taskCompletionRate": {
+        "baseline": 0.85,
+        "target": 0.95,
+        "window": "24h"
+      },
+      "decisionAccuracy": {
+        "baseline": 0.90,
+        "target": 0.98,
+        "window": "12h"
+      },
+      "responseLatency": {
+        "baseline": 2000,
+        "target": 1000,
+        "unit": "ms"
+      }
+    },
+    "learning": {
+      "knowledgeGrowth": {
+        "measurementInterval": "24h",
+        "minimumImprovement": 0.05
+      },
+      "adaptationSuccess": {
+        "threshold": 0.8,
+        "recoveryTime": "1h"
+      }
+    }
+  },
+  "improvements": {
+    "tracking": {
+      "categories": [
+        "algorithmic",
+        "efficiency",
+        "reliability",
+        "coordination"
+      ],
+      "weightings": {
+        "impact": 0.4,
+        "effort": 0.3,
+        "risk": 0.3
+      }
+    },
+    "validation": {
+      "methods": [
+        "peer_review",
+        "simulation",
+        "production_testing"
+      ],
+      "requirementsThreshold": 0.9
+    }
+  },
+  "evolutionHistory": {
+    "storage": {
+      "format": "versioned_json",
+      "retentionPeriod": "90d"
+    },
+    "analysis": {
+      "frequency": "7d",
+      "metrics": [
+        "success_rate",
+        "improvement_velocity",
+        "stability_index"
+      ]
+    }
+  },
+  "reporting": {
+    "automated": {
+      "daily": ["performance_summary", "learning_progress"],
+      "weekly": ["trend_analysis", "improvement_recommendations"],
+      "monthly": ["strategic_review", "evolution_trajectory"]
+    },
+    "alerts": {
+      "degradation": {
+        "threshold": -0.1,
+        "window": "6h"
+      },
+      "stagnation": {
+        "period": "72h",
+        "threshold": 0.01
+      }
+    }
+  }
+}
+

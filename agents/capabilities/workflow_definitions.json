@@ -1,0 +1,84 @@
+{
+    "version": "1.0",
+    "workflows": {
+        "system_development": {
+            "phases": [
+                {
+                    "name": "planning",
+                    "activities": [
+                        {
+                            "name": "requirements_analysis",
+                            "responsible": ["dream_commander", "architect"],
+                            "outputs": ["requirements_doc", "architecture_plan"]
+                        },
+                        {
+                            "name": "resource_planning",
+                            "responsible": ["rix_manager", "pilot_coordinator"],
+                            "outputs": ["resource_allocation_plan", "timeline"]
+                        }
+                    ]
+                },
+                {
+                    "name": "development",
+                    "activities": [
+                        {
+                            "name": "implementation",
+                            "responsible": ["dev_specialist", "integration_specialist"],
+                            "outputs": ["code_base", "integration_points"]
+                        },
+                        {
+                            "name": "security_review",
+                            "responsible": ["security_expert", "compliance_guardian"],
+                            "outputs": ["security_assessment", "compliance_report"]
+                        }
+                    ]
+                },
+                {
+                    "name": "quality_assurance",
+                    "activities": [
+                        {
+                            "name": "testing",
+                            "responsible": ["quality_guardian", "reliability_engineer"],
+                            "outputs": ["test_results", "reliability_metrics"]
+                        },
+                        {
+                            "name": "performance_optimization",
+                            "responsible": ["performance_optimizer", "data_guardian"],
+                            "outputs": ["performance_report", "optimization_recommendations"]
+                        }
+                    ]
+                },
+                {
+                    "name": "deployment",
+                    "activities": [
+                        {
+                            "name": "production_deployment",
+                            "responsible": ["deployment_master", "reliability_engineer"],
+                            "outputs": ["deployment_status", "monitoring_dashboard"]
+                        },
+                        {
+                            "name": "post_deployment",
+                            "responsible": ["dream_commander", "pilot_coordinator"],
+                            "outputs": ["deployment_report", "next_steps"]
+                        }
+                    ]
+                }
+            ],
+            "transitions": {
+                "planning_to_development": {
+                    "conditions": ["requirements_approved", "resources_allocated"],
+                    "validators": ["dream_commander", "architect"]
+                },
+                "development_to_qa": {
+                    "conditions": ["code_complete", "security_cleared"],
+                    "validators": ["quality_guardian", "security_expert"]
+                },
+                "qa_to_deployment": {
+                    "conditions": ["tests_passed", "performance_verified"],
+                    "validators": ["deployment_master", "reliability_engineer"]
+                }
+            }
+        }
+    }
+}
+

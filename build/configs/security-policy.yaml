@@ -1,0 +1,132 @@
+# Security Policy Configuration for Integration Gateway
+version: '1.0'
+
+# Access Control and Authentication
+authentication:
+  enabled: true
+  methods:
+    - type: jwt
+      issuer: "https://auth.example.com"
+      jwks_uri: "https://auth.example.com/.well-known/jwks.json"
+      audiences: ["api.example.com"]
+    - type: oauth2
+      provider: "https://oauth.example.com"
+      client_id: "integration-gateway"
+      scopes: ["read", "write"]
+    - type: api_key
+      header_name: "X-API-Key"
+      validation_endpoint: "https://auth.example.com/validate-key"
+
+authorization:
+  enabled: true
+  default_policy: deny
+  policies:
+    - name: admin_policy
+      roles: ["admin"]
+      resources: ["*"]
+      actions: ["*"]
+    - name: user_policy
+      roles: ["user"]
+      resources: ["/api/public/*", "/api/user/*"]
+      actions: ["GET", "POST"]
+
+# CORS Configuration
+cors:
+  enabled: true
+  allowed_origins:
+    - "https://app.example.com"
+    - "https://admin.example.com"
+  allowed_methods:
+    - "GET"
+    - "POST"
+    - "PUT"
+    - "DELETE"
+    - "OPTIONS"
+  allowed_headers:
+    - "Authorization"
+    - "Content-Type"
+    - "X-Requested-With"
+    - "X-API-Key"
+  expose_headers:
+    - "X-Request-ID"
+  max_age: 3600
+  allow_credentials: true
+
+# Content Security Policy
+content_security_policy:
+  enabled: true
+  policy: "default-src 'self'; script-src 'self' https://trusted-scripts.example.com; img-src 'self' data:; style-src 'self' https://trusted-styles.example.com; font-src 'self'; connect-src 'self' https://api.example.com;"
+  report_only: false
+  report_uri: "https://reports.example.com/csp-violations"
+
+# Rate Limiting
+rate_limiting:
+  enabled: true
+  default_limit: 100
+  default_period: 60  # seconds
+  per_ip: true
+  per_user: true
+  custom_limits:
+    - path: "/api/high-load/*"
+      limit: 20
+      period: 60
+    - path: "/api/admin/*"
+      limit: 200
+      period: 60
+
+# TLS Configuration
+tls:
+  enabled: true
+  min_version: "TLS1.2"
+  ciphers:
+    - "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+    - "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    - "TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256"
+  hsts:
+    enabled: true
+    max_age: 31536000  # 1 year
+    include_subdomains: true
+    preload: true
+
+# IP Restrictions
+ip_restrictions:
+  enabled: false
+  allowed_ips:
+    - "192.168.1.0/24"
+    - "10.0.0.0/8"
+  denied_ips:
+    - "1.2.3.4"
+
+# Security Headers
+security_headers:
+  enabled: true
+  headers:
+    X-Frame-Options: "DENY"
+    X-Content-Type-Options: "nosniff"
+    X-XSS-Protection: "1; mode=block"
+    Referrer-Policy: "strict-origin-when-cross-origin"
+    Permissions-Policy: "geolocation=(), microphone=(), camera=()"
+
+# DDoS Protection
+ddos_protection:
+  enabled: true
+  burst_multiplier: 5
+  auto_blacklist: true
+  blacklist_time: 300  # seconds
+
+# Logging and Monitoring
+security_monitoring:
+  enabled: true
+  log_level: "info"
+  alert_endpoints:
+    - type: "webhook"
+      url: "https://alerts.example.com/security"
+    - type: "email"
+      address: "security@example.com"
+  sensitive_data_masking:
+    enabled: true
+    patterns:
+      - "credit_card"
+      - "ssn"
+      - "password"
+

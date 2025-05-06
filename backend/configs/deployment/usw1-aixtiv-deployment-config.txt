@@ -1,0 +1,1144 @@
+/**
+ * AIXTIV Deployment Configuration for US-West1 GCP Project
+ * 
+ * This module provides deployment configurations for the AIXTIV ecosystem in GCP US-West1 region,
+ * including Kubernetes manifests, CI/CD pipeline configurations, and load balancing settings.
+ */
+
+// Kubernetes namespace configuration for AIXTIV components
+const namespaceConfig = `
+# AIXTIV Kubernetes Namespace Configuration
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aixtiv-system
+  labels:
+    name: aixtiv-system
+    environment: production
+    app.kubernetes.io/part-of: aixtiv
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aixtiv-symphony
+  labels:
+    name: aixtiv-symphony
+    environment: production
+    app.kubernetes.io/part-of: aixtiv
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aixtiv-bidsuite
+  labels:
+    name: aixtiv-bidsuite
+    environment: production
+    app.kubernetes.io/part-of: aixtiv
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aixtiv-agents
+  labels:
+    name: aixtiv-agents
+    environment: production
+    app.kubernetes.io/part-of: aixtiv
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: aixtiv-monitoring
+  labels:
+    name: aixtiv-monitoring
+    environment: production
+    app.kubernetes.io/part-of: aixtiv
+`;
+
+// Deployment configuration for Symphony components
+const symphonyDeploymentConfig = `
+# Symphony Deployment Configuration
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: symphony-api
+  namespace: aixtiv-symphony
+  labels:
+    app: symphony-api
+    component: api
+    app.kubernetes.io/part-of: aixtiv
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: symphony-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: symphony-api
+        component: api
+    spec:
+      containers:
+      - name: symphony-api
+        image: us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-symphony/api:latest
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: FIRESTORE_PROJECT_ID
+          value: "api-for-warp-drive"
+        - name: REGION
+          value: "us-west1"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bidsuite-frontend
+  namespace: aixtiv-bidsuite
+  labels:
+    app: bidsuite-frontend
+    component: frontend
+    app.kubernetes.io/part-of: aixtiv
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bidsuite-frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: bidsuite-frontend
+        component: frontend
+    spec:
+      containers:
+      - name: bidsuite-frontend
+        image: us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-bidsuite/frontend:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        env:
+        - name: API_URL
+          value: "https://api.aixtiv.com/bid-suite"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bidsuite-api
+  namespace: aixtiv-bidsuite
+  labels:
+    app: bidsuite-api
+    component: api
+    app.kubernetes.io/part-of: aixtiv
+spec:
+  selector:
+    app: bidsuite-api
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bidsuite-frontend
+  namespace: aixtiv-bidsuite
+  labels:
+    app: bidsuite-frontend
+    component: frontend
+    app.kubernetes.io/part-of: aixtiv
+spec:
+  selector:
+    app: bidsuite-frontend
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP
+`;
+
+// Deployment configuration for Agent Squadrons
+const agentSquadronsDeploymentConfig = `
+# Agent Squadrons Deployment Configuration
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: squadron1-deployment
+  namespace: aixtiv-agents
+  labels:
+    squadron: squadron1
+    agency: core
+    app.kubernetes.io/part-of: aixtiv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      squadron: squadron1
+  strategy:
+    type: Recreate  # Stateful workload requires careful updates
+  template:
+    metadata:
+      labels:
+        squadron: squadron1
+        agency: core
+    spec:
+      containers:
+      - name: squadron1-controller
+        image: us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-agents/squadron-controller:latest
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 4Gi
+          limits:
+            cpu: 2000m
+            memory: 16Gi
+        env:
+        - name: SQUADRON_ID
+          value: "squadron1"
+        - name: AGENCY
+          value: "core"
+        - name: MEMORY_POOL
+          value: "120"
+        - name: LEAD_AGENT
+          value: "dr-lucy-01"
+        volumeMounts:
+        - name: squadron1-data
+          mountPath: /data
+        - name: agent-credentials
+          mountPath: /etc/agent-credentials
+          readOnly: true
+      volumes:
+      - name: squadron1-data
+        persistentVolumeClaim:
+          claimName: squadron1-data-claim
+      - name: agent-credentials
+        secret:
+          secretName: agent-credentials
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: squadron2-deployment
+  namespace: aixtiv-agents
+  labels:
+    squadron: squadron2
+    agency: deploy
+    app.kubernetes.io/part-of: aixtiv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      squadron: squadron2
+  strategy:
+    type: Recreate  # Stateful workload requires careful updates
+  template:
+    metadata:
+      labels:
+        squadron: squadron2
+        agency: deploy
+    spec:
+      containers:
+      - name: squadron2-controller
+        image: us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-agents/squadron-controller:latest
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 4Gi
+          limits:
+            cpu: 2000m
+            memory: 12Gi
+        env:
+        - name: SQUADRON_ID
+          value: "squadron2"
+        - name: AGENCY
+          value: "deploy"
+        - name: MEMORY_POOL
+          value: "80"
+        - name: LEAD_AGENT
+          value: "dr-grant-02"
+        volumeMounts:
+        - name: squadron2-data
+          mountPath: /data
+        - name: agent-credentials
+          mountPath: /etc/agent-credentials
+          readOnly: true
+      volumes:
+      - name: squadron2-data
+        persistentVolumeClaim:
+          claimName: squadron2-data-claim
+      - name: agent-credentials
+        secret:
+          secretName: agent-credentials
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: squadron3-deployment
+  namespace: aixtiv-agents
+  labels:
+    squadron: squadron3
+    agency: engage
+    app.kubernetes.io/part-of: aixtiv
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      squadron: squadron3
+  strategy:
+    type: Recreate  # Stateful workload requires careful updates
+  template:
+    metadata:
+      labels:
+        squadron: squadron3
+        agency: engage
+    spec:
+      containers:
+      - name: squadron3-controller
+        image: us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-agents/squadron-controller:latest
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 4Gi
+          limits:
+            cpu: 2000m
+            memory: 14Gi
+        env:
+        - name: SQUADRON_ID
+          value: "squadron3"
+        - name: AGENCY
+          value: "engage"
+        - name: MEMORY_POOL
+          value: "100"
+        - name: LEAD_AGENT
+          value: "dr-sabina-03"
+        volumeMounts:
+        - name: squadron3-data
+          mountPath: /data
+        - name: agent-credentials
+          mountPath: /etc/agent-credentials
+          readOnly: true
+      volumes:
+      - name: squadron3-data
+        persistentVolumeClaim:
+          claimName: squadron3-data-claim
+      - name: agent-credentials
+        secret:
+          secretName: agent-credentials
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: squadron1-service
+  namespace: aixtiv-agents
+spec:
+  selector:
+    squadron: squadron1
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: squadron2-service
+  namespace: aixtiv-agents
+spec:
+  selector:
+    squadron: squadron2
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: squadron3-service
+  namespace: aixtiv-agents
+spec:
+  selector:
+    squadron: squadron3
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: squadron1-data-claim
+  namespace: aixtiv-agents
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: premium-rwo
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: squadron2-data-claim
+  namespace: aixtiv-agents
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 80Gi
+  storageClassName: premium-rwo
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: squadron3-data-claim
+  namespace: aixtiv-agents
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: premium-rwo
+`;
+
+// Deployment configuration for Flight Memory System
+const flightMemorySystemDeploymentConfig = `
+# Flight Memory System Deployment Configuration
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flight-memory-system
+  namespace: aixtiv-agents
+  labels:
+    app: flight-memory-system
+    component: core
+    app.kubernetes.io/part-of: aixtiv
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flight-memory-system
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: flight-memory-system
+        component: core
+    spec:
+      containers:
+      - name: flight-memory-controller
+        image: us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-agents/flight-memory-system:latest
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 2Gi
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: FIRESTORE_PROJECT_ID
+          value: "api-for-warp-drive"
+        - name: BLOCKCHAIN_ENABLED
+          value: "true"
+        - name: FLIGHT_DURATION_MINUTES
+          value: "120"
+        volumeMounts:
+        - name: flight-memory-config
+          mountPath: /etc/config
+          readOnly: true
+      volumes:
+      - name: flight-memory-config
+        configMap:
+          name: flight-memory-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flight-memory-system
+  namespace: aixtiv-agents
+spec:
+  selector:
+    app: flight-memory-system
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flight-memory-config
+  namespace: aixtiv-agents
+data:
+  flight-config.json: |
+    {
+      "flightDuration": 120,
+      "descentDuration": 5,
+      "confirmationDuration": 5,
+      "rewardPoints": {
+        "perfectFlight": 100,
+        "pilot": 50,
+        "groundCrew": 30,
+        "owner": 20,
+        "tower": 10
+      },
+      "memoryScaling": {
+        "baseMemory": 4,
+        "maxMemory": 16,
+        "pointsPerMemoryUnit": 1000
+      }
+    }
+`;
+
+// BYOLLM Middleware Deployment Configuration
+const byollmMiddlewareDeploymentConfig = `
+# BYOLLM Middleware Deployment Configuration
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: byollm-middleware
+  namespace: aixtiv-system
+  labels:
+    app: byollm-middleware
+    component: core
+    app.kubernetes.io/part-of: aixtiv
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: byollm-middleware
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: byollm-middleware
+        component: core
+    spec:
+      containers:
+      - name: byollm-middleware
+        image: us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-middleware/byollm-middleware:latest
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 2Gi
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: OPENAI_BASE_URL
+          value: "https://api.openai.com"
+        - name: ANTHROPIC_BASE_URL
+          value: "https://api.anthropic.com"
+        - name: HUGGINGFACE_BASE_URL
+          value: "https://api-inference.huggingface.co"
+        - name: VERTEX_AI_ENABLED
+          value: "true"
+        - name: VERTEX_AI_REGION
+          value: "us-west1"
+        - name: CACHING_ENABLED
+          value: "true"
+        - name: FAILOVER_ENABLED
+          value: "true"
+        volumeMounts:
+        - name: llm-api-credentials
+          mountPath: /etc/llm-credentials
+          readOnly: true
+      volumes:
+      - name: llm-api-credentials
+        secret:
+          secretName: llm-api-credentials
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: byollm-middleware
+  namespace: aixtiv-system
+spec:
+  selector:
+    app: byollm-middleware
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP
+`;
+
+// Ingress configuration for AIXTIV domains
+const ingressConfig = `
+# Ingress Configuration for AIXTIV Domains
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: aixtiv-ingress
+  namespace: aixtiv-system
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.global-static-ip-name: "aixtiv-global-address"
+    networking.gke.io/managed-certificates: "aixtiv-domains-ssl"
+    networking.gke.io/v1beta1.FrontendConfig: "aixtiv-frontend-config"
+spec:
+  rules:
+  - host: www.aixtiv.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: aixtiv-frontend
+            port:
+              number: 80
+  - host: api.aixtiv.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: aixtiv-api-gateway
+            port:
+              number: 80
+  - host: symphony.aixtiv.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: symphony-frontend
+            port:
+              number: 80
+  - host: bidsuite.aixtiv.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: bidsuite-frontend
+            port:
+              number: 80
+  - host: academy.aixtiv.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: academy-frontend
+            port:
+              number: 80
+  - host: giftshop.aixtiv.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: giftshop-frontend
+            port:
+              number: 80
+  - host: memoryvista.aixtiv.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: memory-vista-frontend
+            port:
+              number: 80
+---
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: aixtiv-frontend-config
+  namespace: aixtiv-system
+spec:
+  redirectToHttps:
+    enabled: true
+    responseCodeName: MOVED_PERMANENTLY_DEFAULT
+`;
+
+// API Gateway configuration for routing to different services
+const apiGatewayConfig = `
+# API Gateway Configuration
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aixtiv-api-gateway
+  namespace: aixtiv-system
+  labels:
+    app: aixtiv-api-gateway
+    component: gateway
+    app.kubernetes.io/part-of: aixtiv
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: aixtiv-api-gateway
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: aixtiv-api-gateway
+        component: gateway
+    spec:
+      containers:
+      - name: api-gateway
+        image: us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-system/api-gateway:latest
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: SYMPHONY_API_URL
+          value: "http://symphony-api.aixtiv-symphony.svc.cluster.local"
+        - name: BIDSUITE_API_URL
+          value: "http://bidsuite-api.aixtiv-bidsuite.svc.cluster.local"
+        - name: AGENTS_API_URL
+          value: "http://flight-memory-system.aixtiv-agents.svc.cluster.local"
+        - name: BYOLLM_API_URL
+          value: "http://byollm-middleware.aixtiv-system.svc.cluster.local"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aixtiv-api-gateway
+  namespace: aixtiv-system
+spec:
+  selector:
+    app: aixtiv-api-gateway
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP
+`;
+
+// CI/CD Pipeline configuration for AIXTIV components
+const cicdPipelineConfig = `
+# Cloud Build CI/CD Pipeline Configuration
+
+steps:
+  # Build and push API container
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-\${_COMPONENT}/api:$COMMIT_SHA', './api']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-\${_COMPONENT}/api:$COMMIT_SHA']
+  
+  # Build and push frontend container
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-\${_COMPONENT}/frontend:$COMMIT_SHA', './frontend']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-\${_COMPONENT}/frontend:$COMMIT_SHA']
+  
+  # Update deployment to use new container images
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+      - 'set'
+      - 'image'
+      - 'deployment/\${_COMPONENT}-api'
+      - '\${_COMPONENT}-api=us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-\${_COMPONENT}/api:$COMMIT_SHA'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-west1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=aixtiv-cluster-production'
+      - 'CLOUDSDK_CORE_PROJECT=api-for-warp-drive'
+  
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+      - 'set'
+      - 'image'
+      - 'deployment/\${_COMPONENT}-frontend'
+      - '\${_COMPONENT}-frontend=us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-\${_COMPONENT}/frontend:$COMMIT_SHA'
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-west1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=aixtiv-cluster-production'
+      - 'CLOUDSDK_CORE_PROJECT=api-for-warp-drive'
+
+  # Run tests
+  - name: 'gcr.io/cloud-builders/npm'
+    dir: './api'
+    args: ['run', 'test']
+
+  # Deploy to production only from main branch
+  - name: 'gcr.io/cloud-builders/gcloud'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if [[ "$BRANCH_NAME" == "main" ]]; then
+          kubectl rollout status deployment/\${_COMPONENT}-api -n aixtiv-\${_COMPONENT}
+          kubectl rollout status deployment/\${_COMPONENT}-frontend -n aixtiv-\${_COMPONENT}
+          echo "Deployment completed successfully"
+        else
+          echo "Skipping production deployment - not main branch"
+        fi
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=us-west1-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=aixtiv-cluster-production'
+      - 'CLOUDSDK_CORE_PROJECT=api-for-warp-drive'
+
+# Tag images with latest for main branch deployments
+images:
+  - 'us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-\${_COMPONENT}/api:$COMMIT_SHA'
+  - 'us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-\${_COMPONENT}/frontend:$COMMIT_SHA'
+  - 'us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-\${_COMPONENT}/api:latest'
+  - 'us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-\${_COMPONENT}/frontend:latest'
+
+# Substitution variables
+substitutions:
+  _COMPONENT: 'symphony'  # Default component, can be overridden
+
+# Build timeout
+timeout: '1800s'
+`;
+
+// Export deployment configurations
+module.exports = {
+  namespaceConfig,
+  symphonyDeploymentConfig,
+  bidSuiteDeploymentConfig,
+  agentSquadronsDeploymentConfig,
+  flightMemorySystemDeploymentConfig,
+  byollmMiddlewareDeploymentConfig,
+  ingressConfig,
+  apiGatewayConfig,
+  cicdPipelineConfig,
+  
+  // Helper function to generate complete deployment YAML
+  generateCompleteDeploymentYaml: () => {
+    return [
+      namespaceConfig,
+      symphonyDeploymentConfig,
+      bidSuiteDeploymentConfig,
+      agentSquadronsDeploymentConfig,
+      flightMemorySystemDeploymentConfig,
+      byollmMiddlewareDeploymentConfig,
+      ingressConfig,
+      apiGatewayConfig
+    ].join('\n---\n');
+  },
+  
+  // Helper function to generate deployment script
+  generateDeploymentScript: (environment = 'production') => {
+    return `#!/bin/bash
+# AIXTIV Deployment Script for ${environment} environment
+
+set -e
+
+echo "Starting AIXTIV deployment to ${environment} in us-west1..."
+
+# Set GCP project
+gcloud config set project api-for-warp-drive
+
+# Set compute zone
+gcloud config set compute/zone us-west1-a
+
+# Get GKE credentials
+gcloud container clusters get-credentials aixtiv-cluster-${environment} --zone us-west1-a --project api-for-warp-drive
+
+# Apply namespace configuration
+kubectl apply -f namespaces.yaml
+
+# Apply core system components
+kubectl apply -f system.yaml
+
+# Apply Symphony components
+kubectl apply -f symphony.yaml
+
+# Apply Bid Suite components
+kubectl apply -f bidsuite.yaml
+
+# Apply Agent components
+kubectl apply -f agents.yaml
+
+# Apply Flight Memory System
+kubectl apply -f flight-memory.yaml
+
+# Apply BYOLLM Middleware
+kubectl apply -f byollm.yaml
+
+# Apply Ingress configuration
+kubectl apply -f ingress.yaml
+
+# Verify deployments
+echo "Verifying Symphony API deployment..."
+kubectl rollout status deployment/symphony-api -n aixtiv-symphony
+
+echo "Verifying Symphony Frontend deployment..."
+kubectl rollout status deployment/symphony-frontend -n aixtiv-symphony
+
+echo "Verifying Bid Suite API deployment..."
+kubectl rollout status deployment/bidsuite-api -n aixtiv-bidsuite
+
+echo "Verifying Bid Suite Frontend deployment..."
+kubectl rollout status deployment/bidsuite-frontend -n aixtiv-bidsuite
+
+echo "Verifying Squadron deployments..."
+kubectl rollout status deployment/squadron1-deployment -n aixtiv-agents
+kubectl rollout status deployment/squadron2-deployment -n aixtiv-agents
+kubectl rollout status deployment/squadron3-deployment -n aixtiv-agents
+
+echo "Verifying Flight Memory System deployment..."
+kubectl rollout status deployment/flight-memory-system -n aixtiv-agents
+
+echo "Verifying BYOLLM Middleware deployment..."
+kubectl rollout status deployment/byollm-middleware -n aixtiv-system
+
+echo "Verifying API Gateway deployment..."
+kubectl rollout status deployment/aixtiv-api-gateway -n aixtiv-system
+
+echo "Deployment to ${environment} completed successfully!"
+echo "The AIXTIV system is now available at https://www.aixtiv.com"
+`;
+  }
+};
+_ID
+          value: "api-for-warp-drive"
+        - name: REGION
+          value: "us-west1"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: symphony-frontend
+  namespace: aixtiv-symphony
+  labels:
+    app: symphony-frontend
+    component: frontend
+    app.kubernetes.io/part-of: aixtiv
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: symphony-frontend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: symphony-frontend
+        component: frontend
+    spec:
+      containers:
+      - name: symphony-frontend
+        image: us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-symphony/frontend:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        env:
+        - name: API_URL
+          value: "https://api.aixtiv.com"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: symphony-api
+  namespace: aixtiv-symphony
+  labels:
+    app: symphony-api
+    component: api
+    app.kubernetes.io/part-of: aixtiv
+spec:
+  selector:
+    app: symphony-api
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: symphony-frontend
+  namespace: aixtiv-symphony
+  labels:
+    app: symphony-frontend
+    component: frontend
+    app.kubernetes.io/part-of: aixtiv
+spec:
+  selector:
+    app: symphony-frontend
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP
+`;
+
+// Deployment configuration for Bid Suite components
+const bidSuiteDeploymentConfig = `
+# Bid Suite Deployment Configuration
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bidsuite-api
+  namespace: aixtiv-bidsuite
+  labels:
+    app: bidsuite-api
+    component: api
+    app.kubernetes.io/part-of: aixtiv
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bidsuite-api
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: bidsuite-api
+        component: api
+    spec:
+      containers:
+      - name: bidsuite-api
+        image: us-west1-docker.pkg.dev/api-for-warp-drive/aixtiv-bidsuite/api:latest
+        ports:
+        - containerPort: 8080
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: FIRESTORE_PROJECT

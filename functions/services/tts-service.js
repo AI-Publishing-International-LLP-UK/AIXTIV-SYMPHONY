@@ -8,7 +8,8 @@ const storage = new Storage();
  */
 class TTSService {
   constructor() {
-    this.bucketName = process.env.STORAGE_BUCKET || 'api-for-warp-drive.appspot.com'; // Your default Firebase Storage bucket
+    this.bucketName =
+      process.env.STORAGE_BUCKET || 'api-for-warp-drive.appspot.com'; // Your default Firebase Storage bucket
   }
 
   /**
@@ -25,11 +26,11 @@ class TTSService {
         voice: options.voice || {
           languageCode: 'en-US',
           ssmlGender: 'NEUTRAL',
-          name: 'en-US-Neural2-F'
+          name: 'en-US-Neural2-F',
         },
         audioConfig: options.audioConfig || {
-          audioEncoding: 'MP3'
-        }
+          audioEncoding: 'MP3',
+        },
       };
 
       // Perform the text-to-speech request
@@ -37,20 +38,22 @@ class TTSService {
 
       // Generate a unique filename
       const fileName = `tts-${Date.now()}.mp3`;
-      const filePath = options.storagePath ? `${options.storagePath}/${fileName}` : `tts/${fileName}`;
+      const filePath = options.storagePath
+        ? `${options.storagePath}/${fileName}`
+        : `tts/${fileName}`;
 
       // Upload to Firebase Storage
       const bucket = storage.bucket(this.bucketName);
       const file = bucket.file(filePath);
       await file.save(response.audioContent, {
         metadata: {
-          contentType: 'audio/mp3'
-        }
+          contentType: 'audio/mp3',
+        },
       });
 
       // Make file publicly accessible
       await file.makePublic();
-      
+
       // Get the public URL
       const publicUrl = `https://storage.googleapis.com/${this.bucketName}/${filePath}`;
 
@@ -58,13 +61,13 @@ class TTSService {
         success: true,
         audioUrl: publicUrl,
         fileName,
-        filePath
+        filePath,
       };
     } catch (error) {
       console.error('TTS error:', error);
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -79,13 +82,13 @@ class TTSService {
       const [response] = await client.listVoices({ languageCode });
       return {
         success: true,
-        voices: response.voices
+        voices: response.voices,
       };
     } catch (error) {
       console.error('Error listing voices:', error);
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }
@@ -104,25 +107,27 @@ class TTSService {
         voice: options.voice || {
           languageCode: 'en-US',
           ssmlGender: 'NEUTRAL',
-          name: 'en-US-Neural2-F'
+          name: 'en-US-Neural2-F',
         },
         audioConfig: options.audioConfig || {
-          audioEncoding: 'MP3'
-        }
+          audioEncoding: 'MP3',
+        },
       };
 
       // The rest of the process is the same as textToSpeech
       const [response] = await client.synthesizeSpeech(request);
 
       const fileName = `tts-ssml-${Date.now()}.mp3`;
-      const filePath = options.storagePath ? `${options.storagePath}/${fileName}` : `tts/${fileName}`;
+      const filePath = options.storagePath
+        ? `${options.storagePath}/${fileName}`
+        : `tts/${fileName}`;
 
       const bucket = storage.bucket(this.bucketName);
       const file = bucket.file(filePath);
       await file.save(response.audioContent, {
         metadata: {
-          contentType: 'audio/mp3'
-        }
+          contentType: 'audio/mp3',
+        },
       });
 
       await file.makePublic();
@@ -132,13 +137,13 @@ class TTSService {
         success: true,
         audioUrl: publicUrl,
         fileName,
-        filePath
+        filePath,
       };
     } catch (error) {
       console.error('SSML TTS error:', error);
       return {
         success: false,
-        error: error.message
+        error: error.message,
       };
     }
   }

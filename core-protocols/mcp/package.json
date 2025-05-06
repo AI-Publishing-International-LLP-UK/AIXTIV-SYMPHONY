@@ -1,0 +1,26 @@
+{
+  "name": "asoos-mcp",
+  "version": "1.0.0",
+  "description": "ASOOS Master Control Program (MCP) for agent orchestration and system integration",
+  "main": "mcp-server.js",
+  "scripts": {
+    "start": "./mcp-start.sh",
+    "start:test": "./mcp-start.sh --server=test",
+    "start:dev": "./mcp-start.sh --mode=development",
+    "check": "node mcp-check-config.js",
+    "deploy": "cd deploy && ./deploy.sh",
+    "clean": "rm -rf ./logs/* ./test_logs/*"
+  },
+  "author": "Dr. Claude",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@google-cloud/storage": "^6.5.2",
+    "ethers": "^5.7.2",
+    "firebase-admin": "^11.5.0",
+    "ws": "^8.10.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

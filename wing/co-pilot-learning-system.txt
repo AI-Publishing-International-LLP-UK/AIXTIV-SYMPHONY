@@ -1,0 +1,548 @@
+/**
+ * Co-Pilot Learning System
+ * 
+ * This module implements the learning system for Co-Pilots, allowing them to
+ * improve their capabilities based on owner-subscriber feedback and interactions.
+ */
+
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+const express = require('express');
+const cors = require('cors');
+
+// Initialize Firebase if not already initialized
+if (!admin.apps.length) {
+  admin.initializeApp();
+}
+
+const db = admin.firestore();
+
+// Import utility functions
+const {
+  getDocumentById,
+  updateDocument,
+  createDocument,
+  handleHttpError,
+  createHttpError,
+  authenticateUser
+} = require('./utils');
+
+// Import LLM integration
+const { LLMProviderIntegration } = require('./middleware-layer');
+
+/**
+ * Co-Pilot Learning System
+ * 
+ * Manages the learning and improvement of Co-Pilots based on feedback
+ */
+class CoPilotLearningSystem {
+  constructor(config = {}) {
+    this.llmIntegration = config.llmIntegration || new LLMProviderIntegration();
+    this.feedbacks = db.collection('feedbacks');
+    this.agents = db.collection('agents');
+    this.lenzProfiles = db.collection('q4dLenzProfiles');
+    this.learningInsights = db.collection('learningInsights');
+    this.learningLog = db.collection('learningLog');
+  }
+
+  /**
+   * Process feedback for learning
+   * 
+   * @param {string} feedbackId - ID of the feedback
+   * @returns {Promise<Object>} - Learning results
+   */
+  async processFeedback(feedbackId) {
+    try {
+      // Get the feedback
+      const feedback = await getDocumentById('feedbacks', feedbackId);
+      
+      if (!feedback) {
+        throw new Error(`Feedback ${feedbackId} not found`);
+      }
+      
+      // Check if already processed
+      if (feedback.processed) {
+        return {
+          status: 'already_processed',
+          feedbackId,
+          insightsId: feedback.insightsId
+        };
+      }
+      
+      // Get the deliverable
+      const deliverable = await getDocumentById('deliverables', feedback.deliverableId);
+      
+      if (!deliverable) {
+        throw new Error(`Deliverable ${feedback.deliverableId} not found`);
+      }
+      
+      // Get the agent
+      const agent = await getDocumentById('agents', feedback.agentId);
+      
+      if (!agent) {
+        throw new Error(`Agent ${feedback.agentId} not found`);
+      }
+      
+      // Generate learning insights
+      const insights = await this._generateLearningInsights(deliverable, feedback);
+      
+      // Store the insights
+      const insightsId = await createDocument('learningInsights', null, {
+        feedbackId,
+        agentId: feedback.agentId,
+        deliverableId: feedback.deliverableId,
+        ownerSubscriberId: feedback.ownerSubscriberId,
+        insights,
+        createdAt: admin.firestore.FieldValue.serverTimestamp()
+      });
+      
+      // Update agent with learnings
+      await this._updateAgentWithLearnings(feedback.agentId, insights);
+      
+      // Update feedback as processed
+      await updateDocument('feedbacks', feedbackId, {
+        processed: true,
+        insightsId,
+        processedAt: admin.firestore.FieldValue.serverTimestamp()
+      });
+      
+      // Log the learning event
+      await this._logLearningEvent(feedback.agentId, insightsId, insights);
+      
+      return {
+        status: 'processed',
+        feedbackId,
+        insightsId,
+        insights
+      };
+    } catch (error) {
+      console.error('Error processing feedback for learning:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Generate learning insights from feedback
+   * 
+   * @param {Object} deliverable - Deliverable object
+   * @param {Object} feedback - Feedback object
+   * @returns {Promise<Object>} - Learning insights
+   * @private
+   */
+  async _generateLearningInsights(deliverable, feedback) {
+    try {
+      // Prepare messages for LLM
+      const messages = [
+        {
+          role: 'system',
+          content: `You are a Q4D-Lenz Co-Pilot learning system. Analyze the deliverable and feedback to extract learning insights that will improve future performance.`
+        },
+        {
+          role: 'user',
+          content: `Analyze this deliverable and the owner's feedback:
+          
+Deliverable Title: ${deliverable.title}
+Deliverable Content: ${deliverable.content.substring(0, 1000)}${deliverable.content.length > 1000 ? '...' : ''}
+
+Feedback: ${feedback.feedback}
+${feedback.rating ? `Rating: ${feedback.rating}/5` : ''}
+
+Generate structured learning insights in the following format:
+1. Strengths: What aspects were well-received?
+2. Areas for Improvement: What could be improved?
+3. Suggested Adjustments: Specific changes to make in future deliverables
+4. Learning Priority: The most important learning from this feedback`
+        }
+      ];
+      
+      // Generate insights from LLM
+      const llmResult = await this.llmIntegration.generateText(messages, {
+        temperature: 0.7,
+        max_tokens: 1024
+      });
+      
+      // Parse the insights
+      const insightsText = llmResult.text;
+      
+      const insights = {
+        strengths: this._extractSection(insightsText, 'Strengths:', 'Areas for Improvement:'),
+        areasForImprovement: this._extractSection(insightsText, 'Areas for Improvement:', 'Suggested Adjustments:'),
+        suggestedAdjustments: this._extractSection(insightsText, 'Suggested Adjustments:', 'Learning Priority:'),
+        learningPriority: this._extractSection(insightsText, 'Learning Priority:', null),
+        rawText: insightsText
+      };
+      
+      return insights;
+    } catch (error) {
+      console.error('Error generating learning insights:', error);
+      
+      // Return basic insights if LLM fails
+      return {
+        strengths: 'Could not analyze strengths due to processing error',
+        areasForImprovement: 'Could not analyze areas for improvement due to processing error',
+        suggestedAdjustments: 'Improve error handling',
+        learningPriority: 'Improve error handling'
+      };
+    }
+  }
+
+  /**
+   * Extract a section from text
+   * 
+   * @param {string} text - Full text
+   * @param {string} startMarker - Start marker
+   * @param {string|null} endMarker - End marker or null for end of text
+   * @returns {string} - Extracted section
+   * @private
+   */
+  _extractSection(text, startMarker, endMarker) {
+    const startIndex = text.indexOf(startMarker);
+    
+    if (startIndex === -1) {
+      return '';
+    }
+    
+    const startPosition = startIndex + startMarker.length;
+    
+    if (!endMarker) {
+      return text.substring(startPosition).trim();
+    }
+    
+    const endIndex = text.indexOf(endMarker, startPosition);
+    
+    if (endIndex === -1) {
+      return text.substring(startPosition).trim();
+    }
+    
+    return text.substring(startPosition, endIndex).trim();
+  }
+
+  /**
+   * Update agent profile with learning insights
+   * 
+   * @param {string} agentId - Agent ID
+   * @param {Object} insights - Learning insights
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _updateAgentWithLearnings(agentId, insights) {
+    try {
+      // Get agent profile
+      const agent = await getDocumentById('agents', agentId);
+      
+      if (!agent) {
+        throw new Error(`Agent ${agentId} not found`);
+      }
+      
+      // Update learning metrics
+      const learnings = agent.learnings || [];
+      
+      learnings.push({
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        priority: insights.learningPriority,
+        type: 'feedback'
+      });
+      
+      // Keep only the most recent 10 learnings
+      while (learnings.length > 10) {
+        learnings.shift();
+      }
+      
+      // Update agent profile
+      await updateDocument('agents', agentId, {
+        learnings,
+        lastLearningAt: admin.firestore.FieldValue.serverTimestamp(),
+        learningCount: admin.firestore.FieldValue.increment(1)
+      });
+      
+      // Update Q4D-Lenz profile
+      await this._updateLenzProfile(agentId, insights);
+    } catch (error) {
+      console.error('Error updating agent with learnings:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Update Q4D-Lenz profile with learning insights
+   * 
+   * @param {string} agentId - Agent ID
+   * @param {Object} insights - Learning insights
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _updateLenzProfile(agentId, insights) {
+    try {
+      // Get lens profile
+      const lenzProfile = await getDocumentById('q4dLenzProfiles', agentId);
+      
+      if (!lenzProfile) {
+        throw new Error(`Q4D-Lenz profile for agent ${agentId} not found`);
+      }
+      
+      // Update adaptability score (slight increase)
+      const currentAdaptability = lenzProfile.adaptabilityScore || 0.7;
+      const adaptabilityIncrease = 0.01; // Small increment per learning
+      const newAdaptability = Math.min(currentAdaptability + adaptabilityIncrease, 0.99);
+      
+      // Generate suggested skills based on learnings
+      const suggestedSkills = await this._generateSuggestedSkills(insights);
+      
+      // Update lens profile
+      await updateDocument('q4dLenzProfiles', agentId, {
+        adaptabilityScore: newAdaptability,
+        suggestedSkills,
+        lastLearningAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      });
+    } catch (error) {
+      console.error('Error updating Q4D-Lenz profile:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Log a learning event
+   * 
+   * @param {string} agentId - Agent ID
+   * @param {string} insightsId - Insights ID
+   * @param {Object} insights - Learning insights
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _logLearningEvent(agentId, insightsId, insights) {
+    try {
+      // Create log entry
+      await createDocument('learningLog', null, {
+        agentId,
+        insightsId,
+        learningPriority: insights.learningPriority,
+        timestamp: admin.firestore.FieldValue.serverTimestamp()
+      });
+    } catch (error) {
+      console.error('Error logging learning event:', error);
+      // Non-critical error, continue without throwing
+    }
+  }
+
+  /**
+   * Generate suggested skills based on learning insights
+   * 
+   * @param {Object} insights - Learning insights
+   * @returns {Promise<Array>} - Suggested skills
+   * @private
+   */
+  async _generateSuggestedSkills(insights) {
+    try {
+      // Simple approach: extract key phrases from suggested adjustments
+      const text = insights.suggestedAdjustments;
+      
+      if (!text || text.length < 10) {
+        return [];
+      }
+      
+      // Split text into sentences
+      const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+      
+      // Extract noun phrases as potential skills
+      const skills = [];
+      
+      for (const sentence of sentences) {
+        // Simple heuristic: nouns and noun phrases are often after verbs like "improve", "enhance", "develop"
+        const match = sentence.match(/improve|enhance|develop|master|learn|practice|focus on|prioritize|refine|strengthen\s+([^,.;:]+)/i);
+        
+        if (match && match[1]) {
+          skills.push(match[1].trim());
+        }
+      }
+      
+      // Remove duplicates and limit to 3 skills
+      return [...new Set(skills)].slice(0, 3);
+    } catch (error) {
+      console.error('Error generating suggested skills:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Get learning insights for an agent
+   * 
+   * @param {string} agentId - Agent ID
+   * @param {number} limit - Maximum number of insights to return
+   * @returns {Promise<Array>} - Learning insights
+   */
+  async getAgentLearningInsights(agentId, limit = 10) {
+    try {
+      // Query insights for the agent
+      const snapshot = await this.learningInsights
+        .where('agentId', '==', agentId)
+        .orderBy('createdAt', 'desc')
+        .limit(limit)
+        .get();
+      
+      // Format results
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: doc.data().createdAt ? doc.data().createdAt.toDate().toISOString() : null
+      }));
+    } catch (error) {
+      console.error('Error getting agent learning insights:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Generate a learning report for an agent
+   * 
+   * @param {string} agentId - Agent ID
+   * @returns {Promise<Object>} - Learning report
+   */
+  async generateLearningReport(agentId) {
+    try {
+      // Get agent profile
+      const agent = await getDocumentById('agents', agentId);
+      
+      if (!agent) {
+        throw new Error(`Agent ${agentId} not found`);
+      }
+      
+      // Get lens profile
+      const lenzProfile = await getDocumentById('q4dLenzProfiles', agentId);
+      
+      // Get recent learning insights
+      const insights = await this.getAgentLearningInsights(agentId, 5);
+      
+      // Prepare learning metrics
+      const learningCount = agent.learningCount || 0;
+      const adaptabilityScore = lenzProfile ? lenzProfile.adaptabilityScore : 0;
+      
+      // Extract common areas for improvement
+      const areasForImprovement = insights
+        .map(insight => insight.insights?.areasForImprovement || '')
+        .filter(area => area.length > 0);
+      
+      // Extract common strengths
+      const strengths = insights
+        .map(insight => insight.insights?.strengths || '')
+        .filter(strength => strength.length > 0);
+      
+      // Generate the report
+      return {
+        agentId,
+        learningCount,
+        adaptabilityScore,
+        recentInsightsCount: insights.length,
+        commonAreasForImprovement: this._summarizeTextArray(areasForImprovement),
+        commonStrengths: this._summarizeTextArray(strengths),
+        suggestedSkills: lenzProfile ? lenzProfile.suggestedSkills : [],
+        timestamp: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Error generating learning report:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Summarize an array of text into key points
+   * 
+   * @param {Array} textArray - Array of text to summarize
+   * @returns {string} - Summarized text
+   * @private
+   */
+  _summarizeTextArray(textArray) {
+    if (textArray.length === 0) {
+      return '';
+    }
+    
+    if (textArray.length === 1) {
+      return textArray[0];
+    }
+    
+    // For simplicity, just join the first two texts
+    // In a real implementation, this would use LLM to generate a proper summary
+    return textArray.slice(0, 2).join(' ');
+  }
+}
+
+// Create Express API for Co-Pilot Learning System
+const app = express();
+app.use(cors({ origin: true }));
+app.use(express.json());
+
+// Initialize the learning system
+const learningSystem = new CoPilotLearningSystem();
+
+/**
+ * Process feedback for learning
+ * POST /api/learning/process-feedback
+ */
+app.post('/process-feedback', authenticateUser, async (req, res) => {
+  try {
+    const { feedbackId } = req.body;
+    
+    if (!feedbackId) {
+      throw createHttpError('Feedback ID is required', 400);
+    }
+    
+    const result = await learningSystem.processFeedback(feedbackId);
+    
+    res.status(200).json(result);
+  } catch (error) {
+    handleHttpError(error, res);
+  }
+});
+
+/**
+ * Get learning insights for an agent
+ * GET /api/learning/insights/:agentId
+ */
+app.get('/insights/:agentId', authenticateUser, async (req, res) => {
+  try {
+    const { agentId } = req.params;
+    const { limit } = req.query;
+    
+    if (!agentId) {
+      throw createHttpError('Agent ID is required', 400);
+    }
+    
+    const insights = await learningSystem.getAgentLearningInsights(agentId, limit ? parseInt(limit) : 10);
+    
+    res.status(200).json({
+      agentId,
+      insights,
+      count: insights.length
+    });
+  } catch (error) {
+    handleHttpError(error, res);
+  }
+});
+
+/**
+ * Generate a learning report for an agent
+ * GET /api/learning/report/:agentId
+ */
+app.get('/report/:agentId', authenticateUser, async (req, res) => {
+  try {
+    const { agentId } = req.params;
+    
+    if (!agentId) {
+      throw createHttpError('Agent ID is required', 400);
+    }
+    
+    const report = await learningSystem.generateLearningReport(agentId);
+    
+    res.status(200).json(report);
+  } catch (error) {
+    handleHttpError(error, res);
+  }
+});
+
+// Export the Co-Pilot Learning System API
+const learningApi = functions.region('us-west1').https.onRequest(app);
+
+module.exports = {
+  CoPilotLearningSystem,
+  learningApi
+};

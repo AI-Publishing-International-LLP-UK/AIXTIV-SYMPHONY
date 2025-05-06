@@ -1,6 +1,6 @@
 /**
  * server.js - A simple Express server to route requests to Firebase functions
- * 
+ *
  * This file creates an Express server that receives HTTP requests and
  * forwards them to the appropriate Firebase Cloud Functions.
  */
@@ -36,18 +36,21 @@ app.get('/health', (req, res) => {
 Object.entries(functions).forEach(([functionName, firebaseFunction]) => {
   const path = `/${functionName}`;
   logger.info(`Registering route: ${path}`);
-  
+
   app.all(path, (req, res) => {
     try {
       // Extract the handler function from the Firebase function
-      const handler = firebaseFunction._onRequestWithOptions || 
-                     firebaseFunction._onRequest || 
-                     firebaseFunction;
-      
+      const handler =
+        firebaseFunction._onRequestWithOptions ||
+        firebaseFunction._onRequest ||
+        firebaseFunction;
+
       // Call the handler directly with the Express request and response
       return handler(req, res);
     } catch (error) {
-      logger.error(`Error executing function ${functionName}: ${error.message}`);
+      logger.error(
+        `Error executing function ${functionName}: ${error.message}`
+      );
       res.status(500).send({ error: 'Internal server error' });
     }
   });
@@ -61,11 +64,10 @@ app.listen(PORT, () => {
 });
 
 // Error handling for uncaught exceptions
-process.on('uncaughtException', (error) => {
+process.on('uncaughtException', error => {
   logger.error(`Uncaught exception: ${error.message}`);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
   logger.error(`Unhandled rejection at: ${promise}, reason: ${reason}`);
 });
-

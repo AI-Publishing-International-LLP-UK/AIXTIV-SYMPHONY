@@ -1,0 +1,18 @@
+{
+  "production": {
+    "apiUrl": "https://api.godaddy.com/v1",
+    "keySecretName": "godaddy-api-key",
+    "secretSecretName": "godaddy-api-secret"
+  },
+  "development": {
+    "apiUrl": "https://api.ote-godaddy.com/v1",
+    "keySecretName": "godaddy-api-key-dev",
+    "secretSecretName": "godaddy-api-secret-dev"
+  },
+  "defaultConfig": {
+    "nameservers": ["ns07.domaincontrol.com", "ns08.domaincontrol.com"],
+    "ttl": 3600,
+    "retryAttempts": 3,
+    "delayBetweenRetries": 2000
+  }
+}

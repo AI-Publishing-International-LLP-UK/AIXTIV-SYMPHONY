@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { 
-  Box, 
-  Button, 
-  Card, 
-  CardContent, 
-  Typography, 
-  IconButton, 
-  Divider, 
-  TextField, 
-  Grid, 
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  IconButton,
+  Divider,
+  TextField,
+  Grid,
   Stack,
   Paper,
   Tooltip,
   Badge,
   Avatar,
-  useTheme 
+  useTheme,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import AddIcon from '@mui/icons-material/Add';
@@ -104,29 +104,35 @@ const CartComponent: React.FC<CartComponentProps> = ({
   );
 
   // Update cart item quantity
-  const updateQuantity = useCallback((id: string, newQuantity: number) => {
-    if (newQuantity < 1) return;
-    
-    const updatedItems = cartItems.map(item => 
-      item.id === id ? { ...item, quantity: newQuantity } : item
-    );
-    
-    setCartItems(updatedItems);
-    
-    if (onUpdateCart) {
-      onUpdateCart(updatedItems);
-    }
-  }, [cartItems, onUpdateCart]);
+  const updateQuantity = useCallback(
+    (id: string, newQuantity: number) => {
+      if (newQuantity < 1) return;
+
+      const updatedItems = cartItems.map(item =>
+        item.id === id ? { ...item, quantity: newQuantity } : item
+      );
+
+      setCartItems(updatedItems);
+
+      if (onUpdateCart) {
+        onUpdateCart(updatedItems);
+      }
+    },
+    [cartItems, onUpdateCart]
+  );
 
   // Remove item from cart
-  const removeItem = useCallback((id: string) => {
-    const updatedItems = cartItems.filter(item => item.id !== id);
-    setCartItems(updatedItems);
-    
-    if (onUpdateCart) {
-      onUpdateCart(updatedItems);
-    }
-  }, [cartItems, onUpdateCart]);
+  const removeItem = useCallback(
+    (id: string) => {
+      const updatedItems = cartItems.filter(item => item.id !== id);
+      setCartItems(updatedItems);
+
+      if (onUpdateCart) {
+        onUpdateCart(updatedItems);
+      }
+    },
+    [cartItems, onUpdateCart]
+  );
 
   // Handle checkout
   const handleCheckout = useCallback(() => {
@@ -146,9 +152,9 @@ const CartComponent: React.FC<CartComponentProps> = ({
     <>
       {/* Cart toggle button */}
       <Box sx={{ position: 'fixed', top: 20, right: 20, zIndex: 1000 }}>
-        <Tooltip title={cartOpen ? "Close Cart" : "Open Cart"}>
-          <IconButton 
-            color="primary" 
+        <Tooltip title={cartOpen ? 'Close Cart' : 'Open Cart'}>
+          <IconButton
+            color="primary"
             onClick={toggleCart}
             size="large"
             sx={{
@@ -156,7 +162,7 @@ const CartComponent: React.FC<CartComponentProps> = ({
               boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
               '&:hover': {
                 backgroundColor: theme.palette.primary.light,
-              }
+              },
             }}
           >
             <Badge badgeContent={totalItems} color="secondary">
@@ -179,7 +185,7 @@ const CartComponent: React.FC<CartComponentProps> = ({
           transition: 'transform 0.3s ease-in-out',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '-5px 0 25px rgba(0,0,0,0.1)'
+          boxShadow: '-5px 0 25px rgba(0,0,0,0.1)',
         }}
       >
         <CartHeader>
@@ -197,7 +203,9 @@ const CartComponent: React.FC<CartComponentProps> = ({
         <Box sx={{ overflow: 'auto', flexGrow: 1, p: 2 }}>
           {cartItems.length === 0 ? (
             <EmptyCartContainer>
-              <ShoppingCartIcon sx={{ fontSize: 48, color: 'text.disabled', mb: 2 }} />
+              <ShoppingCartIcon
+                sx={{ fontSize: 48, color: 'text.disabled', mb: 2 }}
+              />
               <Typography variant="h6" color="text.secondary">
                 Your cart is empty
               </Typography>
@@ -206,7 +214,7 @@ const CartComponent: React.FC<CartComponentProps> = ({
               </Typography>
             </EmptyCartContainer>
           ) : (
-            cartItems.map((item) => (
+            cartItems.map(item => (
               <StyledCard key={item.id}>
                 <CardContent sx={{ p: 2 }}>
                   <Grid container spacing={2} alignItems="center">
@@ -225,45 +233,49 @@ const CartComponent: React.FC<CartComponentProps> = ({
                       <Typography variant="body2" color="text.secondary" noWrap>
                         ${item.price.toFixed(2)}
                       </Typography>
-                      
+
                       <QuantityControl>
-                        <IconButton 
-                          size="small" 
-                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        <IconButton
+                          size="small"
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity - 1)
+                          }
                           disabled={item.quantity <= 1}
                         >
                           <RemoveIcon fontSize="small" />
                         </IconButton>
-                        
+
                         <TextField
                           size="small"
                           value={item.quantity}
-                          onChange={(e) => {
+                          onChange={e => {
                             const val = parseInt(e.target.value);
                             if (!isNaN(val) && val > 0) {
                               updateQuantity(item.id, val);
                             }
                           }}
-                          inputProps={{ 
-                            min: 1, 
-                            style: { 
+                          inputProps={{
+                            min: 1,
+                            style: {
                               textAlign: 'center',
                               width: '40px',
-                              padding: '4px'
-                            } 
+                              padding: '4px',
+                            },
                           }}
                         />
-                        
-                        <IconButton 
-                          size="small" 
-                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+
+                        <IconButton
+                          size="small"
+                          onClick={() =>
+                            updateQuantity(item.id, item.quantity + 1)
+                          }
                         >
                           <AddIcon fontSize="small" />
                         </IconButton>
-                        
-                        <IconButton 
+
+                        <IconButton
                           size="small"
-                          color="error" 
+                          color="error"
                           onClick={() => removeItem(item.id)}
                           sx={{ ml: 'auto' }}
                         >
@@ -280,28 +292,28 @@ const CartComponent: React.FC<CartComponentProps> = ({
 
         <Box sx={{ p: 2 }}>
           <Divider sx={{ my: 2 }} />
-          
+
           <Stack direction="row" justifyContent="space-between" sx={{ mb: 2 }}>
             <Typography variant="subtitle1">Subtotal:</Typography>
             <Typography variant="subtitle1">${cartTotal.toFixed(2)}</Typography>
           </Stack>
-          
-          <Button 
-            variant="contained" 
-            color="primary" 
-            fullWidth 
+
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
             size="large"
             disabled={cartItems.length === 0}
             onClick={handleCheckout}
-            sx={{ 
+            sx={{
               py: 1.5,
               borderRadius: '8px',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
             }}
           >
             Checkout
           </Button>
-          
+
           <Button
             variant="text"
             color="primary"
@@ -318,4 +330,3 @@ const CartComponent: React.FC<CartComponentProps> = ({
 };
 
 export default CartComponent;
-

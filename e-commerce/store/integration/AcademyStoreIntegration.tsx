@@ -35,44 +35,48 @@ const sampleProducts: Product[] = [
   {
     id: 'course-001',
     name: 'Advanced Machine Learning',
-    description: 'Master the fundamentals of machine learning algorithms and their applications',
+    description:
+      'Master the fundamentals of machine learning algorithms and their applications',
     price: 129.99,
     imageUrl: '/assets/course-ml.jpg',
     category: 'courses',
-    isFeatured: true
+    isFeatured: true,
   },
   {
     id: 'course-002',
     name: 'Blockchain Fundamentals',
-    description: 'Learn the principles behind blockchain technology and cryptocurrencies',
+    description:
+      'Learn the principles behind blockchain technology and cryptocurrencies',
     price: 89.99,
     imageUrl: '/assets/course-blockchain.jpg',
     category: 'courses',
-    isFeatured: true
+    isFeatured: true,
   },
   {
     id: 'book-001',
     name: 'The Future of AI Ethics',
-    description: 'An in-depth exploration of ethical considerations in artificial intelligence',
+    description:
+      'An in-depth exploration of ethical considerations in artificial intelligence',
     price: 34.99,
     imageUrl: '/assets/book-ai-ethics.jpg',
     category: 'books',
-    isFeatured: false
+    isFeatured: false,
   },
   {
     id: 'tool-001',
     name: 'Neural Network Visualization Kit',
-    description: 'Interactive tools to visualize and understand neural networks',
+    description:
+      'Interactive tools to visualize and understand neural networks',
     price: 49.99,
     imageUrl: '/assets/tool-nn-viz.jpg',
     category: 'tools',
-    isFeatured: true
-  }
+    isFeatured: true,
+  },
 ];
 
 /**
  * AcademyStoreIntegration component
- * 
+ *
  * This component serves as the bridge between the e-commerce store and the Academy module.
  * It displays product information within the Academy interface and handles authentication
  * between the two modules.
@@ -82,7 +86,7 @@ export const AcademyStoreIntegration: React.FC<AcademyStoreProps> = ({
   maxProducts = 4,
   onProductClick,
   currentUser,
-  onAuthRequired
+  onAuthRequired,
 }) => {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
@@ -97,12 +101,12 @@ export const AcademyStoreIntegration: React.FC<AcademyStoreProps> = ({
         // In a real implementation, this would be an API call
         // const response = await fetch('/api/store/products');
         // const data = await response.json();
-        
+
         // Using sample data for now
-        const filteredProducts = showFeaturedOnly 
+        const filteredProducts = showFeaturedOnly
           ? sampleProducts.filter(p => p.isFeatured)
           : sampleProducts;
-          
+
         setProducts(filteredProducts.slice(0, maxProducts));
         setIsLoading(false);
       } catch (err) {
@@ -137,7 +141,7 @@ export const AcademyStoreIntegration: React.FC<AcademyStoreProps> = ({
 
   const handleAddToCart = (e: React.MouseEvent, product: Product) => {
     e.stopPropagation(); // Prevent product click event
-    
+
     // Check if user is authenticated before allowing add to cart
     if (!currentUser?.isAuthenticated) {
       if (onAuthRequired) {
@@ -151,7 +155,7 @@ export const AcademyStoreIntegration: React.FC<AcademyStoreProps> = ({
 
     // In a real implementation, this would dispatch to a cart context or API
     console.log(`Added ${product.name} to cart`);
-    
+
     // Example of how to call an API endpoint to add to cart
     // fetch('/api/cart/add', {
     //   method: 'POST',
@@ -177,9 +181,11 @@ export const AcademyStoreIntegration: React.FC<AcademyStoreProps> = ({
         {currentUser?.isAuthenticated ? (
           <div className="user-welcome">Welcome, {currentUser.name}</div>
         ) : (
-          <button 
+          <button
             className="auth-button"
-            onClick={() => onAuthRequired ? onAuthRequired() : router.push('/login')}
+            onClick={() =>
+              onAuthRequired ? onAuthRequired() : router.push('/login')
+            }
           >
             Sign in to shop
           </button>
@@ -187,9 +193,9 @@ export const AcademyStoreIntegration: React.FC<AcademyStoreProps> = ({
       </div>
 
       <div className="product-grid">
-        {products.map((product) => (
-          <div 
-            key={product.id} 
+        {products.map(product => (
+          <div
+            key={product.id}
             className="product-card"
             onClick={() => handleProductClick(product)}
           >
@@ -201,9 +207,9 @@ export const AcademyStoreIntegration: React.FC<AcademyStoreProps> = ({
               <h3>{product.name}</h3>
               <p className="product-description">{product.description}</p>
               <div className="product-price">${product.price.toFixed(2)}</div>
-              <button 
+              <button
                 className="add-to-cart-button"
-                onClick={(e) => handleAddToCart(e, product)}
+                onClick={e => handleAddToCart(e, product)}
               >
                 Add to Cart
               </button>
@@ -273,7 +279,9 @@ export const AcademyStoreIntegration: React.FC<AcademyStoreProps> = ({
           border: 1px solid #f0f0f0;
           border-radius: 6px;
           overflow: hidden;
-          transition: transform 0.2s, box-shadow 0.2s;
+          transition:
+            transform 0.2s,
+            box-shadow 0.2s;
           cursor: pointer;
           background: white;
         }
@@ -384,17 +392,19 @@ export const AcademyStoreIntegration: React.FC<AcademyStoreProps> = ({
  * for use throughout the Academy module
  */
 export const useAcademyStore = () => {
-  const [cart, setCart] = useState<{productId: string, quantity: number}[]>([]);
+  const [cart, setCart] = useState<{ productId: string; quantity: number }[]>(
+    []
+  );
   const [wishlist, setWishlist] = useState<string[]>([]);
-  
+
   // Add to cart functionality
   const addToCart = (productId: string, quantity: number = 1) => {
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.productId === productId);
-      
+
       if (existingItem) {
-        return prevCart.map(item => 
-          item.productId === productId 
+        return prevCart.map(item =>
+          item.productId === productId
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
@@ -403,26 +413,26 @@ export const useAcademyStore = () => {
       }
     });
   };
-  
+
   // Remove from cart functionality
   const removeFromCart = (productId: string) => {
     setCart(prevCart => prevCart.filter(item => item.productId !== productId));
   };
-  
+
   // Update cart item quantity
   const updateCartItemQuantity = (productId: string, quantity: number) => {
     if (quantity <= 0) {
       removeFromCart(productId);
       return;
     }
-    
-    setCart(prevCart => 
-      prevCart.map(item => 
+
+    setCart(prevCart =>
+      prevCart.map(item =>
         item.productId === productId ? { ...item, quantity } : item
       )
     );
   };
-  
+
   // Toggle wishlist functionality
   const toggleWishlist = (productId: string) => {
     setWishlist(prevWishlist => {
@@ -433,12 +443,12 @@ export const useAcademyStore = () => {
       }
     });
   };
-  
+
   // Get product details
   const getProduct = (productId: string): Product | undefined => {
     return sampleProducts.find(product => product.id === productId);
   };
-  
+
   // Get cart total
   const getCartTotal = (): number => {
     return cart.reduce((total, item) => {
@@ -446,7 +456,7 @@ export const useAcademyStore = () => {
       return total + (product?.price || 0) * item.quantity;
     }, 0);
   };
-  
+
   return {
     products: sampleProducts,
     cart,
@@ -456,9 +466,8 @@ export const useAcademyStore = () => {
     updateCartItemQuantity,
     toggleWishlist,
     getProduct,
-    getCartTotal
+    getCartTotal,
   };
 };
 
 export default AcademyStoreIntegration;
-

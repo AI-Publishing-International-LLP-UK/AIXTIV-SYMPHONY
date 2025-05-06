@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "api-for-warp-drive",
+  "private_key_id": "2550fbe821bd40ca59cbdcf4a0f08233dd7d2edb",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC2tQIaBHKv7YPB\nPCiqfZ2kzLVl6FKyJ+Jsf56Il+agehg7FedjP8HyjQN/w1MpUUwzXzDTUKYHEx0/\ntp1Pcv2z09PX9KdJUy8Ip4p2UCneFdj766n9T3QJYgVKCQOt3/7yYm3iJVRG9NAs\nMUhVqRWt/9RDmsrputtjqLgKYeHmNTl2u38WJr/FvzrrF/m7ku5AlsTqY1yfHk14\nn1hr9KcrLw4hr3+cM+zUqCs1uPnzH5ZlTznRN11oPr8dfNebWd8y9yi+hc66/jYW\nzG906yOSmg0OgpQrKLs7PQPeYWX9hmHgoIjky33E+cwjH+oj/DmSzxfHlmv6049c\neXRoWycNAgMBAAECggEAASX676bCrBw80AMyCTz1YkgJcCzJOkaZu89YiSi/7Gx1\nXbJfTDEmJawLudWZ3qBcxNTkFcFDwzce9QZ6OiSG94aiZfuAbVZObR+VH/W/MZ68\nXfxRoEk2eZRKDrim8y89fGYFz/OmnN854LvlkGjvPTL8BqRrgpO9VcTFdVvp+NGu\n71WvkUtUBYVPcjqpP6gj8YRbSa/CX9wA7eabEcHrWuGTZ0KRBKvBc7mRGR5zhn/J\nQ8m9S9/iGI2ciy6GZUyB9jmt93x6FSZY3H7cr/XpvtdzNn+HlbHDLyc7FAnGgfxe\nMuah9nEc/va4rKFZcuaZDNF+Ct7VelQtsnFPOcZLyQKBgQDfifXH7P440rHxtGp9\nCzCDmu1e1CVuc6ykqg9nR3N16ghY0Doz+qGT5GF0y/o/GOHKhTXsbKBUy/QUCT2g\n9DKwCGJFzvl6YDEbFNnDZEQSVp5AcYxbrysJLSfyOSxGf3IPzPbZip3kuZmBG2lH\nyaLEsoeSNMZeyEndrm1e+zOhqQKBgQDRPSC4XUW/cWvgNbsEpf3hgwjdv2lyuy+0\nxy+uoAgj3HY8pR5SXylX93agBxr7hIqyS+yAv/31pJrHlrdRsYT4VLPx51k4q/La\nkxTKu0qY0ZaRI1zRVYCKseV8KpthaipfRYnDZo+FNm8suKqfFwtwXuFtAatSpptJ\nZvyY6/nAxQKBgAueEeX4DSZK3PCg3b/t6vGMBbYd9GwPGvPb2r0VW4zPQuvKtpuo\n9OjIv7/gMftBgcqSrcDBzHtbti2sZUWOK2w2o1TZcuHHSgYMSVz8QwVo9wSGYjMJ\noYTykdbm3cQ0L2tezZ10tMwEUVQCZrBSbGEonh8dGwomAqDAxfJfv8kxAoGAfZpx\nQtsS3HpMpJn8eyzdu3r6Xorh1PKTD7UmZXBBkq1r+Lmx+waO/fRaLHQ3eVa2H5O+\nFAesfsHh+//4abzjsmK+Zm9XOtLVhOoX6B8IB7aA6P1OYYcvE5L4zFGTVqXxa6GF\nslulufTURgdQvRGLV1hNgC8pVgMXYrfE2FOHaHUCgYEAhrtOPT6BCvYfkrmW0Gyg\neEQq0zW/Z+uRCaVniB0Tww8J+wM2elyRldwl2uFeTh0LxLfb5voRyv4o5ejKFK0o\n46iscqsIzwX1JL+V5dWfHQuiztAl31w21FGDcOMlnxyMu9bWd3+6ZFeaHdYIrqMX\nsmqQ/FIqeFAOnBwYe7MyW1U=\n-----END PRIVATE KEY-----\n",
+  "client_email": "super-claude-sa@api-for-warp-drive.iam.gserviceaccount.com",
+  "client_id": "108868173795070326655",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/super-claude-sa%40api-for-warp-drive.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

@@ -5,16 +5,25 @@ const path = require('path');
 i18n.configure({
   // Path to locale files
   directory: path.join(__dirname, 'locales'),
-  
+
   // List of supported locales
   // Major world languages
   locales: [
     // English variants
-    'en-US', 'en-GB', 'en-AU', 'en-CA', 'en-NZ', 'en-ZA',
-    
-    // Spanish variants 
-    'es-ES', 'es-MX', 'es-AR', 'es-CO', 'es-CL',
-    
+    'en-US',
+    'en-GB',
+    'en-AU',
+    'en-CA',
+    'en-NZ',
+    'en-ZA',
+
+    // Spanish variants
+    'es-ES',
+    'es-MX',
+    'es-AR',
+    'es-CO',
+    'es-CL',
+
     // Indian languages
     'hi-IN', // Hindi
     'bn-IN', // Bengali
@@ -28,7 +37,7 @@ i18n.configure({
     'or-IN', // Odia
     'as-IN', // Assamese
     'ur-IN', // Urdu
-    
+
     // Other major world languages
     'zh-CN', // Chinese (Simplified)
     'zh-TW', // Chinese (Traditional)
@@ -45,49 +54,49 @@ i18n.configure({
     'nl-NL', // Dutch
     'pl-PL', // Polish
     'th-TH', // Thai
-    'vi-VN'  // Vietnamese
+    'vi-VN', // Vietnamese
   ],
-  
+
   // Default locale (fallback)
   defaultLocale: 'en-US',
-  
+
   // Cookie name for storing user's preferred locale
   cookie: 'locale',
-  
+
   // Auto-reload locale files if changed
   autoReload: true,
-  
+
   // Update files with missing translations
   updateFiles: false,
-  
+
   // Sync locale information across all files
   syncFiles: false,
-  
+
   // Mark missing translations
-  missingKeyFn: function(locale, value) {
+  missingKeyFn: function (locale, value) {
     return `[MISSING TRANSLATION: ${locale}][${value}]`;
   },
-  
+
   // Use . notation for nested objects
   objectNotation: true,
-  
+
   // Use JSON file format
   extension: '.json',
-  
+
   // Log debug information about missing translations
-  logDebugFn: function(msg) {
+  logDebugFn: function (msg) {
     console.log('i18n::debug:', msg);
   },
-  
+
   // Log warnings about missing translations
-  logWarnFn: function(msg) {
+  logWarnFn: function (msg) {
     console.log('i18n::warn:', msg);
   },
-  
-  // Log errors 
-  logErrorFn: function(msg) {
+
+  // Log errors
+  logErrorFn: function (msg) {
     console.log('i18n::error:', msg);
-  }
+  },
 });
 
 /**
@@ -103,32 +112,32 @@ function determineLocale(userPrefs, browserLang = 'en-US') {
     if (i18n.getLocales().includes(userPrefs.language)) {
       return userPrefs.language;
     }
-    
+
     // Check if we support a variant of the language
     const langPrefix = userPrefs.language.split('-')[0];
-    const matchedLocale = i18n.getLocales().find(locale => 
-      locale.startsWith(langPrefix + '-')
-    );
-    
+    const matchedLocale = i18n
+      .getLocales()
+      .find(locale => locale.startsWith(langPrefix + '-'));
+
     if (matchedLocale) {
       return matchedLocale;
     }
   }
-  
+
   // Fallback to browser language if supported
   if (browserLang && i18n.getLocales().includes(browserLang)) {
     return browserLang;
   }
-  
+
   const browserLangPrefix = browserLang ? browserLang.split('-')[0] : 'en';
-  const matchedBrowserLocale = i18n.getLocales().find(locale => 
-    locale.startsWith(browserLangPrefix + '-')
-  );
-  
+  const matchedBrowserLocale = i18n
+    .getLocales()
+    .find(locale => locale.startsWith(browserLangPrefix + '-'));
+
   if (matchedBrowserLocale) {
     return matchedBrowserLocale;
   }
-  
+
   // Ultimate fallback
   return i18n.getLocale();
 }
@@ -141,7 +150,12 @@ function determineLocale(userPrefs, browserLang = 'en-US') {
  * @param {string} browserLang - Browser language
  * @returns {string} - Translated text
  */
-function translate(phrase, options = {}, userPrefs = null, browserLang = 'en-US') {
+function translate(
+  phrase,
+  options = {},
+  userPrefs = null,
+  browserLang = 'en-US'
+) {
   const locale = determineLocale(userPrefs, browserLang);
   return i18n.__({ phrase, locale, ...options });
 }
@@ -156,5 +170,5 @@ module.exports = {
   __n: i18n.__n,
   getLocale: i18n.getLocale,
   getLocales: i18n.getLocales,
-  setLocale: i18n.setLocale
+  setLocale: i18n.setLocale,
 };

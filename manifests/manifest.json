@@ -11,7 +11,11 @@
       "description": "Evaluates agents based on SLAs, load and feedback."
     }
   ],
-  "knowledge_domains": ["orchestration", "agent-performance", "workload-balancing"],
+  "knowledge_domains": [
+    "orchestration",
+    "agent-performance",
+    "workload-balancing"
+  ],
   "integration_points": ["firestore", "gateway-api", "dr-grant-auth"],
   "resource_requirements": {
     "memory": "512Mi",

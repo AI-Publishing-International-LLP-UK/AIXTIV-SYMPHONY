@@ -10,7 +10,7 @@ exports.delegateTask = async (req, res) => {
   await firestore.collection('task-assignments').add({
     agent: agentId,
     task: taskDetails,
-    timestamp: new Date()
+    timestamp: new Date(),
   });
 
   res.status(200).json({ status: 'assigned', agentId });

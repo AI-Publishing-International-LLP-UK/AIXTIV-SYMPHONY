@@ -1,0 +1,10 @@
+{
+  "mode": "primary",
+  "initialized_at": "2025-03-09T23:16:12Z",
+  "log_level": "info",
+  "features": {
+    "blockchain_verification": true,
+    "secure_communication": true,
+    "adaptive_learning": true
+  }
+}

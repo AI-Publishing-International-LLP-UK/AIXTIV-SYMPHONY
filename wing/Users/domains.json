@@ -1,0 +1,11 @@
+{
+  "dev": {
+    "domains": [
+      {
+        "domain": "vision.coaching2100.com",
+        "projectId": "api-for-warp-drive",
+        "siteId": "vision-coaching2100"
+      }
+    ]
+  }
+}

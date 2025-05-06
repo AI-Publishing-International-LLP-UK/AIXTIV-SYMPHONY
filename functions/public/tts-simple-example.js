@@ -1,23 +1,27 @@
 // Import Firebase modules
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth';
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+} from 'firebase/auth';
 import { getFunctions, httpsCallable } from 'firebase/functions';
 
 // Your Firebase configuration
 // Replace with your actual Firebase project configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: 'YOUR_API_KEY',
+  authDomain: 'YOUR_PROJECT_ID.firebaseapp.com',
+  projectId: 'YOUR_PROJECT_ID',
+  storageBucket: 'YOUR_PROJECT_ID.appspot.com',
+  messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
+  appId: 'YOUR_APP_ID',
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const functions = getFunctions(app, "us-central1");
+const functions = getFunctions(app, 'us-central1');
 
 /**
  * Authenticates a user with Firebase Authentication
@@ -31,19 +35,19 @@ export function authenticateUser(email, password) {
     // Check if user is already signed in
     const currentUser = auth.currentUser;
     if (currentUser) {
-      console.log("User already authenticated:", currentUser.uid);
+      console.log('User already authenticated:', currentUser.uid);
       resolve(currentUser);
       return;
     }
 
     // Sign in with email and password
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log("Authentication successful:", userCredential.user.uid);
+      .then(userCredential => {
+        console.log('Authentication successful:', userCredential.user.uid);
         resolve(userCredential.user);
       })
-      .catch((error) => {
-        console.error("Authentication failed:", error.message);
+      .catch(error => {
+        console.error('Authentication failed:', error.message);
         reject(error);
       });
   });
@@ -57,21 +61,21 @@ export function authenticateUser(email, password) {
 // Export the function for use in other modules
 export function getAvailableVoices(languageCode = null) {
   const getTtsVoices = httpsCallable(functions, 'getTtsVoices');
-  
+
   // Prepare parameters
   const params = {};
   if (languageCode) {
     params.languageCode = languageCode;
   }
-  
+
   return getTtsVoices(params)
-    .then((result) => {
+    .then(result => {
       const voices = result.data.voices;
       console.log(`Retrieved ${voices.length} voices`);
       return voices;
     })
-    .catch((error) => {
-      console.error("Error getting voices:", error);
+    .catch(error => {
+      console.error('Error getting voices:', error);
       throw error;
     });
 }
@@ -86,18 +90,18 @@ export function getAvailableVoices(languageCode = null) {
 // Export the function for use in other modules
 export function convertTextToSpeech(text, voice, languageCode = 'en-US') {
   const textToSpeech = httpsCallable(functions, 'textToSpeech');
-  
+
   return textToSpeech({
     text: text,
     voice: voice,
-    languageCode: languageCode
+    languageCode: languageCode,
   })
-    .then((result) => {
-      console.log("Text-to-speech conversion successful");
+    .then(result => {
+      console.log('Text-to-speech conversion successful');
       return result.data.audioContent;
     })
-    .catch((error) => {
-      console.error("Text-to-speech conversion failed:", error);
+    .catch(error => {
+      console.error('Text-to-speech conversion failed:', error);
       throw error;
     });
 }
@@ -115,37 +119,37 @@ export function playAudio(base64Audio) {
       const binaryString = window.atob(base64Audio);
       const len = binaryString.length;
       const bytes = new Uint8Array(len);
-      
+
       for (let i = 0; i < len; i++) {
         bytes[i] = binaryString.charCodeAt(i);
       }
-      
+
       // Create audio blob and audio element
       const audioBlob = new Blob([bytes], { type: 'audio/mp3' });
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
-      
+
       // Add event listeners
       audio.addEventListener('play', () => {
-        console.log("Audio playback started");
+        console.log('Audio playback started');
         resolve();
       });
-      
+
       audio.addEventListener('ended', () => {
-        console.log("Audio playback completed");
+        console.log('Audio playback completed');
         URL.revokeObjectURL(audioUrl); // Clean up
       });
-      
-      audio.addEventListener('error', (error) => {
-        console.error("Audio playback error:", error);
+
+      audio.addEventListener('error', error => {
+        console.error('Audio playback error:', error);
         URL.revokeObjectURL(audioUrl); // Clean up
         reject(error);
       });
-      
+
       // Start playback
       audio.play();
     } catch (error) {
-      console.error("Error playing audio:", error);
+      console.error('Error playing audio:', error);
       reject(error);
     }
   });
@@ -189,4 +193,3 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 */
-

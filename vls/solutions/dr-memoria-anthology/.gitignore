@@ -1,0 +1,205 @@
+# Dr. Memoria's AI Automated Publishing & Workflow Automation
+# AIXTIV Symphony Opus 1.0.1 - Vision Lake Solutions
+
+# Node.js ignores
+node_modules/
+npm-debug.log
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+.npm
+.node_repl_history
+*.tgz
+.yarn-integrity
+
+# Python ignores
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+.venv
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Firebase/Firestore
+firebase-*.json
+.firebaserc
+firebase-debug.log
+firebase-debug.*.log
+firebase.admin.json
+*firebase-config*
+*firebase-env-config*
+firestore-debug.log
+ui-debug.log
+
+# API keys and service accounts
+*-credentials.json
+credentials.json
+*api-keys*
+*secret*
+*auth_token*
+*serviceaccount*
+*service-account*
+google-credentials.json
+linkedin-credentials.json
+youtube-credentials.json
+twitter-credentials.json
+facebook-credentials.json
+instagram-credentials.json
+
+# Environment variables
+.env
+.env.development
+.env.test
+.env.production
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+config/.env*
+config/*.env
+
+# Build artifacts
+build/
+dist/
+out/
+.next/
+.nuxt/
+.cache/
+coverage/
+.serverless/
+.fusebox/
+.dynamodb/
+.tern-port
+
+# Academy integration artifacts
+integration/academy/temp/
+academy-exports/
+academy-imports/
+academy-staging/
+academy-temp/
+academy-cache/
+
+# VLS integration artifacts
+vls-bid-suite-cache/
+vls-brand-diagnostic-temp/
+vls-brand-builder-exports/
+vls-customer-delight-sessions/
+vls-workflow-automation-temp/
+
+# Workflow automation specific
+workflow-templates-cache/
+workflow-staging/
+workflow-exports/
+workflow-*.log
+automation-*.log
+publishing-queue/
+publishing-archive/
+publishing-failed/
+
+# Anthology publishing artifacts
+anthology-drafts/
+anthology-pending-review/
+anthology-published/
+anthology-media-cache/
+anthology-media-temp/
+anthology-generations/
+anthology-analytics-cache/
+
+# Media and content
+*.mp4
+*.mp3
+*.wav
+*.avi
+*.mov
+*.webm
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.pdf
+content-cache/
+media-cache/
+temp-media/
+temp-content/
+
+# System files
+.DS_Store
+**/.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editor and IDE
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Temporary files
+tmp/
+.temp/
+*.tmp
+*.bak
+*.swp
+
+# Project specific
+src/preferences/*-private.txt
+docs/*-internal.md
+config/*-secret*
+functions/service-accounts/*.json
+drm-*-private*
+drm-*-secret*
+/Users/*/dr-memoria-deploy/
+
+# Blockchain artifacts
+blockchain-keys/
+blockchain-wallets/
+nft-metadata-private/
+smart-contracts-secrets/
+
+# Integration Gateway
+gateway-configs/
+gateway-tokens/
+gateway-security/
+

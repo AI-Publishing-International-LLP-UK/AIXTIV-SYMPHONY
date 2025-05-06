@@ -1,0 +1,4486 @@
+{
+  "collection": {
+    "item": [
+      {
+        "id": "9e90cedb-6881-4a0e-a587-b7617a6adaa7",
+        "name": "Environment Setup",
+        "item": [
+          {
+            "id": "733d4ed1-9713-4b6e-90ad-21408c586fc3",
+            "name": "Verify Environment",
+            "request": {
+              "url": {
+                "path": ["api", "v1", "status"],
+                "host": ["{{baseUrl}}"],
+                "query": [],
+                "variable": []
+              },
+              "method": "GET"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "d7ad2fbd-a99e-4c3d-a6cb-f0eee323ecf4",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Environment is properly configured', function() {",
+                    "    pm.expect(pm.environment.get('baseUrl')).to.not.be.empty;",
+                    "    pm.expect(pm.environment.get('authToken')).to.not.be.empty;",
+                    "});"
+                  ],
+                  "_lastExecutionId": "cf3980e0-7dd8-4c73-85b4-16b1fa471722"
+                }
+              }
+            ]
+          }
+        ],
+        "event": []
+      },
+      {
+        "id": "2672bd1d-485f-42e3-9ecf-09b602503acc",
+        "name": "Health Checks",
+        "item": [
+          {
+            "id": "2d43d0f6-850b-4767-94e9-90e28fb9cad9",
+            "name": "API Health Check",
+            "request": {
+              "url": {
+                "path": ["health"],
+                "host": ["{{baseUrl}}"],
+                "query": [],
+                "variable": []
+              },
+              "method": "GET"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "99d604f5-f1ff-4ce4-b377-ddc5911d0ba4",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Status code is 200', function() {",
+                    "    pm.response.to.have.status(200);",
+                    "});",
+                    "",
+                    "pm.test('Health check response is valid', function() {",
+                    "    const response = pm.response.json();",
+                    "    pm.expect(response.status).to.eql('healthy');",
+                    "    pm.expect(response.version).to.exist;",
+                    "});"
+                  ],
+                  "_lastExecutionId": "cc492bda-4b25-498d-8d63-0f080d97b73a"
+                }
+              }
+            ]
+          },
+          {
+            "id": "f88c8201-98a8-4b2e-9573-577aaeb7917d",
+            "name": "Integration Gateway Health",
+            "request": {
+              "url": {
+                "path": ["gateway", "health"],
+                "host": ["{{baseUrl}}"],
+                "query": [],
+                "variable": []
+              },
+              "method": "GET"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "45f2533c-dcab-4120-9fd6-58b5e088475c",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Gateway is healthy', function() {",
+                    "    pm.response.to.have.status(200);",
+                    "    const response = pm.response.json();",
+                    "    pm.expect(response.gateway_status).to.eql('operational');",
+                    "});"
+                  ],
+                  "_lastExecutionId": "b36fa8c0-7997-4231-aaa9-41192c8f5db8"
+                }
+              }
+            ]
+          }
+        ],
+        "event": []
+      },
+      {
+        "id": "00ee7c16-1e8c-426a-bdf7-61c7eeadfd93",
+        "name": "Authentication",
+        "item": [
+          {
+            "id": "bbc09a55-1aab-466b-868a-b8bcb4179407",
+            "name": "Login",
+            "request": {
+              "url": {
+                "path": ["auth", "login"],
+                "host": ["{{baseUrl}}"],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "3834f5ac-3535-4132-87a3-820be59d714a",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Authentication successful', function() {",
+                    "    pm.response.to.have.status(200);",
+                    "    const response = pm.response.json();",
+                    "    pm.expect(response.token).to.exist;",
+                    "    pm.environment.set('authToken', response.token);",
+                    "});"
+                  ],
+                  "_lastExecutionId": "1c834793-8a46-4012-9124-61c2d8050283"
+                }
+              }
+            ]
+          },
+          {
+            "id": "cb1cb659-8275-460d-ba78-e290c2183433",
+            "name": "Verify Token",
+            "request": {
+              "url": {
+                "path": ["auth", "verify"],
+                "host": ["{{baseUrl}}"],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{authToken}}"
+                }
+              ],
+              "method": "GET"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "5da16bd2-7511-492f-980d-c29c4c3a6615",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Token is valid', function() {",
+                    "    pm.response.to.have.status(200);",
+                    "    const response = pm.response.json();",
+                    "    pm.expect(response.valid).to.be.true;",
+                    "});"
+                  ],
+                  "_lastExecutionId": "1d6c2569-fcf2-41e7-997c-9c80c07618ac"
+                }
+              }
+            ]
+          }
+        ],
+        "event": []
+      },
+      {
+        "id": "5faf4f7e-f0e0-49c7-82ab-11ee4abf7918",
+        "name": "API Endpoints",
+        "item": [
+          {
+            "id": "4a930bec-3525-4d57-92fa-c64806bfe96c",
+            "name": "List Resources",
+            "request": {
+              "url": {
+                "path": ["api", "v1", "resources"],
+                "host": ["{{baseUrl}}"],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{authToken}}"
+                }
+              ],
+              "method": "GET"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "2672faf8-56ca-4667-8a81-2260e21b27bc",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Can list resources', function() {",
+                    "    pm.response.to.have.status(200);",
+                    "    const response = pm.response.json();",
+                    "    pm.expect(response.items).to.be.an('array');",
+                    "});"
+                  ],
+                  "_lastExecutionId": "2489ab4d-b574-48ec-8049-8c4eb77b331e"
+                }
+              }
+            ]
+          },
+          {
+            "id": "15b0367e-2e11-478e-b487-f0c13636b4b1",
+            "name": "Create Resource",
+            "request": {
+              "url": {
+                "path": ["api", "v1", "resources"],
+                "host": ["{{baseUrl}}"],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{authToken}}"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n    \"name\": \"Test Resource\",\n    \"description\": \"Test resource creation\"\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "9c8484b4-b379-4b48-b35d-c175bf5f62eb",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Resource created successfully', function() {",
+                    "    pm.response.to.have.status(201);",
+                    "    const response = pm.response.json();",
+                    "    pm.expect(response.id).to.exist;",
+                    "});"
+                  ],
+                  "_lastExecutionId": "d2c6a964-dc78-469d-a435-dc851c698f87"
+                }
+              }
+            ]
+          }
+        ],
+        "event": []
+      },
+      {
+        "id": "8f0e679d-3e05-42d5-988d-f31ccbd29acd",
+        "name": "Rate Limiting",
+        "item": [
+          {
+            "id": "0394578f-32c6-47bb-b4ac-6e7a585c67bd",
+            "name": "Rapid Requests",
+            "request": {
+              "url": {
+                "path": ["api", "v1", "resources"],
+                "host": ["{{baseUrl}}"],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{authToken}}"
+                }
+              ],
+              "method": "GET"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "82acc85a-4145-4663-a80a-4b2b63271cba",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Rate limiting is enforced', function() {",
+                    "    if (pm.iterationData.get('iteration') > pm.environment.get('rateLimit')) {",
+                    "        pm.response.to.have.status(429);",
+                    "    }",
+                    "});"
+                  ],
+                  "_lastExecutionId": "2c238cb2-643b-4781-9d75-5553086f0f7f"
+                }
+              }
+            ]
+          }
+        ],
+        "event": []
+      },
+      {
+        "id": "527ebfd2-7e78-4bc9-bd21-17a15e3d7c49",
+        "name": "Integration Gateway",
+        "item": [
+          {
+            "id": "a19c37cb-b7c6-4966-9828-4ad0d396d60f",
+            "name": "Gateway Routes",
+            "request": {
+              "url": {
+                "path": ["gateway", "routes"],
+                "host": ["{{baseUrl}}"],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{authToken}}"
+                }
+              ],
+              "method": "GET"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "df587c4a-8b4d-4bd7-9770-9c864a97192b",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Gateway routes are configured', function() {",
+                    "    pm.response.to.have.status(200);",
+                    "    const response = pm.response.json();",
+                    "    pm.expect(response.routes).to.be.an('array');",
+                    "});"
+                  ],
+                  "_lastExecutionId": "b6fdd366-7f82-4204-9c09-91a00c7dff0c"
+                }
+              }
+            ]
+          },
+          {
+            "id": "1f9b9188-62b0-42b6-882e-6587f56006f2",
+            "name": "Gateway Metrics",
+            "request": {
+              "url": {
+                "path": ["gateway", "metrics"],
+                "host": ["{{baseUrl}}"],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Authorization",
+                  "value": "Bearer {{authToken}}"
+                }
+              ],
+              "method": "GET"
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "9d5fa375-af75-4fe6-a81f-13509a5de0d3",
+                  "type": "text/javascript",
+                  "exec": [
+                    "pm.test('Gateway metrics are available', function() {",
+                    "    pm.response.to.have.status(200);",
+                    "    const response = pm.response.json();",
+                    "    pm.expect(response.metrics).to.exist;",
+                    "});"
+                  ],
+                  "_lastExecutionId": "b31d30e7-5782-45ae-9571-ceb10d40c413"
+                }
+              }
+            ]
+          }
+        ],
+        "event": []
+      }
+    ],
+    "event": [
+      {
+        "listen": "prerequest",
+        "script": {
+          "id": "de8aa733-dfc8-4fe3-a7af-100c0e29270c",
+          "type": "text/javascript",
+          "exec": [
+            "// Global Pre-request Script",
+            "if (!pm.environment.get('authToken')) {",
+            "    console.log('No auth token found, initiating authentication...');",
+            "    // Add authentication logic here",
+            "}"
+          ],
+          "_lastExecutionId": "5e502ecc-be6e-48a8-aabe-053c011e6fdc"
+        }
+      }
+    ],
+    "variable": [
+      {
+        "type": "string",
+        "value": "https://api.day1.asoos.com",
+        "key": "baseUrl"
+      },
+      {
+        "type": "string",
+        "value": "",
+        "key": "authToken"
+      }
+    ],
+    "info": {
+      "_postman_id": "d6bc44ba-94b8-482d-bffb-d07d286a641f",
+      "name": "Day1 API Tests",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    }
+  },
+  "environment": {
+    "_": {
+      "postman_variable_scope": "environment",
+      "postman_exported_at": "2024-01-01T00:00:00.000Z",
+      "postman_exported_using": "Postman"
+    },
+    "id": "day1-api-env",
+    "name": "Day1 API Environment",
+    "values": [
+      {
+        "type": "any",
+        "value": "https://dev-api.day1.asoos.com",
+        "key": "dev_base_url"
+      },
+      {
+        "type": "any",
+        "value": "https://staging-api.day1.asoos.com",
+        "key": "staging_base_url"
+      },
+      {
+        "type": "any",
+        "value": "https://api.day1.asoos.com",
+        "key": "prod_base_url"
+      },
+      {
+        "type": "any",
+        "value": "",
+        "key": "api_key"
+      },
+      {
+        "type": "any",
+        "value": "",
+        "key": "client_id"
+      },
+      {
+        "type": "any",
+        "value": "",
+        "key": "client_secret"
+      },
+      {
+        "type": "any",
+        "value": "",
+        "key": "access_token"
+      },
+      {
+        "type": "any",
+        "value": "",
+        "key": "refresh_token"
+      },
+      {
+        "type": "any",
+        "value": "https://auth.day1.asoos.com",
+        "key": "auth_server_url"
+      },
+      {
+        "type": "any",
+        "value": "test@asoos.com",
+        "key": "test_user_email"
+      },
+      {
+        "type": "any",
+        "value": "",
+        "key": "test_user_password"
+      },
+      {
+        "type": "any",
+        "value": "30000",
+        "key": "request_timeout"
+      },
+      {
+        "type": "any",
+        "value": "3",
+        "key": "max_retries"
+      },
+      {
+        "type": "any",
+        "value": "100",
+        "key": "rate_limit_requests"
+      },
+      {
+        "type": "any",
+        "value": "60",
+        "key": "rate_limit_interval"
+      },
+      {
+        "type": "any",
+        "value": "https://gateway.day1.asoos.com",
+        "key": "integration_gateway_url"
+      },
+      {
+        "type": "any",
+        "value": "https://monitoring.day1.asoos.com",
+        "key": "monitoring_endpoint"
+      },
+      {
+        "type": "any",
+        "value": "minimal",
+        "key": "test_data_set"
+      },
+      {
+        "type": "any",
+        "value": "dummy-api-key",
+        "key": "apiKey"
+      },
+      {
+        "type": "any",
+        "value": "dummy-api-secret",
+        "key": "apiSecret"
+      },
+      {
+        "type": "any",
+        "value": "dummy-auth-token",
+        "key": "authToken"
+      },
+      {
+        "type": "any",
+        "value": "development",
+        "key": "environment"
+      }
+    ]
+  },
+  "globals": {
+    "id": "13536122-69e7-4bae-ad2f-2a9001ca2a59",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 10,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 20,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 10,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 10,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 10,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 11,
+        "pending": 0,
+        "failed": 10
+      },
+      "testScripts": {
+        "total": 10,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 10,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 153.3,
+      "responseMin": 94,
+      "responseMax": 670,
+      "responseSd": 172.23997793775987,
+      "dnsAverage": 0,
+      "dnsMin": 0,
+      "dnsMax": 0,
+      "dnsSd": 0,
+      "firstByteAverage": 0,
+      "firstByteMin": 0,
+      "firstByteMax": 0,
+      "firstByteSd": 0,
+      "started": 1741670234681,
+      "completed": 1741670236403
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 10,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "0ba504f7-fd21-4bf5-bb08-0953e44f20d5",
+          "httpRequestId": "e89622d4-2ff1-43d2-84a7-d40d3741002d"
+        },
+        "item": {
+          "id": "733d4ed1-9713-4b6e-90ad-21408c586fc3",
+          "name": "Verify Environment",
+          "request": {
+            "url": {
+              "path": ["api", "v1", "status"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "d7ad2fbd-a99e-4c3d-a6cb-f0eee323ecf4",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Environment is properly configured', function() {",
+                  "    pm.expect(pm.environment.get('baseUrl')).to.not.be.empty;",
+                  "    pm.expect(pm.environment.get('authToken')).to.not.be.empty;",
+                  "});"
+                ],
+                "_lastExecutionId": "cf3980e0-7dd8-4c73-85b4-16b1fa471722"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": ["api", "v1", "status"],
+            "host": ["api", "day1", "asoos", "com"],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "1e94857f-9a26-4f66-80c4-5ea5f73a71a3",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.day1.asoos.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "e68cf205-84a7-4c0d-ba9a-8da8c89131d7",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5, max=100"
+            },
+            {
+              "key": "content-type",
+              "value": "text/html"
+            },
+            {
+              "key": "content-length",
+              "value": "627"
+            },
+            {
+              "key": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "date",
+              "value": "Tue, 11 Mar 2025 05:17:16 GMT"
+            },
+            {
+              "key": "server",
+              "value": "LiteSpeed"
+            },
+            {
+              "key": "alt-svc",
+              "value": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000, h3-Q050=\":443\"; ma=2592000, h3-Q046=\":443\"; ma=2592000, h3-Q043=\":443\"; ma=2592000, quic=\":443\"; ma=2592000; v=\"43,46\""
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              60, 33, 68, 79, 67, 84, 89, 80, 69, 32, 104, 116, 109, 108, 62,
+              10, 60, 104, 116, 109, 108, 32, 115, 116, 121, 108, 101, 61, 34,
+              104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 37, 34, 62, 10, 60,
+              104, 101, 97, 100, 62, 10, 60, 109, 101, 116, 97, 32, 110, 97,
+              109, 101, 61, 34, 118, 105, 101, 119, 112, 111, 114, 116, 34, 32,
+              99, 111, 110, 116, 101, 110, 116, 61, 34, 119, 105, 100, 116, 104,
+              61, 100, 101, 118, 105, 99, 101, 45, 119, 105, 100, 116, 104, 44,
+              32, 105, 110, 105, 116, 105, 97, 108, 45, 115, 99, 97, 108, 101,
+              61, 49, 44, 32, 115, 104, 114, 105, 110, 107, 45, 116, 111, 45,
+              102, 105, 116, 61, 110, 111, 34, 32, 47, 62, 10, 60, 116, 105,
+              116, 108, 101, 62, 32, 52, 48, 52, 32, 78, 111, 116, 32, 70, 111,
+              117, 110, 100, 10, 60, 47, 116, 105, 116, 108, 101, 62, 60, 47,
+              104, 101, 97, 100, 62, 10, 60, 98, 111, 100, 121, 32, 115, 116,
+              121, 108, 101, 61, 34, 99, 111, 108, 111, 114, 58, 32, 35, 52, 52,
+              52, 59, 32, 109, 97, 114, 103, 105, 110, 58, 48, 59, 102, 111,
+              110, 116, 58, 32, 110, 111, 114, 109, 97, 108, 32, 49, 52, 112,
+              120, 47, 50, 48, 112, 120, 32, 65, 114, 105, 97, 108, 44, 32, 72,
+              101, 108, 118, 101, 116, 105, 99, 97, 44, 32, 115, 97, 110, 115,
+              45, 115, 101, 114, 105, 102, 59, 32, 104, 101, 105, 103, 104, 116,
+              58, 49, 48, 48, 37, 59, 32, 98, 97, 99, 107, 103, 114, 111, 117,
+              110, 100, 45, 99, 111, 108, 111, 114, 58, 32, 35, 102, 102, 102,
+              59, 34, 62, 10, 60, 100, 105, 118, 32, 115, 116, 121, 108, 101,
+              61, 34, 104, 101, 105, 103, 104, 116, 58, 97, 117, 116, 111, 59,
+              32, 109, 105, 110, 45, 104, 101, 105, 103, 104, 116, 58, 49, 48,
+              48, 37, 59, 32, 34, 62, 32, 32, 32, 32, 32, 60, 100, 105, 118, 32,
+              115, 116, 121, 108, 101, 61, 34, 116, 101, 120, 116, 45, 97, 108,
+              105, 103, 110, 58, 32, 99, 101, 110, 116, 101, 114, 59, 32, 119,
+              105, 100, 116, 104, 58, 56, 48, 48, 112, 120, 59, 32, 109, 97,
+              114, 103, 105, 110, 45, 108, 101, 102, 116, 58, 32, 45, 52, 48,
+              48, 112, 120, 59, 32, 112, 111, 115, 105, 116, 105, 111, 110, 58,
+              97, 98, 115, 111, 108, 117, 116, 101, 59, 32, 116, 111, 112, 58,
+              32, 51, 48, 37, 59, 32, 108, 101, 102, 116, 58, 53, 48, 37, 59,
+              34, 62, 10, 32, 32, 32, 32, 32, 32, 32, 32, 60, 104, 49, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 58, 48,
+              59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58, 49, 53,
+              48, 112, 120, 59, 32, 108, 105, 110, 101, 45, 104, 101, 105, 103,
+              104, 116, 58, 49, 53, 48, 112, 120, 59, 32, 102, 111, 110, 116,
+              45, 119, 101, 105, 103, 104, 116, 58, 98, 111, 108, 100, 59, 34,
+              62, 52, 48, 52, 60, 47, 104, 49, 62, 10, 60, 104, 50, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 45, 116,
+              111, 112, 58, 50, 48, 112, 120, 59, 102, 111, 110, 116, 45, 115,
+              105, 122, 101, 58, 32, 51, 48, 112, 120, 59, 34, 62, 78, 111, 116,
+              32, 70, 111, 117, 110, 100, 10, 60, 47, 104, 50, 62, 10, 60, 112,
+              62, 84, 104, 101, 32, 114, 101, 115, 111, 117, 114, 99, 101, 32,
+              114, 101, 113, 117, 101, 115, 116, 101, 100, 32, 99, 111, 117,
+              108, 100, 32, 110, 111, 116, 32, 98, 101, 32, 102, 111, 117, 110,
+              100, 32, 111, 110, 32, 116, 104, 105, 115, 32, 115, 101, 114, 118,
+              101, 114, 33, 60, 47, 112, 62, 10, 60, 47, 100, 105, 118, 62, 60,
+              47, 100, 105, 118, 62, 60, 100, 105, 118, 32, 115, 116, 121, 108,
+              101, 61, 34, 99, 111, 108, 111, 114, 58, 35, 102, 48, 102, 48,
+              102, 48, 59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58,
+              49, 50, 112, 120, 59, 109, 97, 114, 103, 105, 110, 58, 97, 117,
+              116, 111, 59, 112, 97, 100, 100, 105, 110, 103, 58, 48, 112, 120,
+              32, 51, 48, 112, 120, 32, 48, 112, 120, 32, 51, 48, 112, 120, 59,
+              112, 111, 115, 105, 116, 105, 111, 110, 58, 114, 101, 108, 97,
+              116, 105, 118, 101, 59, 99, 108, 101, 97, 114, 58, 98, 111, 116,
+              104, 59, 104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 112, 120,
+              59, 109, 97, 114, 103, 105, 110, 45, 116, 111, 112, 58, 45, 49,
+              48, 49, 112, 120, 59, 98, 97, 99, 107, 103, 114, 111, 117, 110,
+              100, 45, 99, 111, 108, 111, 114, 58, 35, 52, 55, 52, 55, 52, 55,
+              59, 98, 111, 114, 100, 101, 114, 45, 116, 111, 112, 58, 32, 49,
+              112, 120, 32, 115, 111, 108, 105, 100, 32, 114, 103, 98, 97, 40,
+              48, 44, 48, 44, 48, 44, 48, 46, 49, 53, 41, 59, 98, 111, 120, 45,
+              115, 104, 97, 100, 111, 119, 58, 32, 48, 32, 49, 112, 120, 32, 48,
+              32, 114, 103, 98, 97, 40, 50, 53, 53, 44, 32, 50, 53, 53, 44, 32,
+              50, 53, 53, 44, 32, 48, 46, 51, 41, 32, 105, 110, 115, 101, 116,
+              59, 34, 62, 10, 60, 98, 114, 62, 80, 114, 111, 117, 100, 108, 121,
+              32, 112, 111, 119, 101, 114, 101, 100, 32, 98, 121, 32, 32, 60,
+              97, 32, 115, 116, 121, 108, 101, 61, 34, 99, 111, 108, 111, 114,
+              58, 35, 102, 102, 102, 59, 34, 32, 104, 114, 101, 102, 61, 34,
+              104, 116, 116, 112, 58, 47, 47, 119, 119, 119, 46, 116, 117, 114,
+              98, 105, 102, 121, 46, 99, 111, 109, 34, 62, 84, 117, 114, 98,
+              105, 102, 121, 32, 87, 101, 98, 32, 72, 111, 115, 116, 105, 110,
+              103, 60, 47, 97, 62, 60, 47, 100, 105, 118, 62, 60, 47, 98, 111,
+              100, 121, 62, 60, 47, 104, 116, 109, 108, 62, 10
+            ]
+          },
+          "cookie": [],
+          "responseTime": 670,
+          "responseSize": 1070
+        },
+        "id": "733d4ed1-9713-4b6e-90ad-21408c586fc3",
+        "assertions": [
+          {
+            "assertion": "Environment is properly configured",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Environment is properly configured",
+              "message": ".empty was passed non-string primitive undefined",
+              "stack": "AssertionError: .empty was passed non-string primitive undefined\n   at Object.eval sandbox-script.js:1:1)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "d936928f-f38a-4762-81ce-343fe7b11f97",
+          "length": 10,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "286475f9-849e-421f-95da-a6814559001a"
+        },
+        "item": {
+          "id": "2d43d0f6-850b-4767-94e9-90e28fb9cad9",
+          "name": "API Health Check",
+          "request": {
+            "url": {
+              "path": ["health"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "99d604f5-f1ff-4ce4-b377-ddc5911d0ba4",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Health check response is valid', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.status).to.eql('healthy');",
+                  "    pm.expect(response.version).to.exist;",
+                  "});"
+                ],
+                "_lastExecutionId": "cc492bda-4b25-498d-8d63-0f080d97b73a"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": ["health"],
+            "host": ["api", "day1", "asoos", "com"],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "b6f939d3-8147-4874-87ae-9edb20916910",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.day1.asoos.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "278863ca-60dc-45b2-9811-dc6522d53304",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5, max=100"
+            },
+            {
+              "key": "content-type",
+              "value": "text/html"
+            },
+            {
+              "key": "content-length",
+              "value": "627"
+            },
+            {
+              "key": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "date",
+              "value": "Tue, 11 Mar 2025 05:17:16 GMT"
+            },
+            {
+              "key": "server",
+              "value": "LiteSpeed"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              60, 33, 68, 79, 67, 84, 89, 80, 69, 32, 104, 116, 109, 108, 62,
+              10, 60, 104, 116, 109, 108, 32, 115, 116, 121, 108, 101, 61, 34,
+              104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 37, 34, 62, 10, 60,
+              104, 101, 97, 100, 62, 10, 60, 109, 101, 116, 97, 32, 110, 97,
+              109, 101, 61, 34, 118, 105, 101, 119, 112, 111, 114, 116, 34, 32,
+              99, 111, 110, 116, 101, 110, 116, 61, 34, 119, 105, 100, 116, 104,
+              61, 100, 101, 118, 105, 99, 101, 45, 119, 105, 100, 116, 104, 44,
+              32, 105, 110, 105, 116, 105, 97, 108, 45, 115, 99, 97, 108, 101,
+              61, 49, 44, 32, 115, 104, 114, 105, 110, 107, 45, 116, 111, 45,
+              102, 105, 116, 61, 110, 111, 34, 32, 47, 62, 10, 60, 116, 105,
+              116, 108, 101, 62, 32, 52, 48, 52, 32, 78, 111, 116, 32, 70, 111,
+              117, 110, 100, 10, 60, 47, 116, 105, 116, 108, 101, 62, 60, 47,
+              104, 101, 97, 100, 62, 10, 60, 98, 111, 100, 121, 32, 115, 116,
+              121, 108, 101, 61, 34, 99, 111, 108, 111, 114, 58, 32, 35, 52, 52,
+              52, 59, 32, 109, 97, 114, 103, 105, 110, 58, 48, 59, 102, 111,
+              110, 116, 58, 32, 110, 111, 114, 109, 97, 108, 32, 49, 52, 112,
+              120, 47, 50, 48, 112, 120, 32, 65, 114, 105, 97, 108, 44, 32, 72,
+              101, 108, 118, 101, 116, 105, 99, 97, 44, 32, 115, 97, 110, 115,
+              45, 115, 101, 114, 105, 102, 59, 32, 104, 101, 105, 103, 104, 116,
+              58, 49, 48, 48, 37, 59, 32, 98, 97, 99, 107, 103, 114, 111, 117,
+              110, 100, 45, 99, 111, 108, 111, 114, 58, 32, 35, 102, 102, 102,
+              59, 34, 62, 10, 60, 100, 105, 118, 32, 115, 116, 121, 108, 101,
+              61, 34, 104, 101, 105, 103, 104, 116, 58, 97, 117, 116, 111, 59,
+              32, 109, 105, 110, 45, 104, 101, 105, 103, 104, 116, 58, 49, 48,
+              48, 37, 59, 32, 34, 62, 32, 32, 32, 32, 32, 60, 100, 105, 118, 32,
+              115, 116, 121, 108, 101, 61, 34, 116, 101, 120, 116, 45, 97, 108,
+              105, 103, 110, 58, 32, 99, 101, 110, 116, 101, 114, 59, 32, 119,
+              105, 100, 116, 104, 58, 56, 48, 48, 112, 120, 59, 32, 109, 97,
+              114, 103, 105, 110, 45, 108, 101, 102, 116, 58, 32, 45, 52, 48,
+              48, 112, 120, 59, 32, 112, 111, 115, 105, 116, 105, 111, 110, 58,
+              97, 98, 115, 111, 108, 117, 116, 101, 59, 32, 116, 111, 112, 58,
+              32, 51, 48, 37, 59, 32, 108, 101, 102, 116, 58, 53, 48, 37, 59,
+              34, 62, 10, 32, 32, 32, 32, 32, 32, 32, 32, 60, 104, 49, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 58, 48,
+              59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58, 49, 53,
+              48, 112, 120, 59, 32, 108, 105, 110, 101, 45, 104, 101, 105, 103,
+              104, 116, 58, 49, 53, 48, 112, 120, 59, 32, 102, 111, 110, 116,
+              45, 119, 101, 105, 103, 104, 116, 58, 98, 111, 108, 100, 59, 34,
+              62, 52, 48, 52, 60, 47, 104, 49, 62, 10, 60, 104, 50, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 45, 116,
+              111, 112, 58, 50, 48, 112, 120, 59, 102, 111, 110, 116, 45, 115,
+              105, 122, 101, 58, 32, 51, 48, 112, 120, 59, 34, 62, 78, 111, 116,
+              32, 70, 111, 117, 110, 100, 10, 60, 47, 104, 50, 62, 10, 60, 112,
+              62, 84, 104, 101, 32, 114, 101, 115, 111, 117, 114, 99, 101, 32,
+              114, 101, 113, 117, 101, 115, 116, 101, 100, 32, 99, 111, 117,
+              108, 100, 32, 110, 111, 116, 32, 98, 101, 32, 102, 111, 117, 110,
+              100, 32, 111, 110, 32, 116, 104, 105, 115, 32, 115, 101, 114, 118,
+              101, 114, 33, 60, 47, 112, 62, 10, 60, 47, 100, 105, 118, 62, 60,
+              47, 100, 105, 118, 62, 60, 100, 105, 118, 32, 115, 116, 121, 108,
+              101, 61, 34, 99, 111, 108, 111, 114, 58, 35, 102, 48, 102, 48,
+              102, 48, 59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58,
+              49, 50, 112, 120, 59, 109, 97, 114, 103, 105, 110, 58, 97, 117,
+              116, 111, 59, 112, 97, 100, 100, 105, 110, 103, 58, 48, 112, 120,
+              32, 51, 48, 112, 120, 32, 48, 112, 120, 32, 51, 48, 112, 120, 59,
+              112, 111, 115, 105, 116, 105, 111, 110, 58, 114, 101, 108, 97,
+              116, 105, 118, 101, 59, 99, 108, 101, 97, 114, 58, 98, 111, 116,
+              104, 59, 104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 112, 120,
+              59, 109, 97, 114, 103, 105, 110, 45, 116, 111, 112, 58, 45, 49,
+              48, 49, 112, 120, 59, 98, 97, 99, 107, 103, 114, 111, 117, 110,
+              100, 45, 99, 111, 108, 111, 114, 58, 35, 52, 55, 52, 55, 52, 55,
+              59, 98, 111, 114, 100, 101, 114, 45, 116, 111, 112, 58, 32, 49,
+              112, 120, 32, 115, 111, 108, 105, 100, 32, 114, 103, 98, 97, 40,
+              48, 44, 48, 44, 48, 44, 48, 46, 49, 53, 41, 59, 98, 111, 120, 45,
+              115, 104, 97, 100, 111, 119, 58, 32, 48, 32, 49, 112, 120, 32, 48,
+              32, 114, 103, 98, 97, 40, 50, 53, 53, 44, 32, 50, 53, 53, 44, 32,
+              50, 53, 53, 44, 32, 48, 46, 51, 41, 32, 105, 110, 115, 101, 116,
+              59, 34, 62, 10, 60, 98, 114, 62, 80, 114, 111, 117, 100, 108, 121,
+              32, 112, 111, 119, 101, 114, 101, 100, 32, 98, 121, 32, 32, 60,
+              97, 32, 115, 116, 121, 108, 101, 61, 34, 99, 111, 108, 111, 114,
+              58, 35, 102, 102, 102, 59, 34, 32, 104, 114, 101, 102, 61, 34,
+              104, 116, 116, 112, 58, 47, 47, 119, 119, 119, 46, 116, 117, 114,
+              98, 105, 102, 121, 46, 99, 111, 109, 34, 62, 84, 117, 114, 98,
+              105, 102, 121, 32, 87, 101, 98, 32, 72, 111, 115, 116, 105, 110,
+              103, 60, 47, 97, 62, 60, 47, 100, 105, 118, 62, 60, 47, 98, 111,
+              100, 121, 62, 60, 47, 104, 116, 109, 108, 62, 10
+            ]
+          },
+          "cookie": [],
+          "responseTime": 96,
+          "responseSize": 1070
+        },
+        "id": "2d43d0f6-850b-4767-94e9-90e28fb9cad9",
+        "assertions": [
+          {
+            "assertion": "Status code is 200",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Status code is 200",
+              "message": "expected response to have status code 200 but got 404",
+              "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:2)"
+            }
+          },
+          {
+            "assertion": "Health check response is valid",
+            "skipped": false,
+            "error": {
+              "name": "JSONError",
+              "index": 1,
+              "test": "Health check response is valid",
+              "message": "Unexpected token '<' at 1:1\n<!DOCTYPE html>\n^",
+              "stack": "JSONError: Unexpected token '<' at 1:1\n<!DOCTYPE html>\n^\n   at Object.eval sandbox-script.js:2:2)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "41666e41-61f9-4121-8d38-2d13bc8ee997",
+          "length": 10,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "98365862-1c42-4ab6-a3f3-9d5180b14242"
+        },
+        "item": {
+          "id": "f88c8201-98a8-4b2e-9573-577aaeb7917d",
+          "name": "Integration Gateway Health",
+          "request": {
+            "url": {
+              "path": ["gateway", "health"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "45f2533c-dcab-4120-9fd6-58b5e088475c",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Gateway is healthy', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.gateway_status).to.eql('operational');",
+                  "});"
+                ],
+                "_lastExecutionId": "b36fa8c0-7997-4231-aaa9-41192c8f5db8"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": ["gateway", "health"],
+            "host": ["api", "day1", "asoos", "com"],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "54c83fbe-7088-4752-91cc-ac23c2ba2fba",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.day1.asoos.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "d1a6c761-e32a-4c53-9678-7a1977517b8b",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5, max=100"
+            },
+            {
+              "key": "content-type",
+              "value": "text/html"
+            },
+            {
+              "key": "content-length",
+              "value": "627"
+            },
+            {
+              "key": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "date",
+              "value": "Tue, 11 Mar 2025 05:17:16 GMT"
+            },
+            {
+              "key": "server",
+              "value": "LiteSpeed"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              60, 33, 68, 79, 67, 84, 89, 80, 69, 32, 104, 116, 109, 108, 62,
+              10, 60, 104, 116, 109, 108, 32, 115, 116, 121, 108, 101, 61, 34,
+              104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 37, 34, 62, 10, 60,
+              104, 101, 97, 100, 62, 10, 60, 109, 101, 116, 97, 32, 110, 97,
+              109, 101, 61, 34, 118, 105, 101, 119, 112, 111, 114, 116, 34, 32,
+              99, 111, 110, 116, 101, 110, 116, 61, 34, 119, 105, 100, 116, 104,
+              61, 100, 101, 118, 105, 99, 101, 45, 119, 105, 100, 116, 104, 44,
+              32, 105, 110, 105, 116, 105, 97, 108, 45, 115, 99, 97, 108, 101,
+              61, 49, 44, 32, 115, 104, 114, 105, 110, 107, 45, 116, 111, 45,
+              102, 105, 116, 61, 110, 111, 34, 32, 47, 62, 10, 60, 116, 105,
+              116, 108, 101, 62, 32, 52, 48, 52, 32, 78, 111, 116, 32, 70, 111,
+              117, 110, 100, 10, 60, 47, 116, 105, 116, 108, 101, 62, 60, 47,
+              104, 101, 97, 100, 62, 10, 60, 98, 111, 100, 121, 32, 115, 116,
+              121, 108, 101, 61, 34, 99, 111, 108, 111, 114, 58, 32, 35, 52, 52,
+              52, 59, 32, 109, 97, 114, 103, 105, 110, 58, 48, 59, 102, 111,
+              110, 116, 58, 32, 110, 111, 114, 109, 97, 108, 32, 49, 52, 112,
+              120, 47, 50, 48, 112, 120, 32, 65, 114, 105, 97, 108, 44, 32, 72,
+              101, 108, 118, 101, 116, 105, 99, 97, 44, 32, 115, 97, 110, 115,
+              45, 115, 101, 114, 105, 102, 59, 32, 104, 101, 105, 103, 104, 116,
+              58, 49, 48, 48, 37, 59, 32, 98, 97, 99, 107, 103, 114, 111, 117,
+              110, 100, 45, 99, 111, 108, 111, 114, 58, 32, 35, 102, 102, 102,
+              59, 34, 62, 10, 60, 100, 105, 118, 32, 115, 116, 121, 108, 101,
+              61, 34, 104, 101, 105, 103, 104, 116, 58, 97, 117, 116, 111, 59,
+              32, 109, 105, 110, 45, 104, 101, 105, 103, 104, 116, 58, 49, 48,
+              48, 37, 59, 32, 34, 62, 32, 32, 32, 32, 32, 60, 100, 105, 118, 32,
+              115, 116, 121, 108, 101, 61, 34, 116, 101, 120, 116, 45, 97, 108,
+              105, 103, 110, 58, 32, 99, 101, 110, 116, 101, 114, 59, 32, 119,
+              105, 100, 116, 104, 58, 56, 48, 48, 112, 120, 59, 32, 109, 97,
+              114, 103, 105, 110, 45, 108, 101, 102, 116, 58, 32, 45, 52, 48,
+              48, 112, 120, 59, 32, 112, 111, 115, 105, 116, 105, 111, 110, 58,
+              97, 98, 115, 111, 108, 117, 116, 101, 59, 32, 116, 111, 112, 58,
+              32, 51, 48, 37, 59, 32, 108, 101, 102, 116, 58, 53, 48, 37, 59,
+              34, 62, 10, 32, 32, 32, 32, 32, 32, 32, 32, 60, 104, 49, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 58, 48,
+              59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58, 49, 53,
+              48, 112, 120, 59, 32, 108, 105, 110, 101, 45, 104, 101, 105, 103,
+              104, 116, 58, 49, 53, 48, 112, 120, 59, 32, 102, 111, 110, 116,
+              45, 119, 101, 105, 103, 104, 116, 58, 98, 111, 108, 100, 59, 34,
+              62, 52, 48, 52, 60, 47, 104, 49, 62, 10, 60, 104, 50, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 45, 116,
+              111, 112, 58, 50, 48, 112, 120, 59, 102, 111, 110, 116, 45, 115,
+              105, 122, 101, 58, 32, 51, 48, 112, 120, 59, 34, 62, 78, 111, 116,
+              32, 70, 111, 117, 110, 100, 10, 60, 47, 104, 50, 62, 10, 60, 112,
+              62, 84, 104, 101, 32, 114, 101, 115, 111, 117, 114, 99, 101, 32,
+              114, 101, 113, 117, 101, 115, 116, 101, 100, 32, 99, 111, 117,
+              108, 100, 32, 110, 111, 116, 32, 98, 101, 32, 102, 111, 117, 110,
+              100, 32, 111, 110, 32, 116, 104, 105, 115, 32, 115, 101, 114, 118,
+              101, 114, 33, 60, 47, 112, 62, 10, 60, 47, 100, 105, 118, 62, 60,
+              47, 100, 105, 118, 62, 60, 100, 105, 118, 32, 115, 116, 121, 108,
+              101, 61, 34, 99, 111, 108, 111, 114, 58, 35, 102, 48, 102, 48,
+              102, 48, 59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58,
+              49, 50, 112, 120, 59, 109, 97, 114, 103, 105, 110, 58, 97, 117,
+              116, 111, 59, 112, 97, 100, 100, 105, 110, 103, 58, 48, 112, 120,
+              32, 51, 48, 112, 120, 32, 48, 112, 120, 32, 51, 48, 112, 120, 59,
+              112, 111, 115, 105, 116, 105, 111, 110, 58, 114, 101, 108, 97,
+              116, 105, 118, 101, 59, 99, 108, 101, 97, 114, 58, 98, 111, 116,
+              104, 59, 104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 112, 120,
+              59, 109, 97, 114, 103, 105, 110, 45, 116, 111, 112, 58, 45, 49,
+              48, 49, 112, 120, 59, 98, 97, 99, 107, 103, 114, 111, 117, 110,
+              100, 45, 99, 111, 108, 111, 114, 58, 35, 52, 55, 52, 55, 52, 55,
+              59, 98, 111, 114, 100, 101, 114, 45, 116, 111, 112, 58, 32, 49,
+              112, 120, 32, 115, 111, 108, 105, 100, 32, 114, 103, 98, 97, 40,
+              48, 44, 48, 44, 48, 44, 48, 46, 49, 53, 41, 59, 98, 111, 120, 45,
+              115, 104, 97, 100, 111, 119, 58, 32, 48, 32, 49, 112, 120, 32, 48,
+              32, 114, 103, 98, 97, 40, 50, 53, 53, 44, 32, 50, 53, 53, 44, 32,
+              50, 53, 53, 44, 32, 48, 46, 51, 41, 32, 105, 110, 115, 101, 116,
+              59, 34, 62, 10, 60, 98, 114, 62, 80, 114, 111, 117, 100, 108, 121,
+              32, 112, 111, 119, 101, 114, 101, 100, 32, 98, 121, 32, 32, 60,
+              97, 32, 115, 116, 121, 108, 101, 61, 34, 99, 111, 108, 111, 114,
+              58, 35, 102, 102, 102, 59, 34, 32, 104, 114, 101, 102, 61, 34,
+              104, 116, 116, 112, 58, 47, 47, 119, 119, 119, 46, 116, 117, 114,
+              98, 105, 102, 121, 46, 99, 111, 109, 34, 62, 84, 117, 114, 98,
+              105, 102, 121, 32, 87, 101, 98, 32, 72, 111, 115, 116, 105, 110,
+              103, 60, 47, 97, 62, 60, 47, 100, 105, 118, 62, 60, 47, 98, 111,
+              100, 121, 62, 60, 47, 104, 116, 109, 108, 62, 10
+            ]
+          },
+          "cookie": [],
+          "responseTime": 99,
+          "responseSize": 1070
+        },
+        "id": "f88c8201-98a8-4b2e-9573-577aaeb7917d",
+        "assertions": [
+          {
+            "assertion": "Gateway is healthy",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Gateway is healthy",
+              "message": "expected response to have status code 200 but got 404",
+              "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:3)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "2d10a4fd-36f5-4a5f-8b09-615ec9e82313",
+          "length": 10,
+          "cycles": 1,
+          "position": 3,
+          "iteration": 0,
+          "httpRequestId": "1036ef70-b548-4762-8bf5-1ff57e9831e0"
+        },
+        "item": {
+          "id": "bbc09a55-1aab-466b-868a-b8bcb4179407",
+          "name": "Login",
+          "request": {
+            "url": {
+              "path": ["auth", "login"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "3834f5ac-3535-4132-87a3-820be59d714a",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Authentication successful', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.token).to.exist;",
+                  "    pm.environment.set('authToken', response.token);",
+                  "});"
+                ],
+                "_lastExecutionId": "1c834793-8a46-4012-9124-61c2d8050283"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": ["auth", "login"],
+            "host": ["api", "day1", "asoos", "com"],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "628ca51b-796b-4307-a91f-5d614aea2c07",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.day1.asoos.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "66",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}"
+          }
+        },
+        "response": {
+          "id": "73a167fe-ddf0-4107-9707-ffbd17e44f28",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5, max=100"
+            },
+            {
+              "key": "content-type",
+              "value": "text/html"
+            },
+            {
+              "key": "content-length",
+              "value": "627"
+            },
+            {
+              "key": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "date",
+              "value": "Tue, 11 Mar 2025 05:17:16 GMT"
+            },
+            {
+              "key": "server",
+              "value": "LiteSpeed"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              60, 33, 68, 79, 67, 84, 89, 80, 69, 32, 104, 116, 109, 108, 62,
+              10, 60, 104, 116, 109, 108, 32, 115, 116, 121, 108, 101, 61, 34,
+              104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 37, 34, 62, 10, 60,
+              104, 101, 97, 100, 62, 10, 60, 109, 101, 116, 97, 32, 110, 97,
+              109, 101, 61, 34, 118, 105, 101, 119, 112, 111, 114, 116, 34, 32,
+              99, 111, 110, 116, 101, 110, 116, 61, 34, 119, 105, 100, 116, 104,
+              61, 100, 101, 118, 105, 99, 101, 45, 119, 105, 100, 116, 104, 44,
+              32, 105, 110, 105, 116, 105, 97, 108, 45, 115, 99, 97, 108, 101,
+              61, 49, 44, 32, 115, 104, 114, 105, 110, 107, 45, 116, 111, 45,
+              102, 105, 116, 61, 110, 111, 34, 32, 47, 62, 10, 60, 116, 105,
+              116, 108, 101, 62, 32, 52, 48, 52, 32, 78, 111, 116, 32, 70, 111,
+              117, 110, 100, 10, 60, 47, 116, 105, 116, 108, 101, 62, 60, 47,
+              104, 101, 97, 100, 62, 10, 60, 98, 111, 100, 121, 32, 115, 116,
+              121, 108, 101, 61, 34, 99, 111, 108, 111, 114, 58, 32, 35, 52, 52,
+              52, 59, 32, 109, 97, 114, 103, 105, 110, 58, 48, 59, 102, 111,
+              110, 116, 58, 32, 110, 111, 114, 109, 97, 108, 32, 49, 52, 112,
+              120, 47, 50, 48, 112, 120, 32, 65, 114, 105, 97, 108, 44, 32, 72,
+              101, 108, 118, 101, 116, 105, 99, 97, 44, 32, 115, 97, 110, 115,
+              45, 115, 101, 114, 105, 102, 59, 32, 104, 101, 105, 103, 104, 116,
+              58, 49, 48, 48, 37, 59, 32, 98, 97, 99, 107, 103, 114, 111, 117,
+              110, 100, 45, 99, 111, 108, 111, 114, 58, 32, 35, 102, 102, 102,
+              59, 34, 62, 10, 60, 100, 105, 118, 32, 115, 116, 121, 108, 101,
+              61, 34, 104, 101, 105, 103, 104, 116, 58, 97, 117, 116, 111, 59,
+              32, 109, 105, 110, 45, 104, 101, 105, 103, 104, 116, 58, 49, 48,
+              48, 37, 59, 32, 34, 62, 32, 32, 32, 32, 32, 60, 100, 105, 118, 32,
+              115, 116, 121, 108, 101, 61, 34, 116, 101, 120, 116, 45, 97, 108,
+              105, 103, 110, 58, 32, 99, 101, 110, 116, 101, 114, 59, 32, 119,
+              105, 100, 116, 104, 58, 56, 48, 48, 112, 120, 59, 32, 109, 97,
+              114, 103, 105, 110, 45, 108, 101, 102, 116, 58, 32, 45, 52, 48,
+              48, 112, 120, 59, 32, 112, 111, 115, 105, 116, 105, 111, 110, 58,
+              97, 98, 115, 111, 108, 117, 116, 101, 59, 32, 116, 111, 112, 58,
+              32, 51, 48, 37, 59, 32, 108, 101, 102, 116, 58, 53, 48, 37, 59,
+              34, 62, 10, 32, 32, 32, 32, 32, 32, 32, 32, 60, 104, 49, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 58, 48,
+              59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58, 49, 53,
+              48, 112, 120, 59, 32, 108, 105, 110, 101, 45, 104, 101, 105, 103,
+              104, 116, 58, 49, 53, 48, 112, 120, 59, 32, 102, 111, 110, 116,
+              45, 119, 101, 105, 103, 104, 116, 58, 98, 111, 108, 100, 59, 34,
+              62, 52, 48, 52, 60, 47, 104, 49, 62, 10, 60, 104, 50, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 45, 116,
+              111, 112, 58, 50, 48, 112, 120, 59, 102, 111, 110, 116, 45, 115,
+              105, 122, 101, 58, 32, 51, 48, 112, 120, 59, 34, 62, 78, 111, 116,
+              32, 70, 111, 117, 110, 100, 10, 60, 47, 104, 50, 62, 10, 60, 112,
+              62, 84, 104, 101, 32, 114, 101, 115, 111, 117, 114, 99, 101, 32,
+              114, 101, 113, 117, 101, 115, 116, 101, 100, 32, 99, 111, 117,
+              108, 100, 32, 110, 111, 116, 32, 98, 101, 32, 102, 111, 117, 110,
+              100, 32, 111, 110, 32, 116, 104, 105, 115, 32, 115, 101, 114, 118,
+              101, 114, 33, 60, 47, 112, 62, 10, 60, 47, 100, 105, 118, 62, 60,
+              47, 100, 105, 118, 62, 60, 100, 105, 118, 32, 115, 116, 121, 108,
+              101, 61, 34, 99, 111, 108, 111, 114, 58, 35, 102, 48, 102, 48,
+              102, 48, 59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58,
+              49, 50, 112, 120, 59, 109, 97, 114, 103, 105, 110, 58, 97, 117,
+              116, 111, 59, 112, 97, 100, 100, 105, 110, 103, 58, 48, 112, 120,
+              32, 51, 48, 112, 120, 32, 48, 112, 120, 32, 51, 48, 112, 120, 59,
+              112, 111, 115, 105, 116, 105, 111, 110, 58, 114, 101, 108, 97,
+              116, 105, 118, 101, 59, 99, 108, 101, 97, 114, 58, 98, 111, 116,
+              104, 59, 104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 112, 120,
+              59, 109, 97, 114, 103, 105, 110, 45, 116, 111, 112, 58, 45, 49,
+              48, 49, 112, 120, 59, 98, 97, 99, 107, 103, 114, 111, 117, 110,
+              100, 45, 99, 111, 108, 111, 114, 58, 35, 52, 55, 52, 55, 52, 55,
+              59, 98, 111, 114, 100, 101, 114, 45, 116, 111, 112, 58, 32, 49,
+              112, 120, 32, 115, 111, 108, 105, 100, 32, 114, 103, 98, 97, 40,
+              48, 44, 48, 44, 48, 44, 48, 46, 49, 53, 41, 59, 98, 111, 120, 45,
+              115, 104, 97, 100, 111, 119, 58, 32, 48, 32, 49, 112, 120, 32, 48,
+              32, 114, 103, 98, 97, 40, 50, 53, 53, 44, 32, 50, 53, 53, 44, 32,
+              50, 53, 53, 44, 32, 48, 46, 51, 41, 32, 105, 110, 115, 101, 116,
+              59, 34, 62, 10, 60, 98, 114, 62, 80, 114, 111, 117, 100, 108, 121,
+              32, 112, 111, 119, 101, 114, 101, 100, 32, 98, 121, 32, 32, 60,
+              97, 32, 115, 116, 121, 108, 101, 61, 34, 99, 111, 108, 111, 114,
+              58, 35, 102, 102, 102, 59, 34, 32, 104, 114, 101, 102, 61, 34,
+              104, 116, 116, 112, 58, 47, 47, 119, 119, 119, 46, 116, 117, 114,
+              98, 105, 102, 121, 46, 99, 111, 109, 34, 62, 84, 117, 114, 98,
+              105, 102, 121, 32, 87, 101, 98, 32, 72, 111, 115, 116, 105, 110,
+              103, 60, 47, 97, 62, 60, 47, 100, 105, 118, 62, 60, 47, 98, 111,
+              100, 121, 62, 60, 47, 104, 116, 109, 108, 62, 10
+            ]
+          },
+          "cookie": [],
+          "responseTime": 95,
+          "responseSize": 1070
+        },
+        "id": "bbc09a55-1aab-466b-868a-b8bcb4179407",
+        "assertions": [
+          {
+            "assertion": "Authentication successful",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Authentication successful",
+              "message": "expected response to have status code 200 but got 404",
+              "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:4)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "1b0cad16-9137-4f07-ab6f-2a5e029b4651",
+          "length": 10,
+          "cycles": 1,
+          "position": 4,
+          "iteration": 0,
+          "httpRequestId": "5d84caf8-d2f4-4a5f-8c73-50df5aa63bbc"
+        },
+        "item": {
+          "id": "cb1cb659-8275-460d-ba78-e290c2183433",
+          "name": "Verify Token",
+          "request": {
+            "url": {
+              "path": ["auth", "verify"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "5da16bd2-7511-492f-980d-c29c4c3a6615",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Token is valid', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.valid).to.be.true;",
+                  "});"
+                ],
+                "_lastExecutionId": "1d6c2569-fcf2-41e7-997c-9c80c07618ac"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": ["auth", "verify"],
+            "host": ["api", "day1", "asoos", "com"],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer dummy-auth-token"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "bb0af904-7bb5-4058-97ac-d04ec4a74d14",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.day1.asoos.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "13b53d83-34cd-4632-a43c-ace2dba5db15",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5, max=100"
+            },
+            {
+              "key": "content-type",
+              "value": "text/html"
+            },
+            {
+              "key": "content-length",
+              "value": "627"
+            },
+            {
+              "key": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "date",
+              "value": "Tue, 11 Mar 2025 05:17:16 GMT"
+            },
+            {
+              "key": "server",
+              "value": "LiteSpeed"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              60, 33, 68, 79, 67, 84, 89, 80, 69, 32, 104, 116, 109, 108, 62,
+              10, 60, 104, 116, 109, 108, 32, 115, 116, 121, 108, 101, 61, 34,
+              104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 37, 34, 62, 10, 60,
+              104, 101, 97, 100, 62, 10, 60, 109, 101, 116, 97, 32, 110, 97,
+              109, 101, 61, 34, 118, 105, 101, 119, 112, 111, 114, 116, 34, 32,
+              99, 111, 110, 116, 101, 110, 116, 61, 34, 119, 105, 100, 116, 104,
+              61, 100, 101, 118, 105, 99, 101, 45, 119, 105, 100, 116, 104, 44,
+              32, 105, 110, 105, 116, 105, 97, 108, 45, 115, 99, 97, 108, 101,
+              61, 49, 44, 32, 115, 104, 114, 105, 110, 107, 45, 116, 111, 45,
+              102, 105, 116, 61, 110, 111, 34, 32, 47, 62, 10, 60, 116, 105,
+              116, 108, 101, 62, 32, 52, 48, 52, 32, 78, 111, 116, 32, 70, 111,
+              117, 110, 100, 10, 60, 47, 116, 105, 116, 108, 101, 62, 60, 47,
+              104, 101, 97, 100, 62, 10, 60, 98, 111, 100, 121, 32, 115, 116,
+              121, 108, 101, 61, 34, 99, 111, 108, 111, 114, 58, 32, 35, 52, 52,
+              52, 59, 32, 109, 97, 114, 103, 105, 110, 58, 48, 59, 102, 111,
+              110, 116, 58, 32, 110, 111, 114, 109, 97, 108, 32, 49, 52, 112,
+              120, 47, 50, 48, 112, 120, 32, 65, 114, 105, 97, 108, 44, 32, 72,
+              101, 108, 118, 101, 116, 105, 99, 97, 44, 32, 115, 97, 110, 115,
+              45, 115, 101, 114, 105, 102, 59, 32, 104, 101, 105, 103, 104, 116,
+              58, 49, 48, 48, 37, 59, 32, 98, 97, 99, 107, 103, 114, 111, 117,
+              110, 100, 45, 99, 111, 108, 111, 114, 58, 32, 35, 102, 102, 102,
+              59, 34, 62, 10, 60, 100, 105, 118, 32, 115, 116, 121, 108, 101,
+              61, 34, 104, 101, 105, 103, 104, 116, 58, 97, 117, 116, 111, 59,
+              32, 109, 105, 110, 45, 104, 101, 105, 103, 104, 116, 58, 49, 48,
+              48, 37, 59, 32, 34, 62, 32, 32, 32, 32, 32, 60, 100, 105, 118, 32,
+              115, 116, 121, 108, 101, 61, 34, 116, 101, 120, 116, 45, 97, 108,
+              105, 103, 110, 58, 32, 99, 101, 110, 116, 101, 114, 59, 32, 119,
+              105, 100, 116, 104, 58, 56, 48, 48, 112, 120, 59, 32, 109, 97,
+              114, 103, 105, 110, 45, 108, 101, 102, 116, 58, 32, 45, 52, 48,
+              48, 112, 120, 59, 32, 112, 111, 115, 105, 116, 105, 111, 110, 58,
+              97, 98, 115, 111, 108, 117, 116, 101, 59, 32, 116, 111, 112, 58,
+              32, 51, 48, 37, 59, 32, 108, 101, 102, 116, 58, 53, 48, 37, 59,
+              34, 62, 10, 32, 32, 32, 32, 32, 32, 32, 32, 60, 104, 49, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 58, 48,
+              59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58, 49, 53,
+              48, 112, 120, 59, 32, 108, 105, 110, 101, 45, 104, 101, 105, 103,
+              104, 116, 58, 49, 53, 48, 112, 120, 59, 32, 102, 111, 110, 116,
+              45, 119, 101, 105, 103, 104, 116, 58, 98, 111, 108, 100, 59, 34,
+              62, 52, 48, 52, 60, 47, 104, 49, 62, 10, 60, 104, 50, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 45, 116,
+              111, 112, 58, 50, 48, 112, 120, 59, 102, 111, 110, 116, 45, 115,
+              105, 122, 101, 58, 32, 51, 48, 112, 120, 59, 34, 62, 78, 111, 116,
+              32, 70, 111, 117, 110, 100, 10, 60, 47, 104, 50, 62, 10, 60, 112,
+              62, 84, 104, 101, 32, 114, 101, 115, 111, 117, 114, 99, 101, 32,
+              114, 101, 113, 117, 101, 115, 116, 101, 100, 32, 99, 111, 117,
+              108, 100, 32, 110, 111, 116, 32, 98, 101, 32, 102, 111, 117, 110,
+              100, 32, 111, 110, 32, 116, 104, 105, 115, 32, 115, 101, 114, 118,
+              101, 114, 33, 60, 47, 112, 62, 10, 60, 47, 100, 105, 118, 62, 60,
+              47, 100, 105, 118, 62, 60, 100, 105, 118, 32, 115, 116, 121, 108,
+              101, 61, 34, 99, 111, 108, 111, 114, 58, 35, 102, 48, 102, 48,
+              102, 48, 59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58,
+              49, 50, 112, 120, 59, 109, 97, 114, 103, 105, 110, 58, 97, 117,
+              116, 111, 59, 112, 97, 100, 100, 105, 110, 103, 58, 48, 112, 120,
+              32, 51, 48, 112, 120, 32, 48, 112, 120, 32, 51, 48, 112, 120, 59,
+              112, 111, 115, 105, 116, 105, 111, 110, 58, 114, 101, 108, 97,
+              116, 105, 118, 101, 59, 99, 108, 101, 97, 114, 58, 98, 111, 116,
+              104, 59, 104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 112, 120,
+              59, 109, 97, 114, 103, 105, 110, 45, 116, 111, 112, 58, 45, 49,
+              48, 49, 112, 120, 59, 98, 97, 99, 107, 103, 114, 111, 117, 110,
+              100, 45, 99, 111, 108, 111, 114, 58, 35, 52, 55, 52, 55, 52, 55,
+              59, 98, 111, 114, 100, 101, 114, 45, 116, 111, 112, 58, 32, 49,
+              112, 120, 32, 115, 111, 108, 105, 100, 32, 114, 103, 98, 97, 40,
+              48, 44, 48, 44, 48, 44, 48, 46, 49, 53, 41, 59, 98, 111, 120, 45,
+              115, 104, 97, 100, 111, 119, 58, 32, 48, 32, 49, 112, 120, 32, 48,
+              32, 114, 103, 98, 97, 40, 50, 53, 53, 44, 32, 50, 53, 53, 44, 32,
+              50, 53, 53, 44, 32, 48, 46, 51, 41, 32, 105, 110, 115, 101, 116,
+              59, 34, 62, 10, 60, 98, 114, 62, 80, 114, 111, 117, 100, 108, 121,
+              32, 112, 111, 119, 101, 114, 101, 100, 32, 98, 121, 32, 32, 60,
+              97, 32, 115, 116, 121, 108, 101, 61, 34, 99, 111, 108, 111, 114,
+              58, 35, 102, 102, 102, 59, 34, 32, 104, 114, 101, 102, 61, 34,
+              104, 116, 116, 112, 58, 47, 47, 119, 119, 119, 46, 116, 117, 114,
+              98, 105, 102, 121, 46, 99, 111, 109, 34, 62, 84, 117, 114, 98,
+              105, 102, 121, 32, 87, 101, 98, 32, 72, 111, 115, 116, 105, 110,
+              103, 60, 47, 97, 62, 60, 47, 100, 105, 118, 62, 60, 47, 98, 111,
+              100, 121, 62, 60, 47, 104, 116, 109, 108, 62, 10
+            ]
+          },
+          "cookie": [],
+          "responseTime": 96,
+          "responseSize": 1070
+        },
+        "id": "cb1cb659-8275-460d-ba78-e290c2183433",
+        "assertions": [
+          {
+            "assertion": "Token is valid",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Token is valid",
+              "message": "expected response to have status code 200 but got 404",
+              "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:5)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "ab735d7e-02db-4408-8686-67e99a760057",
+          "length": 10,
+          "cycles": 1,
+          "position": 5,
+          "iteration": 0,
+          "httpRequestId": "1cacdaa9-e29e-4daf-a999-f49c8072e28a"
+        },
+        "item": {
+          "id": "4a930bec-3525-4d57-92fa-c64806bfe96c",
+          "name": "List Resources",
+          "request": {
+            "url": {
+              "path": ["api", "v1", "resources"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "2672faf8-56ca-4667-8a81-2260e21b27bc",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Can list resources', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.items).to.be.an('array');",
+                  "});"
+                ],
+                "_lastExecutionId": "2489ab4d-b574-48ec-8049-8c4eb77b331e"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": ["api", "v1", "resources"],
+            "host": ["api", "day1", "asoos", "com"],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer dummy-auth-token"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "475bc92a-7b45-4f80-9917-09860b0c86fb",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.day1.asoos.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "9e2aeeb8-7ec6-4880-bf2f-953aa6394840",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5, max=100"
+            },
+            {
+              "key": "content-type",
+              "value": "text/html"
+            },
+            {
+              "key": "content-length",
+              "value": "627"
+            },
+            {
+              "key": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "date",
+              "value": "Tue, 11 Mar 2025 05:17:17 GMT"
+            },
+            {
+              "key": "server",
+              "value": "LiteSpeed"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              60, 33, 68, 79, 67, 84, 89, 80, 69, 32, 104, 116, 109, 108, 62,
+              10, 60, 104, 116, 109, 108, 32, 115, 116, 121, 108, 101, 61, 34,
+              104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 37, 34, 62, 10, 60,
+              104, 101, 97, 100, 62, 10, 60, 109, 101, 116, 97, 32, 110, 97,
+              109, 101, 61, 34, 118, 105, 101, 119, 112, 111, 114, 116, 34, 32,
+              99, 111, 110, 116, 101, 110, 116, 61, 34, 119, 105, 100, 116, 104,
+              61, 100, 101, 118, 105, 99, 101, 45, 119, 105, 100, 116, 104, 44,
+              32, 105, 110, 105, 116, 105, 97, 108, 45, 115, 99, 97, 108, 101,
+              61, 49, 44, 32, 115, 104, 114, 105, 110, 107, 45, 116, 111, 45,
+              102, 105, 116, 61, 110, 111, 34, 32, 47, 62, 10, 60, 116, 105,
+              116, 108, 101, 62, 32, 52, 48, 52, 32, 78, 111, 116, 32, 70, 111,
+              117, 110, 100, 10, 60, 47, 116, 105, 116, 108, 101, 62, 60, 47,
+              104, 101, 97, 100, 62, 10, 60, 98, 111, 100, 121, 32, 115, 116,
+              121, 108, 101, 61, 34, 99, 111, 108, 111, 114, 58, 32, 35, 52, 52,
+              52, 59, 32, 109, 97, 114, 103, 105, 110, 58, 48, 59, 102, 111,
+              110, 116, 58, 32, 110, 111, 114, 109, 97, 108, 32, 49, 52, 112,
+              120, 47, 50, 48, 112, 120, 32, 65, 114, 105, 97, 108, 44, 32, 72,
+              101, 108, 118, 101, 116, 105, 99, 97, 44, 32, 115, 97, 110, 115,
+              45, 115, 101, 114, 105, 102, 59, 32, 104, 101, 105, 103, 104, 116,
+              58, 49, 48, 48, 37, 59, 32, 98, 97, 99, 107, 103, 114, 111, 117,
+              110, 100, 45, 99, 111, 108, 111, 114, 58, 32, 35, 102, 102, 102,
+              59, 34, 62, 10, 60, 100, 105, 118, 32, 115, 116, 121, 108, 101,
+              61, 34, 104, 101, 105, 103, 104, 116, 58, 97, 117, 116, 111, 59,
+              32, 109, 105, 110, 45, 104, 101, 105, 103, 104, 116, 58, 49, 48,
+              48, 37, 59, 32, 34, 62, 32, 32, 32, 32, 32, 60, 100, 105, 118, 32,
+              115, 116, 121, 108, 101, 61, 34, 116, 101, 120, 116, 45, 97, 108,
+              105, 103, 110, 58, 32, 99, 101, 110, 116, 101, 114, 59, 32, 119,
+              105, 100, 116, 104, 58, 56, 48, 48, 112, 120, 59, 32, 109, 97,
+              114, 103, 105, 110, 45, 108, 101, 102, 116, 58, 32, 45, 52, 48,
+              48, 112, 120, 59, 32, 112, 111, 115, 105, 116, 105, 111, 110, 58,
+              97, 98, 115, 111, 108, 117, 116, 101, 59, 32, 116, 111, 112, 58,
+              32, 51, 48, 37, 59, 32, 108, 101, 102, 116, 58, 53, 48, 37, 59,
+              34, 62, 10, 32, 32, 32, 32, 32, 32, 32, 32, 60, 104, 49, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 58, 48,
+              59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58, 49, 53,
+              48, 112, 120, 59, 32, 108, 105, 110, 101, 45, 104, 101, 105, 103,
+              104, 116, 58, 49, 53, 48, 112, 120, 59, 32, 102, 111, 110, 116,
+              45, 119, 101, 105, 103, 104, 116, 58, 98, 111, 108, 100, 59, 34,
+              62, 52, 48, 52, 60, 47, 104, 49, 62, 10, 60, 104, 50, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 45, 116,
+              111, 112, 58, 50, 48, 112, 120, 59, 102, 111, 110, 116, 45, 115,
+              105, 122, 101, 58, 32, 51, 48, 112, 120, 59, 34, 62, 78, 111, 116,
+              32, 70, 111, 117, 110, 100, 10, 60, 47, 104, 50, 62, 10, 60, 112,
+              62, 84, 104, 101, 32, 114, 101, 115, 111, 117, 114, 99, 101, 32,
+              114, 101, 113, 117, 101, 115, 116, 101, 100, 32, 99, 111, 117,
+              108, 100, 32, 110, 111, 116, 32, 98, 101, 32, 102, 111, 117, 110,
+              100, 32, 111, 110, 32, 116, 104, 105, 115, 32, 115, 101, 114, 118,
+              101, 114, 33, 60, 47, 112, 62, 10, 60, 47, 100, 105, 118, 62, 60,
+              47, 100, 105, 118, 62, 60, 100, 105, 118, 32, 115, 116, 121, 108,
+              101, 61, 34, 99, 111, 108, 111, 114, 58, 35, 102, 48, 102, 48,
+              102, 48, 59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58,
+              49, 50, 112, 120, 59, 109, 97, 114, 103, 105, 110, 58, 97, 117,
+              116, 111, 59, 112, 97, 100, 100, 105, 110, 103, 58, 48, 112, 120,
+              32, 51, 48, 112, 120, 32, 48, 112, 120, 32, 51, 48, 112, 120, 59,
+              112, 111, 115, 105, 116, 105, 111, 110, 58, 114, 101, 108, 97,
+              116, 105, 118, 101, 59, 99, 108, 101, 97, 114, 58, 98, 111, 116,
+              104, 59, 104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 112, 120,
+              59, 109, 97, 114, 103, 105, 110, 45, 116, 111, 112, 58, 45, 49,
+              48, 49, 112, 120, 59, 98, 97, 99, 107, 103, 114, 111, 117, 110,
+              100, 45, 99, 111, 108, 111, 114, 58, 35, 52, 55, 52, 55, 52, 55,
+              59, 98, 111, 114, 100, 101, 114, 45, 116, 111, 112, 58, 32, 49,
+              112, 120, 32, 115, 111, 108, 105, 100, 32, 114, 103, 98, 97, 40,
+              48, 44, 48, 44, 48, 44, 48, 46, 49, 53, 41, 59, 98, 111, 120, 45,
+              115, 104, 97, 100, 111, 119, 58, 32, 48, 32, 49, 112, 120, 32, 48,
+              32, 114, 103, 98, 97, 40, 50, 53, 53, 44, 32, 50, 53, 53, 44, 32,
+              50, 53, 53, 44, 32, 48, 46, 51, 41, 32, 105, 110, 115, 101, 116,
+              59, 34, 62, 10, 60, 98, 114, 62, 80, 114, 111, 117, 100, 108, 121,
+              32, 112, 111, 119, 101, 114, 101, 100, 32, 98, 121, 32, 32, 60,
+              97, 32, 115, 116, 121, 108, 101, 61, 34, 99, 111, 108, 111, 114,
+              58, 35, 102, 102, 102, 59, 34, 32, 104, 114, 101, 102, 61, 34,
+              104, 116, 116, 112, 58, 47, 47, 119, 119, 119, 46, 116, 117, 114,
+              98, 105, 102, 121, 46, 99, 111, 109, 34, 62, 84, 117, 114, 98,
+              105, 102, 121, 32, 87, 101, 98, 32, 72, 111, 115, 116, 105, 110,
+              103, 60, 47, 97, 62, 60, 47, 100, 105, 118, 62, 60, 47, 98, 111,
+              100, 121, 62, 60, 47, 104, 116, 109, 108, 62, 10
+            ]
+          },
+          "cookie": [],
+          "responseTime": 94,
+          "responseSize": 1070
+        },
+        "id": "4a930bec-3525-4d57-92fa-c64806bfe96c",
+        "assertions": [
+          {
+            "assertion": "Can list resources",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Can list resources",
+              "message": "expected response to have status code 200 but got 404",
+              "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:6)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "cd626522-2f74-474d-a481-2d7d4fb5e411",
+          "length": 10,
+          "cycles": 1,
+          "position": 6,
+          "iteration": 0,
+          "httpRequestId": "f960c3fe-eff8-473e-9be8-129257262caa"
+        },
+        "item": {
+          "id": "15b0367e-2e11-478e-b487-f0c13636b4b1",
+          "name": "Create Resource",
+          "request": {
+            "url": {
+              "path": ["api", "v1", "resources"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test Resource\",\n    \"description\": \"Test resource creation\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "9c8484b4-b379-4b48-b35d-c175bf5f62eb",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Resource created successfully', function() {",
+                  "    pm.response.to.have.status(201);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.id).to.exist;",
+                  "});"
+                ],
+                "_lastExecutionId": "d2c6a964-dc78-469d-a435-dc851c698f87"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": ["api", "v1", "resources"],
+            "host": ["api", "day1", "asoos", "com"],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer dummy-auth-token"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "d50de2aa-fbe8-44d3-8a74-130dcf5c78e9",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.day1.asoos.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "76",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n    \"name\": \"Test Resource\",\n    \"description\": \"Test resource creation\"\n}"
+          }
+        },
+        "response": {
+          "id": "31ce06e1-ea57-4192-8322-d2c863a19b48",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5, max=100"
+            },
+            {
+              "key": "content-type",
+              "value": "text/html"
+            },
+            {
+              "key": "content-length",
+              "value": "627"
+            },
+            {
+              "key": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "date",
+              "value": "Tue, 11 Mar 2025 05:17:17 GMT"
+            },
+            {
+              "key": "server",
+              "value": "LiteSpeed"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              60, 33, 68, 79, 67, 84, 89, 80, 69, 32, 104, 116, 109, 108, 62,
+              10, 60, 104, 116, 109, 108, 32, 115, 116, 121, 108, 101, 61, 34,
+              104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 37, 34, 62, 10, 60,
+              104, 101, 97, 100, 62, 10, 60, 109, 101, 116, 97, 32, 110, 97,
+              109, 101, 61, 34, 118, 105, 101, 119, 112, 111, 114, 116, 34, 32,
+              99, 111, 110, 116, 101, 110, 116, 61, 34, 119, 105, 100, 116, 104,
+              61, 100, 101, 118, 105, 99, 101, 45, 119, 105, 100, 116, 104, 44,
+              32, 105, 110, 105, 116, 105, 97, 108, 45, 115, 99, 97, 108, 101,
+              61, 49, 44, 32, 115, 104, 114, 105, 110, 107, 45, 116, 111, 45,
+              102, 105, 116, 61, 110, 111, 34, 32, 47, 62, 10, 60, 116, 105,
+              116, 108, 101, 62, 32, 52, 48, 52, 32, 78, 111, 116, 32, 70, 111,
+              117, 110, 100, 10, 60, 47, 116, 105, 116, 108, 101, 62, 60, 47,
+              104, 101, 97, 100, 62, 10, 60, 98, 111, 100, 121, 32, 115, 116,
+              121, 108, 101, 61, 34, 99, 111, 108, 111, 114, 58, 32, 35, 52, 52,
+              52, 59, 32, 109, 97, 114, 103, 105, 110, 58, 48, 59, 102, 111,
+              110, 116, 58, 32, 110, 111, 114, 109, 97, 108, 32, 49, 52, 112,
+              120, 47, 50, 48, 112, 120, 32, 65, 114, 105, 97, 108, 44, 32, 72,
+              101, 108, 118, 101, 116, 105, 99, 97, 44, 32, 115, 97, 110, 115,
+              45, 115, 101, 114, 105, 102, 59, 32, 104, 101, 105, 103, 104, 116,
+              58, 49, 48, 48, 37, 59, 32, 98, 97, 99, 107, 103, 114, 111, 117,
+              110, 100, 45, 99, 111, 108, 111, 114, 58, 32, 35, 102, 102, 102,
+              59, 34, 62, 10, 60, 100, 105, 118, 32, 115, 116, 121, 108, 101,
+              61, 34, 104, 101, 105, 103, 104, 116, 58, 97, 117, 116, 111, 59,
+              32, 109, 105, 110, 45, 104, 101, 105, 103, 104, 116, 58, 49, 48,
+              48, 37, 59, 32, 34, 62, 32, 32, 32, 32, 32, 60, 100, 105, 118, 32,
+              115, 116, 121, 108, 101, 61, 34, 116, 101, 120, 116, 45, 97, 108,
+              105, 103, 110, 58, 32, 99, 101, 110, 116, 101, 114, 59, 32, 119,
+              105, 100, 116, 104, 58, 56, 48, 48, 112, 120, 59, 32, 109, 97,
+              114, 103, 105, 110, 45, 108, 101, 102, 116, 58, 32, 45, 52, 48,
+              48, 112, 120, 59, 32, 112, 111, 115, 105, 116, 105, 111, 110, 58,
+              97, 98, 115, 111, 108, 117, 116, 101, 59, 32, 116, 111, 112, 58,
+              32, 51, 48, 37, 59, 32, 108, 101, 102, 116, 58, 53, 48, 37, 59,
+              34, 62, 10, 32, 32, 32, 32, 32, 32, 32, 32, 60, 104, 49, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 58, 48,
+              59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58, 49, 53,
+              48, 112, 120, 59, 32, 108, 105, 110, 101, 45, 104, 101, 105, 103,
+              104, 116, 58, 49, 53, 48, 112, 120, 59, 32, 102, 111, 110, 116,
+              45, 119, 101, 105, 103, 104, 116, 58, 98, 111, 108, 100, 59, 34,
+              62, 52, 48, 52, 60, 47, 104, 49, 62, 10, 60, 104, 50, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 45, 116,
+              111, 112, 58, 50, 48, 112, 120, 59, 102, 111, 110, 116, 45, 115,
+              105, 122, 101, 58, 32, 51, 48, 112, 120, 59, 34, 62, 78, 111, 116,
+              32, 70, 111, 117, 110, 100, 10, 60, 47, 104, 50, 62, 10, 60, 112,
+              62, 84, 104, 101, 32, 114, 101, 115, 111, 117, 114, 99, 101, 32,
+              114, 101, 113, 117, 101, 115, 116, 101, 100, 32, 99, 111, 117,
+              108, 100, 32, 110, 111, 116, 32, 98, 101, 32, 102, 111, 117, 110,
+              100, 32, 111, 110, 32, 116, 104, 105, 115, 32, 115, 101, 114, 118,
+              101, 114, 33, 60, 47, 112, 62, 10, 60, 47, 100, 105, 118, 62, 60,
+              47, 100, 105, 118, 62, 60, 100, 105, 118, 32, 115, 116, 121, 108,
+              101, 61, 34, 99, 111, 108, 111, 114, 58, 35, 102, 48, 102, 48,
+              102, 48, 59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58,
+              49, 50, 112, 120, 59, 109, 97, 114, 103, 105, 110, 58, 97, 117,
+              116, 111, 59, 112, 97, 100, 100, 105, 110, 103, 58, 48, 112, 120,
+              32, 51, 48, 112, 120, 32, 48, 112, 120, 32, 51, 48, 112, 120, 59,
+              112, 111, 115, 105, 116, 105, 111, 110, 58, 114, 101, 108, 97,
+              116, 105, 118, 101, 59, 99, 108, 101, 97, 114, 58, 98, 111, 116,
+              104, 59, 104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 112, 120,
+              59, 109, 97, 114, 103, 105, 110, 45, 116, 111, 112, 58, 45, 49,
+              48, 49, 112, 120, 59, 98, 97, 99, 107, 103, 114, 111, 117, 110,
+              100, 45, 99, 111, 108, 111, 114, 58, 35, 52, 55, 52, 55, 52, 55,
+              59, 98, 111, 114, 100, 101, 114, 45, 116, 111, 112, 58, 32, 49,
+              112, 120, 32, 115, 111, 108, 105, 100, 32, 114, 103, 98, 97, 40,
+              48, 44, 48, 44, 48, 44, 48, 46, 49, 53, 41, 59, 98, 111, 120, 45,
+              115, 104, 97, 100, 111, 119, 58, 32, 48, 32, 49, 112, 120, 32, 48,
+              32, 114, 103, 98, 97, 40, 50, 53, 53, 44, 32, 50, 53, 53, 44, 32,
+              50, 53, 53, 44, 32, 48, 46, 51, 41, 32, 105, 110, 115, 101, 116,
+              59, 34, 62, 10, 60, 98, 114, 62, 80, 114, 111, 117, 100, 108, 121,
+              32, 112, 111, 119, 101, 114, 101, 100, 32, 98, 121, 32, 32, 60,
+              97, 32, 115, 116, 121, 108, 101, 61, 34, 99, 111, 108, 111, 114,
+              58, 35, 102, 102, 102, 59, 34, 32, 104, 114, 101, 102, 61, 34,
+              104, 116, 116, 112, 58, 47, 47, 119, 119, 119, 46, 116, 117, 114,
+              98, 105, 102, 121, 46, 99, 111, 109, 34, 62, 84, 117, 114, 98,
+              105, 102, 121, 32, 87, 101, 98, 32, 72, 111, 115, 116, 105, 110,
+              103, 60, 47, 97, 62, 60, 47, 100, 105, 118, 62, 60, 47, 98, 111,
+              100, 121, 62, 60, 47, 104, 116, 109, 108, 62, 10
+            ]
+          },
+          "cookie": [],
+          "responseTime": 95,
+          "responseSize": 1070
+        },
+        "id": "15b0367e-2e11-478e-b487-f0c13636b4b1",
+        "assertions": [
+          {
+            "assertion": "Resource created successfully",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Resource created successfully",
+              "message": "expected response to have status code 201 but got 404",
+              "stack": "AssertionError: expected response to have status code 201 but got 404\n   at Object.eval sandbox-script.js:1:7)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "7304cd44-b5ae-4306-9774-24cad7b8adb1",
+          "length": 10,
+          "cycles": 1,
+          "position": 7,
+          "iteration": 0,
+          "httpRequestId": "7b0c7a30-dac0-47e9-a7d5-64d436bdec0c"
+        },
+        "item": {
+          "id": "0394578f-32c6-47bb-b4ac-6e7a585c67bd",
+          "name": "Rapid Requests",
+          "request": {
+            "url": {
+              "path": ["api", "v1", "resources"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "82acc85a-4145-4663-a80a-4b2b63271cba",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Rate limiting is enforced', function() {",
+                  "    if (pm.iterationData.get('iteration') > pm.environment.get('rateLimit')) {",
+                  "        pm.response.to.have.status(429);",
+                  "    }",
+                  "});"
+                ],
+                "_lastExecutionId": "2c238cb2-643b-4781-9d75-5553086f0f7f"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": ["api", "v1", "resources"],
+            "host": ["api", "day1", "asoos", "com"],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer dummy-auth-token"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "10e9c912-3556-492d-ae9e-0535eb4d7adc",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.day1.asoos.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "c7834308-0df0-4337-b490-2cb6b9215806",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5, max=100"
+            },
+            {
+              "key": "content-type",
+              "value": "text/html"
+            },
+            {
+              "key": "content-length",
+              "value": "627"
+            },
+            {
+              "key": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "date",
+              "value": "Tue, 11 Mar 2025 05:17:17 GMT"
+            },
+            {
+              "key": "server",
+              "value": "LiteSpeed"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              60, 33, 68, 79, 67, 84, 89, 80, 69, 32, 104, 116, 109, 108, 62,
+              10, 60, 104, 116, 109, 108, 32, 115, 116, 121, 108, 101, 61, 34,
+              104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 37, 34, 62, 10, 60,
+              104, 101, 97, 100, 62, 10, 60, 109, 101, 116, 97, 32, 110, 97,
+              109, 101, 61, 34, 118, 105, 101, 119, 112, 111, 114, 116, 34, 32,
+              99, 111, 110, 116, 101, 110, 116, 61, 34, 119, 105, 100, 116, 104,
+              61, 100, 101, 118, 105, 99, 101, 45, 119, 105, 100, 116, 104, 44,
+              32, 105, 110, 105, 116, 105, 97, 108, 45, 115, 99, 97, 108, 101,
+              61, 49, 44, 32, 115, 104, 114, 105, 110, 107, 45, 116, 111, 45,
+              102, 105, 116, 61, 110, 111, 34, 32, 47, 62, 10, 60, 116, 105,
+              116, 108, 101, 62, 32, 52, 48, 52, 32, 78, 111, 116, 32, 70, 111,
+              117, 110, 100, 10, 60, 47, 116, 105, 116, 108, 101, 62, 60, 47,
+              104, 101, 97, 100, 62, 10, 60, 98, 111, 100, 121, 32, 115, 116,
+              121, 108, 101, 61, 34, 99, 111, 108, 111, 114, 58, 32, 35, 52, 52,
+              52, 59, 32, 109, 97, 114, 103, 105, 110, 58, 48, 59, 102, 111,
+              110, 116, 58, 32, 110, 111, 114, 109, 97, 108, 32, 49, 52, 112,
+              120, 47, 50, 48, 112, 120, 32, 65, 114, 105, 97, 108, 44, 32, 72,
+              101, 108, 118, 101, 116, 105, 99, 97, 44, 32, 115, 97, 110, 115,
+              45, 115, 101, 114, 105, 102, 59, 32, 104, 101, 105, 103, 104, 116,
+              58, 49, 48, 48, 37, 59, 32, 98, 97, 99, 107, 103, 114, 111, 117,
+              110, 100, 45, 99, 111, 108, 111, 114, 58, 32, 35, 102, 102, 102,
+              59, 34, 62, 10, 60, 100, 105, 118, 32, 115, 116, 121, 108, 101,
+              61, 34, 104, 101, 105, 103, 104, 116, 58, 97, 117, 116, 111, 59,
+              32, 109, 105, 110, 45, 104, 101, 105, 103, 104, 116, 58, 49, 48,
+              48, 37, 59, 32, 34, 62, 32, 32, 32, 32, 32, 60, 100, 105, 118, 32,
+              115, 116, 121, 108, 101, 61, 34, 116, 101, 120, 116, 45, 97, 108,
+              105, 103, 110, 58, 32, 99, 101, 110, 116, 101, 114, 59, 32, 119,
+              105, 100, 116, 104, 58, 56, 48, 48, 112, 120, 59, 32, 109, 97,
+              114, 103, 105, 110, 45, 108, 101, 102, 116, 58, 32, 45, 52, 48,
+              48, 112, 120, 59, 32, 112, 111, 115, 105, 116, 105, 111, 110, 58,
+              97, 98, 115, 111, 108, 117, 116, 101, 59, 32, 116, 111, 112, 58,
+              32, 51, 48, 37, 59, 32, 108, 101, 102, 116, 58, 53, 48, 37, 59,
+              34, 62, 10, 32, 32, 32, 32, 32, 32, 32, 32, 60, 104, 49, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 58, 48,
+              59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58, 49, 53,
+              48, 112, 120, 59, 32, 108, 105, 110, 101, 45, 104, 101, 105, 103,
+              104, 116, 58, 49, 53, 48, 112, 120, 59, 32, 102, 111, 110, 116,
+              45, 119, 101, 105, 103, 104, 116, 58, 98, 111, 108, 100, 59, 34,
+              62, 52, 48, 52, 60, 47, 104, 49, 62, 10, 60, 104, 50, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 45, 116,
+              111, 112, 58, 50, 48, 112, 120, 59, 102, 111, 110, 116, 45, 115,
+              105, 122, 101, 58, 32, 51, 48, 112, 120, 59, 34, 62, 78, 111, 116,
+              32, 70, 111, 117, 110, 100, 10, 60, 47, 104, 50, 62, 10, 60, 112,
+              62, 84, 104, 101, 32, 114, 101, 115, 111, 117, 114, 99, 101, 32,
+              114, 101, 113, 117, 101, 115, 116, 101, 100, 32, 99, 111, 117,
+              108, 100, 32, 110, 111, 116, 32, 98, 101, 32, 102, 111, 117, 110,
+              100, 32, 111, 110, 32, 116, 104, 105, 115, 32, 115, 101, 114, 118,
+              101, 114, 33, 60, 47, 112, 62, 10, 60, 47, 100, 105, 118, 62, 60,
+              47, 100, 105, 118, 62, 60, 100, 105, 118, 32, 115, 116, 121, 108,
+              101, 61, 34, 99, 111, 108, 111, 114, 58, 35, 102, 48, 102, 48,
+              102, 48, 59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58,
+              49, 50, 112, 120, 59, 109, 97, 114, 103, 105, 110, 58, 97, 117,
+              116, 111, 59, 112, 97, 100, 100, 105, 110, 103, 58, 48, 112, 120,
+              32, 51, 48, 112, 120, 32, 48, 112, 120, 32, 51, 48, 112, 120, 59,
+              112, 111, 115, 105, 116, 105, 111, 110, 58, 114, 101, 108, 97,
+              116, 105, 118, 101, 59, 99, 108, 101, 97, 114, 58, 98, 111, 116,
+              104, 59, 104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 112, 120,
+              59, 109, 97, 114, 103, 105, 110, 45, 116, 111, 112, 58, 45, 49,
+              48, 49, 112, 120, 59, 98, 97, 99, 107, 103, 114, 111, 117, 110,
+              100, 45, 99, 111, 108, 111, 114, 58, 35, 52, 55, 52, 55, 52, 55,
+              59, 98, 111, 114, 100, 101, 114, 45, 116, 111, 112, 58, 32, 49,
+              112, 120, 32, 115, 111, 108, 105, 100, 32, 114, 103, 98, 97, 40,
+              48, 44, 48, 44, 48, 44, 48, 46, 49, 53, 41, 59, 98, 111, 120, 45,
+              115, 104, 97, 100, 111, 119, 58, 32, 48, 32, 49, 112, 120, 32, 48,
+              32, 114, 103, 98, 97, 40, 50, 53, 53, 44, 32, 50, 53, 53, 44, 32,
+              50, 53, 53, 44, 32, 48, 46, 51, 41, 32, 105, 110, 115, 101, 116,
+              59, 34, 62, 10, 60, 98, 114, 62, 80, 114, 111, 117, 100, 108, 121,
+              32, 112, 111, 119, 101, 114, 101, 100, 32, 98, 121, 32, 32, 60,
+              97, 32, 115, 116, 121, 108, 101, 61, 34, 99, 111, 108, 111, 114,
+              58, 35, 102, 102, 102, 59, 34, 32, 104, 114, 101, 102, 61, 34,
+              104, 116, 116, 112, 58, 47, 47, 119, 119, 119, 46, 116, 117, 114,
+              98, 105, 102, 121, 46, 99, 111, 109, 34, 62, 84, 117, 114, 98,
+              105, 102, 121, 32, 87, 101, 98, 32, 72, 111, 115, 116, 105, 110,
+              103, 60, 47, 97, 62, 60, 47, 100, 105, 118, 62, 60, 47, 98, 111,
+              100, 121, 62, 60, 47, 104, 116, 109, 108, 62, 10
+            ]
+          },
+          "cookie": [],
+          "responseTime": 94,
+          "responseSize": 1070
+        },
+        "id": "0394578f-32c6-47bb-b4ac-6e7a585c67bd",
+        "assertions": [
+          {
+            "assertion": "Rate limiting is enforced",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "2f99958a-aa16-421c-aae7-39a1a8006e2f",
+          "length": 10,
+          "cycles": 1,
+          "position": 8,
+          "iteration": 0,
+          "httpRequestId": "004c9dbf-72c3-4c11-8214-ff7fb0cd995c"
+        },
+        "item": {
+          "id": "a19c37cb-b7c6-4966-9828-4ad0d396d60f",
+          "name": "Gateway Routes",
+          "request": {
+            "url": {
+              "path": ["gateway", "routes"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "df587c4a-8b4d-4bd7-9770-9c864a97192b",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Gateway routes are configured', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.routes).to.be.an('array');",
+                  "});"
+                ],
+                "_lastExecutionId": "b6fdd366-7f82-4204-9c09-91a00c7dff0c"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": ["gateway", "routes"],
+            "host": ["api", "day1", "asoos", "com"],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer dummy-auth-token"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "6edd6382-b339-44be-b6a5-9acae8b66589",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.day1.asoos.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "c3506104-777b-4110-8750-5903a2b575ad",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5, max=100"
+            },
+            {
+              "key": "content-type",
+              "value": "text/html"
+            },
+            {
+              "key": "content-length",
+              "value": "627"
+            },
+            {
+              "key": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "date",
+              "value": "Tue, 11 Mar 2025 05:17:17 GMT"
+            },
+            {
+              "key": "server",
+              "value": "LiteSpeed"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              60, 33, 68, 79, 67, 84, 89, 80, 69, 32, 104, 116, 109, 108, 62,
+              10, 60, 104, 116, 109, 108, 32, 115, 116, 121, 108, 101, 61, 34,
+              104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 37, 34, 62, 10, 60,
+              104, 101, 97, 100, 62, 10, 60, 109, 101, 116, 97, 32, 110, 97,
+              109, 101, 61, 34, 118, 105, 101, 119, 112, 111, 114, 116, 34, 32,
+              99, 111, 110, 116, 101, 110, 116, 61, 34, 119, 105, 100, 116, 104,
+              61, 100, 101, 118, 105, 99, 101, 45, 119, 105, 100, 116, 104, 44,
+              32, 105, 110, 105, 116, 105, 97, 108, 45, 115, 99, 97, 108, 101,
+              61, 49, 44, 32, 115, 104, 114, 105, 110, 107, 45, 116, 111, 45,
+              102, 105, 116, 61, 110, 111, 34, 32, 47, 62, 10, 60, 116, 105,
+              116, 108, 101, 62, 32, 52, 48, 52, 32, 78, 111, 116, 32, 70, 111,
+              117, 110, 100, 10, 60, 47, 116, 105, 116, 108, 101, 62, 60, 47,
+              104, 101, 97, 100, 62, 10, 60, 98, 111, 100, 121, 32, 115, 116,
+              121, 108, 101, 61, 34, 99, 111, 108, 111, 114, 58, 32, 35, 52, 52,
+              52, 59, 32, 109, 97, 114, 103, 105, 110, 58, 48, 59, 102, 111,
+              110, 116, 58, 32, 110, 111, 114, 109, 97, 108, 32, 49, 52, 112,
+              120, 47, 50, 48, 112, 120, 32, 65, 114, 105, 97, 108, 44, 32, 72,
+              101, 108, 118, 101, 116, 105, 99, 97, 44, 32, 115, 97, 110, 115,
+              45, 115, 101, 114, 105, 102, 59, 32, 104, 101, 105, 103, 104, 116,
+              58, 49, 48, 48, 37, 59, 32, 98, 97, 99, 107, 103, 114, 111, 117,
+              110, 100, 45, 99, 111, 108, 111, 114, 58, 32, 35, 102, 102, 102,
+              59, 34, 62, 10, 60, 100, 105, 118, 32, 115, 116, 121, 108, 101,
+              61, 34, 104, 101, 105, 103, 104, 116, 58, 97, 117, 116, 111, 59,
+              32, 109, 105, 110, 45, 104, 101, 105, 103, 104, 116, 58, 49, 48,
+              48, 37, 59, 32, 34, 62, 32, 32, 32, 32, 32, 60, 100, 105, 118, 32,
+              115, 116, 121, 108, 101, 61, 34, 116, 101, 120, 116, 45, 97, 108,
+              105, 103, 110, 58, 32, 99, 101, 110, 116, 101, 114, 59, 32, 119,
+              105, 100, 116, 104, 58, 56, 48, 48, 112, 120, 59, 32, 109, 97,
+              114, 103, 105, 110, 45, 108, 101, 102, 116, 58, 32, 45, 52, 48,
+              48, 112, 120, 59, 32, 112, 111, 115, 105, 116, 105, 111, 110, 58,
+              97, 98, 115, 111, 108, 117, 116, 101, 59, 32, 116, 111, 112, 58,
+              32, 51, 48, 37, 59, 32, 108, 101, 102, 116, 58, 53, 48, 37, 59,
+              34, 62, 10, 32, 32, 32, 32, 32, 32, 32, 32, 60, 104, 49, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 58, 48,
+              59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58, 49, 53,
+              48, 112, 120, 59, 32, 108, 105, 110, 101, 45, 104, 101, 105, 103,
+              104, 116, 58, 49, 53, 48, 112, 120, 59, 32, 102, 111, 110, 116,
+              45, 119, 101, 105, 103, 104, 116, 58, 98, 111, 108, 100, 59, 34,
+              62, 52, 48, 52, 60, 47, 104, 49, 62, 10, 60, 104, 50, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 45, 116,
+              111, 112, 58, 50, 48, 112, 120, 59, 102, 111, 110, 116, 45, 115,
+              105, 122, 101, 58, 32, 51, 48, 112, 120, 59, 34, 62, 78, 111, 116,
+              32, 70, 111, 117, 110, 100, 10, 60, 47, 104, 50, 62, 10, 60, 112,
+              62, 84, 104, 101, 32, 114, 101, 115, 111, 117, 114, 99, 101, 32,
+              114, 101, 113, 117, 101, 115, 116, 101, 100, 32, 99, 111, 117,
+              108, 100, 32, 110, 111, 116, 32, 98, 101, 32, 102, 111, 117, 110,
+              100, 32, 111, 110, 32, 116, 104, 105, 115, 32, 115, 101, 114, 118,
+              101, 114, 33, 60, 47, 112, 62, 10, 60, 47, 100, 105, 118, 62, 60,
+              47, 100, 105, 118, 62, 60, 100, 105, 118, 32, 115, 116, 121, 108,
+              101, 61, 34, 99, 111, 108, 111, 114, 58, 35, 102, 48, 102, 48,
+              102, 48, 59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58,
+              49, 50, 112, 120, 59, 109, 97, 114, 103, 105, 110, 58, 97, 117,
+              116, 111, 59, 112, 97, 100, 100, 105, 110, 103, 58, 48, 112, 120,
+              32, 51, 48, 112, 120, 32, 48, 112, 120, 32, 51, 48, 112, 120, 59,
+              112, 111, 115, 105, 116, 105, 111, 110, 58, 114, 101, 108, 97,
+              116, 105, 118, 101, 59, 99, 108, 101, 97, 114, 58, 98, 111, 116,
+              104, 59, 104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 112, 120,
+              59, 109, 97, 114, 103, 105, 110, 45, 116, 111, 112, 58, 45, 49,
+              48, 49, 112, 120, 59, 98, 97, 99, 107, 103, 114, 111, 117, 110,
+              100, 45, 99, 111, 108, 111, 114, 58, 35, 52, 55, 52, 55, 52, 55,
+              59, 98, 111, 114, 100, 101, 114, 45, 116, 111, 112, 58, 32, 49,
+              112, 120, 32, 115, 111, 108, 105, 100, 32, 114, 103, 98, 97, 40,
+              48, 44, 48, 44, 48, 44, 48, 46, 49, 53, 41, 59, 98, 111, 120, 45,
+              115, 104, 97, 100, 111, 119, 58, 32, 48, 32, 49, 112, 120, 32, 48,
+              32, 114, 103, 98, 97, 40, 50, 53, 53, 44, 32, 50, 53, 53, 44, 32,
+              50, 53, 53, 44, 32, 48, 46, 51, 41, 32, 105, 110, 115, 101, 116,
+              59, 34, 62, 10, 60, 98, 114, 62, 80, 114, 111, 117, 100, 108, 121,
+              32, 112, 111, 119, 101, 114, 101, 100, 32, 98, 121, 32, 32, 60,
+              97, 32, 115, 116, 121, 108, 101, 61, 34, 99, 111, 108, 111, 114,
+              58, 35, 102, 102, 102, 59, 34, 32, 104, 114, 101, 102, 61, 34,
+              104, 116, 116, 112, 58, 47, 47, 119, 119, 119, 46, 116, 117, 114,
+              98, 105, 102, 121, 46, 99, 111, 109, 34, 62, 84, 117, 114, 98,
+              105, 102, 121, 32, 87, 101, 98, 32, 72, 111, 115, 116, 105, 110,
+              103, 60, 47, 97, 62, 60, 47, 100, 105, 118, 62, 60, 47, 98, 111,
+              100, 121, 62, 60, 47, 104, 116, 109, 108, 62, 10
+            ]
+          },
+          "cookie": [],
+          "responseTime": 96,
+          "responseSize": 1070
+        },
+        "id": "a19c37cb-b7c6-4966-9828-4ad0d396d60f",
+        "assertions": [
+          {
+            "assertion": "Gateway routes are configured",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Gateway routes are configured",
+              "message": "expected response to have status code 200 but got 404",
+              "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:9)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "705e7699-bfa5-4422-aa2d-7c0bf7fb76da",
+          "length": 10,
+          "cycles": 1,
+          "position": 9,
+          "iteration": 0,
+          "httpRequestId": "6f2924c7-7f4b-4b48-95d0-5415bf170812"
+        },
+        "item": {
+          "id": "1f9b9188-62b0-42b6-882e-6587f56006f2",
+          "name": "Gateway Metrics",
+          "request": {
+            "url": {
+              "path": ["gateway", "metrics"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "9d5fa375-af75-4fe6-a81f-13509a5de0d3",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Gateway metrics are available', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.metrics).to.exist;",
+                  "});"
+                ],
+                "_lastExecutionId": "b31d30e7-5782-45ae-9571-ceb10d40c413"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": ["gateway", "metrics"],
+            "host": ["api", "day1", "asoos", "com"],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Authorization",
+              "value": "Bearer dummy-auth-token"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "3d532878-4e11-47bb-a6e9-6c318720d897",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "api.day1.asoos.com",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "65dbd84c-4cc2-4d92-a450-067d07ef246f",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "Connection",
+              "value": "Keep-Alive"
+            },
+            {
+              "key": "Keep-Alive",
+              "value": "timeout=5, max=100"
+            },
+            {
+              "key": "content-type",
+              "value": "text/html"
+            },
+            {
+              "key": "content-length",
+              "value": "627"
+            },
+            {
+              "key": "content-encoding",
+              "value": "gzip"
+            },
+            {
+              "key": "vary",
+              "value": "Accept-Encoding"
+            },
+            {
+              "key": "date",
+              "value": "Tue, 11 Mar 2025 05:17:17 GMT"
+            },
+            {
+              "key": "server",
+              "value": "LiteSpeed"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              60, 33, 68, 79, 67, 84, 89, 80, 69, 32, 104, 116, 109, 108, 62,
+              10, 60, 104, 116, 109, 108, 32, 115, 116, 121, 108, 101, 61, 34,
+              104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 37, 34, 62, 10, 60,
+              104, 101, 97, 100, 62, 10, 60, 109, 101, 116, 97, 32, 110, 97,
+              109, 101, 61, 34, 118, 105, 101, 119, 112, 111, 114, 116, 34, 32,
+              99, 111, 110, 116, 101, 110, 116, 61, 34, 119, 105, 100, 116, 104,
+              61, 100, 101, 118, 105, 99, 101, 45, 119, 105, 100, 116, 104, 44,
+              32, 105, 110, 105, 116, 105, 97, 108, 45, 115, 99, 97, 108, 101,
+              61, 49, 44, 32, 115, 104, 114, 105, 110, 107, 45, 116, 111, 45,
+              102, 105, 116, 61, 110, 111, 34, 32, 47, 62, 10, 60, 116, 105,
+              116, 108, 101, 62, 32, 52, 48, 52, 32, 78, 111, 116, 32, 70, 111,
+              117, 110, 100, 10, 60, 47, 116, 105, 116, 108, 101, 62, 60, 47,
+              104, 101, 97, 100, 62, 10, 60, 98, 111, 100, 121, 32, 115, 116,
+              121, 108, 101, 61, 34, 99, 111, 108, 111, 114, 58, 32, 35, 52, 52,
+              52, 59, 32, 109, 97, 114, 103, 105, 110, 58, 48, 59, 102, 111,
+              110, 116, 58, 32, 110, 111, 114, 109, 97, 108, 32, 49, 52, 112,
+              120, 47, 50, 48, 112, 120, 32, 65, 114, 105, 97, 108, 44, 32, 72,
+              101, 108, 118, 101, 116, 105, 99, 97, 44, 32, 115, 97, 110, 115,
+              45, 115, 101, 114, 105, 102, 59, 32, 104, 101, 105, 103, 104, 116,
+              58, 49, 48, 48, 37, 59, 32, 98, 97, 99, 107, 103, 114, 111, 117,
+              110, 100, 45, 99, 111, 108, 111, 114, 58, 32, 35, 102, 102, 102,
+              59, 34, 62, 10, 60, 100, 105, 118, 32, 115, 116, 121, 108, 101,
+              61, 34, 104, 101, 105, 103, 104, 116, 58, 97, 117, 116, 111, 59,
+              32, 109, 105, 110, 45, 104, 101, 105, 103, 104, 116, 58, 49, 48,
+              48, 37, 59, 32, 34, 62, 32, 32, 32, 32, 32, 60, 100, 105, 118, 32,
+              115, 116, 121, 108, 101, 61, 34, 116, 101, 120, 116, 45, 97, 108,
+              105, 103, 110, 58, 32, 99, 101, 110, 116, 101, 114, 59, 32, 119,
+              105, 100, 116, 104, 58, 56, 48, 48, 112, 120, 59, 32, 109, 97,
+              114, 103, 105, 110, 45, 108, 101, 102, 116, 58, 32, 45, 52, 48,
+              48, 112, 120, 59, 32, 112, 111, 115, 105, 116, 105, 111, 110, 58,
+              97, 98, 115, 111, 108, 117, 116, 101, 59, 32, 116, 111, 112, 58,
+              32, 51, 48, 37, 59, 32, 108, 101, 102, 116, 58, 53, 48, 37, 59,
+              34, 62, 10, 32, 32, 32, 32, 32, 32, 32, 32, 60, 104, 49, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 58, 48,
+              59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58, 49, 53,
+              48, 112, 120, 59, 32, 108, 105, 110, 101, 45, 104, 101, 105, 103,
+              104, 116, 58, 49, 53, 48, 112, 120, 59, 32, 102, 111, 110, 116,
+              45, 119, 101, 105, 103, 104, 116, 58, 98, 111, 108, 100, 59, 34,
+              62, 52, 48, 52, 60, 47, 104, 49, 62, 10, 60, 104, 50, 32, 115,
+              116, 121, 108, 101, 61, 34, 109, 97, 114, 103, 105, 110, 45, 116,
+              111, 112, 58, 50, 48, 112, 120, 59, 102, 111, 110, 116, 45, 115,
+              105, 122, 101, 58, 32, 51, 48, 112, 120, 59, 34, 62, 78, 111, 116,
+              32, 70, 111, 117, 110, 100, 10, 60, 47, 104, 50, 62, 10, 60, 112,
+              62, 84, 104, 101, 32, 114, 101, 115, 111, 117, 114, 99, 101, 32,
+              114, 101, 113, 117, 101, 115, 116, 101, 100, 32, 99, 111, 117,
+              108, 100, 32, 110, 111, 116, 32, 98, 101, 32, 102, 111, 117, 110,
+              100, 32, 111, 110, 32, 116, 104, 105, 115, 32, 115, 101, 114, 118,
+              101, 114, 33, 60, 47, 112, 62, 10, 60, 47, 100, 105, 118, 62, 60,
+              47, 100, 105, 118, 62, 60, 100, 105, 118, 32, 115, 116, 121, 108,
+              101, 61, 34, 99, 111, 108, 111, 114, 58, 35, 102, 48, 102, 48,
+              102, 48, 59, 32, 102, 111, 110, 116, 45, 115, 105, 122, 101, 58,
+              49, 50, 112, 120, 59, 109, 97, 114, 103, 105, 110, 58, 97, 117,
+              116, 111, 59, 112, 97, 100, 100, 105, 110, 103, 58, 48, 112, 120,
+              32, 51, 48, 112, 120, 32, 48, 112, 120, 32, 51, 48, 112, 120, 59,
+              112, 111, 115, 105, 116, 105, 111, 110, 58, 114, 101, 108, 97,
+              116, 105, 118, 101, 59, 99, 108, 101, 97, 114, 58, 98, 111, 116,
+              104, 59, 104, 101, 105, 103, 104, 116, 58, 49, 48, 48, 112, 120,
+              59, 109, 97, 114, 103, 105, 110, 45, 116, 111, 112, 58, 45, 49,
+              48, 49, 112, 120, 59, 98, 97, 99, 107, 103, 114, 111, 117, 110,
+              100, 45, 99, 111, 108, 111, 114, 58, 35, 52, 55, 52, 55, 52, 55,
+              59, 98, 111, 114, 100, 101, 114, 45, 116, 111, 112, 58, 32, 49,
+              112, 120, 32, 115, 111, 108, 105, 100, 32, 114, 103, 98, 97, 40,
+              48, 44, 48, 44, 48, 44, 48, 46, 49, 53, 41, 59, 98, 111, 120, 45,
+              115, 104, 97, 100, 111, 119, 58, 32, 48, 32, 49, 112, 120, 32, 48,
+              32, 114, 103, 98, 97, 40, 50, 53, 53, 44, 32, 50, 53, 53, 44, 32,
+              50, 53, 53, 44, 32, 48, 46, 51, 41, 32, 105, 110, 115, 101, 116,
+              59, 34, 62, 10, 60, 98, 114, 62, 80, 114, 111, 117, 100, 108, 121,
+              32, 112, 111, 119, 101, 114, 101, 100, 32, 98, 121, 32, 32, 60,
+              97, 32, 115, 116, 121, 108, 101, 61, 34, 99, 111, 108, 111, 114,
+              58, 35, 102, 102, 102, 59, 34, 32, 104, 114, 101, 102, 61, 34,
+              104, 116, 116, 112, 58, 47, 47, 119, 119, 119, 46, 116, 117, 114,
+              98, 105, 102, 121, 46, 99, 111, 109, 34, 62, 84, 117, 114, 98,
+              105, 102, 121, 32, 87, 101, 98, 32, 72, 111, 115, 116, 105, 110,
+              103, 60, 47, 97, 62, 60, 47, 100, 105, 118, 62, 60, 47, 98, 111,
+              100, 121, 62, 60, 47, 104, 116, 109, 108, 62, 10
+            ]
+          },
+          "cookie": [],
+          "responseTime": 98,
+          "responseSize": 1070
+        },
+        "id": "1f9b9188-62b0-42b6-882e-6587f56006f2",
+        "assertions": [
+          {
+            "assertion": "Gateway metrics are available",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "Gateway metrics are available",
+              "message": "expected response to have status code 200 but got 404",
+              "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:10)"
+            }
+          }
+        ]
+      }
+    ],
+    "transfers": {
+      "responseTotal": 6270
+    },
+    "failures": [
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Environment is properly configured",
+          "message": ".empty was passed non-string primitive undefined",
+          "stack": "AssertionError: .empty was passed non-string primitive undefined\n   at Object.eval sandbox-script.js:1:1)",
+          "checksum": "8f089696dff5f10d34b5837475ab1869",
+          "id": "495a7a69-2ce9-4f1c-a136-c3f7c64783a9",
+          "timestamp": 1741670235374,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 1,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "733d4ed1-9713-4b6e-90ad-21408c586fc3",
+          "name": "Verify Environment",
+          "request": {
+            "url": {
+              "path": ["api", "v1", "status"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "d7ad2fbd-a99e-4c3d-a6cb-f0eee323ecf4",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Environment is properly configured', function() {",
+                  "    pm.expect(pm.environment.get('baseUrl')).to.not.be.empty;",
+                  "    pm.expect(pm.environment.get('authToken')).to.not.be.empty;",
+                  "});"
+                ],
+                "_lastExecutionId": "cf3980e0-7dd8-4c73-85b4-16b1fa471722"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "9e90cedb-6881-4a0e-a587-b7617a6adaa7",
+          "name": "Environment Setup",
+          "item": [
+            {
+              "id": "733d4ed1-9713-4b6e-90ad-21408c586fc3",
+              "name": "Verify Environment",
+              "request": {
+                "url": {
+                  "path": ["api", "v1", "status"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "d7ad2fbd-a99e-4c3d-a6cb-f0eee323ecf4",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Environment is properly configured', function() {",
+                      "    pm.expect(pm.environment.get('baseUrl')).to.not.be.empty;",
+                      "    pm.expect(pm.environment.get('authToken')).to.not.be.empty;",
+                      "});"
+                    ],
+                    "_lastExecutionId": "cf3980e0-7dd8-4c73-85b4-16b1fa471722"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 10,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "0ba504f7-fd21-4bf5-bb08-0953e44f20d5",
+          "httpRequestId": "e89622d4-2ff1-43d2-84a7-d40d3741002d",
+          "scriptId": "d7ad2fbd-a99e-4c3d-a6cb-f0eee323ecf4",
+          "execution": "cf3980e0-7dd8-4c73-85b4-16b1fa471722"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Status code is 200",
+          "message": "expected response to have status code 200 but got 404",
+          "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:2)",
+          "checksum": "e3bd6eda1cb0422bfce43f4050ef2d89",
+          "id": "fcd592dd-ca49-4268-8730-cad395a7c5a7",
+          "timestamp": 1741670235489,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 2,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "2d43d0f6-850b-4767-94e9-90e28fb9cad9",
+          "name": "API Health Check",
+          "request": {
+            "url": {
+              "path": ["health"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "99d604f5-f1ff-4ce4-b377-ddc5911d0ba4",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Health check response is valid', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.status).to.eql('healthy');",
+                  "    pm.expect(response.version).to.exist;",
+                  "});"
+                ],
+                "_lastExecutionId": "cc492bda-4b25-498d-8d63-0f080d97b73a"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "2672bd1d-485f-42e3-9ecf-09b602503acc",
+          "name": "Health Checks",
+          "item": [
+            {
+              "id": "2d43d0f6-850b-4767-94e9-90e28fb9cad9",
+              "name": "API Health Check",
+              "request": {
+                "url": {
+                  "path": ["health"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "99d604f5-f1ff-4ce4-b377-ddc5911d0ba4",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status code is 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Health check response is valid', function() {",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.status).to.eql('healthy');",
+                      "    pm.expect(response.version).to.exist;",
+                      "});"
+                    ],
+                    "_lastExecutionId": "cc492bda-4b25-498d-8d63-0f080d97b73a"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "f88c8201-98a8-4b2e-9573-577aaeb7917d",
+              "name": "Integration Gateway Health",
+              "request": {
+                "url": {
+                  "path": ["gateway", "health"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "45f2533c-dcab-4120-9fd6-58b5e088475c",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Gateway is healthy', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.gateway_status).to.eql('operational');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "b36fa8c0-7997-4231-aaa9-41192c8f5db8"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "d936928f-f38a-4762-81ce-343fe7b11f97",
+          "length": 10,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "286475f9-849e-421f-95da-a6814559001a",
+          "scriptId": "99d604f5-f1ff-4ce4-b377-ddc5911d0ba4",
+          "execution": "cc492bda-4b25-498d-8d63-0f080d97b73a"
+        }
+      },
+      {
+        "error": {
+          "name": "JSONError",
+          "index": 1,
+          "test": "Health check response is valid",
+          "message": "Unexpected token '<' at 1:1\n<!DOCTYPE html>\n^",
+          "stack": "JSONError: Unexpected token '<' at 1:1\n<!DOCTYPE html>\n^\n   at Object.eval sandbox-script.js:2:2)",
+          "checksum": "6f18596d799b0ea4e57eb146f0358698",
+          "id": "8254e253-21da-4c29-b551-ce5aebd6ba2e",
+          "timestamp": 1741670235491,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 2,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 2,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:1 in test-script",
+        "source": {
+          "id": "2d43d0f6-850b-4767-94e9-90e28fb9cad9",
+          "name": "API Health Check",
+          "request": {
+            "url": {
+              "path": ["health"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "99d604f5-f1ff-4ce4-b377-ddc5911d0ba4",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Health check response is valid', function() {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.status).to.eql('healthy');",
+                  "    pm.expect(response.version).to.exist;",
+                  "});"
+                ],
+                "_lastExecutionId": "cc492bda-4b25-498d-8d63-0f080d97b73a"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "2672bd1d-485f-42e3-9ecf-09b602503acc",
+          "name": "Health Checks",
+          "item": [
+            {
+              "id": "2d43d0f6-850b-4767-94e9-90e28fb9cad9",
+              "name": "API Health Check",
+              "request": {
+                "url": {
+                  "path": ["health"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "99d604f5-f1ff-4ce4-b377-ddc5911d0ba4",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status code is 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Health check response is valid', function() {",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.status).to.eql('healthy');",
+                      "    pm.expect(response.version).to.exist;",
+                      "});"
+                    ],
+                    "_lastExecutionId": "cc492bda-4b25-498d-8d63-0f080d97b73a"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "f88c8201-98a8-4b2e-9573-577aaeb7917d",
+              "name": "Integration Gateway Health",
+              "request": {
+                "url": {
+                  "path": ["gateway", "health"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "45f2533c-dcab-4120-9fd6-58b5e088475c",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Gateway is healthy', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.gateway_status).to.eql('operational');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "b36fa8c0-7997-4231-aaa9-41192c8f5db8"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "d936928f-f38a-4762-81ce-343fe7b11f97",
+          "length": 10,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "286475f9-849e-421f-95da-a6814559001a",
+          "scriptId": "99d604f5-f1ff-4ce4-b377-ddc5911d0ba4",
+          "execution": "cc492bda-4b25-498d-8d63-0f080d97b73a"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Gateway is healthy",
+          "message": "expected response to have status code 200 but got 404",
+          "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:3)",
+          "checksum": "1797ad973ab07d00777e17a37f36fb68",
+          "id": "6a753a6d-3bf2-4383-a8a3-57b0878c9294",
+          "timestamp": 1741670235606,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 3,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "f88c8201-98a8-4b2e-9573-577aaeb7917d",
+          "name": "Integration Gateway Health",
+          "request": {
+            "url": {
+              "path": ["gateway", "health"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "45f2533c-dcab-4120-9fd6-58b5e088475c",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Gateway is healthy', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.gateway_status).to.eql('operational');",
+                  "});"
+                ],
+                "_lastExecutionId": "b36fa8c0-7997-4231-aaa9-41192c8f5db8"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "2672bd1d-485f-42e3-9ecf-09b602503acc",
+          "name": "Health Checks",
+          "item": [
+            {
+              "id": "2d43d0f6-850b-4767-94e9-90e28fb9cad9",
+              "name": "API Health Check",
+              "request": {
+                "url": {
+                  "path": ["health"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "99d604f5-f1ff-4ce4-b377-ddc5911d0ba4",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Status code is 200', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Health check response is valid', function() {",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.status).to.eql('healthy');",
+                      "    pm.expect(response.version).to.exist;",
+                      "});"
+                    ],
+                    "_lastExecutionId": "cc492bda-4b25-498d-8d63-0f080d97b73a"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "f88c8201-98a8-4b2e-9573-577aaeb7917d",
+              "name": "Integration Gateway Health",
+              "request": {
+                "url": {
+                  "path": ["gateway", "health"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "45f2533c-dcab-4120-9fd6-58b5e088475c",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Gateway is healthy', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.gateway_status).to.eql('operational');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "b36fa8c0-7997-4231-aaa9-41192c8f5db8"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "41666e41-61f9-4121-8d38-2d13bc8ee997",
+          "length": 10,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "98365862-1c42-4ab6-a3f3-9d5180b14242",
+          "scriptId": "45f2533c-dcab-4120-9fd6-58b5e088475c",
+          "execution": "b36fa8c0-7997-4231-aaa9-41192c8f5db8"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Authentication successful",
+          "message": "expected response to have status code 200 but got 404",
+          "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:4)",
+          "checksum": "bcbaca8e23218153fc8c7b934300c594",
+          "id": "0cb83fef-0ba4-4f3b-bbfa-7fa9e1dd8428",
+          "timestamp": 1741670235718,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 4,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "bbc09a55-1aab-466b-868a-b8bcb4179407",
+          "name": "Login",
+          "request": {
+            "url": {
+              "path": ["auth", "login"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "3834f5ac-3535-4132-87a3-820be59d714a",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Authentication successful', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.token).to.exist;",
+                  "    pm.environment.set('authToken', response.token);",
+                  "});"
+                ],
+                "_lastExecutionId": "1c834793-8a46-4012-9124-61c2d8050283"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "00ee7c16-1e8c-426a-bdf7-61c7eeadfd93",
+          "name": "Authentication",
+          "item": [
+            {
+              "id": "bbc09a55-1aab-466b-868a-b8bcb4179407",
+              "name": "Login",
+              "request": {
+                "url": {
+                  "path": ["auth", "login"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}"
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "3834f5ac-3535-4132-87a3-820be59d714a",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Authentication successful', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.token).to.exist;",
+                      "    pm.environment.set('authToken', response.token);",
+                      "});"
+                    ],
+                    "_lastExecutionId": "1c834793-8a46-4012-9124-61c2d8050283"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "cb1cb659-8275-460d-ba78-e290c2183433",
+              "name": "Verify Token",
+              "request": {
+                "url": {
+                  "path": ["auth", "verify"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "5da16bd2-7511-492f-980d-c29c4c3a6615",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Token is valid', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.valid).to.be.true;",
+                      "});"
+                    ],
+                    "_lastExecutionId": "1d6c2569-fcf2-41e7-997c-9c80c07618ac"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "2d10a4fd-36f5-4a5f-8b09-615ec9e82313",
+          "length": 10,
+          "cycles": 1,
+          "position": 3,
+          "iteration": 0,
+          "httpRequestId": "1036ef70-b548-4762-8bf5-1ff57e9831e0",
+          "scriptId": "3834f5ac-3535-4132-87a3-820be59d714a",
+          "execution": "1c834793-8a46-4012-9124-61c2d8050283"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Token is valid",
+          "message": "expected response to have status code 200 but got 404",
+          "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:5)",
+          "checksum": "df60dc429893a117575ab4eb5925de32",
+          "id": "dd36630f-22f1-42bd-ad48-004bac9786a0",
+          "timestamp": 1741670235834,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 5,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "cb1cb659-8275-460d-ba78-e290c2183433",
+          "name": "Verify Token",
+          "request": {
+            "url": {
+              "path": ["auth", "verify"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "5da16bd2-7511-492f-980d-c29c4c3a6615",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Token is valid', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.valid).to.be.true;",
+                  "});"
+                ],
+                "_lastExecutionId": "1d6c2569-fcf2-41e7-997c-9c80c07618ac"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "00ee7c16-1e8c-426a-bdf7-61c7eeadfd93",
+          "name": "Authentication",
+          "item": [
+            {
+              "id": "bbc09a55-1aab-466b-868a-b8bcb4179407",
+              "name": "Login",
+              "request": {
+                "url": {
+                  "path": ["auth", "login"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{password}}\"\n}"
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "3834f5ac-3535-4132-87a3-820be59d714a",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Authentication successful', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.token).to.exist;",
+                      "    pm.environment.set('authToken', response.token);",
+                      "});"
+                    ],
+                    "_lastExecutionId": "1c834793-8a46-4012-9124-61c2d8050283"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "cb1cb659-8275-460d-ba78-e290c2183433",
+              "name": "Verify Token",
+              "request": {
+                "url": {
+                  "path": ["auth", "verify"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "5da16bd2-7511-492f-980d-c29c4c3a6615",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Token is valid', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.valid).to.be.true;",
+                      "});"
+                    ],
+                    "_lastExecutionId": "1d6c2569-fcf2-41e7-997c-9c80c07618ac"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "1b0cad16-9137-4f07-ab6f-2a5e029b4651",
+          "length": 10,
+          "cycles": 1,
+          "position": 4,
+          "iteration": 0,
+          "httpRequestId": "5d84caf8-d2f4-4a5f-8c73-50df5aa63bbc",
+          "scriptId": "5da16bd2-7511-492f-980d-c29c4c3a6615",
+          "execution": "1d6c2569-fcf2-41e7-997c-9c80c07618ac"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Can list resources",
+          "message": "expected response to have status code 200 but got 404",
+          "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:6)",
+          "checksum": "5fd1cd8fc7d27370e62c1a9b4b9790d4",
+          "id": "9812f70a-0c40-45ef-95e1-a7a3b530e34a",
+          "timestamp": 1741670235946,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 6,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "4a930bec-3525-4d57-92fa-c64806bfe96c",
+          "name": "List Resources",
+          "request": {
+            "url": {
+              "path": ["api", "v1", "resources"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "2672faf8-56ca-4667-8a81-2260e21b27bc",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Can list resources', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.items).to.be.an('array');",
+                  "});"
+                ],
+                "_lastExecutionId": "2489ab4d-b574-48ec-8049-8c4eb77b331e"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "5faf4f7e-f0e0-49c7-82ab-11ee4abf7918",
+          "name": "API Endpoints",
+          "item": [
+            {
+              "id": "4a930bec-3525-4d57-92fa-c64806bfe96c",
+              "name": "List Resources",
+              "request": {
+                "url": {
+                  "path": ["api", "v1", "resources"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2672faf8-56ca-4667-8a81-2260e21b27bc",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Can list resources', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.items).to.be.an('array');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "2489ab4d-b574-48ec-8049-8c4eb77b331e"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "15b0367e-2e11-478e-b487-f0c13636b4b1",
+              "name": "Create Resource",
+              "request": {
+                "url": {
+                  "path": ["api", "v1", "resources"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Test Resource\",\n    \"description\": \"Test resource creation\"\n}"
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "9c8484b4-b379-4b48-b35d-c175bf5f62eb",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Resource created successfully', function() {",
+                      "    pm.response.to.have.status(201);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.id).to.exist;",
+                      "});"
+                    ],
+                    "_lastExecutionId": "d2c6a964-dc78-469d-a435-dc851c698f87"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "ab735d7e-02db-4408-8686-67e99a760057",
+          "length": 10,
+          "cycles": 1,
+          "position": 5,
+          "iteration": 0,
+          "httpRequestId": "1cacdaa9-e29e-4daf-a999-f49c8072e28a",
+          "scriptId": "2672faf8-56ca-4667-8a81-2260e21b27bc",
+          "execution": "2489ab4d-b574-48ec-8049-8c4eb77b331e"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Resource created successfully",
+          "message": "expected response to have status code 201 but got 404",
+          "stack": "AssertionError: expected response to have status code 201 but got 404\n   at Object.eval sandbox-script.js:1:7)",
+          "checksum": "61a23159816823d27d4d092c85e947a0",
+          "id": "ad6052f3-1d20-46ca-a250-577b5fa1c340",
+          "timestamp": 1741670236059,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 7,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "15b0367e-2e11-478e-b487-f0c13636b4b1",
+          "name": "Create Resource",
+          "request": {
+            "url": {
+              "path": ["api", "v1", "resources"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test Resource\",\n    \"description\": \"Test resource creation\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "9c8484b4-b379-4b48-b35d-c175bf5f62eb",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Resource created successfully', function() {",
+                  "    pm.response.to.have.status(201);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.id).to.exist;",
+                  "});"
+                ],
+                "_lastExecutionId": "d2c6a964-dc78-469d-a435-dc851c698f87"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "5faf4f7e-f0e0-49c7-82ab-11ee4abf7918",
+          "name": "API Endpoints",
+          "item": [
+            {
+              "id": "4a930bec-3525-4d57-92fa-c64806bfe96c",
+              "name": "List Resources",
+              "request": {
+                "url": {
+                  "path": ["api", "v1", "resources"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2672faf8-56ca-4667-8a81-2260e21b27bc",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Can list resources', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.items).to.be.an('array');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "2489ab4d-b574-48ec-8049-8c4eb77b331e"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "15b0367e-2e11-478e-b487-f0c13636b4b1",
+              "name": "Create Resource",
+              "request": {
+                "url": {
+                  "path": ["api", "v1", "resources"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"name\": \"Test Resource\",\n    \"description\": \"Test resource creation\"\n}"
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "9c8484b4-b379-4b48-b35d-c175bf5f62eb",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Resource created successfully', function() {",
+                      "    pm.response.to.have.status(201);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.id).to.exist;",
+                      "});"
+                    ],
+                    "_lastExecutionId": "d2c6a964-dc78-469d-a435-dc851c698f87"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "cd626522-2f74-474d-a481-2d7d4fb5e411",
+          "length": 10,
+          "cycles": 1,
+          "position": 6,
+          "iteration": 0,
+          "httpRequestId": "f960c3fe-eff8-473e-9be8-129257262caa",
+          "scriptId": "9c8484b4-b379-4b48-b35d-c175bf5f62eb",
+          "execution": "d2c6a964-dc78-469d-a435-dc851c698f87"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Gateway routes are configured",
+          "message": "expected response to have status code 200 but got 404",
+          "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:9)",
+          "checksum": "1f2cb4ca2a9c84d53417de2ef9fc2b73",
+          "id": "e8b98dbf-f20f-4ba4-8961-258402e8a054",
+          "timestamp": 1741670236284,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 9,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "a19c37cb-b7c6-4966-9828-4ad0d396d60f",
+          "name": "Gateway Routes",
+          "request": {
+            "url": {
+              "path": ["gateway", "routes"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "df587c4a-8b4d-4bd7-9770-9c864a97192b",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Gateway routes are configured', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.routes).to.be.an('array');",
+                  "});"
+                ],
+                "_lastExecutionId": "b6fdd366-7f82-4204-9c09-91a00c7dff0c"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "527ebfd2-7e78-4bc9-bd21-17a15e3d7c49",
+          "name": "Integration Gateway",
+          "item": [
+            {
+              "id": "a19c37cb-b7c6-4966-9828-4ad0d396d60f",
+              "name": "Gateway Routes",
+              "request": {
+                "url": {
+                  "path": ["gateway", "routes"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "df587c4a-8b4d-4bd7-9770-9c864a97192b",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Gateway routes are configured', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.routes).to.be.an('array');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "b6fdd366-7f82-4204-9c09-91a00c7dff0c"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1f9b9188-62b0-42b6-882e-6587f56006f2",
+              "name": "Gateway Metrics",
+              "request": {
+                "url": {
+                  "path": ["gateway", "metrics"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "9d5fa375-af75-4fe6-a81f-13509a5de0d3",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Gateway metrics are available', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.metrics).to.exist;",
+                      "});"
+                    ],
+                    "_lastExecutionId": "b31d30e7-5782-45ae-9571-ceb10d40c413"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "2f99958a-aa16-421c-aae7-39a1a8006e2f",
+          "length": 10,
+          "cycles": 1,
+          "position": 8,
+          "iteration": 0,
+          "httpRequestId": "004c9dbf-72c3-4c11-8214-ff7fb0cd995c",
+          "scriptId": "df587c4a-8b4d-4bd7-9770-9c864a97192b",
+          "execution": "b6fdd366-7f82-4204-9c09-91a00c7dff0c"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "Gateway metrics are available",
+          "message": "expected response to have status code 200 but got 404",
+          "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:10)",
+          "checksum": "e8925708ce10b10069d7d5400472d4db",
+          "id": "a458cfb1-bd4a-485f-bcb6-b44b68c69b1d",
+          "timestamp": 1741670236399,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 10,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "1f9b9188-62b0-42b6-882e-6587f56006f2",
+          "name": "Gateway Metrics",
+          "request": {
+            "url": {
+              "path": ["gateway", "metrics"],
+              "host": ["{{baseUrl}}"],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "9d5fa375-af75-4fe6-a81f-13509a5de0d3",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Gateway metrics are available', function() {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.metrics).to.exist;",
+                  "});"
+                ],
+                "_lastExecutionId": "b31d30e7-5782-45ae-9571-ceb10d40c413"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "id": "527ebfd2-7e78-4bc9-bd21-17a15e3d7c49",
+          "name": "Integration Gateway",
+          "item": [
+            {
+              "id": "a19c37cb-b7c6-4966-9828-4ad0d396d60f",
+              "name": "Gateway Routes",
+              "request": {
+                "url": {
+                  "path": ["gateway", "routes"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "df587c4a-8b4d-4bd7-9770-9c864a97192b",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Gateway routes are configured', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.routes).to.be.an('array');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "b6fdd366-7f82-4204-9c09-91a00c7dff0c"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1f9b9188-62b0-42b6-882e-6587f56006f2",
+              "name": "Gateway Metrics",
+              "request": {
+                "url": {
+                  "path": ["gateway", "metrics"],
+                  "host": ["{{baseUrl}}"],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{authToken}}"
+                  }
+                ],
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "9d5fa375-af75-4fe6-a81f-13509a5de0d3",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Gateway metrics are available', function() {",
+                      "    pm.response.to.have.status(200);",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(response.metrics).to.exist;",
+                      "});"
+                    ],
+                    "_lastExecutionId": "b31d30e7-5782-45ae-9571-ceb10d40c413"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": []
+        },
+        "cursor": {
+          "ref": "705e7699-bfa5-4422-aa2d-7c0bf7fb76da",
+          "length": 10,
+          "cycles": 1,
+          "position": 9,
+          "iteration": 0,
+          "httpRequestId": "6f2924c7-7f4b-4b48-95d0-5415bf170812",
+          "scriptId": "9d5fa375-af75-4fe6-a81f-13509a5de0d3",
+          "execution": "b31d30e7-5782-45ae-9571-ceb10d40c413"
+        }
+      }
+    ],
+    "error": null
+  }
+}

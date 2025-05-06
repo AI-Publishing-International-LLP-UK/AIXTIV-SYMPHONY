@@ -1,0 +1,54 @@
+{
+  "name": "@aixtiv/dream-commander-rules-engine",
+  "version": "1.0.0",
+  "description": "Rules engine for the Dream Commander component of Aixtiv Symphony",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest",
+    "lint": "eslint src/**/*.js",
+    "build": "tsc",
+    "docs": "jsdoc -c jsdoc.json"
+  },
+  "keywords": [
+    "aixtiv",
+    "symphony",
+    "dream-commander",
+    "rules-engine",
+    "vls"
+  ],
+  "author": "Aixtiv Symphony Team",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "firebase-admin": "^11.5.0",
+    "winston": "^3.8.2",
+    "ioredis": "^5.3.1",
+    "uuid": "^9.0.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "joi": "^17.8.3",
+    "moment": "^2.29.4",
+    "node-cache": "^5.1.2",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "eslint": "^8.36.0",
+    "jest": "^29.5.0",
+    "nodemon": "^2.0.21",
+    "typescript": "^4.9.5",
+    "jsdoc": "^4.0.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AI-Publishing-International-LLP-UK/AIXTIV-SYMPHONY.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AI-Publishing-International-LLP-UK/AIXTIV-SYMPHONY/issues"
+  },
+  "homepage": "https://github.com/AI-Publishing-International-LLP-UK/AIXTIV-SYMPHONY#readme"
+}

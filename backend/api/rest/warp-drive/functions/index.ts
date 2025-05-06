@@ -1,0 +1,1 @@
+This is a placeholder for functions/index.ts. Content will be filled in real deployment.

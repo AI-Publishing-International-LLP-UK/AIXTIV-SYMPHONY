@@ -1,0 +1,19 @@
+{
+  "name": "vls",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js",
+    "build": "echo \"Building project\" && rm -rf dist && mkdir -p dist && cp -r package.json dist/ && cp -r solutions dist/ 2>/dev/null || echo \"No solutions directory to copy\" && cp -r interfaces dist/ 2>/dev/null || echo \"No interfaces directory to copy\"",
+    "preview": "node index.js",
+    "lint": "echo \"Linting code\" && exit 0",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

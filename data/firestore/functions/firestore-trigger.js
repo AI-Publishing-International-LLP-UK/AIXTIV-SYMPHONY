@@ -1,16 +1,17 @@
-const functions = require("firebase-functions");
-const admin = require("firebase-admin");
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
 admin.initializeApp();
 const db = admin.firestore();
 
 exports.onAgentMetricsUpdate = functions.firestore
-  .document("agent-metrics/{agentId}")
+  .document('agent-metrics/{agentId}')
   .onUpdate(async (change, context) => {
     const after = change.after.data();
     const before = change.before.data();
 
     if (after.load > 0.85 && after.responseTime > before.responseTime) {
-      const taskSnapshot = await db.collection('task-assignments')
+      const taskSnapshot = await db
+        .collection('task-assignments')
         .where('agent', '==', context.params.agentId)
         .where('status', '==', 'assigned')
         .limit(3)

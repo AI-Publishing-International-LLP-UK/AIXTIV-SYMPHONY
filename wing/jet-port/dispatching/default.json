@@ -1,0 +1,22 @@
+{
+  "performance": {
+    "apiThrottleLimit": 5,
+    "apiThrottleInterval": 1000,
+    "maxRetries": 3,
+    "concurrency": 2
+  },
+  "logging": {
+    "level": "info",
+    "filename": "domain-management.log"
+  },
+  "api": {
+    "firebase": {
+      "baseUrl": "https://firebase.googleapis.com/v1",
+      "timeout": 10000
+    },
+    "godaddy": {
+      "baseUrl": "https://api.godaddy.com/v1",
+      "timeout": 10000
+    }
+  }
+}

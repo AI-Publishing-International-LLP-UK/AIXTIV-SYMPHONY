@@ -1,6 +1,6 @@
 /**
  * Server.js - Entry point for Cloud Run
- * 
+ *
  * This file imports Firebase functions from index.js and sets them up as Express routes
  * to be served directly from Cloud Run without requiring the Firebase Functions runtime.
  */
@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 // Instead, we extract the actual handler function and use it directly
 
 // Extract the handler function from each Firebase function
-const extractHandler = (firebaseFunction) => {
+const extractHandler = firebaseFunction => {
   return firebaseFunction._handler || firebaseFunction.__trigger.func;
 };
 
@@ -71,4 +71,3 @@ app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
   console.log('Press Ctrl+C to quit.');
 });
-

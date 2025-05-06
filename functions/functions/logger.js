@@ -3,21 +3,20 @@
  */
 
 const logger = {
-  info: (message) => {
+  info: message => {
     console.log(`[INFO] ${message}`);
   },
-  error: (message) => {
+  error: message => {
     console.error(`[ERROR] ${message}`);
   },
-  warn: (message) => {
+  warn: message => {
     console.warn(`[WARN] ${message}`);
   },
-  debug: (message) => {
+  debug: message => {
     if (process.env.DEBUG) {
       console.debug(`[DEBUG] ${message}`);
     }
-  }
+  },
 };
 
 module.exports = logger;
-

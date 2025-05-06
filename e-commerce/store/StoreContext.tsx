@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useReducer, ReactNode, useEffect } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  ReactNode,
+  useEffect,
+} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 // Types
@@ -68,16 +74,18 @@ const storeReducer = (state: StoreState, action: ActionType): StoreState => {
   switch (action.type) {
     case 'ADD_TO_CART': {
       const { productId, quantity, ...rest } = action.payload;
-      
+
       // Check if item already exists in cart
-      const existingItemIndex = state.cart.findIndex(item => item.productId === productId);
-      
+      const existingItemIndex = state.cart.findIndex(
+        item => item.productId === productId
+      );
+
       if (existingItemIndex >= 0) {
         // Update quantity of existing item
         const updatedCart = [...state.cart];
         updatedCart[existingItemIndex] = {
           ...updatedCart[existingItemIndex],
-          quantity: updatedCart[existingItemIndex].quantity + quantity
+          quantity: updatedCart[existingItemIndex].quantity + quantity,
         };
         return { ...state, cart: updatedCart };
       } else {
@@ -86,81 +94,83 @@ const storeReducer = (state: StoreState, action: ActionType): StoreState => {
           id: uuidv4(),
           productId,
           quantity,
-          ...rest
+          ...rest,
         };
         return { ...state, cart: [...state.cart, newItem] };
       }
     }
-    
+
     case 'REMOVE_FROM_CART':
       return {
         ...state,
-        cart: state.cart.filter(item => item.id !== action.payload)
+        cart: state.cart.filter(item => item.id !== action.payload),
       };
-      
+
     case 'UPDATE_QUANTITY': {
       const { id, quantity } = action.payload;
       return {
         ...state,
         cart: state.cart.map(item =>
           item.id === id ? { ...item, quantity } : item
-        )
+        ),
       };
     }
-    
+
     case 'CLEAR_CART':
       return { ...state, cart: [] };
-      
+
     case 'TOGGLE_CART':
       return { ...state, isCartOpen: !state.isCartOpen };
-      
+
     case 'SET_CHECKOUT_STEP':
       return { ...state, checkoutStep: action.payload };
-      
+
     case 'LOGIN':
       return {
         ...state,
-        user: { ...action.payload, isAuthenticated: true }
+        user: { ...action.payload, isAuthenticated: true },
       };
-      
+
     case 'LOGOUT':
       return { ...state, user: null };
-      
+
     case 'ADD_TO_WISHLIST':
       if (state.wishlist.includes(action.payload)) {
         return state;
       }
       return {
         ...state,
-        wishlist: [...state.wishlist, action.payload]
+        wishlist: [...state.wishlist, action.payload],
       };
-      
+
     case 'REMOVE_FROM_WISHLIST':
       return {
         ...state,
-        wishlist: state.wishlist.filter(id => id !== action.payload)
+        wishlist: state.wishlist.filter(id => id !== action.payload),
       };
-      
+
     case 'ADD_RECENTLY_VIEWED': {
       // Remove if exists, then add to beginning
-      const filteredViewed = state.recentlyViewed.filter(id => id !== action.payload);
+      const filteredViewed = state.recentlyViewed.filter(
+        id => id !== action.payload
+      );
       return {
         ...state,
-        recentlyViewed: [action.payload, ...filteredViewed].slice(0, 10) // Limit to 10 items
+        recentlyViewed: [action.payload, ...filteredViewed].slice(0, 10), // Limit to 10 items
       };
     }
-    
+
     case 'SET_LOADING':
       return { ...state, loading: action.payload };
-      
+
     case 'SET_ERROR':
       return { ...state, error: action.payload };
-      
+
     case 'APPLY_DISCOUNT':
       // This would need more complex logic depending on your discount system
       console.log(`Discount code applied: ${action.payload}`);
       return state;
-      
+
     default:
       return state;
   }
@@ -184,15 +194,17 @@ interface StoreContextValue {
 const StoreContext = createContext<StoreContextValue | undefined>(undefined);
 
 // Context provider component
-export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const StoreProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [state, dispatch] = useReducer(storeReducer, initialState);
-  
+
   // Load state from localStorage on mount
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');
     const savedUser = localStorage.getItem('user');
     const savedWishlist = localStorage.getItem('wishlist');
-    
+
     if (savedCart) {
       try {
         const parsedCart = JSON.parse(savedCart);
@@ -203,7 +215,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         console.error('Failed to parse saved cart:', e);
       }
     }
-    
+
     if (savedUser) {
       try {
         const parsedUser = JSON.parse(savedUser);
@@ -212,7 +224,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         console.error('Failed to parse saved user:', e);
       }
     }
-    
+
     if (savedWishlist) {
       try {
         const parsedWishlist = JSON.parse(savedWishlist);
@@ -224,7 +236,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       }
     }
   }, []);
-  
+
   // Save state to localStorage when it changes
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(state.cart));
@@ -235,44 +247,47 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
     localStorage.setItem('wishlist', JSON.stringify(state.wishlist));
   }, [state.cart, state.user, state.wishlist]);
-  
+
   // Helper functions for common actions
   const addToCart = (item: Omit<CartItem, 'id'>) => {
     dispatch({ type: 'ADD_TO_CART', payload: item });
   };
-  
+
   const removeFromCart = (id: string) => {
     dispatch({ type: 'REMOVE_FROM_CART', payload: id });
   };
-  
+
   const updateQuantity = (id: string, quantity: number) => {
     dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } });
   };
-  
+
   const clearCart = () => {
     dispatch({ type: 'CLEAR_CART' });
   };
-  
+
   const toggleCart = () => {
     dispatch({ type: 'TOGGLE_CART' });
   };
-  
+
   const login = (userData: Omit<User, 'isAuthenticated'>) => {
     dispatch({ type: 'LOGIN', payload: userData });
   };
-  
+
   const logout = () => {
     dispatch({ type: 'LOGOUT' });
   };
-  
+
   const getCartTotal = () => {
-    return state.cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    return state.cart.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
   };
-  
+
   const getCartItemCount = () => {
     return state.cart.reduce((count, item) => count + item.quantity, 0);
   };
-  
+
   const value = {
     state,
     dispatch,
@@ -284,38 +299,45 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     login,
     logout,
     getCartTotal,
-    getCartItemCount
+    getCartItemCount,
   };
-  
-  return <StoreContext.Provider value={value}>{children}</StoreContext.Provider>;
+
+  return (
+    <StoreContext.Provider value={value}>{children}</StoreContext.Provider>
+  );
 };
 
 // Custom hook to use the store context
 export const useStore = (): StoreContextValue => {
   const context = useContext(StoreContext);
-  
+
   if (context === undefined) {
     throw new Error('useStore must be used within a StoreProvider');
   }
-  
+
   return context;
 };
 
 // Export a hook for academy integration
 export const useAcademyStore = () => {
   const { state, addToCart, getCartTotal } = useStore();
-  
-  const addCourseToCart = (courseId: string, name: string, price: number, image?: string) => {
+
+  const addCourseToCart = (
+    courseId: string,
+    name: string,
+    price: number,
+    image?: string
+  ) => {
     addToCart({
       productId: courseId,
       name,
       price,
       quantity: 1,
       image,
-      courseId
+      courseId,
     });
   };
-  
+
   const getEnrolledCourses = () => {
     // This would typically come from the user profile or a separate API
     // For now, we just return courses in the cart as a placeholder
@@ -324,14 +346,13 @@ export const useAcademyStore = () => {
       .map(item => ({
         id: item.courseId as string,
         name: item.name,
-        price: item.price
+        price: item.price,
       }));
   };
-  
+
   return {
     addCourseToCart,
     getEnrolledCourses,
-    getCartTotal
+    getCartTotal,
   };
 };
-

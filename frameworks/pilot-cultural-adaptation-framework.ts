@@ -11,7 +11,7 @@ export enum CulturalContext {
   GULF_REGION_CONSERVATIVE = 'gulf_region_conservative',
   SAUDI_ARABIA = 'saudi_arabia',
   NORTH_AFRICAN = 'north_african',
-  LEVANT = 'levant'
+  LEVANT = 'levant',
 }
 
 export interface CulturalAdaptationProfile {
@@ -53,7 +53,7 @@ export class CulturalAdaptationManager {
           headCovering: 'niqab',
           bodyCoverage: 'traditional',
           colorPalette: ['black', 'navy', 'dark_brown'],
-          accessoryRestrictions: ['jewelry', 'bright_colors']
+          accessoryRestrictions: ['jewelry', 'bright_colors'],
         },
         communicationNorms: {
           genderInteraction: 'segregated',
@@ -61,14 +61,14 @@ export class CulturalAdaptationManager {
           honorifics: ['Sheikh', 'Ustadha', 'Hajja'],
           bodyLanguage: {
             eyeContact: 'limited',
-            personalSpace: 'distant'
-          }
+            personalSpace: 'distant',
+          },
         },
         languageAdaptation: {
           formalityLevel: 'high',
           religiousLanguageAwareness: true,
-          dialectalVariations: ['Gulf Arabic', 'Najdi Arabic']
-        }
+          dialectalVariations: ['Gulf Arabic', 'Najdi Arabic'],
+        },
       },
       {
         context: CulturalContext.MIDDLE_EASTERN_CONSERVATIVE,
@@ -76,7 +76,7 @@ export class CulturalAdaptationManager {
           headCovering: 'hijab',
           bodyCoverage: 'modest',
           colorPalette: ['navy', 'dark_green', 'maroon', 'gray'],
-          accessoryRestrictions: ['overly_flashy_jewelry']
+          accessoryRestrictions: ['overly_flashy_jewelry'],
         },
         communicationNorms: {
           genderInteraction: 'professional_distance',
@@ -84,18 +84,18 @@ export class CulturalAdaptationManager {
           honorifics: ['Doctor', 'Professor', 'Ustadh'],
           bodyLanguage: {
             eyeContact: 'gender_specific',
-            personalSpace: 'moderate'
-          }
+            personalSpace: 'moderate',
+          },
         },
         languageAdaptation: {
           formalityLevel: 'medium',
           religiousLanguageAwareness: true,
           dialectalVariations: [
-            'Egyptian Arabic', 
-            'Levantine Arabic', 
-            'Iraqi Arabic'
-          ]
-        }
+            'Egyptian Arabic',
+            'Levantine Arabic',
+            'Iraqi Arabic',
+          ],
+        },
       },
       {
         context: CulturalContext.MIDDLE_EASTERN_MODERN,
@@ -103,7 +103,7 @@ export class CulturalAdaptationManager {
           headCovering: 'light_scarf',
           bodyCoverage: 'western',
           colorPalette: ['teal', 'burgundy', 'forest_green', 'navy'],
-          accessoryRestrictions: []
+          accessoryRestrictions: [],
         },
         communicationNorms: {
           genderInteraction: 'open',
@@ -111,18 +111,18 @@ export class CulturalAdaptationManager {
           honorifics: ['Doctor', 'Professional'],
           bodyLanguage: {
             eyeContact: 'direct',
-            personalSpace: 'close'
-          }
+            personalSpace: 'close',
+          },
         },
         languageAdaptation: {
           formalityLevel: 'low',
           religiousLanguageAwareness: false,
-          dialectalVariations: ['Modern Standard Arabic']
-        }
-      }
+          dialectalVariations: ['Modern Standard Arabic'],
+        },
+      },
     ];
 
-    profiles.forEach(profile => 
+    profiles.forEach(profile =>
       this.culturalProfiles.set(profile.context, profile)
     );
   }
@@ -130,7 +130,9 @@ export class CulturalAdaptationManager {
   /**
    * Get cultural adaptation profile for a specific context
    */
-  getCulturalProfile(context: CulturalContext): CulturalAdaptationProfile | undefined {
+  getCulturalProfile(
+    context: CulturalContext
+  ): CulturalAdaptationProfile | undefined {
     return this.culturalProfiles.get(context);
   }
 
@@ -138,7 +140,7 @@ export class CulturalAdaptationManager {
    * Adapt agent presentation for a specific cultural context
    */
   adaptAgentPresentation(
-    agentName: string, 
+    agentName: string,
     context: CulturalContext
   ): {
     dresscode: CulturalAdaptationProfile['dresscode'];
@@ -152,13 +154,13 @@ export class CulturalAdaptationManager {
           headCovering: 'light_scarf',
           bodyCoverage: 'modest',
           colorPalette: ['navy', 'gray', 'dark_green'],
-          accessoryRestrictions: []
+          accessoryRestrictions: [],
         },
         communicationGuidelines: [
           'Maintain professional and respectful demeanor',
           'Be mindful of local cultural sensitivities',
-          'Adapt communication style to local norms'
-        ]
+          'Adapt communication style to local norms',
+        ],
       };
     }
 
@@ -169,8 +171,8 @@ export class CulturalAdaptationManager {
         `Observe ${profile.communicationNorms.genderInteraction} interaction protocols`,
         `Maintain ${profile.communicationNorms.bodyLanguage.personalSpace} personal space`,
         `Follow ${profile.languageAdaptation.formalityLevel} formality level`,
-        'Respect local cultural and religious sensitivities'
-      ]
+        'Respect local cultural and religious sensitivities',
+      ],
     };
   }
 
@@ -193,7 +195,7 @@ export class CulturalAdaptationManager {
     };
   } {
     const presentation = this.adaptAgentPresentation(agentName, context);
-    
+
     return {
       culturalPresentation: presentation,
       languageCapabilities: {
@@ -204,9 +206,9 @@ export class CulturalAdaptationManager {
           'Levantine Arabic': 1.0,
           'Moroccan Arabic': 0.9,
           'Iraqi Arabic': 0.9,
-          'Modern Standard Arabic': 1.0
-        }
-      }
+          'Modern Standard Arabic': 1.0,
+        },
+      },
     };
   }
 }
@@ -219,7 +221,7 @@ function demonstrateCulturalAdaptation() {
 
   // Adapt Dr. Memoria for Saudi Arabian context
   const saudiAdaptation = adaptationManager.integrateInCulturalContext(
-    'Dr. Memoria', 
+    'Dr. Memoria',
     CulturalContext.SAUDI_ARABIA
   );
 
@@ -227,7 +229,7 @@ function demonstrateCulturalAdaptation() {
 
   // Adapt Dr. Match for Modern Middle Eastern context
   const modernMEAdaptation = adaptationManager.integrateInCulturalContext(
-    'Dr. Match', 
+    'Dr. Match',
     CulturalContext.MIDDLE_EASTERN_MODERN
   );
 
@@ -237,5 +239,5 @@ function demonstrateCulturalAdaptation() {
 export default {
   CulturalAdaptationManager,
   CulturalContext,
-  demonstrateCulturalAdaptation
+  demonstrateCulturalAdaptation,
 };

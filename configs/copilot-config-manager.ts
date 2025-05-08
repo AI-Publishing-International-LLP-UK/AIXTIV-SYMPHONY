@@ -10,7 +10,7 @@ export enum ConfigType {
   WORKFLOW = 'workflow',
   INTEGRATION = 'integration',
   SECURITY = 'security',
-  SYSTEM = 'system'
+  SYSTEM = 'system',
 }
 
 /**
@@ -20,7 +20,7 @@ export enum ConfigSource {
   LOCAL = 'local',
   FIREBASE = 'firebase',
   API = 'api',
-  ENVIRONMENT = 'environment'
+  ENVIRONMENT = 'environment',
 }
 
 /**
@@ -59,13 +59,13 @@ export class CoPilotConfigManager extends EventEmitter {
   private configs: Map<string, ConfigEntry>;
   private providers: Map<ConfigSource, ConfigStorageProvider>;
   private initialized: boolean = false;
-  
+
   private constructor() {
     super();
     this.configs = new Map();
     this.providers = new Map();
   }
-  
+
   /**
    * Get singleton instance of the configuration manager
    */
@@ -75,15 +75,18 @@ export class CoPilotConfigManager extends EventEmitter {
     }
     return CoPilotConfigManager.instance;
   }
-  
+
   /**
    * Register a storage provider for a specific configuration source
    */
-  registerProvider(source: ConfigSource, provider: ConfigStorageProvider): void {
+  registerProvider(
+    source: ConfigSource,
+    provider: ConfigStorageProvider
+  ): void {
     this.providers.set(source, provider);
     this.emit('provider:registered', { source });
   }
-  
+
   /**
    * Initialize the configuration manager
    */
@@ -91,7 +94,7 @@ export class CoPilotConfigManager extends EventEmitter {
     if (this.initialized) {
       return;
     }
-    
+
     // Load configurations from all registered providers
     for (const [source, provider] of this.providers.entries()) {
       try {
@@ -99,7 +102,7 @@ export class CoPilotConfigManager extends EventEmitter {
         configs.forEach(config => {
           this.configs.set(config.id, {
             ...config,
-            source
+            source,
           });
         });
         console.log(`Loaded ${configs.length} configurations from ${source}`);
@@ -107,11 +110,11 @@ export class CoPilotConfigManager extends EventEmitter {
         console.error(`Failed to load configurations from ${source}:`, error);
       }
     }
-    
+
     this.initialized = true;
     this.emit('initialized');
   }
-  
+
   /**
    * Get a configuration by ID
    */
@@ -122,41 +125,46 @@ export class CoPilotConfigManager extends EventEmitter {
     }
     return config.data as T;
   }
-  
+
   /**
    * Get all configurations of a specific type
    */
   getConfigsByType(type: ConfigType): ConfigEntry[] {
-    return Array.from(this.configs.values())
-      .filter(config => config.type === type);
+    return Array.from(this.configs.values()).filter(
+      config => config.type === type
+    );
   }
-  
+
   /**
    * Set or update a configuration
    */
-  async setConfig(entry: Omit<ConfigEntry, 'createdAt' | 'updatedAt'>): Promise<ConfigEntry> {
+  async setConfig(
+    entry: Omit<ConfigEntry, 'createdAt' | 'updatedAt'>
+  ): Promise<ConfigEntry> {
     const now = Date.now();
     const existing = this.configs.get(entry.id);
-    
+
     const configEntry: ConfigEntry = {
       ...entry,
       createdAt: existing?.createdAt || now,
-      updatedAt: now
+      updatedAt: now,
     };
-    
+
     // Save to the appropriate provider
     const provider = this.providers.get(configEntry.source);
     if (!provider) {
-      throw new Error(`No provider registered for source: ${configEntry.source}`);
+      throw new Error(
+        `No provider registered for source: ${configEntry.source}`
+      );
     }
-    
+
     await provider.save(configEntry);
     this.configs.set(configEntry.id, configEntry);
     this.emit('config:updated', { id: configEntry.id, type: configEntry.type });
-    
+
     return configEntry;
   }
-  
+
   /**
    * Delete a configuration by ID
    */
@@ -165,29 +173,30 @@ export class CoPilotConfigManager extends EventEmitter {
     if (!config) {
       return false;
     }
-    
+
     const provider = this.providers.get(config.source);
     if (!provider) {
       throw new Error(`No provider registered for source: ${config.source}`);
     }
-    
+
     const success = await provider.delete(id);
     if (success) {
       this.configs.delete(id);
       this.emit('config:deleted', { id, type: config.type });
     }
-    
+
     return success;
   }
-  
+
   /**
    * Find configurations by tags
    */
   findConfigsByTags(tags: string[]): ConfigEntry[] {
-    return Array.from(this.configs.values())
-      .filter(config => tags.every(tag => config.tags?.includes(tag)));
+    return Array.from(this.configs.values()).filter(config =>
+      tags.every(tag => config.tags?.includes(tag))
+    );
   }
-  
+
   /**
    * Create a new configuration entry
    */
@@ -203,7 +212,7 @@ export class CoPilotConfigManager extends EventEmitter {
     } = {}
   ): Promise<ConfigEntry> {
     const id = `${type}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     return this.setConfig({
       id,
       type,
@@ -213,10 +222,10 @@ export class CoPilotConfigManager extends EventEmitter {
       data,
       source: options.source || ConfigSource.LOCAL,
       encrypted: options.encrypted,
-      tags: options.tags
+      tags: options.tags,
     });
   }
-  
+
   /**
    * Reset the manager (for testing)
    */

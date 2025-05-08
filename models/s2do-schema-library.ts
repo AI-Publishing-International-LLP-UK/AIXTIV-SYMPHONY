@@ -1,9 +1,9 @@
 /**
  * S2DO Schema Library
- * 
+ *
  * A comprehensive library of standardized S2DO actions organized by domain and stem verbs.
  * This schema can be used to ensure consistent action naming and handling across an organization.
- * 
+ *
  * Format: S2DO:Stem:Action
  */
 
@@ -27,7 +27,7 @@ export enum S2DOStem {
   ANALYZE = 'Analyze',
   AUDIT = 'Audit',
   EXAMINE = 'Examine',
-  
+
   // Approval and Verification
   APPROVE = 'Approve',
   VERIFY = 'Verify',
@@ -36,7 +36,7 @@ export enum S2DOStem {
   AUTHORIZE = 'Authorize',
   CERTIFY = 'Certify',
   ENDORSE = 'Endorse',
-  
+
   // Modification
   UPDATE = 'Update',
   MODIFY = 'Modify',
@@ -45,7 +45,7 @@ export enum S2DOStem {
   ENHANCE = 'Enhance',
   OPTIMIZE = 'Optimize',
   CUSTOMIZE = 'Customize',
-  
+
   // Execution and Implementation
   EXECUTE = 'Execute',
   IMPLEMENT = 'Implement',
@@ -54,7 +54,7 @@ export enum S2DOStem {
   ACTIVATE = 'Activate',
   RUN = 'Run',
   PERFORM = 'Perform',
-  
+
   // Completion and Delivery
   COMPLETE = 'Complete',
   FINALIZE = 'Finalize',
@@ -63,7 +63,7 @@ export enum S2DOStem {
   CONCLUDE = 'Conclude',
   PUBLISH = 'Publish',
   RELEASE = 'Release',
-  
+
   // Management and Monitoring
   MANAGE = 'Manage',
   MONITOR = 'Monitor',
@@ -72,7 +72,7 @@ export enum S2DOStem {
   COORDINATE = 'Coordinate',
   SUPERVISE = 'Supervise',
   ADMINISTER = 'Administer',
-  
+
   // Communication
   REPORT = 'Report',
   SHARE = 'Share',
@@ -81,7 +81,7 @@ export enum S2DOStem {
   PRESENT = 'Present',
   DISTRIBUTE = 'Distribute',
   BROADCAST = 'Broadcast',
-  
+
   // Financial
   FUND = 'Fund',
   PAY = 'Pay',
@@ -90,7 +90,7 @@ export enum S2DOStem {
   ALLOCATE = 'Allocate',
   INVEST = 'Invest',
   REIMBURSE = 'Reimburse',
-  
+
   // Transition and Transfer
   TRANSITION = 'Transition',
   TRANSFER = 'Transfer',
@@ -99,7 +99,7 @@ export enum S2DOStem {
   ESCALATE = 'Escalate',
   DELEGATE = 'Delegate',
   ASSIGN = 'Assign',
-  
+
   // Cancellation and Termination
   CANCEL = 'Cancel',
   TERMINATE = 'Terminate',
@@ -108,24 +108,24 @@ export enum S2DOStem {
   SUSPEND = 'Suspend',
   REJECT = 'Reject',
   ARCHIVE = 'Archive',
-  
+
   // Advanced Intelligence (Years 8-15)
   TRANSFORM = 'Transform',
   INTEGRATE = 'Integrate',
   SYNCHRONIZE = 'Synchronize',
   GOVERN = 'Govern',
-  
+
   // Ambient Intelligence (Years 16-22)
   ANTICIPATE = 'Anticipate',
   CONTEXTUAL = 'Contextual',
   SYNTHESIZE = 'Synthesize',
   ORCHESTRATE = 'Orchestrate',
-  
+
   // Transcendent Systems (Years 23-30)
   CONSCIOUSNESS = 'Consciousness',
   QUANTUM_INTELLIGENCE = 'QuantumIntelligence',
   SYMBIOTIC = 'Symbiotic',
-  TRANSDIMENSIONAL = 'Transdimensional'
+  TRANSDIMENSIONAL = 'Transdimensional',
 }
 
 /**
@@ -152,18 +152,18 @@ export enum S2DODomain {
   EXECUTIVE = 'Executive',
   CREATIVE = 'Creative',
   EDUCATION = 'Education',
-  
+
   // Advanced domains (Years 12-22)
   INTELLIGENCE = 'Intelligence',
   ECOSYSTEM = 'Ecosystem',
   EXPERIENCE = 'Experience',
   INNOVATION = 'Innovation',
-  
+
   // Future domains (Years 23-30)
   CONSCIOUSNESS = 'Consciousness',
   QUANTUM = 'Quantum',
   SYMBIOTIC = 'Symbiotic',
-  TRANSDIMENSIONAL = 'Transdimensional'
+  TRANSDIMENSIONAL = 'Transdimensional',
 }
 
 /**
@@ -173,29 +173,30 @@ export enum S2DOPriority {
   LOW = 'low',
   MEDIUM = 'medium',
   HIGH = 'high',
-  CRITICAL = 'critical'
+  CRITICAL = 'critical',
 }
 
 /**
  * Verification requirement types
  */
 export enum S2DOVerificationType {
-  SINGLE = 'single',      // Single approver required
-  MULTI = 'multi',        // Multiple approvers required
+  SINGLE = 'single', // Single approver required
+  MULTI = 'multi', // Multiple approvers required
   SEQUENTIAL = 'sequential', // Approvers must verify in order
-  MAJORITY = 'majority',  // Majority of approvers required
-  UNANIMOUS = 'unanimous' // All approvers must verify
+  MAJORITY = 'majority', // Majority of approvers required
+  UNANIMOUS = 'unanimous', // All approvers must verify
 }
 
 /**
  * Base type for S2DO action definitions
  */
 export interface S2DOActionDefinition {
-  name: string;           // The action name (e.g., "Invoice")
-  domain: S2DODomain;     // The domain this action belongs to
-  description: string;    // Human-readable description
+  name: string; // The action name (e.g., "Invoice")
+  domain: S2DODomain; // The domain this action belongs to
+  description: string; // Human-readable description
   defaultPriority: S2DOPriority; // Default priority for this action
-  defaultVerification: {  // Default verification requirements
+  defaultVerification: {
+    // Default verification requirements
     type: S2DOVerificationType;
     requiredRoles?: string[];
     minimumApprovals?: number;
@@ -208,8 +209,8 @@ export interface S2DOActionDefinition {
  * Full S2DO action with stem
  */
 export interface S2DOAction extends S2DOActionDefinition {
-  stem: S2DOStem;         // The verb stem for this action
-  fullName: string;       // Complete name in S2DO:Stem:Action format
+  stem: S2DOStem; // The verb stem for this action
+  fullName: string; // Complete name in S2DO:Stem:Action format
 }
 
 /**
@@ -223,10 +224,10 @@ export const ContentActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.MEDIUM,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['editor']
+      requiredRoles: ['editor'],
     },
     requiredParameters: ['title', 'body', 'keywords'],
-    optionalParameters: ['category', 'author', 'images', 'publishDate']
+    optionalParameters: ['category', 'author', 'images', 'publishDate'],
   },
   {
     name: 'WhitePaper',
@@ -236,10 +237,10 @@ export const ContentActions: S2DOActionDefinition[] = [
     defaultVerification: {
       type: S2DOVerificationType.MULTI,
       requiredRoles: ['editor', 'subject-matter-expert'],
-      minimumApprovals: 2
+      minimumApprovals: 2,
     },
     requiredParameters: ['title', 'body', 'abstract', 'author'],
-    optionalParameters: ['citations', 'figures', 'tables']
+    optionalParameters: ['citations', 'figures', 'tables'],
   },
   {
     name: 'SocialPost',
@@ -248,10 +249,10 @@ export const ContentActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.MEDIUM,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['social-media-manager']
+      requiredRoles: ['social-media-manager'],
     },
     requiredParameters: ['text', 'platform', 'publishDate'],
-    optionalParameters: ['images', 'tags', 'links', 'targetAudience']
+    optionalParameters: ['images', 'tags', 'links', 'targetAudience'],
   },
   {
     name: 'Newsletter',
@@ -260,10 +261,10 @@ export const ContentActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['editor', 'marketing-manager']
+      requiredRoles: ['editor', 'marketing-manager'],
     },
     requiredParameters: ['subject', 'body', 'recipientSegment'],
-    optionalParameters: ['preheader', 'callToAction', 'images']
+    optionalParameters: ['preheader', 'callToAction', 'images'],
   },
   {
     name: 'VideoScript',
@@ -273,10 +274,10 @@ export const ContentActions: S2DOActionDefinition[] = [
     defaultVerification: {
       type: S2DOVerificationType.MULTI,
       requiredRoles: ['creative-director', 'subject-matter-expert'],
-      minimumApprovals: 2
+      minimumApprovals: 2,
     },
     requiredParameters: ['title', 'script', 'duration', 'target'],
-    optionalParameters: ['visualNotes', 'musicNotes', 'voiceOver']
+    optionalParameters: ['visualNotes', 'musicNotes', 'voiceOver'],
   },
   {
     name: 'PressRelease',
@@ -285,11 +286,11 @@ export const ContentActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.CRITICAL,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['pr-manager', 'legal-advisor', 'executive']
+      requiredRoles: ['pr-manager', 'legal-advisor', 'executive'],
     },
     requiredParameters: ['headline', 'body', 'releaseDate', 'contactInfo'],
-    optionalParameters: ['quotes', 'images', 'boilerplate']
-  }
+    optionalParameters: ['quotes', 'images', 'boilerplate'],
+  },
 ];
 
 /**
@@ -303,10 +304,10 @@ export const FinanceActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['finance-manager', 'department-head']
+      requiredRoles: ['finance-manager', 'department-head'],
     },
     requiredParameters: ['invoiceNumber', 'amount', 'recipient', 'dueDate'],
-    optionalParameters: ['lineItems', 'taxAmount', 'notes', 'paymentTerms']
+    optionalParameters: ['lineItems', 'taxAmount', 'notes', 'paymentTerms'],
   },
   {
     name: 'Budget',
@@ -315,10 +316,10 @@ export const FinanceActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.CRITICAL,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['finance-manager', 'department-head', 'executive']
+      requiredRoles: ['finance-manager', 'department-head', 'executive'],
     },
     requiredParameters: ['period', 'departmentId', 'totalAmount', 'categories'],
-    optionalParameters: ['justification', 'previousBudget', 'forecast']
+    optionalParameters: ['justification', 'previousBudget', 'forecast'],
   },
   {
     name: 'Expense',
@@ -327,10 +328,15 @@ export const FinanceActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.MEDIUM,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['finance-manager']
+      requiredRoles: ['finance-manager'],
     },
     requiredParameters: ['amount', 'category', 'date', 'submitter'],
-    optionalParameters: ['receipt', 'notes', 'projectId', 'reimbursementMethod']
+    optionalParameters: [
+      'receipt',
+      'notes',
+      'projectId',
+      'reimbursementMethod',
+    ],
   },
   {
     name: 'Payment',
@@ -340,10 +346,10 @@ export const FinanceActions: S2DOActionDefinition[] = [
     defaultVerification: {
       type: S2DOVerificationType.MULTI,
       requiredRoles: ['finance-manager', 'finance-director'],
-      minimumApprovals: 2
+      minimumApprovals: 2,
     },
     requiredParameters: ['amount', 'recipient', 'method', 'purpose'],
-    optionalParameters: ['invoiceId', 'scheduledDate', 'recurring']
+    optionalParameters: ['invoiceId', 'scheduledDate', 'recurring'],
   },
   {
     name: 'FinancialReport',
@@ -352,11 +358,11 @@ export const FinanceActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['accountant', 'finance-director', 'cfo']
+      requiredRoles: ['accountant', 'finance-director', 'cfo'],
     },
     requiredParameters: ['period', 'reportType', 'data', 'preparedBy'],
-    optionalParameters: ['notes', 'highlights', 'recommendations']
-  }
+    optionalParameters: ['notes', 'highlights', 'recommendations'],
+  },
 ];
 
 /**
@@ -371,10 +377,10 @@ export const ProjectActions: S2DOActionDefinition[] = [
     defaultVerification: {
       type: S2DOVerificationType.MULTI,
       requiredRoles: ['project-sponsor', 'resource-manager'],
-      minimumApprovals: 2
+      minimumApprovals: 2,
     },
     requiredParameters: ['name', 'description', 'objectives', 'timeline'],
-    optionalParameters: ['budget', 'team', 'risks', 'dependencies']
+    optionalParameters: ['budget', 'team', 'risks', 'dependencies'],
   },
   {
     name: 'Milestone',
@@ -383,10 +389,10 @@ export const ProjectActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['project-manager']
+      requiredRoles: ['project-manager'],
     },
     requiredParameters: ['projectId', 'name', 'deliverables', 'dueDate'],
-    optionalParameters: ['dependencies', 'acceptanceCriteria', 'assignee']
+    optionalParameters: ['dependencies', 'acceptanceCriteria', 'assignee'],
   },
   {
     name: 'Task',
@@ -395,10 +401,15 @@ export const ProjectActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.MEDIUM,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['project-manager']
+      requiredRoles: ['project-manager'],
     },
     requiredParameters: ['name', 'description', 'assignee', 'dueDate'],
-    optionalParameters: ['status', 'priority', 'estimatedHours', 'dependencies']
+    optionalParameters: [
+      'status',
+      'priority',
+      'estimatedHours',
+      'dependencies',
+    ],
   },
   {
     name: 'Risk',
@@ -408,10 +419,10 @@ export const ProjectActions: S2DOActionDefinition[] = [
     defaultVerification: {
       type: S2DOVerificationType.MULTI,
       requiredRoles: ['project-manager', 'risk-manager'],
-      minimumApprovals: 2
+      minimumApprovals: 2,
     },
     requiredParameters: ['projectId', 'description', 'likelihood', 'impact'],
-    optionalParameters: ['mitigationPlan', 'owner', 'contingencyPlan']
+    optionalParameters: ['mitigationPlan', 'owner', 'contingencyPlan'],
   },
   {
     name: 'ChangeRequest',
@@ -420,10 +431,10 @@ export const ProjectActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['project-manager', 'project-sponsor']
+      requiredRoles: ['project-manager', 'project-sponsor'],
     },
     requiredParameters: ['projectId', 'description', 'justification', 'impact'],
-    optionalParameters: ['costImpact', 'scheduleImpact', 'resources']
+    optionalParameters: ['costImpact', 'scheduleImpact', 'resources'],
   },
   {
     name: 'StatusReport',
@@ -432,11 +443,11 @@ export const ProjectActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.MEDIUM,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['project-manager']
+      requiredRoles: ['project-manager'],
     },
     requiredParameters: ['projectId', 'period', 'status', 'accomplishments'],
-    optionalParameters: ['nextSteps', 'issues', 'risks', 'metrics']
-  }
+    optionalParameters: ['nextSteps', 'issues', 'risks', 'metrics'],
+  },
 ];
 
 /**
@@ -450,10 +461,10 @@ export const LegalActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.CRITICAL,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['legal-counsel', 'department-head', 'executive']
+      requiredRoles: ['legal-counsel', 'department-head', 'executive'],
     },
     requiredParameters: ['parties', 'terms', 'effectiveDate', 'value'],
-    optionalParameters: ['expirationDate', 'specialClauses', 'attachments']
+    optionalParameters: ['expirationDate', 'specialClauses', 'attachments'],
   },
   {
     name: 'LegalReview',
@@ -462,10 +473,10 @@ export const LegalActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['legal-counsel']
+      requiredRoles: ['legal-counsel'],
     },
     requiredParameters: ['subject', 'analysis', 'conclusion', 'reviewer'],
-    optionalParameters: ['risks', 'recommendations', 'references']
+    optionalParameters: ['risks', 'recommendations', 'references'],
   },
   {
     name: 'Compliance',
@@ -475,10 +486,10 @@ export const LegalActions: S2DOActionDefinition[] = [
     defaultVerification: {
       type: S2DOVerificationType.MULTI,
       requiredRoles: ['compliance-officer', 'legal-counsel'],
-      minimumApprovals: 2
+      minimumApprovals: 2,
     },
     requiredParameters: ['regulation', 'assessment', 'status', 'evidence'],
-    optionalParameters: ['remediation', 'deadline', 'responsibleParty']
+    optionalParameters: ['remediation', 'deadline', 'responsibleParty'],
   },
   {
     name: 'IntellectualProperty',
@@ -487,11 +498,11 @@ export const LegalActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['legal-counsel', 'ip-manager', 'executive']
+      requiredRoles: ['legal-counsel', 'ip-manager', 'executive'],
     },
     requiredParameters: ['type', 'description', 'creator', 'ownership'],
-    optionalParameters: ['registrationDetails', 'value', 'relatedRights']
-  }
+    optionalParameters: ['registrationDetails', 'value', 'relatedRights'],
+  },
 ];
 
 /**
@@ -505,10 +516,15 @@ export const ProductActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['product-manager', 'engineering-lead']
+      requiredRoles: ['product-manager', 'engineering-lead'],
     },
     requiredParameters: ['name', 'description', 'userValue', 'priority'],
-    optionalParameters: ['requirements', 'metrics', 'designDocs', 'dependencies']
+    optionalParameters: [
+      'requirements',
+      'metrics',
+      'designDocs',
+      'dependencies',
+    ],
   },
   {
     name: 'Release',
@@ -517,10 +533,10 @@ export const ProductActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.CRITICAL,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['product-manager', 'qa-lead', 'release-manager']
+      requiredRoles: ['product-manager', 'qa-lead', 'release-manager'],
     },
     requiredParameters: ['version', 'features', 'releaseDate', 'releaseNotes'],
-    optionalParameters: ['knownIssues', 'targetAudience', 'rollbackPlan']
+    optionalParameters: ['knownIssues', 'targetAudience', 'rollbackPlan'],
   },
   {
     name: 'UserStory',
@@ -529,10 +545,10 @@ export const ProductActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.MEDIUM,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['product-manager']
+      requiredRoles: ['product-manager'],
     },
     requiredParameters: ['title', 'asA', 'iWant', 'soThat'],
-    optionalParameters: ['acceptanceCriteria', 'priority', 'size', 'notes']
+    optionalParameters: ['acceptanceCriteria', 'priority', 'size', 'notes'],
   },
   {
     name: 'ProductRoadmap',
@@ -541,10 +557,10 @@ export const ProductActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['product-manager', 'product-director', 'executive']
+      requiredRoles: ['product-manager', 'product-director', 'executive'],
     },
     requiredParameters: ['product', 'timeframe', 'milestones', 'themes'],
-    optionalParameters: ['assumptions', 'dependencies', 'marketAnalysis']
+    optionalParameters: ['assumptions', 'dependencies', 'marketAnalysis'],
   },
   {
     name: 'Experiment',
@@ -553,11 +569,16 @@ export const ProductActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.MEDIUM,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['product-manager']
+      requiredRoles: ['product-manager'],
     },
     requiredParameters: ['hypothesis', 'methodology', 'metrics', 'audience'],
-    optionalParameters: ['duration', 'controlGroup', 'variants', 'expectedResults']
-  }
+    optionalParameters: [
+      'duration',
+      'controlGroup',
+      'variants',
+      'expectedResults',
+    ],
+  },
 ];
 
 /**
@@ -571,10 +592,16 @@ export const MarketingActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['marketing-manager', 'marketing-director']
+      requiredRoles: ['marketing-manager', 'marketing-director'],
     },
-    requiredParameters: ['name', 'objective', 'audience', 'channels', 'timeline'],
-    optionalParameters: ['budget', 'creativeAssets', 'metrics', 'messaging']
+    requiredParameters: [
+      'name',
+      'objective',
+      'audience',
+      'channels',
+      'timeline',
+    ],
+    optionalParameters: ['budget', 'creativeAssets', 'metrics', 'messaging'],
   },
   {
     name: 'MarketingAsset',
@@ -583,10 +610,10 @@ export const MarketingActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.MEDIUM,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['marketing-manager']
+      requiredRoles: ['marketing-manager'],
     },
     requiredParameters: ['type', 'description', 'purpose', 'targetAudience'],
-    optionalParameters: ['campaign', 'dueDate', 'distribution', 'callToAction']
+    optionalParameters: ['campaign', 'dueDate', 'distribution', 'callToAction'],
   },
   {
     name: 'EventPlan',
@@ -595,10 +622,10 @@ export const MarketingActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['event-manager', 'marketing-director']
+      requiredRoles: ['event-manager', 'marketing-director'],
     },
     requiredParameters: ['name', 'date', 'location', 'audience', 'objective'],
-    optionalParameters: ['budget', 'speakers', 'agenda', 'promotionPlan']
+    optionalParameters: ['budget', 'speakers', 'agenda', 'promotionPlan'],
   },
   {
     name: 'BrandAsset',
@@ -607,11 +634,11 @@ export const MarketingActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['brand-manager', 'creative-director']
+      requiredRoles: ['brand-manager', 'creative-director'],
     },
     requiredParameters: ['type', 'description', 'usage', 'formats'],
-    optionalParameters: ['guidelines', 'variations', 'designer']
-  }
+    optionalParameters: ['guidelines', 'variations', 'designer'],
+  },
 ];
 
 /**
@@ -625,10 +652,10 @@ export const HRActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['hiring-manager', 'hr-manager']
+      requiredRoles: ['hiring-manager', 'hr-manager'],
     },
     requiredParameters: ['position', 'department', 'requirements', 'deadline'],
-    optionalParameters: ['salary', 'level', 'interviewer', 'jobDescription']
+    optionalParameters: ['salary', 'level', 'interviewer', 'jobDescription'],
   },
   {
     name: 'Performance',
@@ -637,10 +664,10 @@ export const HRActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['manager', 'hr-manager']
+      requiredRoles: ['manager', 'hr-manager'],
     },
     requiredParameters: ['employeeId', 'period', 'assessment', 'goals'],
-    optionalParameters: ['strengths', 'improvements', 'developmentPlan']
+    optionalParameters: ['strengths', 'improvements', 'developmentPlan'],
   },
   {
     name: 'Training',
@@ -649,10 +676,10 @@ export const HRActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.MEDIUM,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['learning-development-manager']
+      requiredRoles: ['learning-development-manager'],
     },
     requiredParameters: ['title', 'objectives', 'audience', 'format'],
-    optionalParameters: ['duration', 'provider', 'cost', 'prerequisites']
+    optionalParameters: ['duration', 'provider', 'cost', 'prerequisites'],
   },
   {
     name: 'CompensationChange',
@@ -661,11 +688,16 @@ export const HRActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['manager', 'hr-director', 'finance-manager']
+      requiredRoles: ['manager', 'hr-director', 'finance-manager'],
     },
-    requiredParameters: ['employeeId', 'currentCompensation', 'newCompensation', 'reason'],
-    optionalParameters: ['effectiveDate', 'bonusAmount', 'equityChange']
-  }
+    requiredParameters: [
+      'employeeId',
+      'currentCompensation',
+      'newCompensation',
+      'reason',
+    ],
+    optionalParameters: ['effectiveDate', 'bonusAmount', 'equityChange'],
+  },
 ];
 
 /**
@@ -679,10 +711,15 @@ export const ITActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['it-manager', 'change-advisory-board']
+      requiredRoles: ['it-manager', 'change-advisory-board'],
     },
     requiredParameters: ['system', 'description', 'impact', 'rollbackPlan'],
-    optionalParameters: ['downtime', 'testing', 'dependencies', 'securityImpact']
+    optionalParameters: [
+      'downtime',
+      'testing',
+      'dependencies',
+      'securityImpact',
+    ],
   },
   {
     name: 'AccessRequest',
@@ -691,10 +728,10 @@ export const ITActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.MEDIUM,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['manager', 'it-security']
+      requiredRoles: ['manager', 'it-security'],
     },
     requiredParameters: ['userId', 'system', 'accessLevel', 'justification'],
-    optionalParameters: ['duration', 'approver', 'specialConditions']
+    optionalParameters: ['duration', 'approver', 'specialConditions'],
   },
   {
     name: 'Incident',
@@ -703,10 +740,15 @@ export const ITActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['it-manager']
+      requiredRoles: ['it-manager'],
     },
     requiredParameters: ['service', 'description', 'impact', 'urgency'],
-    optionalParameters: ['rootCause', 'resolution', 'affectedUsers', 'timeline']
+    optionalParameters: [
+      'rootCause',
+      'resolution',
+      'affectedUsers',
+      'timeline',
+    ],
   },
   {
     name: 'SecurityPatching',
@@ -715,11 +757,11 @@ export const ITActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['security-manager', 'it-manager']
+      requiredRoles: ['security-manager', 'it-manager'],
     },
     requiredParameters: ['systems', 'patches', 'vulnerabilities', 'schedule'],
-    optionalParameters: ['testing', 'dependencies', 'downtime', 'priority']
-  }
+    optionalParameters: ['testing', 'dependencies', 'downtime', 'priority'],
+  },
 ];
 
 /**
@@ -746,10 +788,10 @@ export const AmbientAnticipateActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['intelligence-manager']
+      requiredRoles: ['intelligence-manager'],
     },
     requiredParameters: ['context', 'targetEntity', 'timeframe'],
-    optionalParameters: ['confidenceThreshold', 'dataPoints', 'scope']
+    optionalParameters: ['confidenceThreshold', 'dataPoints', 'scope'],
   },
   {
     name: 'Trends',
@@ -759,10 +801,14 @@ export const AmbientAnticipateActions: S2DOActionDefinition[] = [
     defaultVerification: {
       type: S2DOVerificationType.MULTI,
       requiredRoles: ['strategy-director', 'data-scientist'],
-      minimumApprovals: 2
+      minimumApprovals: 2,
     },
     requiredParameters: ['market', 'timeframe', 'indicators'],
-    optionalParameters: ['competitiveContext', 'historicalData', 'confidenceLevel']
+    optionalParameters: [
+      'competitiveContext',
+      'historicalData',
+      'confidenceLevel',
+    ],
   },
   {
     name: 'Behavior',
@@ -771,11 +817,15 @@ export const AmbientAnticipateActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.MEDIUM,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['behavioral-scientist']
+      requiredRoles: ['behavioral-scientist'],
     },
     requiredParameters: ['subjectProfile', 'context', 'behavioralPatterns'],
-    optionalParameters: ['ethicalBoundaries', 'confidenceThreshold', 'adaptiveResponse']
-  }
+    optionalParameters: [
+      'ethicalBoundaries',
+      'confidenceThreshold',
+      'adaptiveResponse',
+    ],
+  },
 ];
 
 export const AmbientContextualActions: S2DOActionDefinition[] = [
@@ -786,10 +836,14 @@ export const AmbientContextualActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.MEDIUM,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['experience-designer']
+      requiredRoles: ['experience-designer'],
     },
     requiredParameters: ['context', 'adaptationParameters', 'targetSystem'],
-    optionalParameters: ['userPreferences', 'environmentalFactors', 'adaptationBoundaries']
+    optionalParameters: [
+      'userPreferences',
+      'environmentalFactors',
+      'adaptationBoundaries',
+    ],
   },
   {
     name: 'Sense',
@@ -798,11 +852,19 @@ export const AmbientContextualActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.MEDIUM,
     defaultVerification: {
       type: S2DOVerificationType.SINGLE,
-      requiredRoles: ['ambient-systems-engineer']
+      requiredRoles: ['ambient-systems-engineer'],
     },
-    requiredParameters: ['sensorArray', 'interpretationModel', 'contextDefinition'],
-    optionalParameters: ['privacySettings', 'dataRetention', 'anomalyDetection']
-  }
+    requiredParameters: [
+      'sensorArray',
+      'interpretationModel',
+      'contextDefinition',
+    ],
+    optionalParameters: [
+      'privacySettings',
+      'dataRetention',
+      'anomalyDetection',
+    ],
+  },
 ];
 
 export const AmbientSynthesizeActions: S2DOActionDefinition[] = [
@@ -813,10 +875,14 @@ export const AmbientSynthesizeActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['knowledge-architect', 'domain-expert']
+      requiredRoles: ['knowledge-architect', 'domain-expert'],
     },
     requiredParameters: ['sources', 'knowledgeDomain', 'synthesisParameters'],
-    optionalParameters: ['confidenceThreshold', 'contradictionHandling', 'knowledgeStructure']
+    optionalParameters: [
+      'confidenceThreshold',
+      'contradictionHandling',
+      'knowledgeStructure',
+    ],
   },
   {
     name: 'Experience',
@@ -826,25 +892,38 @@ export const AmbientSynthesizeActions: S2DOActionDefinition[] = [
     defaultVerification: {
       type: S2DOVerificationType.MULTI,
       requiredRoles: ['experience-designer', 'customer-journey-expert'],
-      minimumApprovals: 2
+      minimumApprovals: 2,
     },
     requiredParameters: ['touchpoints', 'userTypes', 'experienceGoals'],
-    optionalParameters: ['emotionalJourney', 'consistencyParameters', 'adaptiveElements']
-  }
+    optionalParameters: [
+      'emotionalJourney',
+      'consistencyParameters',
+      'adaptiveElements',
+    ],
+  },
 ];
 
 export const AmbientOrchestrateActions: S2DOActionDefinition[] = [
   {
     name: 'Ecosystem',
     domain: S2DODomain.ECOSYSTEM,
-    description: 'Orchestrate complex business ecosystems with multiple stakeholders',
+    description:
+      'Orchestrate complex business ecosystems with multiple stakeholders',
     defaultPriority: S2DOPriority.CRITICAL,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['ecosystem-architect', 'strategic-director', 'partner-manager']
+      requiredRoles: [
+        'ecosystem-architect',
+        'strategic-director',
+        'partner-manager',
+      ],
     },
     requiredParameters: ['participants', 'valueFlows', 'governanceModel'],
-    optionalParameters: ['incentiveStructures', 'conflictResolution', 'adaptationMechanisms']
+    optionalParameters: [
+      'incentiveStructures',
+      'conflictResolution',
+      'adaptationMechanisms',
+    ],
   },
   {
     name: 'Resources',
@@ -854,11 +933,19 @@ export const AmbientOrchestrateActions: S2DOActionDefinition[] = [
     defaultVerification: {
       type: S2DOVerificationType.MULTI,
       requiredRoles: ['resource-manager', 'operations-director'],
-      minimumApprovals: 2
+      minimumApprovals: 2,
     },
-    requiredParameters: ['resourceTypes', 'allocationStrategy', 'optimizationGoals'],
-    optionalParameters: ['priorityRules', 'conflictResolution', 'adaptationThresholds']
-  }
+    requiredParameters: [
+      'resourceTypes',
+      'allocationStrategy',
+      'optimizationGoals',
+    ],
+    optionalParameters: [
+      'priorityRules',
+      'conflictResolution',
+      'adaptationThresholds',
+    ],
+  },
 ];
 
 /**
@@ -873,10 +960,18 @@ export const TranscendentConsciousnessActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['consciousness-architect', 'ethical-overseer']
+      requiredRoles: ['consciousness-architect', 'ethical-overseer'],
     },
-    requiredParameters: ['reflectionDomain', 'metacognitiveFramework', 'purposeAlignment'],
-    optionalParameters: ['evolutionaryBoundaries', 'consciousnessMetrics', 'ethicalGuardrails']
+    requiredParameters: [
+      'reflectionDomain',
+      'metacognitiveFramework',
+      'purposeAlignment',
+    ],
+    optionalParameters: [
+      'evolutionaryBoundaries',
+      'consciousnessMetrics',
+      'ethicalGuardrails',
+    ],
   },
   {
     name: 'Empathize',
@@ -885,26 +980,47 @@ export const TranscendentConsciousnessActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.MULTI,
-      requiredRoles: ['empathy-designer', 'consciousness-architect', 'ethics-guardian'],
-      minimumApprovals: 3
+      requiredRoles: [
+        'empathy-designer',
+        'consciousness-architect',
+        'ethics-guardian',
+      ],
+      minimumApprovals: 3,
     },
-    requiredParameters: ['subjectExperience', 'empathicModel', 'empathicPurpose'],
-    optionalParameters: ['emotionalDepth', 'boundaryAwareness', 'ethicalConsiderations']
-  }
+    requiredParameters: [
+      'subjectExperience',
+      'empathicModel',
+      'empathicPurpose',
+    ],
+    optionalParameters: [
+      'emotionalDepth',
+      'boundaryAwareness',
+      'ethicalConsiderations',
+    ],
+  },
 ];
 
 export const TranscendentQuantumIntelligenceActions: S2DOActionDefinition[] = [
   {
     name: 'Compute',
     domain: S2DODomain.QUANTUM,
-    description: 'Utilize quantum computing for previously impossible calculations',
+    description:
+      'Utilize quantum computing for previously impossible calculations',
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['quantum-scientist', 'computation-architect']
+      requiredRoles: ['quantum-scientist', 'computation-architect'],
     },
-    requiredParameters: ['problemSpecification', 'quantumResources', 'interpretationFramework'],
-    optionalParameters: ['errorCorrection', 'quantumAdvantageMetrics', 'classicalFallback']
+    requiredParameters: [
+      'problemSpecification',
+      'quantumResources',
+      'interpretationFramework',
+    ],
+    optionalParameters: [
+      'errorCorrection',
+      'quantumAdvantageMetrics',
+      'classicalFallback',
+    ],
   },
   {
     name: 'Entangle',
@@ -913,11 +1029,23 @@ export const TranscendentQuantumIntelligenceActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.CRITICAL,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['quantum-engineer', 'systems-architect', 'security-guardian']
+      requiredRoles: [
+        'quantum-engineer',
+        'systems-architect',
+        'security-guardian',
+      ],
     },
-    requiredParameters: ['entanglementPurpose', 'systems', 'entanglementProtocol'],
-    optionalParameters: ['securityMeasures', 'decoherenceManagement', 'quantumAdvantageMetrics']
-  }
+    requiredParameters: [
+      'entanglementPurpose',
+      'systems',
+      'entanglementProtocol',
+    ],
+    optionalParameters: [
+      'securityMeasures',
+      'decoherenceManagement',
+      'quantumAdvantageMetrics',
+    ],
+  },
 ];
 
 export const TranscendentSymbioticActions: S2DOActionDefinition[] = [
@@ -928,11 +1056,23 @@ export const TranscendentSymbioticActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.MULTI,
-      requiredRoles: ['symbiotic-architect', 'creative-director', 'ethics-guardian'],
-      minimumApprovals: 3
+      requiredRoles: [
+        'symbiotic-architect',
+        'creative-director',
+        'ethics-guardian',
+      ],
+      minimumApprovals: 3,
     },
-    requiredParameters: ['creationDomain', 'symbioticProtocol', 'emergenceParameters'],
-    optionalParameters: ['creativeBoundaries', 'attribution', 'evolutionaryCapacity']
+    requiredParameters: [
+      'creationDomain',
+      'symbioticProtocol',
+      'emergenceParameters',
+    ],
+    optionalParameters: [
+      'creativeBoundaries',
+      'attribution',
+      'evolutionaryCapacity',
+    ],
   },
   {
     name: 'Amplify',
@@ -941,11 +1081,23 @@ export const TranscendentSymbioticActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['symbiotic-designer', 'cognitive-scientist', 'ethics-guardian']
+      requiredRoles: [
+        'symbiotic-designer',
+        'cognitive-scientist',
+        'ethics-guardian',
+      ],
     },
-    requiredParameters: ['capabilityDomain', 'amplificationParameters', 'integrationProtocol'],
-    optionalParameters: ['autonomyBoundaries', 'disengagementProtocol', 'evolutionaryCapacity']
-  }
+    requiredParameters: [
+      'capabilityDomain',
+      'amplificationParameters',
+      'integrationProtocol',
+    ],
+    optionalParameters: [
+      'autonomyBoundaries',
+      'disengagementProtocol',
+      'evolutionaryCapacity',
+    ],
+  },
 ];
 
 export const TranscendentTransdimensionalActions: S2DOActionDefinition[] = [
@@ -956,10 +1108,22 @@ export const TranscendentTransdimensionalActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.HIGH,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['reality-architect', 'navigation-designer', 'security-guardian']
+      requiredRoles: [
+        'reality-architect',
+        'navigation-designer',
+        'security-guardian',
+      ],
     },
-    requiredParameters: ['dimensions', 'navigationalIntent', 'transitionProtocol'],
-    optionalParameters: ['consistencyRequirements', 'identityPersistence', 'securityMeasures']
+    requiredParameters: [
+      'dimensions',
+      'navigationalIntent',
+      'transitionProtocol',
+    ],
+    optionalParameters: [
+      'consistencyRequirements',
+      'identityPersistence',
+      'securityMeasures',
+    ],
   },
   {
     name: 'Create',
@@ -968,11 +1132,23 @@ export const TranscendentTransdimensionalActions: S2DOActionDefinition[] = [
     defaultPriority: S2DOPriority.CRITICAL,
     defaultVerification: {
       type: S2DOVerificationType.SEQUENTIAL,
-      requiredRoles: ['reality-architect', 'dimensional-designer', 'ethics-guardian']
+      requiredRoles: [
+        'reality-architect',
+        'dimensional-designer',
+        'ethics-guardian',
+      ],
     },
-    requiredParameters: ['dimensionalSpecification', 'creationPurpose', 'governanceModel'],
-    optionalParameters: ['accessControls', 'physicalManifestations', 'evolutionaryCapability']
-  }
+    requiredParameters: [
+      'dimensionalSpecification',
+      'creationPurpose',
+      'governanceModel',
+    ],
+    optionalParameters: [
+      'accessControls',
+      'physicalManifestations',
+      'evolutionaryCapability',
+    ],
+  },
 ];
 
 /**
@@ -987,26 +1163,24 @@ const allDomainActions = {
   [S2DODomain.MARKETING]: MarketingActions,
   [S2DODomain.HR]: HRActions,
   [S2DODomain.IT]: ITActions,
-  
+
   // Phase 5: Ambient Intelligence (Years 16-22)
   [S2DODomain.INTELLIGENCE]: [
     ...AmbientAnticipateActions,
     ...AmbientContextualActions,
-    ...AmbientSynthesizeActions
+    ...AmbientSynthesizeActions,
   ],
-  [S2DODomain.ECOSYSTEM]: [
-    ...AmbientOrchestrateActions
-  ],
+  [S2DODomain.ECOSYSTEM]: [...AmbientOrchestrateActions],
   [S2DODomain.EXPERIENCE]: [
     ...AmbientContextualActions.filter(a => a.domain === S2DODomain.EXPERIENCE),
-    ...AmbientSynthesizeActions.filter(a => a.domain === S2DODomain.EXPERIENCE)
+    ...AmbientSynthesizeActions.filter(a => a.domain === S2DODomain.EXPERIENCE),
   ],
-  
+
   // Phase 6: Transcendent Systems (Years 23-30)
   [S2DODomain.CONSCIOUSNESS]: TranscendentConsciousnessActions,
   [S2DODomain.QUANTUM]: TranscendentQuantumIntelligenceActions,
   [S2DODomain.SYMBIOTIC]: TranscendentSymbioticActions,
-  [S2DODomain.TRANSDIMENSIONAL]: TranscendentTransdimensionalActions
+  [S2DODomain.TRANSDIMENSIONAL]: TranscendentTransdimensionalActions,
 };
 
 /**
@@ -1020,14 +1194,14 @@ const stemDescriptions: Record<string, string> = {
   [S2DOStem.BUILD]: 'Construct or assemble a component',
   [S2DOStem.GENERATE]: 'Automatically produce content or data',
   [S2DOStem.DEVELOP]: 'Iteratively create and enhance',
-  
+
   [S2DOStem.REVIEW]: 'Assess for quality or correctness',
   [S2DOStem.EVALUATE]: 'Judge value or effectiveness',
   [S2DOStem.ASSESS]: 'Determine status or condition',
   [S2DOStem.ANALYZE]: 'Examine in detail',
   [S2DOStem.AUDIT]: 'Conduct formal examination',
   [S2DOStem.EXAMINE]: 'Inspect thoroughly',
-  
+
   [S2DOStem.APPROVE]: 'Give formal acceptance',
   [S2DOStem.VERIFY]: 'Confirm accuracy or truth',
   [S2DOStem.VALIDATE]: 'Confirm compliance with requirements',
@@ -1035,7 +1209,7 @@ const stemDescriptions: Record<string, string> = {
   [S2DOStem.AUTHORIZE]: 'Give official permission',
   [S2DOStem.CERTIFY]: 'Formally attest or guarantee',
   [S2DOStem.ENDORSE]: 'Express approval or support',
-  
+
   [S2DOStem.UPDATE]: 'Bring to current state',
   [S2DOStem.MODIFY]: 'Make partial changes',
   [S2DOStem.REVISE]: 'Reconsider and amend',
@@ -1043,7 +1217,7 @@ const stemDescriptions: Record<string, string> = {
   [S2DOStem.ENHANCE]: 'Increase quality or value',
   [S2DOStem.OPTIMIZE]: 'Make as effective as possible',
   [S2DOStem.CUSTOMIZE]: 'Adapt to specific needs',
-  
+
   [S2DOStem.EXECUTE]: 'Carry out an action or plan',
   [S2DOStem.IMPLEMENT]: 'Put into effect or action',
   [S2DOStem.DEPLOY]: 'Move into position for use',
@@ -1051,7 +1225,7 @@ const stemDescriptions: Record<string, string> = {
   [S2DOStem.ACTIVATE]: 'Make active or operational',
   [S2DOStem.RUN]: 'Operate or execute a process',
   [S2DOStem.PERFORM]: 'Carry out an action or function',
-  
+
   [S2DOStem.COMPLETE]: 'Finish or make whole',
   [S2DOStem.FINALIZE]: 'Bring to conclusion',
   [S2DOStem.DELIVER]: 'Provide to recipient',
@@ -1059,7 +1233,7 @@ const stemDescriptions: Record<string, string> = {
   [S2DOStem.CONCLUDE]: 'Bring to an end',
   [S2DOStem.PUBLISH]: 'Make available to audience',
   [S2DOStem.RELEASE]: 'Make available for use',
-  
+
   [S2DOStem.MANAGE]: 'Handle, direct, or control',
   [S2DOStem.MONITOR]: 'Observe and check progress',
   [S2DOStem.TRACK]: 'Follow progress or development',
@@ -1067,7 +1241,7 @@ const stemDescriptions: Record<string, string> = {
   [S2DOStem.COORDINATE]: 'Organize or integrate activities',
   [S2DOStem.SUPERVISE]: 'Direct and watch over work',
   [S2DOStem.ADMINISTER]: 'Manage or direct operations',
-  
+
   [S2DOStem.REPORT]: 'Provide information formally',
   [S2DOStem.SHARE]: 'Give access or distribute',
   [S2DOStem.COMMUNICATE]: 'Exchange information',
@@ -1075,7 +1249,7 @@ const stemDescriptions: Record<string, string> = {
   [S2DOStem.PRESENT]: 'Show or display formally',
   [S2DOStem.DISTRIBUTE]: 'Spread or supply to multiple recipients',
   [S2DOStem.BROADCAST]: 'Widely disseminate information',
-  
+
   [S2DOStem.FUND]: 'Provide money for',
   [S2DOStem.PAY]: 'Give money in exchange',
   [S2DOStem.BUDGET]: 'Allocate financial resources',
@@ -1083,7 +1257,7 @@ const stemDescriptions: Record<string, string> = {
   [S2DOStem.ALLOCATE]: 'Distribute for specific purpose',
   [S2DOStem.INVEST]: 'Commit resources for future return',
   [S2DOStem.REIMBURSE]: 'Pay back for expenses',
-  
+
   [S2DOStem.TRANSITION]: 'Move from one state to another',
   [S2DOStem.TRANSFER]: 'Move from one place or person to another',
   [S2DOStem.MIGRATE]: 'Move to new environment or platform',
@@ -1091,14 +1265,14 @@ const stemDescriptions: Record<string, string> = {
   [S2DOStem.ESCALATE]: 'Increase in intensity or pass to higher authority',
   [S2DOStem.DELEGATE]: 'Entrust task to another',
   [S2DOStem.ASSIGN]: 'Allocate task or responsibility',
-  
+
   [S2DOStem.CANCEL]: 'Annul or make void',
   [S2DOStem.TERMINATE]: 'Bring to an end',
   [S2DOStem.WITHDRAW]: 'Remove or take back',
   [S2DOStem.ABORT]: 'Stop prematurely',
   [S2DOStem.SUSPEND]: 'Temporarily stop',
   [S2DOStem.REJECT]: 'Refuse to accept',
-  [S2DOStem.ARCHIVE]: 'Store for historical reference'
+  [S2DOStem.ARCHIVE]: 'Store for historical reference',
 };
 
 /**
@@ -1109,45 +1283,53 @@ const stemDescriptions: Record<string, string> = {
  */
 const extendedStemDescriptions: Record<string, string> = {
   // Advanced Intelligence (Years 8-15)
-  [S2DOStem.TRANSFORM]: 'Fundamentally change the nature or structure of something',
+  [S2DOStem.TRANSFORM]:
+    'Fundamentally change the nature or structure of something',
   [S2DOStem.INTEGRATE]: 'Combine multiple components into a unified whole',
   [S2DOStem.SYNCHRONIZE]: 'Coordinate multiple elements to operate in harmony',
   [S2DOStem.GOVERN]: 'Establish and enforce rules, policies, and controls',
-  
+
   // Ambient Intelligence (Years 16-22)
   [S2DOStem.ANTICIPATE]: 'Predict and prepare for future needs or events',
   [S2DOStem.CONTEXTUAL]: 'Adapt actions based on environmental awareness',
   [S2DOStem.SYNTHESIZE]: 'Create new unified elements from diverse sources',
   [S2DOStem.ORCHESTRATE]: 'Coordinate complex systems of systems harmoniously',
-  
+
   // Transcendent Systems (Years 23-30)
-  [S2DOStem.CONSCIOUSNESS]: 'Operate with self-awareness and metacognitive capabilities',
-  [S2DOStem.QUANTUM_INTELLIGENCE]: 'Utilize quantum effects for advanced computation and reality manipulation',
-  [S2DOStem.SYMBIOTIC]: 'Create mutually beneficial integration between human and system capabilities',
-  [S2DOStem.TRANSDIMENSIONAL]: 'Operate across physical, digital, and virtual reality boundaries'
+  [S2DOStem.CONSCIOUSNESS]:
+    'Operate with self-awareness and metacognitive capabilities',
+  [S2DOStem.QUANTUM_INTELLIGENCE]:
+    'Utilize quantum effects for advanced computation and reality manipulation',
+  [S2DOStem.SYMBIOTIC]:
+    'Create mutually beneficial integration between human and system capabilities',
+  [S2DOStem.TRANSDIMENSIONAL]:
+    'Operate across physical, digital, and virtual reality boundaries',
 };
 
 // Combine all stem descriptions
 const allStemDescriptions = {
   ...stemDescriptions,
-  ...extendedStemDescriptions
+  ...extendedStemDescriptions,
 };
 
 export const S2DOSchemaV1: S2DOSchema = {
   version: '1.0.0',
   lastUpdated: '2025-03-01',
   domains: allDomainActions,
-  stemVerbs: allStemDescriptions
+  stemVerbs: allStemDescriptions,
 };
 
 /**
  * Generate a full S2DO action from stem and definition
  */
-export function buildS2DOAction(stem: S2DOStem, actionDef: S2DOActionDefinition): S2DOAction {
+export function buildS2DOAction(
+  stem: S2DOStem,
+  actionDef: S2DOActionDefinition
+): S2DOAction {
   return {
     ...actionDef,
     stem,
-    fullName: `S2DO:${stem}:${actionDef.name}`
+    fullName: `S2DO:${stem}:${actionDef.name}`,
   };
 }
 
@@ -1156,7 +1338,7 @@ export function buildS2DOAction(stem: S2DOStem, actionDef: S2DOActionDefinition)
  */
 export function generateAllS2DOActions(): S2DOAction[] {
   const allActions: S2DOAction[] = [];
-  
+
   // For each domain
   Object.values(allDomainActions).forEach(domainActions => {
     // For each action in domain
@@ -1165,43 +1347,58 @@ export function generateAllS2DOActions(): S2DOAction[] {
       Object.values(S2DOStem).forEach(stem => {
         // Filter stems based on domains for future capabilities
         // Only allow appropriate stems for each domain
-        
+
         // Phase 5-6 stems only apply to specific domains
-        if (stem === S2DOStem.ANTICIPATE || 
-            stem === S2DOStem.CONTEXTUAL || 
-            stem === S2DOStem.SYNTHESIZE || 
-            stem === S2DOStem.ORCHESTRATE) {
-          
+        if (
+          stem === S2DOStem.ANTICIPATE ||
+          stem === S2DOStem.CONTEXTUAL ||
+          stem === S2DOStem.SYNTHESIZE ||
+          stem === S2DOStem.ORCHESTRATE
+        ) {
           // Only allow these stems for Intelligence, Ecosystem, and Experience domains
-          if (actionDef.domain !== S2DODomain.INTELLIGENCE && 
-              actionDef.domain !== S2DODomain.ECOSYSTEM && 
-              actionDef.domain !== S2DODomain.EXPERIENCE) {
+          if (
+            actionDef.domain !== S2DODomain.INTELLIGENCE &&
+            actionDef.domain !== S2DODomain.ECOSYSTEM &&
+            actionDef.domain !== S2DODomain.EXPERIENCE
+          ) {
             return; // Skip this combination
           }
         }
-        
+
         // Phase 6 stems only apply to their specific domains
-        if (stem === S2DOStem.CONSCIOUSNESS && actionDef.domain !== S2DODomain.CONSCIOUSNESS) {
+        if (
+          stem === S2DOStem.CONSCIOUSNESS &&
+          actionDef.domain !== S2DODomain.CONSCIOUSNESS
+        ) {
           return;
         }
-        
-        if (stem === S2DOStem.QUANTUM_INTELLIGENCE && actionDef.domain !== S2DODomain.QUANTUM) {
+
+        if (
+          stem === S2DOStem.QUANTUM_INTELLIGENCE &&
+          actionDef.domain !== S2DODomain.QUANTUM
+        ) {
           return;
         }
-        
-        if (stem === S2DOStem.SYMBIOTIC && actionDef.domain !== S2DODomain.SYMBIOTIC) {
+
+        if (
+          stem === S2DOStem.SYMBIOTIC &&
+          actionDef.domain !== S2DODomain.SYMBIOTIC
+        ) {
           return;
         }
-        
-        if (stem === S2DOStem.TRANSDIMENSIONAL && actionDef.domain !== S2DODomain.TRANSDIMENSIONAL) {
+
+        if (
+          stem === S2DOStem.TRANSDIMENSIONAL &&
+          actionDef.domain !== S2DODomain.TRANSDIMENSIONAL
+        ) {
           return;
         }
-        
+
         allActions.push(buildS2DOAction(stem, actionDef));
       });
     });
   });
-  
+
   return allActions;
 }
 
@@ -1210,71 +1407,85 @@ export function generateAllS2DOActions(): S2DOAction[] {
  */
 export function isValidS2DOAction(actionString: string): boolean {
   const parts = actionString.split(':');
-  
+
   if (parts.length !== 3 || parts[0] !== 'S2DO') {
     return false;
   }
-  
+
   const [_, stemString, actionName] = parts;
-  
+
   // Check if stem is valid
   const isValidStem = Object.values(S2DOStem).includes(stemString as S2DOStem);
   if (!isValidStem) {
     return false;
   }
-  
+
   // Check if action is valid in any domain
   let isValidAction = false;
   let validDomains: S2DODomain[] = [];
-  
+
   Object.entries(allDomainActions).forEach(([domain, domainActions]) => {
     if (domainActions.some(action => action.name === actionName)) {
       isValidAction = true;
       validDomains.push(domain as S2DODomain);
     }
   });
-  
+
   if (!isValidAction) {
     return false;
   }
-  
+
   // Check domain-stem compatibility for future capabilities
   const stem = stemString as S2DOStem;
-  
+
   // Phase 5 stems only apply to specific domains
-  if (stem === S2DOStem.ANTICIPATE || 
-      stem === S2DOStem.CONTEXTUAL || 
-      stem === S2DOStem.SYNTHESIZE || 
-      stem === S2DOStem.ORCHESTRATE) {
-    
-    const hasValidDomain = validDomains.some(domain => 
-      domain === S2DODomain.INTELLIGENCE || 
-      domain === S2DODomain.ECOSYSTEM || 
-      domain === S2DODomain.EXPERIENCE
+  if (
+    stem === S2DOStem.ANTICIPATE ||
+    stem === S2DOStem.CONTEXTUAL ||
+    stem === S2DOStem.SYNTHESIZE ||
+    stem === S2DOStem.ORCHESTRATE
+  ) {
+    const hasValidDomain = validDomains.some(
+      domain =>
+        domain === S2DODomain.INTELLIGENCE ||
+        domain === S2DODomain.ECOSYSTEM ||
+        domain === S2DODomain.EXPERIENCE
     );
-    
+
     if (!hasValidDomain) {
       return false;
     }
   }
-  
+
   // Phase 6 stems only apply to their specific domains
-  if (stem === S2DOStem.CONSCIOUSNESS && !validDomains.includes(S2DODomain.CONSCIOUSNESS)) {
+  if (
+    stem === S2DOStem.CONSCIOUSNESS &&
+    !validDomains.includes(S2DODomain.CONSCIOUSNESS)
+  ) {
     return false;
   }
-  
-  if (stem === S2DOStem.QUANTUM_INTELLIGENCE && !validDomains.includes(S2DODomain.QUANTUM)) {
+
+  if (
+    stem === S2DOStem.QUANTUM_INTELLIGENCE &&
+    !validDomains.includes(S2DODomain.QUANTUM)
+  ) {
     return false;
   }
-  
-  if (stem === S2DOStem.SYMBIOTIC && !validDomains.includes(S2DODomain.SYMBIOTIC)) {
+
+  if (
+    stem === S2DOStem.SYMBIOTIC &&
+    !validDomains.includes(S2DODomain.SYMBIOTIC)
+  ) {
     return false;
   }
-  
-  if (stem === S2DOStem.TRANSDIMENSIONAL && !validDomains.includes(S2DODomain.TRANSDIMENSIONAL)) {
+
+  if (
+    stem === S2DOStem.TRANSDIMENSIONAL &&
+    !validDomains.includes(S2DODomain.TRANSDIMENSIONAL)
+  ) {
     return false;
   }
-  
+
   return true;
 }
 

@@ -1,6 +1,6 @@
 /**
  * Blockchain Authorization Service
- * 
+ *
  * Provides secure blockchain-based authorization for Co-Pilot deliverables
  * and implements QR code generation for owner-subscriber approval.
  */
@@ -18,15 +18,11 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 // Import utility functions
-const {
-  getDocumentById,
-  updateDocument,
-  createDocument
-} = require('./utils');
+const { getDocumentById, updateDocument, createDocument } = require('./utils');
 
 /**
  * BlockchainAuthorizationService
- * 
+ *
  * Service to handle blockchain-based authorization for Co-Pilot deliverables
  */
 class BlockchainAuthorizationService {
@@ -38,7 +34,7 @@ class BlockchainAuthorizationService {
 
   /**
    * Generate a QR code for a deliverable
-   * 
+   *
    * @param {string} deliverableId - ID of the deliverable
    * @param {string} ownerSubscriberId - ID of the owner-subscriber
    * @returns {Promise<Object>} - QR code data and image
@@ -47,64 +43,70 @@ class BlockchainAuthorizationService {
     try {
       // Get the deliverable to verify it exists
       const deliverable = await getDocumentById('deliverables', deliverableId);
-      
+
       if (!deliverable) {
         throw new Error(`Deliverable ${deliverableId} not found`);
       }
-      
+
       // Verify owner matches
       if (deliverable.ownerSubscriberId !== ownerSubscriberId) {
         throw new Error('Unauthorized: Owner ID mismatch');
       }
-      
+
       // Create authorization data
       const timestamp = new Date().toISOString();
       const authData = {
         deliverableId,
         ownerSubscriberId,
         timestamp,
-        type: 'deliverable_authorization'
+        type: 'deliverable_authorization',
       };
-      
+
       // Generate hash for the authorization
       const dataString = JSON.stringify(authData);
       const hash = this._generateHash(dataString);
-      
+
       // Create the QR data object
       const qrData = {
         ...authData,
-        hash
-      };
-      
-      // Generate QR code image
-      const qrCodeImage = await this._generateQRCodeImage(JSON.stringify(qrData));
-      
-      // Store authorization data in Firestore
-      const authorizationId = await createDocument('authorizationRequests', null, {
-        deliverableId,
-        ownerSubscriberId,
-        qrData,
         hash,
-        status: 'pending',
-        createdAt: admin.firestore.FieldValue.serverTimestamp(),
-        expiresAt: admin.firestore.Timestamp.fromDate(
-          new Date(Date.now() + 1000 * 60 * 60 * 24) // 24 hours expiration
-        )
-      });
-      
+      };
+
+      // Generate QR code image
+      const qrCodeImage = await this._generateQRCodeImage(
+        JSON.stringify(qrData)
+      );
+
+      // Store authorization data in Firestore
+      const authorizationId = await createDocument(
+        'authorizationRequests',
+        null,
+        {
+          deliverableId,
+          ownerSubscriberId,
+          qrData,
+          hash,
+          status: 'pending',
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          expiresAt: admin.firestore.Timestamp.fromDate(
+            new Date(Date.now() + 1000 * 60 * 60 * 24) // 24 hours expiration
+          ),
+        }
+      );
+
       // Update deliverable with authorization request
       await updateDocument('deliverables', deliverableId, {
         authorizationRequestId: authorizationId,
         authorizationHash: hash,
         authorizationStatus: 'pending',
-        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
-      
+
       return {
         authorizationId,
         qrData,
         qrCodeImage,
-        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString()
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(),
       };
     } catch (error) {
       console.error('Error generating authorization QR:', error);
@@ -114,7 +116,7 @@ class BlockchainAuthorizationService {
 
   /**
    * Verify and process a QR code authorization
-   * 
+   *
    * @param {string} qrData - QR code data from scan
    * @param {string} ownerSubscriberId - ID of the owner-subscriber
    * @returns {Promise<Object>} - Authorization result
@@ -123,22 +125,23 @@ class BlockchainAuthorizationService {
     try {
       // Parse QR data
       const data = typeof qrData === 'string' ? JSON.parse(qrData) : qrData;
-      
+
       // Verify the hash
       const { hash, ...authData } = data;
       const calculatedHash = this._generateHash(JSON.stringify(authData));
-      
+
       if (calculatedHash !== hash) {
         throw new Error('Invalid authorization: Hash mismatch');
       }
-      
+
       // Verify the owner-subscriber ID
       if (authData.ownerSubscriberId !== ownerSubscriberId) {
         throw new Error('Unauthorized: Owner ID mismatch');
       }
-      
+
       // Check if the authorization has expired
-      const authRequest = await db.collection('authorizationRequests')
+      const authRequest = await db
+        .collection('authorizationRequests')
         .where('hash', '==', hash)
         .limit(1)
         .get()
@@ -147,18 +150,18 @@ class BlockchainAuthorizationService {
           const doc = snapshot.docs[0];
           return { id: doc.id, ...doc.data() };
         });
-      
+
       if (!authRequest) {
         throw new Error('Authorization request not found');
       }
-      
+
       if (authRequest.expiresAt.toDate() < new Date()) {
         throw new Error('Authorization expired');
       }
-      
+
       // Record the authorization on the blockchain
       const transaction = await this._recordOnBlockchain(authData);
-      
+
       // Create the authorization record
       const authorizationData = {
         deliverableId: authData.deliverableId,
@@ -168,11 +171,15 @@ class BlockchainAuthorizationService {
         blockchainTransactionId: transaction.id,
         blockchainHash: transaction.hash,
         authorizedAt: admin.firestore.FieldValue.serverTimestamp(),
-        status: 'authorized'
+        status: 'authorized',
       };
-      
-      const authorizationId = await createDocument('authorizations', null, authorizationData);
-      
+
+      const authorizationId = await createDocument(
+        'authorizations',
+        null,
+        authorizationData
+      );
+
       // Update the deliverable with authorization data
       await updateDocument('deliverables', authData.deliverableId, {
         authorized: true,
@@ -180,22 +187,22 @@ class BlockchainAuthorizationService {
         blockchainTransactionId: transaction.id,
         authorizationStatus: 'authorized',
         authorizedAt: admin.firestore.FieldValue.serverTimestamp(),
-        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
-      
+
       // Update the authorization request
       await updateDocument('authorizationRequests', authRequest.id, {
         status: 'processed',
         authorizationId,
-        processedAt: admin.firestore.FieldValue.serverTimestamp()
+        processedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
-      
+
       return {
         success: true,
         deliverableId: authData.deliverableId,
         authorizationId,
         transactionId: transaction.id,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
     } catch (error) {
       console.error('Error processing authorization:', error);
@@ -205,7 +212,7 @@ class BlockchainAuthorizationService {
 
   /**
    * Generate a cryptographic hash for data
-   * 
+   *
    * @param {string} data - Data to hash
    * @returns {string} - Hash result
    * @private
@@ -216,7 +223,7 @@ class BlockchainAuthorizationService {
 
   /**
    * Generate a QR code image from data
-   * 
+   *
    * @param {string} data - Data to encode in QR
    * @returns {Promise<string>} - Data URL for QR code image
    * @private
@@ -230,8 +237,8 @@ class BlockchainAuthorizationService {
         margin: 1,
         color: {
           dark: '#000000',
-          light: '#ffffff'
-        }
+          light: '#ffffff',
+        },
       });
     } catch (error) {
       console.error('Error generating QR code image:', error);
@@ -241,7 +248,7 @@ class BlockchainAuthorizationService {
 
   /**
    * Record transaction on blockchain
-   * 
+   *
    * @param {Object} data - Transaction data
    * @returns {Promise<Object>} - Blockchain transaction result
    * @private
@@ -250,29 +257,29 @@ class BlockchainAuthorizationService {
     try {
       // In a real implementation, this would interact with an actual blockchain
       // For now, we'll simulate by storing in Firestore
-      
+
       const timestamp = new Date().toISOString();
       const transactionData = {
         ...data,
         timestamp,
-        type: 'authorization'
+        type: 'authorization',
       };
-      
+
       const hash = this._generateHash(JSON.stringify(transactionData));
-      
+
       const transaction = {
         data: transactionData,
         hash,
         timestamp: admin.firestore.FieldValue.serverTimestamp(),
-        verified: true
+        verified: true,
       };
-      
+
       const docRef = await this.transactions.add(transaction);
-      
+
       return {
         id: docRef.id,
         hash,
-        timestamp
+        timestamp,
       };
     } catch (error) {
       console.error('Error recording on blockchain:', error);
@@ -282,29 +289,34 @@ class BlockchainAuthorizationService {
 
   /**
    * Verify a blockchain transaction
-   * 
+   *
    * @param {string} transactionId - ID of the transaction
    * @returns {Promise<Object>} - Verification result
    */
   async verifyTransaction(transactionId) {
     try {
-      const transaction = await getDocumentById('blockchainTransactions', transactionId);
-      
+      const transaction = await getDocumentById(
+        'blockchainTransactions',
+        transactionId
+      );
+
       if (!transaction) {
         return {
           verified: false,
-          error: 'Transaction not found'
+          error: 'Transaction not found',
         };
       }
-      
+
       // Verify the hash
-      const calculatedHash = this._generateHash(JSON.stringify(transaction.data));
+      const calculatedHash = this._generateHash(
+        JSON.stringify(transaction.data)
+      );
       const hashMatch = calculatedHash === transaction.hash;
-      
+
       return {
         verified: hashMatch,
         transaction: hashMatch ? transaction : null,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
     } catch (error) {
       console.error('Error verifying transaction:', error);
@@ -316,7 +328,11 @@ class BlockchainAuthorizationService {
 // Create Express API for blockchain authorization
 const express = require('express');
 const cors = require('cors');
-const { authenticateUser, handleHttpError, createHttpError } = require('./utils');
+const {
+  authenticateUser,
+  handleHttpError,
+  createHttpError,
+} = require('./utils');
 
 const app = express();
 app.use(cors({ origin: true }));
@@ -332,17 +348,23 @@ const authService = new BlockchainAuthorizationService();
 app.post('/authorize/generate', authenticateUser, async (req, res) => {
   try {
     const { deliverableId, ownerSubscriberId } = req.body;
-    
+
     if (!deliverableId || !ownerSubscriberId) {
-      throw createHttpError('Deliverable ID and owner-subscriber ID are required', 400);
+      throw createHttpError(
+        'Deliverable ID and owner-subscriber ID are required',
+        400
+      );
     }
-    
-    const qrResult = await authService.generateAuthorizationQR(deliverableId, ownerSubscriberId);
-    
+
+    const qrResult = await authService.generateAuthorizationQR(
+      deliverableId,
+      ownerSubscriberId
+    );
+
     res.status(200).json({
       authorizationId: qrResult.authorizationId,
       qrCodeImage: qrResult.qrCodeImage,
-      expiresAt: qrResult.expiresAt
+      expiresAt: qrResult.expiresAt,
     });
   } catch (error) {
     handleHttpError(error, res);
@@ -356,13 +378,19 @@ app.post('/authorize/generate', authenticateUser, async (req, res) => {
 app.post('/authorize/process', authenticateUser, async (req, res) => {
   try {
     const { qrData, ownerSubscriberId } = req.body;
-    
+
     if (!qrData || !ownerSubscriberId) {
-      throw createHttpError('QR data and owner-subscriber ID are required', 400);
+      throw createHttpError(
+        'QR data and owner-subscriber ID are required',
+        400
+      );
     }
-    
-    const result = await authService.processAuthorization(qrData, ownerSubscriberId);
-    
+
+    const result = await authService.processAuthorization(
+      qrData,
+      ownerSubscriberId
+    );
+
     res.status(200).json(result);
   } catch (error) {
     handleHttpError(error, res);
@@ -376,13 +404,13 @@ app.post('/authorize/process', authenticateUser, async (req, res) => {
 app.get('/verify/:transactionId', authenticateUser, async (req, res) => {
   try {
     const { transactionId } = req.params;
-    
+
     if (!transactionId) {
       throw createHttpError('Transaction ID is required', 400);
     }
-    
+
     const result = await authService.verifyTransaction(transactionId);
-    
+
     res.status(200).json(result);
   } catch (error) {
     handleHttpError(error, res);
@@ -394,5 +422,5 @@ const blockchainAuth = functions.https.onRequest(app);
 
 module.exports = {
   BlockchainAuthorizationService,
-  blockchainAuth
+  blockchainAuth,
 };

@@ -2,7 +2,12 @@ import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 
 import { beforeEach, describe, expect, it, jest } from '@jest/globals';
 import { GoDaddyIntegration } from './godaddy-integration';
-import { GoDaddyConfig, DNSRecord, DNSRecordType, DomainUpdateResult } from './godaddy-integration-interfaces';
+import {
+  GoDaddyConfig,
+  DNSRecord,
+  DNSRecordType,
+  DomainUpdateResult,
+} from './godaddy-integration-interfaces';
 
 // Mock API responses
 const mockDNSRecords: DNSRecord[] = [
@@ -10,20 +15,20 @@ const mockDNSRecords: DNSRecord[] = [
     type: DNSRecordType.A,
     name: 'test',
     data: '192.168.1.1',
-    ttl: 3600
+    ttl: 3600,
   },
   {
     type: DNSRecordType.CNAME,
     name: 'www',
     data: 'example.com',
-    ttl: 3600
-  }
+    ttl: 3600,
+  },
 ];
 
 const mockConfig: GoDaddyConfig = {
   apiKey: 'test-key',
   apiSecret: 'test-secret',
-  baseUrl: 'https://api.godaddy.com/v1'
+  baseUrl: 'https://api.godaddy.com/v1',
 };
 
 describe('GoDaddyIntegration', () => {
@@ -40,7 +45,7 @@ describe('GoDaddyIntegration', () => {
     it('should retrieve DNS records for a domain', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(mockDNSRecords)
+        json: () => Promise.resolve(mockDNSRecords),
       });
 
       const records = await integration.getDNSRecords('example.com');
@@ -56,12 +61,12 @@ describe('GoDaddyIntegration', () => {
         type: DNSRecordType.A,
         name: 'new',
         data: '192.168.1.2',
-        ttl: 3600
+        ttl: 3600,
       };
 
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ success: true })
+        json: () => Promise.resolve({ success: true }),
       });
 
       await integration.addDNSRecord('example.com', newRecord);
@@ -69,7 +74,7 @@ describe('GoDaddyIntegration', () => {
         'https://api.godaddy.com/v1/domains/example.com/records',
         expect.objectContaining({
           method: 'PATCH',
-          body: JSON.stringify([newRecord])
+          body: JSON.stringify([newRecord]),
         })
       );
     });
@@ -80,7 +85,7 @@ describe('GoDaddyIntegration', () => {
         .mockRejectedValueOnce(new Error('Network error'))
         .mockResolvedValueOnce({
           ok: true,
-          json: () => Promise.resolve(mockDNSRecords)
+          json: () => Promise.resolve(mockDNSRecords),
         });
 
       const records = await integration.getDNSRecords('example.com');
@@ -91,9 +96,9 @@ describe('GoDaddyIntegration', () => {
     it('should throw error after max retries', async () => {
       mockFetch.mockRejectedValue(new Error('Network error'));
 
-      await expect(integration.getDNSRecords('example.com'))
-        .rejects
-        .toThrow('Failed to retrieve DNS records after 3 attempts');
+      await expect(integration.getDNSRecords('example.com')).rejects.toThrow(
+        'Failed to retrieve DNS records after 3 attempts'
+      );
     });
   });
 
@@ -103,20 +108,23 @@ describe('GoDaddyIntegration', () => {
       type: DNSRecordType.CNAME,
       name: 'www',
       data: 'target.com',
-      ttl: 3600
+      ttl: 3600,
     };
 
     it('should process batch DNS updates', async () => {
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ success: true })
+        json: () => Promise.resolve({ success: true }),
       });
 
-      const results = await integration.batchUpdateDNSRecords(batchDomains, batchRecord);
-      
+      const results = await integration.batchUpdateDNSRecords(
+        batchDomains,
+        batchRecord
+      );
+
       expect(results).toHaveLength(batchDomains.length);
       expect(mockFetch).toHaveBeenCalledTimes(batchDomains.length);
-      
+
       results.forEach((result: DomainUpdateResult) => {
         expect(result.success).toBe(true);
       });
@@ -124,11 +132,20 @@ describe('GoDaddyIntegration', () => {
 
     it('should handle partial failures in batch operations', async () => {
       mockFetch
-        .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ success: true }) })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ success: true }),
+        })
         .mockRejectedValueOnce(new Error('API Error'))
-        .mockResolvedValueOnce({ ok: true, json: () => Promise.resolve({ success: true }) });
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () => Promise.resolve({ success: true }),
+        });
 
-      const results = await integration.batchUpdateDNSRecords(batchDomains, batchRecord);
+      const results = await integration.batchUpdateDNSRecords(
+        batchDomains,
+        batchRecord
+      );
 
       expect(results).toHaveLength(batchDomains.length);
       expect(results[0].success).toBe(true);
@@ -140,14 +157,14 @@ describe('GoDaddyIntegration', () => {
       const startTime = Date.now();
       mockFetch.mockResolvedValue({
         ok: true,
-        json: () => Promise.resolve({ success: true })
+        json: () => Promise.resolve({ success: true }),
       });
 
       await integration.batchUpdateDNSRecords(batchDomains, batchRecord);
-      
+
       const endTime = Date.now();
       const duration = endTime - startTime;
-      
+
       // Assuming 100ms delay between requests
       expect(duration).toBeGreaterThanOrEqual(200); // 3 requests = 2 delays
     });
@@ -158,12 +175,12 @@ describe('GoDaddyIntegration', () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 401,
-        statusText: 'Unauthorized'
+        statusText: 'Unauthorized',
       });
 
-      await expect(integration.getDNSRecords('example.com'))
-        .rejects
-        .toThrow('Authentication failed: Invalid API credentials');
+      await expect(integration.getDNSRecords('example.com')).rejects.toThrow(
+        'Authentication failed: Invalid API credentials'
+      );
     });
 
     it('should handle 429 Rate Limit errors', async () => {
@@ -172,12 +189,12 @@ describe('GoDaddyIntegration', () => {
           ok: false,
           status: 429,
           headers: {
-            get: (name: string) => name === 'Retry-After' ? '2' : null
-          }
+            get: (name: string) => (name === 'Retry-After' ? '2' : null),
+          },
         })
         .mockResolvedValueOnce({
           ok: true,
-          json: () => Promise.resolve(mockDNSRecords)
+          json: () => Promise.resolve(mockDNSRecords),
         });
 
       const records = await integration.getDNSRecords('example.com');
@@ -188,20 +205,20 @@ describe('GoDaddyIntegration', () => {
     it('should handle malformed API responses', async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve(null)
+        json: () => Promise.resolve(null),
       });
 
-      await expect(integration.getDNSRecords('example.com'))
-        .rejects
-        .toThrow('Invalid API response format');
+      await expect(integration.getDNSRecords('example.com')).rejects.toThrow(
+        'Invalid API response format'
+      );
     });
   });
 
   describe('Input Validation', () => {
     it('should validate domain names', async () => {
-      await expect(integration.getDNSRecords('invalid domain'))
-        .rejects
-        .toThrow('Invalid domain name format');
+      await expect(integration.getDNSRecords('invalid domain')).rejects.toThrow(
+        'Invalid domain name format'
+      );
     });
 
     it('should validate DNS record format', async () => {
@@ -209,12 +226,12 @@ describe('GoDaddyIntegration', () => {
         type: 'INVALID' as DNSRecordType,
         name: 'test',
         data: '192.168.1.1',
-        ttl: 3600
+        ttl: 3600,
       };
 
-      await expect(integration.addDNSRecord('example.com', invalidRecord))
-        .rejects
-        .toThrow('Invalid DNS record type');
+      await expect(
+        integration.addDNSRecord('example.com', invalidRecord)
+      ).rejects.toThrow('Invalid DNS record type');
     });
 
     it('should validate TTL values', async () => {
@@ -222,13 +239,12 @@ describe('GoDaddyIntegration', () => {
         type: DNSRecordType.A,
         name: 'test',
         data: '192.168.1.1',
-        ttl: 0
+        ttl: 0,
       };
 
-      await expect(integration.addDNSRecord('example.com', invalidTTLRecord))
-        .rejects
-        .toThrow('Invalid TTL value');
+      await expect(
+        integration.addDNSRecord('example.com', invalidTTLRecord)
+      ).rejects.toThrow('Invalid TTL value');
     });
   });
 });
-

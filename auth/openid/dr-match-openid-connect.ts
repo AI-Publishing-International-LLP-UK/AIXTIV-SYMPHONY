@@ -21,14 +21,14 @@ export interface OpenIDConnectConfig {
  */
 export interface LinkedInUserInfo {
   // Standard OpenID Connect claims
-  sub: string;          // Unique identifier for the user
-  name?: string;        // Full name
-  given_name?: string;  // First name
+  sub: string; // Unique identifier for the user
+  name?: string; // Full name
+  given_name?: string; // First name
   family_name?: string; // Last name
-  picture?: string;     // Profile picture URL
-  email?: string;       // Primary email address
+  picture?: string; // Profile picture URL
+  email?: string; // Primary email address
   email_verified?: boolean;
-  
+
   // Additional LinkedIn-specific profile information
   headline?: string;
   publicProfileUrl?: string;
@@ -64,10 +64,7 @@ export class LinkedInOpenIDConnectService {
   /**
    * Generate Authorization URL for OpenID Connect
    */
-  generateAuthorizationUrl(
-    state?: string,
-    nonce?: string
-  ): string {
+  generateAuthorizationUrl(state?: string, nonce?: string): string {
     // Generate state and nonce if not provided
     const authState = state || this.generateSecureToken();
     const authNonce = nonce || this.generateSecureToken();
@@ -80,7 +77,7 @@ export class LinkedInOpenIDConnectService {
       redirect_uri: this.config.redirectUri,
       scope: this.config.scopes.join(' '),
       state: authState,
-      nonce: authNonce
+      nonce: authNonce,
     });
 
     return `${baseUrl}?${params.toString()}`;
@@ -100,12 +97,12 @@ export class LinkedInOpenIDConnectService {
           code: authorizationCode,
           redirect_uri: this.config.redirectUri,
           client_id: this.config.clientId,
-          client_secret: this.config.clientSecret
+          client_secret: this.config.clientSecret,
         }),
         {
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
         }
       );
 
@@ -115,7 +112,7 @@ export class LinkedInOpenIDConnectService {
         expires_in: response.data.expires_in,
         scope: response.data.scope,
         id_token: response.data.id_token,
-        refresh_token: response.data.refresh_token
+        refresh_token: response.data.refresh_token,
       };
 
       // Cache the token set
@@ -131,18 +128,16 @@ export class LinkedInOpenIDConnectService {
   /**
    * Retrieve User Information
    */
-  async getUserInfo(
-    accessToken?: string
-  ): Promise<LinkedInUserInfo> {
+  async getUserInfo(accessToken?: string): Promise<LinkedInUserInfo> {
     // Use provided token or retrieve from cache
     const token = accessToken || this.getAccessTokenFromCache();
 
     try {
       const response = await axios.get('https://api.linkedin.com/v2/userinfo', {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json'
-        }
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
+        },
       });
 
       // Transform response to LinkedInUserInfo
@@ -156,9 +151,7 @@ export class LinkedInOpenIDConnectService {
   /**
    * Refresh Access Token
    */
-  async refreshAccessToken(
-    refreshToken: string
-  ): Promise<TokenSet> {
+  async refreshAccessToken(refreshToken: string): Promise<TokenSet> {
     try {
       const response = await axios.post(
         'https://www.linkedin.com/oauth/v2/accessToken',
@@ -166,12 +159,12 @@ export class LinkedInOpenIDConnectService {
           grant_type: 'refresh_token',
           refresh_token: refreshToken,
           client_id: this.config.clientId,
-          client_secret: this.config.clientSecret
+          client_secret: this.config.clientSecret,
         }),
         {
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
         }
       );
 
@@ -180,7 +173,7 @@ export class LinkedInOpenIDConnectService {
         token_type: response.data.token_type,
         expires_in: response.data.expires_in,
         scope: response.data.scope,
-        refresh_token: response.data.refresh_token
+        refresh_token: response.data.refresh_token,
       };
 
       // Update cache with new token set
@@ -196,9 +189,7 @@ export class LinkedInOpenIDConnectService {
   /**
    * Validate Access Token
    */
-  async validateAccessToken(
-    accessToken: string
-  ): Promise<{
+  async validateAccessToken(accessToken: string): Promise<{
     valid: boolean;
     claims?: any;
   }> {
@@ -209,18 +200,18 @@ export class LinkedInOpenIDConnectService {
         new URLSearchParams({
           token: accessToken,
           client_id: this.config.clientId,
-          client_secret: this.config.clientSecret
+          client_secret: this.config.clientSecret,
         }),
         {
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
         }
       );
 
       return {
         valid: response.data.active,
-        claims: response.data
+        claims: response.data,
       };
     } catch (error) {
       console.error('Token validation failed', error);
@@ -268,14 +259,14 @@ export class LinkedInOpenIDConnectService {
       picture: rawUserInfo.picture,
       email: rawUserInfo.email,
       email_verified: rawUserInfo.email_verified,
-      
+
       // LinkedIn-specific extensions
       headline: rawUserInfo.headline,
       publicProfileUrl: rawUserInfo.publicProfileUrl,
       profilePictureUrls: {
         normal: rawUserInfo.pictureUrls?.normal,
-        large: rawUserInfo.pictureUrls?.large
-      }
+        large: rawUserInfo.pictureUrls?.large,
+      },
     };
   }
 }
@@ -288,10 +279,10 @@ export const DrMatchOpenIDConfig: OpenIDConnectConfig = {
   clientSecret: process.env.LINKEDIN_DR_MATCH_CLIENT_SECRET || '',
   redirectUri: 'https://coaching2100.com',
   scopes: [
-    'openid',     // Basic OpenID Connect scope
-    'profile',    // Access to profile information
-    'email'       // Access to email address
-  ]
+    'openid', // Basic OpenID Connect scope
+    'profile', // Access to profile information
+    'email', // Access to email address
+  ],
 };
 
 /**
@@ -305,7 +296,7 @@ async function demonstrateLinkedInOpenIDConnect() {
     const authorizationUrl = openIDService.generateAuthorizationUrl();
     console.log('Authorization URL:', authorizationUrl);
 
-    // Simulate authorization code exchange 
+    // Simulate authorization code exchange
     // (In a real app, this would come from the OAuth flow)
     const mockAuthorizationCode = 'MOCK_AUTHORIZATION_CODE';
     const tokenSet = await openIDService.exchangeAuthorizationCode(
@@ -314,9 +305,7 @@ async function demonstrateLinkedInOpenIDConnect() {
     console.log('Token Set:', tokenSet);
 
     // Retrieve User Information
-    const userInfo = await openIDService.getUserInfo(
-      tokenSet.access_token
-    );
+    const userInfo = await openIDService.getUserInfo(tokenSet.access_token);
     console.log('User Information:', userInfo);
 
     // Validate Access Token
@@ -324,7 +313,6 @@ async function demonstrateLinkedInOpenIDConnect() {
       tokenSet.access_token
     );
     console.log('Token Validation:', tokenValidation);
-
   } catch (error) {
     console.error('OpenID Connect Demonstration Failed', error);
   }
@@ -333,5 +321,5 @@ async function demonstrateLinkedInOpenIDConnect() {
 export default {
   LinkedInOpenIDConnectService,
   DrMatchOpenIDConfig,
-  demonstrateLinkedInOpenIDConnect
+  demonstrateLinkedInOpenIDConnect,
 };

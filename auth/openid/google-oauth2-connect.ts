@@ -25,15 +25,15 @@ export interface OAuth2Config {
  */
 export interface GoogleUserInfo {
   // Standard OpenID Connect claims
-  sub: string;          // Unique identifier for the user
-  name?: string;        // Full name
-  given_name?: string;  // First name
+  sub: string; // Unique identifier for the user
+  name?: string; // Full name
+  given_name?: string; // First name
   family_name?: string; // Last name
-  picture?: string;     // Profile picture URL
-  email?: string;       // Primary email address
+  picture?: string; // Profile picture URL
+  email?: string; // Primary email address
   email_verified?: boolean;
   locale?: string;
-  hd?: string;          // Hosted domain (for Google Workspace accounts)
+  hd?: string; // Hosted domain (for Google Workspace accounts)
 }
 
 /**
@@ -69,7 +69,7 @@ export class GoogleOAuth2Service {
 
   constructor(config: OAuth2Config, renewalStrategy?: TokenRenewalStrategy) {
     this.config = config;
-    
+
     // Default renewal strategy checks if token expires in less than 5 minutes
     this.renewalStrategy = renewalStrategy || {
       shouldRenew: (tokenSet: TokenSet): boolean => {
@@ -82,7 +82,7 @@ export class GoogleOAuth2Service {
           throw new Error('No refresh token available');
         }
         return this.refreshAccessToken(tokenSet.refresh_token);
-      }
+      },
     };
 
     // Start the auto-renewal process
@@ -163,9 +163,7 @@ export class GoogleOAuth2Service {
   /**
    * Refresh Access Token
    */
-  async refreshAccessToken(
-    refreshToken: string
-  ): Promise<TokenSet> {
+  async refreshAccessToken(refreshToken: string): Promise<TokenSet> {
     try {
       const response = await axios.post(
         this.config.tokenEndpoint,
@@ -209,17 +207,15 @@ export class GoogleOAuth2Service {
   /**
    * Get User Information
    */
-  async getUserInfo(
-    accessToken?: string
-  ): Promise<GoogleUserInfo> {
+  async getUserInfo(accessToken?: string): Promise<GoogleUserInfo> {
     // Use provided token or retrieve from cache
     const token = accessToken || this.getAccessTokenFromCache();
 
     try {
       const response = await axios.get(this.config.userInfoEndpoint, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json',
+          Authorization: `Bearer ${token}`,
+          Accept: 'application/json',
         },
       });
 
@@ -259,7 +255,10 @@ export class GoogleOAuth2Service {
 
       // Remove from cache if present
       this.tokenCache.forEach((tokenSet, key) => {
-        if (tokenSet.access_token === token || tokenSet.refresh_token === token) {
+        if (
+          tokenSet.access_token === token ||
+          tokenSet.refresh_token === token
+        ) {
           this.tokenCache.delete(key);
         }
       });
@@ -279,29 +278,31 @@ export class GoogleOAuth2Service {
   validateIdToken(idToken: string): { valid: boolean; payload?: any } {
     try {
       const [header, payload, signature] = idToken.split('.');
-      
+
       // Decode the payload
       const decodedPayload = JSON.parse(
         Buffer.from(payload, 'base64').toString('utf-8')
       );
-      
+
       // Check expiration time
       const now = Math.floor(Date.now() / 1000);
       if (decodedPayload.exp && decodedPayload.exp < now) {
         return { valid: false };
       }
-      
+
       // Check issuer (should be Google)
-      if (decodedPayload.iss !== 'https://accounts.google.com' && 
-          decodedPayload.iss !== 'accounts.google.com') {
+      if (
+        decodedPayload.iss !== 'https://accounts.google.com' &&
+        decodedPayload.iss !== 'accounts.google.com'
+      ) {
         return { valid: false };
       }
-      
+
       // Check audience matches our client ID
       if (decodedPayload.aud !== this.config.clientId) {
         return { valid: false };
       }
-      
+
       return { valid: true, payload: decodedPayload };
     } catch (error) {
       console.error('ID token validation failed', error);
@@ -322,14 +323,14 @@ export class GoogleOAuth2Service {
   private cacheTokenSet(tokenSet: TokenSet): void {
     // Use user ID (sub) as the cache key if possible
     let cacheKey = tokenSet.access_token;
-    
+
     if (tokenSet.id_token) {
       const validation = this.validateIdToken(tokenSet.id_token);
       if (validation.valid && validation.payload.sub) {
         cacheKey = validation.payload.sub;
       }
     }
-    
+
     this.tokenCache.set(cacheKey, tokenSet);
   }
 
@@ -350,9 +351,10 @@ export class GoogleOAuth2Service {
           if (tokenSet.refresh_token) {
             try {
               // Use renewalStrategy to refresh the token
-              this.renewalStrategy.renewToken(tokenSet)
+              this.renewalStrategy
+                .renewToken(tokenSet)
                 .catch(error => console.error('Auto-renewal failed:', error));
-              
+
               // Return the current token anyway, as the renewal is async
               return tokenSet.access_token;
             } catch (error) {
@@ -380,8 +382,9 @@ export class GoogleOAuth2Service {
     }
 
     this.renewalInterval = setInterval(() => {
-      this.checkAndRenewTokens()
-        .catch(error => console.error('Auto-renewal check failed:', error));
+      this.checkAndRenewTokens().catch(error =>
+        console.error('Auto-renewal check failed:', error)
+      );
     }, this.renewalIntervalMs);
   }
 
@@ -417,26 +420,32 @@ export class GoogleOAuth2Service {
  * Google OAuth2 Configuration for Integration Gateway
  */
 export const IntegrationGatewayOAuth2Config: OAuth2Config = {
-  clientId: process.env.GOOGLE_OAUTH_CLIENT_ID || '859242575175-65n67dkc0omsbjj7ghgv9i3vpjd92vnl.apps.googleusercontent.com',
+  clientId:
+    process.env.GOOGLE_OAUTH_CLIENT_ID ||
+    '859242575175-65n67dkc0omsbjj7ghgv9i3vpjd92vnl.apps.googleusercontent.com',
   clientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET || '',
-  redirectUri: process.env.GOOGLE_OAUTH_REDIRECT_URI || 'https://integration-gateway-859242575175.us-west1.run.app/auth/callback',
+  redirectUri:
+    process.env.GOOGLE_OAUTH_REDIRECT_URI ||
+    'https://integration-gateway-859242575175.us-west1.run.app/auth/callback',
   scopes: [
     'openid',
     'profile',
     'email',
     'https://www.googleapis.com/auth/userinfo.profile',
-    'https://www.googleapis.com/auth/userinfo.email'
+    'https://www.googleapis.com/auth/userinfo.email',
   ],
   authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
   tokenEndpoint: 'https://oauth2.googleapis.com/token',
   userInfoEndpoint: 'https://openidconnect.googleapis.com/v1/userinfo',
-  revokeEndpoint: 'https://oauth2.googleapis.com/revoke'
+  revokeEndpoint: 'https://oauth2.googleapis.com/revoke',
 };
 
 /**
  * Create a singleton instance of the Google OAuth2 service
  */
-export const googleOAuth2Service = new GoogleOAuth2Service(IntegrationGatewayOAuth2Config);
+export const googleOAuth2Service = new GoogleOAuth2Service(
+  IntegrationGatewayOAuth2Config
+);
 
 /**
  * OAuth2 Authentication Result Interface
@@ -472,20 +481,23 @@ export class OAuth2Integration {
     try {
       // Exchange authorization code for tokens
       const tokenSet = await this.service.exchangeAuthorizationCode(code);
-      
+
       // Get user information
       const userInfo = await this.service.getUserInfo(tokenSet.access_token);
-      
+
       return {
         success: true,
         user: userInfo,
-        tokenSet
+        tokenSet,
       };
     } catch (error) {
       console.error('OAuth2 callback handling failed:', error);
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error during OAuth2 callback'
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Unknown error during OAuth2 callback',
       };
     }
   }
@@ -503,16 +515,16 @@ export class OAuth2Integration {
    */
   addAuthToRequest(config: any, accessToken?: string): any {
     const token = accessToken || this.getAccessToken();
-    
+
     if (!token) {
       console.warn('No access token available for request');
       return config;
     }
-    
+
     if (!config.headers) {
       config.headers = {};
     }
-    
+
     config.headers['Authorization'] = `Bearer ${token}`;
     return config;
   }
@@ -523,7 +535,8 @@ export class OAuth2Integration {
   getAccessToken(): string | null {
     try {
       // This will trigger auto-refresh if token is expired
-      return this.service.getUserInfo()
+      return this.service
+        .getUserInfo()
         .then(() => null) // This should never happen as getUserInfo will return user info
         .catch(() => null);
     } catch (error) {
@@ -537,25 +550,29 @@ export class OAuth2Integration {
   async logout(tokenSet: TokenSet): Promise<boolean> {
     try {
       let success = true;
-      
+
       // Revoke access token if available
       if (tokenSet.access_token) {
-        const accessTokenRevoked = await this.service.revokeToken(tokenSet.access_token);
+        const accessTokenRevoked = await this.service.revokeToken(
+          tokenSet.access_token
+        );
         if (!accessTokenRevoked) {
           console.warn('Failed to revoke access token');
           success = false;
         }
       }
-      
+
       // Revoke refresh token if available
       if (tokenSet.refresh_token) {
-        const refreshTokenRevoked = await this.service.revokeToken(tokenSet.refresh_token);
+        const refreshTokenRevoked = await this.service.revokeToken(
+          tokenSet.refresh_token
+        );
         if (!refreshTokenRevoked) {
           console.warn('Failed to revoke refresh token');
           success = false;
         }
       }
-      
+
       return success;
     } catch (error) {
       console.error('Logout failed:', error);
@@ -605,7 +622,7 @@ export function initOAuth2Middleware(app: any) {
     const state = crypto.randomBytes(16).toString('hex');
     // Store state in session for CSRF protection (assuming express-session is used)
     req.session.oauthState = state;
-    
+
     const loginUrl = oauth2Integration.getLoginUrl(state);
     res.redirect(loginUrl);
   });
@@ -613,29 +630,29 @@ export function initOAuth2Middleware(app: any) {
   // Handle OAuth callback
   app.get('/auth/callback', async (req: any, res: any) => {
     const { code, state } = req.query;
-    
+
     // Verify state for CSRF protection
     if (req.session.oauthState !== state) {
       return res.status(403).send('Invalid state parameter');
     }
-    
+
     // Clear oauth state from session
     delete req.session.oauthState;
-    
+
     try {
       const authResult = await oauth2Integration.handleCallback(code);
-      
+
       if (!authResult.success) {
         return res.redirect('/login?error=auth_failed');
       }
-      
+
       // Map Google user to system user
       const systemUser = oauth2Integration.mapToSystemUser(authResult.user!);
-      
+
       // Store user in session
       req.session.user = systemUser;
       req.session.tokenSet = authResult.tokenSet;
-      
+
       // Redirect to success page or dashboard
       res.redirect('/dashboard');
     } catch (error) {
@@ -647,11 +664,11 @@ export function initOAuth2Middleware(app: any) {
   // Logout endpoint
   app.get('/auth/logout', async (req: any, res: any) => {
     const tokenSet = req.session.tokenSet;
-    
+
     if (tokenSet) {
       await oauth2Integration.logout(tokenSet);
     }
-    
+
     // Clear session
     req.session.destroy((err: any) => {
       if (err) {

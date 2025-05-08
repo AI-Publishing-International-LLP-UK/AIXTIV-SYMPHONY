@@ -1,8 +1,8 @@
 /**
  * Dream Commander Authentication Framework
- * 
+ *
  * Comprehensive Agent Authentication Process
- * 
+ *
  * Core Authentication Workflow:
  * 1. Multi-Source Profile Aggregation
  * 2. Confidence Score Calculation
@@ -56,22 +56,23 @@ class DreamCommanderAuthenticator {
       );
 
       // Step 2: Confidence Score Calculation
-      const confidenceScores = this.confidenceCalculator.calculateComprehensiveScore({
-        linkedInProfile,
-        drMatchProfile,
-        agentSpecialization: context.agent.specialization
-      });
+      const confidenceScores =
+        this.confidenceCalculator.calculateComprehensiveScore({
+          linkedInProfile,
+          drMatchProfile,
+          agentSpecialization: context.agent.specialization,
+        });
 
       // Step 3: Unique Identifier Generation
       const uniqueId = this.uniqueIdGenerator.generate({
         profileData: linkedInProfile,
         drMatchData: drMatchProfile,
-        confidenceScores
+        confidenceScores,
       });
 
       // Step 4: Cultural Empathy (CE) Rating Derivation
       const ceRating = this.calculateCulturalEmpathyRating(
-        linkedInProfile, 
+        linkedInProfile,
         drMatchProfile
       );
 
@@ -83,15 +84,17 @@ class DreamCommanderAuthenticator {
         confidenceScores: {
           overall: confidenceScores.overallConfidence,
           professionalDomain: confidenceScores.domainConfidence,
-          profileAuthenticity: confidenceScores.profileAuthenticity
+          profileAuthenticity: confidenceScores.profileAuthenticity,
         },
         culturalEmpathyRating: ceRating,
-        authenticationTimestamp: new Date().toISOString()
+        authenticationTimestamp: new Date().toISOString(),
       };
     } catch (error) {
       // Comprehensive Error Handling
       console.error('Authentication Process Failed', error);
-      throw new Error('Agent Authentication Failed: Comprehensive Verification Unsuccessful');
+      throw new Error(
+        'Agent Authentication Failed: Comprehensive Verification Unsuccessful'
+      );
     }
   }
 
@@ -100,7 +103,7 @@ class DreamCommanderAuthenticator {
    * Derives a nuanced understanding of professional and interpersonal compatibility
    */
   private calculateCulturalEmpathyRating(
-    linkedInProfile: any, 
+    linkedInProfile: any,
     drMatchProfile: any
   ): number {
     // Complex multi-dimensional CE rating calculation
@@ -110,10 +113,13 @@ class DreamCommanderAuthenticator {
     // - Collaborative indicators
     // - Interpersonal skill markers
     const ceComponents = {
-      professionalAlignment: this.calculateProfessionalAlignment(linkedInProfile, drMatchProfile),
+      professionalAlignment: this.calculateProfessionalAlignment(
+        linkedInProfile,
+        drMatchProfile
+      ),
       networkDiversity: this.assessNetworkDiversity(linkedInProfile),
       collaborativeCapacity: this.evaluateCollaborativeSkills(drMatchProfile),
-      adaptabilityIndex: this.computeAdaptabilityScore(linkedInProfile)
+      adaptabilityIndex: this.computeAdaptabilityScore(linkedInProfile),
     };
 
     // Weighted aggregation of CE components
@@ -147,11 +153,12 @@ class DreamCommanderAuthenticator {
       professionalAlignment: 0.35,
       networkDiversity: 0.25,
       collaborativeCapacity: 0.25,
-      adaptabilityIndex: 0.15
+      adaptabilityIndex: 0.15,
     };
 
-    return Object.keys(components).reduce((score, key) => 
-      score + (components[key] * weights[key]), 0
+    return Object.keys(components).reduce(
+      (score, key) => score + components[key] * weights[key],
+      0
     );
   }
 }
@@ -159,17 +166,17 @@ class DreamCommanderAuthenticator {
 // Example Usage
 async function runAuthenticationTest() {
   const authenticator = new DreamCommanderAuthenticator();
-  
+
   const authResult = await authenticator.authenticateAgent({
     ownerSubscriber: {
       name: 'Phillip Corey Roark',
       professionalDomain: 'Technological Ecosystem Architecture',
-      linkedInProfile: 'phillipcorey'
+      linkedInProfile: 'phillipcorey',
     },
     agent: {
       name: 'Lucy',
-      specialization: 'Strategic Intelligence'
-    }
+      specialization: 'Strategic Intelligence',
+    },
   });
 
   console.log('Authentication Result:', authResult);

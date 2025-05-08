@@ -1,17 +1,38 @@
 /**
  * AIXTIV SYMPHONY™ Agent Orchestration
  * © 2025 AI Publishing International LLP
- * 
+ *
  * PROPRIETARY AND CONFIDENTIAL
  * This is proprietary software of AI Publishing International LLP.
  * All rights reserved. No part of this software may be reproduced,
  * modified, or distributed without prior written permission.
  */
 
-import { AgentService, ConversationService, ActivityLoggerService, PerformanceMetricsService } from '../core';
+import {
+  AgentService,
+  ConversationService,
+  ActivityLoggerService,
+  PerformanceMetricsService,
+} from '../core';
 import { PineconeClient, QueryResponse } from '@pinecone-database/pinecone';
-import { getFirestore, collection, doc, getDoc, getDocs, query, where, Timestamp, documentId, limit, orderBy } from 'firebase/firestore';
-import { getFunctions, httpsCallable, HttpsCallableResult } from 'firebase/functions';
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+  Timestamp,
+  documentId,
+  limit,
+  orderBy,
+} from 'firebase/firestore';
+import {
+  getFunctions,
+  httpsCallable,
+  HttpsCallableResult,
+} from 'firebase/functions';
 import { PilotType, PerformanceProfile } from '../core/types';
 import { ethers } from 'ethers';
 import * as CryptoJS from 'crypto-js';
@@ -23,7 +44,7 @@ const functions = getFunctions();
 // Initialize Pinecone
 const pinecone = new PineconeClient({
   apiKey: process.env.PINECONE_API_KEY || '',
-  environment: process.env.PINECONE_ENVIRONMENT || ''
+  environment: process.env.PINECONE_ENVIRONMENT || '',
 });
 
 // Agent Execution Middleware Class
@@ -87,7 +108,7 @@ class AgentExecutionMiddleware {
         {
           conversationId,
           messageId: message.id,
-          responseId: agentResponse.id
+          responseId: agentResponse.id,
         }
       );
 
@@ -111,14 +132,17 @@ class AgentExecutionMiddleware {
   /**
    * Retrieve context for the conversation
    */
-  private async retrieveContext(conversationId: string, message: any): Promise<any> {
+  private async retrieveContext(
+    conversationId: string,
+    message: any
+  ): Promise<any> {
     // Basic context - recent messages
     const recentMessages = await this.getRecentMessages(conversationId, 10);
-    
+
     // Enhanced context if using high performance or ultra performance agents
     let enhancedContext = {};
     if (
-      this.performanceProfile === PerformanceProfile.HIGH_PERFORMANCE || 
+      this.performanceProfile === PerformanceProfile.HIGH_PERFORMANCE ||
       this.performanceProfile === PerformanceProfile.ULTRA_PERFORMANCE
     ) {
       // Retrieve vector context if available
@@ -126,23 +150,26 @@ class AgentExecutionMiddleware {
         const vectorContext = await this.retrieveVectorContext(message.content);
         enhancedContext = { ...enhancedContext, vectorContext };
       }
-      
+
       // Add specialized context based on agent type
       const specializedContext = await this.retrieveSpecializedContext();
       enhancedContext = { ...enhancedContext, ...specializedContext };
     }
-    
+
     return {
       recentMessages,
       currentMessage: message,
-      ...enhancedContext
+      ...enhancedContext,
     };
   }
 
   /**
    * Get recent messages from a conversation
    */
-  private async getRecentMessages(conversationId: string, count: number): Promise<any[]> {
+  private async getRecentMessages(
+    conversationId: string,
+    count: number
+  ): Promise<any[]> {
     try {
       // Get messages from conversation
       const messagesQuery = query(
@@ -152,7 +179,7 @@ class AgentExecutionMiddleware {
       );
 
       const querySnapshot = await getDocs(messagesQuery);
-      
+
       // Convert to array and reverse to get chronological order
       return querySnapshot.docs.map(doc => doc.data()).reverse();
     } catch (error) {
@@ -169,38 +196,40 @@ class AgentExecutionMiddleware {
       if (!this.vectorStoreId) {
         return [];
       }
-      
+
       // Get vector store details
-      const vectorStoreDoc = await getDoc(doc(db, 'vectorStores', this.vectorStoreId));
-      
+      const vectorStoreDoc = await getDoc(
+        doc(db, 'vectorStores', this.vectorStoreId)
+      );
+
       if (!vectorStoreDoc.exists()) {
         return [];
       }
-      
+
       const vectorStore = vectorStoreDoc.data();
-      
+
       // Generate embedding for the message content
       // In a real implementation, this would call a text embedding model API
       const embedding = await this.generateEmbedding(content);
-      
+
       // Store the embedding for future reference
       this.embeddings.push({
         text: content,
-        vector: embedding
+        vector: embedding,
       });
-      
+
       // Initialize Pinecone if needed
       await pinecone.init();
-      
+
       // Query Pinecone for similar vectors
       const index = pinecone.Index(vectorStore.indexName);
       const queryResponse = await index.query({
         queryVector: embedding,
         namespace: vectorStore.namespace,
         topK: 5,
-        includeMetadata: true
+        includeMetadata: true,
       });
-      
+
       // Extract and return relevant context
       return this.processQueryResponse(queryResponse);
     } catch (error) {
@@ -218,13 +247,15 @@ class AgentExecutionMiddleware {
       // For now, use Firebase Function to generate embedding
       const generateEmbeddingFn = httpsCallable(functions, 'generateEmbedding');
       const result = await generateEmbeddingFn({ text });
-      
+
       return (result.data as any).embedding;
     } catch (error) {
       console.error('Error generating embedding:', error);
-      
+
       // Return a placeholder embedding (this would never be used in production)
-      return Array(1536).fill(0).map(() => Math.random() * 2 - 1);
+      return Array(1536)
+        .fill(0)
+        .map(() => Math.random() * 2 - 1);
     }
   }
 
@@ -235,11 +266,11 @@ class AgentExecutionMiddleware {
     if (!queryResponse.matches || queryResponse.matches.length === 0) {
       return [];
     }
-    
+
     return queryResponse.matches.map(match => ({
       id: match.id,
       score: match.score,
-      metadata: match.metadata
+      metadata: match.metadata,
     }));
   }
 
@@ -281,7 +312,7 @@ class AgentExecutionMiddleware {
       );
 
       const querySnapshot = await getDocs(memoryQuery);
-      
+
       // Extract and return memory objects
       return {
         memories: querySnapshot.docs.map(doc => doc.data()),
@@ -289,14 +320,14 @@ class AgentExecutionMiddleware {
           'record_memories',
           'analyze_memories',
           'connect_memories',
-          'organize_memories'
-        ]
+          'organize_memories',
+        ],
       };
     } catch (error) {
       console.error('Error retrieving Memoria context:', error);
       return {
         memories: [],
-        memoryCapabilities: []
+        memoryCapabilities: [],
       };
     }
   }
@@ -308,28 +339,28 @@ class AgentExecutionMiddleware {
     try {
       // Get owner's profile data
       const ownerData = await this.getOwnerProfile();
-      
+
       // Get integration status
       const linkedinIntegration = await this.checkIntegrationStatus('LINKEDIN');
-      
+
       return {
         profile: ownerData,
         integrations: {
-          linkedin: linkedinIntegration
+          linkedin: linkedinIntegration,
         },
         matchCapabilities: [
           'profile_analysis',
           'network_recommendations',
           'content_suggestions',
-          'engagement_analytics'
-        ]
+          'engagement_analytics',
+        ],
       };
     } catch (error) {
       console.error('Error retrieving Match context:', error);
       return {
         profile: {},
         integrations: {},
-        matchCapabilities: []
+        matchCapabilities: [],
       };
     }
   }
@@ -350,21 +381,21 @@ class AgentExecutionMiddleware {
       );
 
       const querySnapshot = await getDocs(dreamQuery);
-      
+
       return {
         dreams: querySnapshot.docs.map(doc => doc.data()),
         visualizationCapabilities: [
           'dream_interpretation',
           'visual_generation',
           'pattern_recognition',
-          'metaphor_analysis'
-        ]
+          'metaphor_analysis',
+        ],
       };
     } catch (error) {
       console.error('Error retrieving Lucy context:', error);
       return {
         dreams: [],
-        visualizationCapabilities: []
+        visualizationCapabilities: [],
       };
     }
   }
@@ -375,12 +406,13 @@ class AgentExecutionMiddleware {
   private async retrieveMariaContext(): Promise<any> {
     try {
       // Get cultural adaptation settings
-      const culturalSettings = this.agentInstance.culturalAdaptationSettings || {};
-      
+      const culturalSettings =
+        this.agentInstance.culturalAdaptationSettings || {};
+
       // Get owner's language preferences
       const ownerData = await this.getOwnerProfile();
       const language = ownerData.locale || 'en_US';
-      
+
       return {
         culturalSettings,
         language,
@@ -389,8 +421,8 @@ class AgentExecutionMiddleware {
           'language_translation',
           'cultural_adaptation',
           'localization',
-          'idiomatic_expression'
-        ]
+          'idiomatic_expression',
+        ],
       };
     } catch (error) {
       console.error('Error retrieving Maria context:', error);
@@ -398,7 +430,7 @@ class AgentExecutionMiddleware {
         culturalSettings: {},
         language: 'en_US',
         region: 'global',
-        translationCapabilities: []
+        translationCapabilities: [],
       };
     }
   }
@@ -409,13 +441,17 @@ class AgentExecutionMiddleware {
   private async getOwnerProfile(): Promise<any> {
     try {
       if (this.agentInstance.ownerType === 'user') {
-        const userDoc = await getDoc(doc(db, 'users', this.agentInstance.ownerId));
+        const userDoc = await getDoc(
+          doc(db, 'users', this.agentInstance.ownerId)
+        );
         return userDoc.exists() ? userDoc.data() : {};
       } else if (this.agentInstance.ownerType === 'organization') {
-        const orgDoc = await getDoc(doc(db, 'organizations', this.agentInstance.ownerId));
+        const orgDoc = await getDoc(
+          doc(db, 'organizations', this.agentInstance.ownerId)
+        );
         return orgDoc.exists() ? orgDoc.data() : {};
       }
-      
+
       return {};
     } catch (error) {
       console.error('Error getting owner profile:', error);
@@ -435,17 +471,20 @@ class AgentExecutionMiddleware {
       );
 
       const querySnapshot = await getDocs(integrationQuery);
-      
+
       if (querySnapshot.empty) {
         return { connected: false };
       }
-      
+
       return {
         connected: true,
-        connectionDetails: querySnapshot.docs[0].data()
+        connectionDetails: querySnapshot.docs[0].data(),
       };
     } catch (error) {
-      console.error(`Error checking ${integrationType} integration status:`, error);
+      console.error(
+        `Error checking ${integrationType} integration status:`,
+        error
+      );
       return { connected: false };
     }
   }
@@ -457,10 +496,13 @@ class AgentExecutionMiddleware {
     try {
       // Prepare agent execution
       await this.prepareAgentExecution();
-      
+
       // Call agent execution function based on agent type
-      const agentFunction = httpsCallable(functions, `execute_${this.agentType.toLowerCase()}`);
-      
+      const agentFunction = httpsCallable(
+        functions,
+        `execute_${this.agentType.toLowerCase()}`
+      );
+
       const executionPayload = {
         message: message,
         context: context,
@@ -469,25 +511,26 @@ class AgentExecutionMiddleware {
           name: this.agentInstance.name,
           performanceProfile: this.performanceProfile,
           communicationSettings: this.agentInstance.communicationSettings,
-          culturalAdaptationSettings: this.agentInstance.culturalAdaptationSettings
-        }
+          culturalAdaptationSettings:
+            this.agentInstance.culturalAdaptationSettings,
+        },
       };
-      
+
       // Execute the agent function
       const result = await agentFunction(executionPayload);
-      
+
       // Process and return the result
       return this.processAgentResult(result);
     } catch (error) {
       console.error('Error executing agent logic:', error);
-      
+
       // Return fallback response
       return {
         content: `I apologize, but I encountered an issue while processing your message. Let's try again or rephrase your request.`,
         metadata: {
           error: error.toString(),
-          fallback: true
-        }
+          fallback: true,
+        },
       };
     }
   }
@@ -498,9 +541,9 @@ class AgentExecutionMiddleware {
   private async prepareAgentExecution(): Promise<void> {
     // Update agent activity timestamp
     await AgentService.updateAgentInstance(this.agentInstance.id, {
-      'metadata.lastActive': Timestamp.now()
+      'metadata.lastActive': Timestamp.now(),
     });
-    
+
     // Additional preparation based on performance profile
     if (this.performanceProfile === PerformanceProfile.ULTRA_PERFORMANCE) {
       // Prepare cache for ultra performance
@@ -521,16 +564,16 @@ class AgentExecutionMiddleware {
    */
   private processAgentResult(result: HttpsCallableResult<any>): any {
     const resultData = result.data;
-    
+
     // Perform response filtering and enhancement
     if (
-      this.performanceProfile === PerformanceProfile.HIGH_PERFORMANCE || 
+      this.performanceProfile === PerformanceProfile.HIGH_PERFORMANCE ||
       this.performanceProfile === PerformanceProfile.ULTRA_PERFORMANCE
     ) {
       // Apply advanced processing for high/ultra performance
       return this.enhanceResponse(resultData);
     }
-    
+
     // Return the standard response
     return resultData;
   }
@@ -562,21 +605,21 @@ class AgentExecutionMiddleware {
     if (response.metadata?.memoryReferences) {
       const memories = response.metadata.memoryReferences;
       let enhancedContent = response.content;
-      
+
       // Add memory reference notes if applicable
       if (memories.length > 0) {
-        enhancedContent += "\n\n*Memory References:*\n";
+        enhancedContent += '\n\n*Memory References:*\n';
         memories.forEach((memory: any, index: number) => {
           enhancedContent += `${index + 1}. ${memory.title} (${memory.date})\n`;
         });
       }
-      
+
       return {
         ...response,
-        content: enhancedContent
+        content: enhancedContent,
       };
     }
-    
+
     return response;
   }
 
@@ -585,21 +628,24 @@ class AgentExecutionMiddleware {
    */
   private enhanceMatchResponse(response: any): any {
     // Add LinkedIn integration notes if applicable
-    if (response.metadata?.linkedinIntegration && response.metadata.linkedinAction) {
+    if (
+      response.metadata?.linkedinIntegration &&
+      response.metadata.linkedinAction
+    ) {
       let enhancedContent = response.content;
-      
+
       enhancedContent += `\n\n*LinkedIn Action:* ${response.metadata.linkedinAction}\n`;
-      
+
       if (response.metadata.linkedinResults) {
         enhancedContent += `Results: ${response.metadata.linkedinResults}\n`;
       }
-      
+
       return {
         ...response,
-        content: enhancedContent
+        content: enhancedContent,
       };
     }
-    
+
     return response;
   }
 
@@ -611,21 +657,21 @@ class AgentExecutionMiddleware {
     if (response.metadata?.translation) {
       const translation = response.metadata.translation;
       let enhancedContent = response.content;
-      
+
       if (translation.sourceLanguage && translation.targetLanguage) {
         enhancedContent += `\n\n*Translation:* ${translation.sourceLanguage} → ${translation.targetLanguage}\n`;
-        
+
         if (translation.culturalNotes) {
           enhancedContent += `*Cultural Context:* ${translation.culturalNotes}\n`;
         }
       }
-      
+
       return {
         ...response,
-        content: enhancedContent
+        content: enhancedContent,
       };
     }
-    
+
     return response;
   }
 }
@@ -645,22 +691,26 @@ export class AgentOrchestrationManager {
     if (!AgentOrchestrationManager.instance) {
       AgentOrchestrationManager.instance = new AgentOrchestrationManager();
     }
-    
+
     return AgentOrchestrationManager.instance;
   }
 
   /**
    * Process a message with an agent
    */
-  public async processMessage(agentId: string, message: any, conversationId: string): Promise<any> {
+  public async processMessage(
+    agentId: string,
+    message: any,
+    conversationId: string
+  ): Promise<any> {
     try {
       // Get or create agent middleware
       const agentMiddleware = await this.getAgentMiddleware(agentId);
-      
+
       if (!agentMiddleware) {
         throw new Error(`Agent ${agentId} not found or not active`);
       }
-      
+
       // Process the message
       return await agentMiddleware.processMessage(message, conversationId);
     } catch (error) {
@@ -672,30 +722,35 @@ export class AgentOrchestrationManager {
   /**
    * Create or get an agent execution middleware
    */
-  private async getAgentMiddleware(agentId: string): Promise<AgentExecutionMiddleware | null> {
+  private async getAgentMiddleware(
+    agentId: string
+  ): Promise<AgentExecutionMiddleware | null> {
     // Check if agent middleware already exists
     if (this.activeAgents.has(agentId)) {
       return this.activeAgents.get(agentId) || null;
     }
-    
+
     // Get agent data
     const agent = await AgentService.getAgentById(agentId);
-    
+
     if (!agent || agent.status !== 'active') {
       return null;
     }
-    
+
     // Create new middleware
     const middleware = new AgentExecutionMiddleware(agent);
     this.activeAgents.set(agentId, middleware);
-    
+
     return middleware;
   }
 
   /**
    * Get all active agents by owner
    */
-  public async getActiveAgentsByOwner(ownerType: string, ownerId: string): Promise<any[]> {
+  public async getActiveAgentsByOwner(
+    ownerType: string,
+    ownerId: string
+  ): Promise<any[]> {
     try {
       return await AgentService.getAgentsByOwner(ownerType, ownerId);
     } catch (error) {
@@ -721,18 +776,21 @@ export class AgentOrchestrationManager {
    */
   public async updateAgent(agentId: string, data: any): Promise<any> {
     try {
-      const updatedAgent = await AgentService.updateAgentInstance(agentId, data);
-      
+      const updatedAgent = await AgentService.updateAgentInstance(
+        agentId,
+        data
+      );
+
       // Update middleware if exists
       if (updatedAgent && this.activeAgents.has(agentId)) {
         // Remove old middleware
         this.activeAgents.delete(agentId);
-        
+
         // Create new middleware with updated agent data
         const middleware = new AgentExecutionMiddleware(updatedAgent);
         this.activeAgents.set(agentId, middleware);
       }
-      
+
       return updatedAgent;
     } catch (error) {
       console.error('Error updating agent:', error);
@@ -752,11 +810,11 @@ export class AgentOrchestrationManager {
     try {
       // Get agent data
       const agent = await AgentService.getAgentById(agentId);
-      
+
       if (!agent || agent.status !== 'active') {
         throw new Error(`Agent ${agentId} not found or not active`);
       }
-      
+
       // Create conversation
       const conversation = await ConversationService.createConversation(
         title,
@@ -764,10 +822,10 @@ export class AgentOrchestrationManager {
         initiatorId,
         [
           { type: initiatorType, id: initiatorId },
-          { type: 'agent', id: agentId }
+          { type: 'agent', id: agentId },
         ]
       );
-      
+
       return conversation;
     } catch (error) {
       console.error('Error creating conversation with agent:', error);
@@ -791,17 +849,21 @@ export class AgentNFTManager {
     this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     this.contractAddress = contractAddress;
     this.aixtivWallet = new ethers.Wallet(privateKey, this.provider);
-    
+
     // ABI for ERC-721 NFT contract with metadata
     const abi = [
       'function mint(address to, string memory tokenURI) external returns (uint256)',
       'function ownerOf(uint256 tokenId) external view returns (address)',
       'function transferFrom(address from, address to, uint256 tokenId) external',
       'function tokenURI(uint256 tokenId) external view returns (string memory)',
-      'event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)'
+      'event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)',
     ];
-    
-    this.contract = new ethers.Contract(contractAddress, abi, this.aixtivWallet);
+
+    this.contract = new ethers.Contract(
+      contractAddress,
+      abi,
+      this.aixtivWallet
+    );
   }
 
   /**
@@ -815,18 +877,26 @@ export class AgentNFTManager {
     try {
       // Upload metadata to IPFS
       const metadataUri = await this.uploadMetadataToIPFS(metadata);
-      
+
       // Mint the NFT
       const tx = await this.contract.mint(ownerAddress, metadataUri);
       const receipt = await tx.wait();
-      
+
       // Get the token ID from the Transfer event
-      const transferEvent = receipt.events.find((e: any) => e.event === 'Transfer');
+      const transferEvent = receipt.events.find(
+        (e: any) => e.event === 'Transfer'
+      );
       const tokenId = transferEvent.args.tokenId.toString();
-      
+
       // Create NFT record in Firestore
-      await this.createNFTRecord(agentId, tokenId, ownerAddress, metadataUri, receipt.transactionHash);
-      
+      await this.createNFTRecord(
+        agentId,
+        tokenId,
+        ownerAddress,
+        metadataUri,
+        receipt.transactionHash
+      );
+
       return tokenId;
     } catch (error) {
       console.error('Error minting agent NFT:', error);
@@ -844,12 +914,16 @@ export class AgentNFTManager {
   ): Promise<string> {
     try {
       // Transfer the NFT
-      const tx = await this.contract.transferFrom(fromAddress, toAddress, tokenId);
+      const tx = await this.contract.transferFrom(
+        fromAddress,
+        toAddress,
+        tokenId
+      );
       const receipt = await tx.wait();
-      
+
       // Update NFT record in Firestore
       await this.updateNFTRecord(tokenId, toAddress, receipt.transactionHash);
-      
+
       return receipt.transactionHash;
     } catch (error) {
       console.error('Error transferring agent NFT:', error);
@@ -876,7 +950,9 @@ export class AgentNFTManager {
     try {
       // In a real implementation, this would upload to IPFS
       // For now, return a mock IPFS URI
-      const metadataHash = CryptoJS.SHA256(JSON.stringify(metadata)).toString().substring(0, 16);
+      const metadataHash = CryptoJS.SHA256(JSON.stringify(metadata))
+        .toString()
+        .substring(0, 16);
       return `ipfs://${metadataHash}`;
     } catch (error) {
       console.error('Error uploading metadata to IPFS:', error);
@@ -904,7 +980,7 @@ export class AgentNFTManager {
         contractAddress: this.contractAddress,
         blockchainNetwork: 'ethereum',
         metadata: {
-          uri: metadataUri
+          uri: metadataUri,
         },
         mintedAt: Timestamp.now(),
         transferHistory: [
@@ -912,18 +988,18 @@ export class AgentNFTManager {
             fromAddress: '0x0000000000000000000000000000000000000000',
             toAddress: ownerAddress,
             transactionId: transactionHash,
-            timestamp: Timestamp.now()
-          }
-        ]
+            timestamp: Timestamp.now(),
+          },
+        ],
       };
-      
+
       await setDoc(doc(db, 'nftTokens', nftData.id), nftData);
-      
+
       // Update agent with NFT reference
       await AgentService.updateAgentInstance(agentId, {
         'metadata.nftTokenId': tokenId,
         'metadata.nftContractAddress': this.contractAddress,
-        updatedAt: Timestamp.now()
+        updatedAt: Timestamp.now(),
       });
     } catch (error) {
       console.error('Error creating NFT record:', error);
@@ -948,38 +1024,45 @@ export class AgentNFTManager {
       );
 
       const querySnapshot = await getDocs(nftQuery);
-      
+
       if (querySnapshot.empty) {
         throw new Error('NFT record not found');
       }
-      
+
       const nftDoc = querySnapshot.docs[0];
       const nftData = nftDoc.data();
-      
+
       // Update owner and transfer history
       const transferEvent = {
         fromAddress: nftData.ownerAddress,
         toAddress: newOwnerAddress,
         transactionId: transactionHash,
-        timestamp: Timestamp.now()
+        timestamp: Timestamp.now(),
       };
-      
+
       await updateDoc(doc(db, 'nftTokens', nftDoc.id), {
         ownerAddress: newOwnerAddress,
         transferHistory: [...nftData.transferHistory, transferEvent],
-        updatedAt: Timestamp.now()
+        updatedAt: Timestamp.now(),
       });
-      
+
       // Update agent owner if applicable
       if (nftData.linkedRecordId && nftData.tokenType === 'agent') {
-        const agentDoc = await getDoc(doc(db, 'agents', nftData.linkedRecordId));
-        
+        const agentDoc = await getDoc(
+          doc(db, 'agents', nftData.linkedRecordId)
+        );
+
         if (agentDoc.exists()) {
           // Determine owner type based on address pattern
           // This is a simplified approach - in practice, you'd need a more robust system
-          const newOwnerType = newOwnerAddress.startsWith('org_') ? 'organization' : 'user';
-          const newOwnerId = await this.resolveAddressToId(newOwnerAddress, newOwnerType);
-          
+          const newOwnerType = newOwnerAddress.startsWith('org_')
+            ? 'organization'
+            : 'user';
+          const newOwnerId = await this.resolveAddressToId(
+            newOwnerAddress,
+            newOwnerType
+          );
+
           // Update agent owner
           await AgentService.updateAgentInstance(nftData.linkedRecordId, {
             ownerType: newOwnerType,
@@ -987,9 +1070,9 @@ export class AgentNFTManager {
             'metadata.ownershipTransferred': true,
             'metadata.previousOwner': {
               ownerType: agentDoc.data().ownerType,
-              ownerId: agentDoc.data().ownerId
+              ownerId: agentDoc.data().ownerId,
             },
-            updatedAt: Timestamp.now()
+            updatedAt: Timestamp.now(),
           });
         }
       }
@@ -1002,22 +1085,31 @@ export class AgentNFTManager {
   /**
    * Resolve blockchain address to user/organization ID
    */
-  private async resolveAddressToId(address: string, ownerType: string): Promise<string> {
+  private async resolveAddressToId(
+    address: string,
+    ownerType: string
+  ): Promise<string> {
     try {
       let collection = ownerType === 'user' ? 'users' : 'organizations';
-      
+
       // Query for entity with matching blockchain address
       const entityQuery = query(
         collection(db, collection),
-        where(ownerType === 'user' ? 'blockchainAddress' : 'blockchainVerification.address', '==', address)
+        where(
+          ownerType === 'user'
+            ? 'blockchainAddress'
+            : 'blockchainVerification.address',
+          '==',
+          address
+        )
       );
 
       const querySnapshot = await getDocs(entityQuery);
-      
+
       if (querySnapshot.empty) {
         throw new Error(`No ${ownerType} found with address ${address}`);
       }
-      
+
       return querySnapshot.docs[0].id;
     } catch (error) {
       console.error('Error resolving address to ID:', error);
@@ -1046,17 +1138,17 @@ export class MultiAgentCollaborationSystem {
     try {
       // Validate agents
       const agents = await this.validateAgents(agentIds);
-      
+
       if (agents.length === 0) {
         throw new Error('No valid agents provided');
       }
-      
+
       // Prepare participants
       const participants = [
         { type: initiatorType, id: initiatorId },
-        ...agents.map(agent => ({ type: 'agent', id: agent.id }))
+        ...agents.map(agent => ({ type: 'agent', id: agent.id })),
       ];
-      
+
       // Create conversation
       const conversation = await ConversationService.createConversation(
         title,
@@ -1064,17 +1156,17 @@ export class MultiAgentCollaborationSystem {
         initiatorId,
         participants
       );
-      
+
       // Add metadata about the multi-agent setup
       await updateDoc(doc(db, 'conversations', conversation.id), {
         'metadata.isMultiAgent': true,
         'metadata.agentRoles': agents.map(agent => ({
           agentId: agent.id,
           agentType: agent.agentTypeId,
-          name: agent.name
-        }))
+          name: agent.name,
+        })),
       });
-      
+
       return conversation;
     } catch (error) {
       console.error('Error creating multi-agent conversation:', error);
@@ -1091,19 +1183,21 @@ export class MultiAgentCollaborationSystem {
   ): Promise<any[]> {
     try {
       // Get conversation data
-      const conversationDoc = await getDoc(doc(db, 'conversations', conversationId));
-      
+      const conversationDoc = await getDoc(
+        doc(db, 'conversations', conversationId)
+      );
+
       if (!conversationDoc.exists()) {
         throw new Error('Conversation not found');
       }
-      
+
       const conversation = conversationDoc.data();
-      
+
       // Check if it's a multi-agent conversation
       if (!conversation.metadata?.isMultiAgent) {
         throw new Error('Not a multi-agent conversation');
       }
-      
+
       // Get agent participants
       const participantsQuery = query(
         collection(db, 'conversations', conversationId, 'participants'),
@@ -1113,13 +1207,13 @@ export class MultiAgentCollaborationSystem {
 
       const querySnapshot = await getDocs(participantsQuery);
       const agentParticipants = querySnapshot.docs.map(doc => doc.data());
-      
+
       // Process message with each agent
       const responses = [];
-      
+
       for (const participant of agentParticipants) {
         const agentId = participant.participantId;
-        
+
         // Determine if this agent should respond
         // This could be based on roles, turn-taking, etc.
         if (await this.shouldAgentRespond(agentId, conversationId, message)) {
@@ -1128,11 +1222,11 @@ export class MultiAgentCollaborationSystem {
             message,
             conversationId
           );
-          
+
           responses.push(response);
         }
       }
-      
+
       return responses;
     } catch (error) {
       console.error('Error processing multi-agent message:', error);
@@ -1146,15 +1240,15 @@ export class MultiAgentCollaborationSystem {
   private async validateAgents(agentIds: string[]): Promise<any[]> {
     try {
       const agents = [];
-      
+
       for (const agentId of agentIds) {
         const agent = await AgentService.getAgentById(agentId);
-        
+
         if (agent && agent.status === 'active') {
           agents.push(agent);
         }
       }
-      
+
       return agents;
     } catch (error) {
       console.error('Error validating agents:', error);
@@ -1172,50 +1266,52 @@ export class MultiAgentCollaborationSystem {
   ): Promise<boolean> {
     try {
       // Get conversation metadata
-      const conversationDoc = await getDoc(doc(db, 'conversations', conversationId));
-      
+      const conversationDoc = await getDoc(
+        doc(db, 'conversations', conversationId)
+      );
+
       if (!conversationDoc.exists()) {
         return false;
       }
-      
+
       const conversation = conversationDoc.data();
-      
+
       // Get agent role
       const agentRole = conversation.metadata?.agentRoles?.find(
         (role: any) => role.agentId === agentId
       );
-      
+
       if (!agentRole) {
         return false;
       }
-      
+
       // Get agent
       const agent = await AgentService.getAgentById(agentId);
-      
+
       if (!agent || agent.status !== 'active') {
         return false;
       }
-      
+
       // Determine response strategy based on agent type
       switch (agent.agentTypeId) {
         case PilotType.DR_MATCH_PILOT:
           // Dr. Match responds to messages with networking keywords
           return this.containsMatchKeywords(message.content);
-        
+
         case PilotType.DR_LUCIA_PILOT:
           // Dr. Lucy responds to messages with visualization/dream keywords
           return this.containsLucyKeywords(message.content);
-        
+
         case PilotType.DR_MARIA_HISTORICAL_01:
         case PilotType.DR_MARIA_HISTORICAL_02:
         case PilotType.DR_MARIA_HISTORICAL_03:
           // Dr. Maria responds to messages with language/cultural keywords
           return this.containsMariaKeywords(message.content);
-        
+
         case PilotType.DR_MEMORIA_PILOT:
           // Dr. Memoria responds to messages with memory keywords
           return this.containsMemoriaKeywords(message.content);
-        
+
         default:
           // Default to responding
           return true;
@@ -1231,10 +1327,18 @@ export class MultiAgentCollaborationSystem {
    */
   private containsMatchKeywords(content: string): boolean {
     const keywords = [
-      'network', 'connection', 'linkedin', 'profile', 'professional',
-      'contact', 'job', 'career', 'opportunity', 'recommendation'
+      'network',
+      'connection',
+      'linkedin',
+      'profile',
+      'professional',
+      'contact',
+      'job',
+      'career',
+      'opportunity',
+      'recommendation',
     ];
-    
+
     return this.containsKeywords(content, keywords);
   }
 
@@ -1243,10 +1347,18 @@ export class MultiAgentCollaborationSystem {
    */
   private containsLucyKeywords(content: string): boolean {
     const keywords = [
-      'dream', 'visualization', 'image', 'picture', 'visual',
-      'imagine', 'see', 'vision', 'creativity', 'creative'
+      'dream',
+      'visualization',
+      'image',
+      'picture',
+      'visual',
+      'imagine',
+      'see',
+      'vision',
+      'creativity',
+      'creative',
     ];
-    
+
     return this.containsKeywords(content, keywords);
   }
 
@@ -1255,10 +1367,18 @@ export class MultiAgentCollaborationSystem {
    */
   private containsMariaKeywords(content: string): boolean {
     const keywords = [
-      'language', 'translate', 'culture', 'cultural', 'international',
-      'global', 'localize', 'region', 'country', 'foreign'
+      'language',
+      'translate',
+      'culture',
+      'cultural',
+      'international',
+      'global',
+      'localize',
+      'region',
+      'country',
+      'foreign',
     ];
-    
+
     return this.containsKeywords(content, keywords);
   }
 
@@ -1267,10 +1387,18 @@ export class MultiAgentCollaborationSystem {
    */
   private containsMemoriaKeywords(content: string): boolean {
     const keywords = [
-      'memory', 'remember', 'recall', 'store', 'save',
-      'archive', 'record', 'history', 'past', 'journal'
+      'memory',
+      'remember',
+      'recall',
+      'store',
+      'save',
+      'archive',
+      'record',
+      'history',
+      'past',
+      'journal',
     ];
-    
+
     return this.containsKeywords(content, keywords);
   }
 
@@ -1279,7 +1407,9 @@ export class MultiAgentCollaborationSystem {
    */
   private containsKeywords(content: string, keywords: string[]): boolean {
     const lowerContent = content.toLowerCase();
-    return keywords.some(keyword => lowerContent.includes(keyword.toLowerCase()));
+    return keywords.some(keyword =>
+      lowerContent.includes(keyword.toLowerCase())
+    );
   }
 }
 
@@ -1288,5 +1418,5 @@ export default {
   AgentExecutionMiddleware,
   AgentOrchestrationManager,
   AgentNFTManager,
-  MultiAgentCollaborationSystem
+  MultiAgentCollaborationSystem,
 };

@@ -10,15 +10,22 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   sendEmailVerification,
-  EmailAuthProvider
+  EmailAuthProvider,
 } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
-import { 
-  User, 
-  UserType, 
-  AuthProvider, 
-  UserAuthLevel, 
-  USER_TYPES 
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  serverTimestamp,
+} from 'firebase/firestore';
+import {
+  User,
+  UserType,
+  AuthProvider,
+  UserAuthLevel,
+  USER_TYPES,
 } from './user-auth-types';
 
 // Your Firebase configuration
@@ -29,7 +36,7 @@ const firebaseConfig = {
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
@@ -63,7 +70,7 @@ export class AuthService {
 
   private constructor() {
     // Private constructor to enforce singleton
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, user => {
       if (user) {
         this.fetchUserProfile(user);
       } else {
@@ -92,7 +99,10 @@ export class AuthService {
   public async signInWithGoogle(): Promise<User> {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      return await this.handleSocialAuthResult(result.user, AuthProvider.GOOGLE);
+      return await this.handleSocialAuthResult(
+        result.user,
+        AuthProvider.GOOGLE
+      );
     } catch (error) {
       console.error('Error signing in with Google:', error);
       throw error;
@@ -105,7 +115,10 @@ export class AuthService {
   public async signInWithOutlook(): Promise<User> {
     try {
       const result = await signInWithPopup(auth, outlookProvider);
-      return await this.handleSocialAuthResult(result.user, AuthProvider.OUTLOOK);
+      return await this.handleSocialAuthResult(
+        result.user,
+        AuthProvider.OUTLOOK
+      );
     } catch (error) {
       console.error('Error signing in with Outlook:', error);
       throw error;
@@ -118,7 +131,10 @@ export class AuthService {
   public async signInWithLinkedIn(): Promise<User> {
     try {
       const result = await signInWithPopup(auth, linkedinProvider);
-      return await this.handleSocialAuthResult(result.user, AuthProvider.LINKEDIN);
+      return await this.handleSocialAuthResult(
+        result.user,
+        AuthProvider.LINKEDIN
+      );
     } catch (error) {
       console.error('Error signing in with LinkedIn:', error);
       throw error;
@@ -141,13 +157,21 @@ export class AuthService {
   /**
    * Register with email and password
    */
-  public async registerWithEmail(email: string, password: string, displayName: string): Promise<User> {
+  public async registerWithEmail(
+    email: string,
+    password: string,
+    displayName: string
+  ): Promise<User> {
     try {
-      const result = await createUserWithEmailAndPassword(auth, email, password);
-      
+      const result = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
       // Send email verification
       await sendEmailVerification(result.user);
-      
+
       // Create user profile with basic auth level
       const userProfile: Partial<User> = {
         uid: result.user.uid,
@@ -159,14 +183,14 @@ export class AuthService {
         verifiedEmail: false,
         verifiedPaymentMethod: false,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       // Save user profile to Firestore
       await setDoc(doc(db, 'users', result.user.uid), {
         ...userProfile,
         createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       });
 
       return this.fetchUserProfile(result.user);
@@ -196,12 +220,12 @@ export class AuthService {
   public async upgradeToDrGrant(userId: string): Promise<User> {
     try {
       const userRef = doc(db, 'users', userId);
-      
+
       await updateDoc(userRef, {
         userType: 'verified',
         authLevel: UserAuthLevel.DR_GRANT,
         verifiedEmail: true,
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       });
 
       if (this.currentUser && this.currentUser.uid === userId) {
@@ -210,7 +234,7 @@ export class AuthService {
           userType: 'verified',
           authLevel: UserAuthLevel.DR_GRANT,
           verifiedEmail: true,
-          updatedAt: new Date()
+          updatedAt: new Date(),
         };
       }
 
@@ -224,16 +248,19 @@ export class AuthService {
   /**
    * Add payment method and upgrade user to Payment Verified (Level 2.5)
    */
-  public async addPaymentMethodAndUpgrade(userId: string, paymentMethodId: string): Promise<User> {
+  public async addPaymentMethodAndUpgrade(
+    userId: string,
+    paymentMethodId: string
+  ): Promise<User> {
     try {
       const userRef = doc(db, 'users', userId);
-      
+
       await updateDoc(userRef, {
         userType: 'paymentVerified',
         authLevel: UserAuthLevel.PAYMENT_VERIFIED,
         verifiedPaymentMethod: true,
         paymentMethodId: paymentMethodId,
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       });
 
       if (this.currentUser && this.currentUser.uid === userId) {
@@ -242,7 +269,7 @@ export class AuthService {
           userType: 'paymentVerified',
           authLevel: UserAuthLevel.PAYMENT_VERIFIED,
           verifiedPaymentMethod: true,
-          updatedAt: new Date()
+          updatedAt: new Date(),
         };
       }
 
@@ -261,14 +288,14 @@ export class AuthService {
       const userRef = doc(db, 'users', userId);
       const trialEndDate = new Date();
       trialEndDate.setDate(trialEndDate.getDate() + 3); // 3-day trial
-      
+
       await updateDoc(userRef, {
         userType: 'trialPeriod',
         authLevel: UserAuthLevel.TRIAL_PERIOD,
         trialStartDate: serverTimestamp(),
         trialEndDate: trialEndDate,
         dreamCommanderInStasis: true,
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       });
 
       if (this.currentUser && this.currentUser.uid === userId) {
@@ -276,7 +303,7 @@ export class AuthService {
           ...this.currentUser,
           userType: 'trialPeriod',
           authLevel: UserAuthLevel.TRIAL_PERIOD,
-          updatedAt: new Date()
+          updatedAt: new Date(),
         };
       }
 
@@ -290,16 +317,19 @@ export class AuthService {
   /**
    * Upgrade to fully registered user (Level 3)
    */
-  public async upgradeToFullyRegistered(userId: string, culturalEmpathyCode: string): Promise<User> {
+  public async upgradeToFullyRegistered(
+    userId: string,
+    culturalEmpathyCode: string
+  ): Promise<User> {
     try {
       const userRef = doc(db, 'users', userId);
-      
+
       await updateDoc(userRef, {
         userType: 'fullyRegistered',
         authLevel: UserAuthLevel.FULLY_REGISTERED,
         culturalEmpathyCode: culturalEmpathyCode,
         dreamCommanderInStasis: false, // Release from stasis
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
       });
 
       if (this.currentUser && this.currentUser.uid === userId) {
@@ -308,7 +338,7 @@ export class AuthService {
           userType: 'fullyRegistered',
           authLevel: UserAuthLevel.FULLY_REGISTERED,
           culturalEmpathyCode: culturalEmpathyCode,
-          updatedAt: new Date()
+          updatedAt: new Date(),
         };
       }
 
@@ -322,7 +352,10 @@ export class AuthService {
   /**
    * Handle social authentication result
    */
-  private async handleSocialAuthResult(firebaseUser: FirebaseUser, provider: AuthProvider): Promise<User> {
+  private async handleSocialAuthResult(
+    firebaseUser: FirebaseUser,
+    provider: AuthProvider
+  ): Promise<User> {
     try {
       const userRef = doc(db, 'users', firebaseUser.uid);
       const userDoc = await getDoc(userRef);
@@ -331,7 +364,7 @@ export class AuthService {
         // Update existing user
         await updateDoc(userRef, {
           authProvider: provider,
-          updatedAt: serverTimestamp()
+          updatedAt: serverTimestamp(),
         });
         return this.fetchUserProfile(firebaseUser);
       } else {
@@ -347,7 +380,7 @@ export class AuthService {
           verifiedEmail: firebaseUser.emailVerified,
           verifiedPaymentMethod: false,
           createdAt: new Date(),
-          updatedAt: new Date()
+          updatedAt: new Date(),
         };
 
         // If email is verified, set level to DR_GRANT
@@ -360,7 +393,7 @@ export class AuthService {
         await setDoc(userRef, {
           ...userProfile,
           createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
+          updatedAt: serverTimestamp(),
         });
 
         return this.fetchUserProfile(firebaseUser);

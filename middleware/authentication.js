@@ -5,6 +5,7 @@
 
 const logger = require('../services/common/logger');
 const sallyport = require('../services/sallyport/sallyport-client');
+const sallyPortVerifier = require('../auth/security/sallyport-verifier');
 
 /**
  * Authenticate incoming requests
@@ -37,22 +38,24 @@ async function authenticateRequest(req, res, next) {
     const token = parts[1];
 
     // Verify token with SallyPort
-    const session = await sallyport.getUserSession(token);
-
-    // Check if session is valid
-    if (!session.valid) {
+    const verificationResult = await sallyPortVerifier.verifyToken(token);
+    
+    // Check if verification was successful
+    if (!verificationResult.valid) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid or expired session',
+        message: verificationResult.error || 'Invalid or expired session',
       });
     }
 
     // Attach user to request
     req.user = {
-      uuid: session.userUuid,
-      email: session.email,
-      role: session.role,
-      permissions: session.permissions,
+      uuid: verificationResult.userId,
+      email: verificationResult.email || 'unknown',
+      role: verificationResult.roles && verificationResult.roles.length > 0 
+        ? verificationResult.roles[0] 
+        : 'user',
+      permissions: verificationResult.permissions || [],
     };
 
     // Continue to next middleware or route handler
@@ -114,7 +117,53 @@ function authorizePermissions(requiredPermissions) {
   };
 }
 
+/**
+ * Create Fastify compatible authentication hook
+ * @returns {Function} Fastify preHandler hook function
+ */
+function createFastifyAuthHook() {
+  return async function(request, reply) {
+    try {
+      // Convert to Express-like objects for compatibility
+      const req = {
+        headers: request.headers,
+        user: null
+      };
+      
+      const res = {
+        status: (code) => ({
+          json: (data) => {
+            reply.code(code).send(data);
+            return reply;
+          }
+        })
+      };
+      
+      // Use existing authenticate function
+      await new Promise((resolve, reject) => {
+        authenticateRequest(req, res, (err) => {
+          if (err) return reject(err);
+          resolve();
+        });
+      });
+      
+      // Transfer user to Fastify request
+      if (req.user) {
+        request.user = req.user;
+      }
+      
+    } catch (error) {
+      logger.error(`Fastify authentication error: ${error.message}`);
+      reply.code(401).send({
+        success: false,
+        message: 'Authentication failed'
+      });
+    }
+  };
+}
+
 module.exports = {
   authenticateRequest,
   authorizePermissions,
+  createFastifyAuthHook
 };

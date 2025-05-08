@@ -18,7 +18,7 @@ enum ComplianceStatus {
   IMPLEMENTED = 'IMPLEMENTED',
   OPERATING = 'OPERATING',
   DECOMMISSIONED = 'DECOMMISSIONED',
-  EXCEPTION = 'EXCEPTION'
+  EXCEPTION = 'EXCEPTION',
 }
 
 interface Attestation {
@@ -34,7 +34,7 @@ class S2DOGovernanceEngine {
   private readonly blockchainService: BlockchainService;
   private readonly workflowEngine: WorkflowEngine;
   private readonly evidenceCollector: EvidenceCollector;
-  
+
   constructor(
     complianceRepository: ComplianceRepository,
     blockchainService: BlockchainService,
@@ -46,40 +46,56 @@ class S2DOGovernanceEngine {
     this.workflowEngine = workflowEngine;
     this.evidenceCollector = evidenceCollector;
   }
-  
-  async evaluateSecurityPosture(integrationId: string): Promise<SecurityPostureAssessment> {
+
+  async evaluateSecurityPosture(
+    integrationId: string
+  ): Promise<SecurityPostureAssessment> {
     // 1. Retrieve all S2DO controls applicable to this integration
-    const applicableControls = await this.complianceRepository.getApplicableControls(integrationId);
-    
+    const applicableControls =
+      await this.complianceRepository.getApplicableControls(integrationId);
+
     // 2. Evaluate implementation status for each control
     const controlAssessments = await Promise.all(
       applicableControls.map(async control => {
-        const complianceRecord = await this.complianceRepository.getComplianceRecord(integrationId, control.id);
-        const evidence = await this.evidenceCollector.collectEvidence(integrationId, control.id);
-        
+        const complianceRecord =
+          await this.complianceRepository.getComplianceRecord(
+            integrationId,
+            control.id
+          );
+        const evidence = await this.evidenceCollector.collectEvidence(
+          integrationId,
+          control.id
+        );
+
         return {
           controlId: control.id,
           controlName: control.name,
           category: control.category,
-          implementationStatus: complianceRecord?.implementationStatus || ComplianceStatus.PLANNED,
+          implementationStatus:
+            complianceRecord?.implementationStatus || ComplianceStatus.PLANNED,
           evidence,
-          riskLevel: this.calculateRiskLevel(control, complianceRecord, evidence)
+          riskLevel: this.calculateRiskLevel(
+            control,
+            complianceRecord,
+            evidence
+          ),
         };
       })
     );
-    
+
     // 3. Calculate overall security posture
     const securityScore = this.calculateSecurityScore(controlAssessments);
-    
+
     return {
       integrationId,
       assessmentTimestamp: new Date(),
       overallSecurityScore: securityScore,
       controlAssessments,
-      remediationRecommendations: this.generateRecommendations(controlAssessments)
+      remediationRecommendations:
+        this.generateRecommendations(controlAssessments),
     };
   }
-  
+
   async createS2DOAttestationWorkflow(
     integrationId: string,
     controlIds: string[],
@@ -92,42 +108,44 @@ class S2DOGovernanceEngine {
         {
           type: 'EVIDENCE_COLLECTION',
           controlIds,
-          automaticCollection: true
+          automaticCollection: true,
         },
         {
           type: 'CONTROL_IMPLEMENTATION_VERIFICATION',
-          verifiers: approvers.filter(a => a.roles.includes('SECURITY_REVIEWER')),
-          requiredApprovals: Math.ceil(approvers.length * 0.5)
+          verifiers: approvers.filter(a =>
+            a.roles.includes('SECURITY_REVIEWER')
+          ),
+          requiredApprovals: Math.ceil(approvers.length * 0.5),
         },
         {
           type: 'EXECUTIVE_APPROVAL',
           approvers: approvers.filter(a => a.roles.includes('EXECUTIVE')),
-          requiredApprovals: 1
+          requiredApprovals: 1,
         },
         {
           type: 'BLOCKCHAIN_RECORD_CREATION',
-          recordType: 'S2DO_ATTESTATION'
-        }
+          recordType: 'S2DO_ATTESTATION',
+        },
       ],
       completionActions: [
         {
           type: 'UPDATE_COMPLIANCE_STATUS',
-          newStatus: ComplianceStatus.IMPLEMENTED
+          newStatus: ComplianceStatus.IMPLEMENTED,
         },
         {
           type: 'NOTIFICATION',
           recipients: approvers,
-          template: 'S2DO_COMPLIANCE_COMPLETE'
-        }
-      ]
+          template: 'S2DO_COMPLIANCE_COMPLETE',
+        },
+      ],
     };
-    
+
     return this.workflowEngine.createWorkflow(workflowDefinition, {
       integrationId,
-      controlIds
+      controlIds,
     });
   }
-  
+
   async recordBlockchainCompliance(
     complianceRecord: S2DOComplianceRecord
   ): Promise<string> {
@@ -140,46 +158,53 @@ class S2DOGovernanceEngine {
       implementationStatus: complianceRecord.implementationStatus,
       approverIds: complianceRecord.approvedBy.map(a => a.id),
       timestamp: complianceRecord.approvalTimestamp.toISOString(),
-      evidenceHashes: complianceRecord.evidenceReferences.map(ref => this.computeEvidenceHash(ref)),
-      attestationHashes: complianceRecord.attestations.map(att => this.computeAttestationHash(att))
+      evidenceHashes: complianceRecord.evidenceReferences.map(ref =>
+        this.computeEvidenceHash(ref)
+      ),
+      attestationHashes: complianceRecord.attestations.map(att =>
+        this.computeAttestationHash(att)
+      ),
     };
-    
+
     // 2. Create immutable blockchain record
-    const transactionId = await this.blockchainService.recordComplianceAttestation(blockchainRecord);
-    
+    const transactionId =
+      await this.blockchainService.recordComplianceAttestation(
+        blockchainRecord
+      );
+
     // 3. Update compliance record with blockchain reference
     await this.complianceRepository.updateComplianceRecord({
       ...complianceRecord,
-      blockchainRecordId: transactionId
+      blockchainRecordId: transactionId,
     });
-    
+
     return transactionId;
   }
-  
+
   // Helper methods
   private calculateRiskLevel(control, complianceRecord, evidence): RiskLevel {
     // Implementation of risk calculation logic
     return RiskLevel.LOW;
   }
-  
+
   private calculateSecurityScore(controlAssessments): number {
     // Implementation of security score calculation
     return 85;
   }
-  
+
   private generateRecommendations(controlAssessments): Recommendation[] {
     // Implementation of recommendation generation
     return [];
   }
-  
+
   private computeEvidenceHash(evidenceReference: string): string {
     // Implementation of evidence hashing
-    return "hash-placeholder";
+    return 'hash-placeholder';
   }
-  
+
   private computeAttestationHash(attestation: Attestation): string {
     // Implementation of attestation hashing
-    return "hash-placeholder";
+    return 'hash-placeholder';
   }
 }
 
@@ -201,21 +226,21 @@ enum ApprovalType {
   SECRET_ACCESS = 'SECRET_ACCESS',
   COPILOT_DELEGATION = 'COPILOT_DELEGATION',
   CONFIGURATION_CHANGE = 'CONFIGURATION_CHANGE',
-  COMPLIANCE_ATTESTATION = 'COMPLIANCE_ATTESTATION'
+  COMPLIANCE_ATTESTATION = 'COMPLIANCE_ATTESTATION',
 }
 
 enum ApprovalStatus {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
-  EXPIRED = 'EXPIRED'
+  EXPIRED = 'EXPIRED',
 }
 
 class BlockchainApprovalService implements BlockchainService {
   private readonly blockchainAdapter: BlockchainAdapter;
   private readonly cryptoService: CryptoService;
   private readonly networkConfig: BlockchainNetworkConfig;
-  
+
   constructor(
     blockchainAdapter: BlockchainAdapter,
     cryptoService: CryptoService,
@@ -225,7 +250,7 @@ class BlockchainApprovalService implements BlockchainService {
     this.cryptoService = cryptoService;
     this.networkConfig = networkConfig;
   }
-  
+
   async createApprovalRequest(
     approvalType: ApprovalType,
     assetId: string,
@@ -234,7 +259,7 @@ class BlockchainApprovalService implements BlockchainService {
   ): Promise<BlockchainApprovalRecord> {
     // 1. Generate unique request ID
     const requestId = crypto.randomUUID();
-    
+
     // 2. Create approval smart contract transaction
     const approvalRequest = {
       requestId,
@@ -242,22 +267,25 @@ class BlockchainApprovalService implements BlockchainService {
       assetId,
       data: approvalData,
       requiredApprovers: requiredApprovers.map(a => a.id),
-      minApprovals: this.calculateMinimumApprovals(approvalType, requiredApprovers),
+      minApprovals: this.calculateMinimumApprovals(
+        approvalType,
+        requiredApprovers
+      ),
       expirationTime: this.calculateExpirationTime(approvalType),
       metadata: {
         requestor: approvalData.requestorId,
         timestamp: new Date().toISOString(),
-        purpose: approvalData.purpose || 'Not specified'
-      }
+        purpose: approvalData.purpose || 'Not specified',
+      },
     };
-    
+
     // 3. Submit to blockchain
     const txResult = await this.blockchainAdapter.submitTransaction(
       this.networkConfig.contractId,
       'createApprovalRequest',
       [JSON.stringify(approvalRequest)]
     );
-    
+
     // 4. Store reference and return approval record
     return {
       transactionId: txResult.transactionId,
@@ -268,10 +296,10 @@ class BlockchainApprovalService implements BlockchainService {
       approvers: requiredApprovers.map(a => a.id),
       approvalData,
       status: ApprovalStatus.PENDING,
-      verificationUrl: this.generateVerificationUrl(txResult.transactionId)
+      verificationUrl: this.generateVerificationUrl(txResult.transactionId),
     };
   }
-  
+
   async submitApproval(
     transactionId: string,
     approverId: string,
@@ -283,7 +311,7 @@ class BlockchainApprovalService implements BlockchainService {
       `${transactionId}:${approverId}:${decision}:${Date.now()}`,
       approverId
     );
-    
+
     // 2. Submit approval to blockchain
     const approvalData = {
       transactionId,
@@ -291,31 +319,33 @@ class BlockchainApprovalService implements BlockchainService {
       decision,
       justification,
       timestamp: new Date().toISOString(),
-      signature
+      signature,
     };
-    
+
     const txResult = await this.blockchainAdapter.submitTransaction(
       this.networkConfig.contractId,
       'submitApproval',
       [JSON.stringify(approvalData)]
     );
-    
+
     // 3. Check if this approval changes overall status
     const updatedRequest = await this.getApprovalRequest(transactionId);
-    
+
     return {
       transactionId: txResult.transactionId,
       originalRequestId: transactionId,
       approvalStatus: updatedRequest.status,
       timestamp: new Date(txResult.timestamp),
-      approvalIndex: updatedRequest.approvals.length
+      approvalIndex: updatedRequest.approvals.length,
     };
   }
-  
-  async verifyApprovalStatus(transactionId: string): Promise<ApprovalVerificationResult> {
+
+  async verifyApprovalStatus(
+    transactionId: string
+  ): Promise<ApprovalVerificationResult> {
     // 1. Query blockchain for approval status
     const approvalRequest = await this.getApprovalRequest(transactionId);
-    
+
     // 2. Verify all approval signatures
     const validSignatures = await Promise.all(
       approvalRequest.approvals.map(async approval => {
@@ -326,10 +356,10 @@ class BlockchainApprovalService implements BlockchainService {
         );
       })
     );
-    
+
     // 3. Determine overall verification status
     const allSignaturesValid = validSignatures.every(valid => valid);
-    
+
     return {
       transactionId,
       verified: allSignaturesValid,
@@ -340,30 +370,30 @@ class BlockchainApprovalService implements BlockchainService {
       blockchainReference: {
         chainId: this.networkConfig.chainId,
         blockHeight: approvalRequest.blockHeight,
-        verificationUrl: this.generateVerificationUrl(transactionId)
-      }
+        verificationUrl: this.generateVerificationUrl(transactionId),
+      },
     };
   }
-  
+
   async recordComplianceAttestation(attestationData: any): Promise<string> {
     // 1. Prepare attestation for blockchain recording
     const attestationRecord = {
       type: 'COMPLIANCE_ATTESTATION',
       data: attestationData,
       timestamp: new Date().toISOString(),
-      hash: this.cryptoService.hashObject(attestationData)
+      hash: this.cryptoService.hashObject(attestationData),
     };
-    
+
     // 2. Submit to blockchain
     const txResult = await this.blockchainAdapter.submitTransaction(
       this.networkConfig.contractId,
       'recordAttestation',
       [JSON.stringify(attestationRecord)]
     );
-    
+
     return txResult.transactionId;
   }
-  
+
   // Helper methods
   private async getApprovalRequest(transactionId: string): Promise<any> {
     const result = await this.blockchainAdapter.queryContract(
@@ -371,11 +401,14 @@ class BlockchainApprovalService implements BlockchainService {
       'getApprovalRequest',
       [transactionId]
     );
-    
+
     return JSON.parse(result);
   }
-  
-  private calculateMinimumApprovals(approvalType: ApprovalType, approvers: Identity[]): number {
+
+  private calculateMinimumApprovals(
+    approvalType: ApprovalType,
+    approvers: Identity[]
+  ): number {
     // Implementation of approval threshold calculation based on type and approvers
     switch (approvalType) {
       case ApprovalType.INTEGRATION_DEPLOYMENT:
@@ -386,7 +419,7 @@ class BlockchainApprovalService implements BlockchainService {
         return Math.ceil(approvers.length * 0.5);
     }
   }
-  
+
   private calculateExpirationTime(approvalType: ApprovalType): Date {
     // Implementation of expiration time calculation
     const now = new Date();
@@ -397,7 +430,7 @@ class BlockchainApprovalService implements BlockchainService {
         return new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days
     }
   }
-  
+
   private generateVerificationUrl(transactionId: string): string {
     return `${this.networkConfig.explorerUrl}/tx/${transactionId}`;
   }
@@ -410,7 +443,7 @@ class EnhancedIntegrationGateway {
   private readonly secretsVault: SecretsVault;
   private readonly s2doGovernance: S2DOGovernanceEngine;
   private readonly blockchainApproval: BlockchainApprovalService;
-  
+
   constructor(
     authenticator: ZeroTrustAuthenticator,
     delegationFramework: CoPilotDelegationFramework,
@@ -424,7 +457,7 @@ class EnhancedIntegrationGateway {
     this.s2doGovernance = s2doGovernance;
     this.blockchainApproval = blockchainApproval;
   }
-  
+
   async secureIntegrationDeployment(
     context: AuthenticationContext,
     integrationConfig: IntegrationConfiguration
@@ -433,34 +466,38 @@ class EnhancedIntegrationGateway {
     const securityPosture = await this.s2doGovernance.evaluateSecurityPosture(
       integrationConfig.id
     );
-    
+
     // 2. If security posture meets threshold, proceed with deployment
-    if (securityPosture.overallSecurityScore >= this.getSecurityThreshold(integrationConfig.criticality)) {
+    if (
+      securityPosture.overallSecurityScore >=
+      this.getSecurityThreshold(integrationConfig.criticality)
+    ) {
       // 3. Create blockchain approval request
       const approvers = await this.identifyRequiredApprovers(
         integrationConfig.id,
         securityPosture
       );
-      
-      const approvalRecord = await this.blockchainApproval.createApprovalRequest(
-        ApprovalType.INTEGRATION_DEPLOYMENT,
-        integrationConfig.id,
-        {
-          requestorId: context.userIdentity.id,
-          integrationName: integrationConfig.name,
-          securityScore: securityPosture.overallSecurityScore,
-          purpose: integrationConfig.purpose
-        },
-        approvers
-      );
-      
+
+      const approvalRecord =
+        await this.blockchainApproval.createApprovalRequest(
+          ApprovalType.INTEGRATION_DEPLOYMENT,
+          integrationConfig.id,
+          {
+            requestorId: context.userIdentity.id,
+            integrationName: integrationConfig.name,
+            securityScore: securityPosture.overallSecurityScore,
+            purpose: integrationConfig.purpose,
+          },
+          approvers
+        );
+
       // 4. Return pending status
       return {
         status: DeploymentStatus.APPROVAL_PENDING,
         approvalId: approvalRecord.transactionId,
         requiredApprovers: approvers.map(a => a.id),
         securityPosture,
-        verificationUrl: approvalRecord.verificationUrl
+        verificationUrl: approvalRecord.verificationUrl,
       };
     } else {
       // 5. Return rejected status with recommendations
@@ -468,11 +505,11 @@ class EnhancedIntegrationGateway {
         status: DeploymentStatus.SECURITY_REVIEW_REQUIRED,
         securityPosture,
         remediationRequired: true,
-        recommendations: securityPosture.remediationRecommendations
+        recommendations: securityPosture.remediationRecommendations,
       };
     }
   }
-  
+
   // Helper methods
   private getSecurityThreshold(criticality: IntegrationCriticality): number {
     // Implementation of threshold calculation
@@ -487,7 +524,7 @@ class EnhancedIntegrationGateway {
         return 80;
     }
   }
-  
+
   private async identifyRequiredApprovers(
     integrationId: string,
     securityPosture: SecurityPostureAssessment

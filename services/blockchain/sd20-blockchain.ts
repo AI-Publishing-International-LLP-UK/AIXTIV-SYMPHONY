@@ -12,7 +12,7 @@ export class SD20BlockchainService implements BlockchainService {
   private wallet: ethers.Wallet;
   private actionVerificationContract: ethers.Contract;
   private nftContract: ethers.Contract;
-  
+
   constructor(
     rpcUrl: string,
     privateKey: string,
@@ -23,20 +23,20 @@ export class SD20BlockchainService implements BlockchainService {
   ) {
     this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     this.wallet = new ethers.Wallet(privateKey, this.provider);
-    
+
     this.actionVerificationContract = new ethers.Contract(
       actionVerificationContractAddress,
       actionVerificationContractAbi,
       this.wallet
     );
-    
+
     this.nftContract = new ethers.Contract(
       nftContractAddress,
       nftContractAbi,
       this.wallet
     );
   }
-  
+
   /**
    * Store action verification on the blockchain
    */
@@ -55,10 +55,10 @@ export class SD20BlockchainService implements BlockchainService {
         verifierAddresses,
         { gasLimit: 500000 }
       );
-      
+
       // Wait for transaction to be mined
       const receipt = await tx.wait();
-      
+
       // Return transaction hash
       return receipt.transactionHash;
     } catch (error) {
@@ -66,7 +66,7 @@ export class SD20BlockchainService implements BlockchainService {
       throw new Error('Failed to store action verification on blockchain');
     }
   }
-  
+
   /**
    * Mint an NFT for a completed action
    */
@@ -78,10 +78,12 @@ export class SD20BlockchainService implements BlockchainService {
     try {
       // Store metadata on IPFS
       const metadataUri = await this.storeMetadataOnIPFS(metadata);
-      
+
       // Calculate royalty shares based on contributor count
-      const shares = this.calculateRoyaltyShares(contributorAddresses.length + 1);
-      
+      const shares = this.calculateRoyaltyShares(
+        contributorAddresses.length + 1
+      );
+
       // Create transaction to mint NFT
       const tx = await this.nftContract.mintActionNFT(
         ownerAddress,
@@ -90,21 +92,21 @@ export class SD20BlockchainService implements BlockchainService {
         shares,
         { gasLimit: 700000 }
       );
-      
+
       // Wait for transaction to be mined
       const receipt = await tx.wait();
-      
+
       // Extract token ID from event logs
       const event = receipt.events.find(e => e.event === 'Transfer');
       const tokenId = event.args.tokenId.toString();
-      
+
       return tokenId;
     } catch (error) {
       console.error('Error minting NFT:', error);
       throw new Error('Failed to mint NFT on blockchain');
     }
   }
-  
+
   /**
    * Verify an action record on the blockchain
    */
@@ -114,8 +116,9 @@ export class SD20BlockchainService implements BlockchainService {
   ): Promise<boolean> {
     try {
       // Query blockchain to verify action record
-      const storedHash = await this.actionVerificationContract.getActionHash(actionId);
-      
+      const storedHash =
+        await this.actionVerificationContract.getActionHash(actionId);
+
       // Compare stored hash with provided hash
       return storedHash === actionHash;
     } catch (error) {
@@ -123,7 +126,7 @@ export class SD20BlockchainService implements BlockchainService {
       return false;
     }
   }
-  
+
   /**
    * Store metadata on IPFS and return the URI
    */
@@ -132,19 +135,19 @@ export class SD20BlockchainService implements BlockchainService {
       // In a real implementation, this would use an IPFS service
       // For this example, we'll simulate it
       console.log('Storing metadata on IPFS:', metadata);
-      
+
       // Generate a fake IPFS CID based on the metadata
       const fakeCid = Buffer.from(JSON.stringify(metadata))
         .toString('base64')
         .substring(0, 46);
-      
+
       return `ipfs://${fakeCid}`;
     } catch (error) {
       console.error('Error storing metadata on IPFS:', error);
       throw new Error('Failed to store metadata on IPFS');
     }
   }
-  
+
   /**
    * Calculate royalty shares for contributors
    */
@@ -152,13 +155,13 @@ export class SD20BlockchainService implements BlockchainService {
     // Simple equal distribution for now
     const baseShare = Math.floor(100 / contributorCount);
     const shares = Array(contributorCount).fill(baseShare);
-    
+
     // Ensure total adds up to 100%
     const total = shares.reduce((sum, share) => sum + share, 0);
     if (total < 100) {
       shares[0] += 100 - total;
     }
-    
+
     return shares;
   }
 }

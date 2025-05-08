@@ -7,7 +7,8 @@ import { createInterface } from 'readline';
  * @throws {Error} If domain format is invalid
  */
 export function validateDomain(domain) {
-  const domainRegex = /^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
+  const domainRegex =
+    /^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/;
   if (!domainRegex.test(domain)) {
     throw new Error(`Invalid domain format: ${domain}`);
   }
@@ -38,7 +39,7 @@ export async function readFileLines(filePath) {
 export async function confirm(message) {
   const rl = createInterface({
     input: process.stdin,
-    output: process.stdout
+    output: process.stdout,
   });
 
   return new Promise(resolve => {
@@ -59,7 +60,7 @@ export function formatDNSRecord(record) {
     Type: record.type,
     Name: record.name,
     Data: record.data,
-    TTL: record.ttl
+    TTL: record.ttl,
   };
 }
 
@@ -91,4 +92,3 @@ export async function retry(fn, { attempts = 3, delay = 1000 } = {}) {
     }
   }
 }
-

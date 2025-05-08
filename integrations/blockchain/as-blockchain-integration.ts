@@ -1,7 +1,7 @@
 /**
  * AIXTIV SYMPHONY™ Blockchain Integration
  * © 2025 AI Publishing International LLP
- * 
+ *
  * PROPRIETARY AND CONFIDENTIAL
  * This is proprietary software of AI Publishing International LLP.
  * All rights reserved. No part of this software may be reproduced,
@@ -10,7 +10,19 @@
 
 import { ethers } from 'ethers';
 import * as IPFS from 'ipfs-http-client';
-import { getFirestore, collection, doc, getDoc, setDoc, updateDoc, addDoc, query, where, Timestamp, getDocs } from 'firebase/firestore';
+import {
+  getFirestore,
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  addDoc,
+  query,
+  where,
+  Timestamp,
+  getDocs,
+} from 'firebase/firestore';
 import { ActivityLoggerService } from '../core';
 import * as CryptoJS from 'crypto-js';
 
@@ -24,9 +36,11 @@ const ipfs = IPFS.create({
   protocol: 'https',
   headers: {
     authorization: `Basic ${Buffer.from(
-      process.env.INFURA_IPFS_PROJECT_ID + ':' + process.env.INFURA_IPFS_PROJECT_SECRET
-    ).toString('base64')}`
-  }
+      process.env.INFURA_IPFS_PROJECT_ID +
+        ':' +
+        process.env.INFURA_IPFS_PROJECT_SECRET
+    ).toString('base64')}`,
+  },
 });
 
 /**
@@ -42,12 +56,12 @@ const AIXTIVNFTContractABI = [
   'function getApproved(uint256 tokenId) external view returns (address)',
   'function setApprovalForAll(address operator, bool approved) external',
   'function isApprovedForAll(address owner, address operator) external view returns (bool)',
-  
+
   // Metadata extension
   'function name() external view returns (string memory)',
   'function symbol() external view returns (string memory)',
   'function tokenURI(uint256 tokenId) external view returns (string memory)',
-  
+
   // AIXTIV custom functions
   'function mintAgent(address to, string memory tokenURI, string memory agentType) external returns (uint256)',
   'function mintSolution(address to, string memory tokenURI, string memory solutionCode) external returns (uint256)',
@@ -55,13 +69,13 @@ const AIXTIVNFTContractABI = [
   'function getAgentType(uint256 tokenId) external view returns (string memory)',
   'function getSolutionCode(uint256 tokenId) external view returns (string memory)',
   'function getTokenMetadata(uint256 tokenId) external view returns (string memory agentType, string memory solutionCode, uint256 createdAt)',
-  
+
   // Events
   'event Transfer(address indexed from, address indexed to, uint256 indexed tokenId)',
   'event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId)',
   'event ApprovalForAll(address indexed owner, address indexed operator, bool approved)',
   'event AgentMinted(uint256 indexed tokenId, address indexed owner, string agentType)',
-  'event SolutionMinted(uint256 indexed tokenId, address indexed owner, string solutionCode)'
+  'event SolutionMinted(uint256 indexed tokenId, address indexed owner, string solutionCode)',
 ];
 
 const AIXTIVVerificationContractABI = [
@@ -72,10 +86,10 @@ const AIXTIVVerificationContractABI = [
   'function isOrganizationVerified(address orgAddress) external view returns (bool)',
   'function getUserVerificationData(address userAddress) external view returns (bytes32 userCodeHash, uint256 verifiedAt, bool status)',
   'function getOrganizationVerificationData(address orgAddress) external view returns (bytes32 orgIdHash, uint256 verifiedAt, bool status)',
-  
+
   // Events
   'event UserVerified(address indexed userAddress, bytes32 indexed userCodeHash, bool status)',
-  'event OrganizationVerified(address indexed orgAddress, bytes32 indexed orgIdHash, bool status)'
+  'event OrganizationVerified(address indexed orgAddress, bytes32 indexed orgIdHash, bool status)',
 ];
 
 const AIXTIVSubscriptionContractABI = [
@@ -87,11 +101,11 @@ const AIXTIVSubscriptionContractABI = [
   'function isSubscriptionActive(address subscriber, string memory solutionCode) external view returns (bool)',
   'function getSubscriptionsBySubscriber(address subscriber) external view returns (uint256[] memory)',
   'function getSubscriptionsBySolution(string memory solutionCode) external view returns (uint256[] memory)',
-  
+
   // Events
   'event SubscriptionCreated(uint256 indexed subscriptionId, address indexed subscriber, string solutionCode, uint256 startTime, uint256 endTime)',
   'event SubscriptionRenewed(uint256 indexed subscriptionId, uint256 newEndTime)',
-  'event SubscriptionCanceled(uint256 indexed subscriptionId, uint256 canceledAt)'
+  'event SubscriptionCanceled(uint256 indexed subscriptionId, uint256 canceledAt)',
 ];
 
 /**
@@ -104,24 +118,38 @@ export class BlockchainIntegrationManager {
   private nftContract: ethers.Contract;
   private verificationContract: ethers.Contract;
   private subscriptionContract: ethers.Contract;
-  
+
   constructor(
     rpcUrl: string = process.env.ETHEREUM_RPC_URL || '',
     privateKey: string = process.env.AIXTIV_PRIVATE_KEY || '',
     nftContractAddress: string = process.env.AIXTIV_NFT_CONTRACT_ADDRESS || '',
-    verificationContractAddress: string = process.env.AIXTIV_VERIFICATION_CONTRACT_ADDRESS || '',
-    subscriptionContractAddress: string = process.env.AIXTIV_SUBSCRIPTION_CONTRACT_ADDRESS || ''
+    verificationContractAddress: string = process.env
+      .AIXTIV_VERIFICATION_CONTRACT_ADDRESS || '',
+    subscriptionContractAddress: string = process.env
+      .AIXTIV_SUBSCRIPTION_CONTRACT_ADDRESS || ''
   ) {
     // Initialize provider and wallet
     this.provider = new ethers.providers.JsonRpcProvider(rpcUrl);
     this.wallet = new ethers.Wallet(privateKey, this.provider);
-    
+
     // Initialize contracts
-    this.nftContract = new ethers.Contract(nftContractAddress, AIXTIVNFTContractABI, this.wallet);
-    this.verificationContract = new ethers.Contract(verificationContractAddress, AIXTIVVerificationContractABI, this.wallet);
-    this.subscriptionContract = new ethers.Contract(subscriptionContractAddress, AIXTIVSubscriptionContractABI, this.wallet);
+    this.nftContract = new ethers.Contract(
+      nftContractAddress,
+      AIXTIVNFTContractABI,
+      this.wallet
+    );
+    this.verificationContract = new ethers.Contract(
+      verificationContractAddress,
+      AIXTIVVerificationContractABI,
+      this.wallet
+    );
+    this.subscriptionContract = new ethers.Contract(
+      subscriptionContractAddress,
+      AIXTIVSubscriptionContractABI,
+      this.wallet
+    );
   }
-  
+
   /**
    * Create a blockchain wallet for a user
    */
@@ -129,10 +157,10 @@ export class BlockchainIntegrationManager {
     const wallet = ethers.Wallet.createRandom();
     return {
       address: wallet.address,
-      privateKey: wallet.privateKey
+      privateKey: wallet.privateKey,
     };
   }
-  
+
   /**
    * Verify a user on the blockchain
    */
@@ -143,16 +171,23 @@ export class BlockchainIntegrationManager {
   ): Promise<{ transactionId: string; status: boolean }> {
     try {
       // Create hash of the user code
-      const userCodeHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(userCode));
-      
+      const userCodeHash = ethers.utils.keccak256(
+        ethers.utils.toUtf8Bytes(userCode)
+      );
+
       // Call verification contract
-      const tx = await this.verificationContract.verifyUser(userAddress, userCodeHash);
+      const tx = await this.verificationContract.verifyUser(
+        userAddress,
+        userCodeHash
+      );
       const receipt = await tx.wait();
-      
+
       // Get event data
-      const verifiedEvent = receipt.events.find((e: any) => e.event === 'UserVerified');
+      const verifiedEvent = receipt.events.find(
+        (e: any) => e.event === 'UserVerified'
+      );
       const verificationStatus = verifiedEvent.args.status;
-      
+
       // Create verification record in Firestore
       await this.createVerificationRecord(
         'user',
@@ -162,17 +197,17 @@ export class BlockchainIntegrationManager {
         receipt.transactionHash,
         verificationStatus
       );
-      
+
       return {
         transactionId: receipt.transactionHash,
-        status: verificationStatus
+        status: verificationStatus,
       };
     } catch (error) {
       console.error('Error verifying user on blockchain:', error);
       throw error;
     }
   }
-  
+
   /**
    * Verify an organization on the blockchain
    */
@@ -183,15 +218,20 @@ export class BlockchainIntegrationManager {
     try {
       // Create hash of the organization ID
       const orgIdHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(orgId));
-      
+
       // Call verification contract
-      const tx = await this.verificationContract.verifyOrganization(orgAddress, orgIdHash);
+      const tx = await this.verificationContract.verifyOrganization(
+        orgAddress,
+        orgIdHash
+      );
       const receipt = await tx.wait();
-      
+
       // Get event data
-      const verifiedEvent = receipt.events.find((e: any) => e.event === 'OrganizationVerified');
+      const verifiedEvent = receipt.events.find(
+        (e: any) => e.event === 'OrganizationVerified'
+      );
       const verificationStatus = verifiedEvent.args.status;
-      
+
       // Create verification record in Firestore
       await this.createVerificationRecord(
         'organization',
@@ -201,17 +241,17 @@ export class BlockchainIntegrationManager {
         receipt.transactionHash,
         verificationStatus
       );
-      
+
       return {
         transactionId: receipt.transactionHash,
-        status: verificationStatus
+        status: verificationStatus,
       };
     } catch (error) {
       console.error('Error verifying organization on blockchain:', error);
       throw error;
     }
   }
-  
+
   /**
    * Check if a user is verified on the blockchain
    */
@@ -223,7 +263,7 @@ export class BlockchainIntegrationManager {
       throw error;
     }
   }
-  
+
   /**
    * Check if an organization is verified on the blockchain
    */
@@ -235,7 +275,7 @@ export class BlockchainIntegrationManager {
       throw error;
     }
   }
-  
+
   /**
    * Mint an agent NFT
    */
@@ -248,15 +288,21 @@ export class BlockchainIntegrationManager {
     try {
       // Upload metadata to IPFS
       const metadataUri = await this.uploadMetadataToIPFS(metadata);
-      
+
       // Mint the NFT
-      const tx = await this.nftContract.mintAgent(ownerAddress, metadataUri, agentType);
+      const tx = await this.nftContract.mintAgent(
+        ownerAddress,
+        metadataUri,
+        agentType
+      );
       const receipt = await tx.wait();
-      
+
       // Get the token ID from the AgentMinted event
-      const mintedEvent = receipt.events.find((e: any) => e.event === 'AgentMinted');
+      const mintedEvent = receipt.events.find(
+        (e: any) => e.event === 'AgentMinted'
+      );
       const tokenId = mintedEvent.args.tokenId.toString();
-      
+
       // Create NFT record in Firestore
       await this.createNFTRecord(
         'agent',
@@ -267,17 +313,17 @@ export class BlockchainIntegrationManager {
         receipt.transactionHash,
         { agentType }
       );
-      
+
       return {
         tokenId,
-        transactionId: receipt.transactionHash
+        transactionId: receipt.transactionHash,
       };
     } catch (error) {
       console.error('Error minting agent NFT:', error);
       throw error;
     }
   }
-  
+
   /**
    * Mint a solution NFT
    */
@@ -290,15 +336,21 @@ export class BlockchainIntegrationManager {
     try {
       // Upload metadata to IPFS
       const metadataUri = await this.uploadMetadataToIPFS(metadata);
-      
+
       // Mint the NFT
-      const tx = await this.nftContract.mintSolution(ownerAddress, metadataUri, solutionCode);
+      const tx = await this.nftContract.mintSolution(
+        ownerAddress,
+        metadataUri,
+        solutionCode
+      );
       const receipt = await tx.wait();
-      
+
       // Get the token ID from the SolutionMinted event
-      const mintedEvent = receipt.events.find((e: any) => e.event === 'SolutionMinted');
+      const mintedEvent = receipt.events.find(
+        (e: any) => e.event === 'SolutionMinted'
+      );
       const tokenId = mintedEvent.args.tokenId.toString();
-      
+
       // Create NFT record in Firestore
       await this.createNFTRecord(
         'solution',
@@ -309,17 +361,17 @@ export class BlockchainIntegrationManager {
         receipt.transactionHash,
         { solutionCode }
       );
-      
+
       return {
         tokenId,
-        transactionId: receipt.transactionHash
+        transactionId: receipt.transactionHash,
       };
     } catch (error) {
       console.error('Error minting solution NFT:', error);
       throw error;
     }
   }
-  
+
   /**
    * Transfer an NFT to a new owner
    */
@@ -330,21 +382,25 @@ export class BlockchainIntegrationManager {
   ): Promise<{ transactionId: string }> {
     try {
       // Transfer the NFT
-      const tx = await this.nftContract.transferFrom(fromAddress, toAddress, tokenId);
+      const tx = await this.nftContract.transferFrom(
+        fromAddress,
+        toAddress,
+        tokenId
+      );
       const receipt = await tx.wait();
-      
+
       // Update NFT record in Firestore
       await this.updateNFTOwner(tokenId, toAddress, receipt.transactionHash);
-      
+
       return {
-        transactionId: receipt.transactionHash
+        transactionId: receipt.transactionHash,
       };
     } catch (error) {
       console.error('Error transferring NFT:', error);
       throw error;
     }
   }
-  
+
   /**
    * Get owner of an NFT
    */
@@ -356,7 +412,7 @@ export class BlockchainIntegrationManager {
       throw error;
     }
   }
-  
+
   /**
    * Create a subscription on the blockchain
    */
@@ -370,7 +426,7 @@ export class BlockchainIntegrationManager {
     try {
       // Convert days to seconds
       const durationInSeconds = durationInDays * 24 * 60 * 60;
-      
+
       // Create subscription on blockchain
       const tx = await this.subscriptionContract.createSubscription(
         subscriberAddress,
@@ -378,13 +434,15 @@ export class BlockchainIntegrationManager {
         durationInSeconds
       );
       const receipt = await tx.wait();
-      
+
       // Get the subscription ID from the SubscriptionCreated event
-      const subscriptionEvent = receipt.events.find((e: any) => e.event === 'SubscriptionCreated');
+      const subscriptionEvent = receipt.events.find(
+        (e: any) => e.event === 'SubscriptionCreated'
+      );
       const subscriptionId = subscriptionEvent.args.subscriptionId.toString();
       const startTime = subscriptionEvent.args.startTime.toNumber();
       const endTime = subscriptionEvent.args.endTime.toNumber();
-      
+
       // Create subscription record in Firestore
       await this.createSubscriptionRecord(
         subscriptionId,
@@ -395,17 +453,17 @@ export class BlockchainIntegrationManager {
         endTime,
         receipt.transactionHash
       );
-      
+
       return {
         subscriptionId,
-        transactionId: receipt.transactionHash
+        transactionId: receipt.transactionHash,
       };
     } catch (error) {
       console.error('Error creating subscription on blockchain:', error);
       throw error;
     }
   }
-  
+
   /**
    * Renew a subscription on the blockchain
    */
@@ -416,35 +474,37 @@ export class BlockchainIntegrationManager {
     try {
       // Convert days to seconds
       const additionalSeconds = additionalDays * 24 * 60 * 60;
-      
+
       // Renew subscription on blockchain
       const tx = await this.subscriptionContract.renewSubscription(
         subscriptionId,
         additionalSeconds
       );
       const receipt = await tx.wait();
-      
+
       // Get the new end time from the SubscriptionRenewed event
-      const renewedEvent = receipt.events.find((e: any) => e.event === 'SubscriptionRenewed');
+      const renewedEvent = receipt.events.find(
+        (e: any) => e.event === 'SubscriptionRenewed'
+      );
       const newEndTime = renewedEvent.args.newEndTime.toNumber();
-      
+
       // Update subscription record in Firestore
       await this.updateSubscriptionRecord(
         subscriptionId,
         newEndTime,
         receipt.transactionHash
       );
-      
+
       return {
         transactionId: receipt.transactionHash,
-        newEndTime
+        newEndTime,
       };
     } catch (error) {
       console.error('Error renewing subscription on blockchain:', error);
       throw error;
     }
   }
-  
+
   /**
    * Cancel a subscription on the blockchain
    */
@@ -453,29 +513,32 @@ export class BlockchainIntegrationManager {
   ): Promise<{ transactionId: string }> {
     try {
       // Cancel subscription on blockchain
-      const tx = await this.subscriptionContract.cancelSubscription(subscriptionId);
+      const tx =
+        await this.subscriptionContract.cancelSubscription(subscriptionId);
       const receipt = await tx.wait();
-      
+
       // Get the canceled time from the SubscriptionCanceled event
-      const canceledEvent = receipt.events.find((e: any) => e.event === 'SubscriptionCanceled');
+      const canceledEvent = receipt.events.find(
+        (e: any) => e.event === 'SubscriptionCanceled'
+      );
       const canceledAt = canceledEvent.args.canceledAt.toNumber();
-      
+
       // Update subscription record in Firestore
       await this.cancelSubscriptionRecord(
         subscriptionId,
         canceledAt,
         receipt.transactionHash
       );
-      
+
       return {
-        transactionId: receipt.transactionHash
+        transactionId: receipt.transactionHash,
       };
     } catch (error) {
       console.error('Error canceling subscription on blockchain:', error);
       throw error;
     }
   }
-  
+
   /**
    * Check if a subscription is active
    */
@@ -493,43 +556,47 @@ export class BlockchainIntegrationManager {
       throw error;
     }
   }
-  
+
   /**
    * Get subscription details
    */
   public async getSubscription(subscriptionId: string): Promise<any> {
     try {
-      const subscription = await this.subscriptionContract.getSubscription(subscriptionId);
-      
+      const subscription =
+        await this.subscriptionContract.getSubscription(subscriptionId);
+
       return {
         subscriber: subscription.subscriber,
         solutionCode: subscription.solutionCode,
         startTime: subscription.startTime.toNumber(),
         endTime: subscription.endTime.toNumber(),
-        active: subscription.active
+        active: subscription.active,
       };
     } catch (error) {
       console.error('Error getting subscription details:', error);
       throw error;
     }
   }
-  
+
   /**
    * Get all subscriptions for a subscriber
    */
-  public async getSubscriptionsBySubscriber(subscriberAddress: string): Promise<string[]> {
+  public async getSubscriptionsBySubscriber(
+    subscriberAddress: string
+  ): Promise<string[]> {
     try {
-      const subscriptionIds = await this.subscriptionContract.getSubscriptionsBySubscriber(
-        subscriberAddress
-      );
-      
+      const subscriptionIds =
+        await this.subscriptionContract.getSubscriptionsBySubscriber(
+          subscriberAddress
+        );
+
       return subscriptionIds.map((id: ethers.BigNumber) => id.toString());
     } catch (error) {
       console.error('Error getting subscriptions by subscriber:', error);
       throw error;
     }
   }
-  
+
   /**
    * Upload metadata to IPFS
    */
@@ -537,10 +604,10 @@ export class BlockchainIntegrationManager {
     try {
       // Convert metadata to JSON string
       const metadataJson = JSON.stringify(metadata);
-      
+
       // Add to IPFS
       const { cid } = await ipfs.add(Buffer.from(metadataJson));
-      
+
       // Return IPFS URI
       return `ipfs://${cid.toString()}`;
     } catch (error) {
@@ -548,7 +615,7 @@ export class BlockchainIntegrationManager {
       throw error;
     }
   }
-  
+
   /**
    * Create verification record in Firestore
    */
@@ -572,12 +639,15 @@ export class BlockchainIntegrationManager {
         verificationHash: verificationHash.substring(2), // Remove '0x' prefix
         verificationStatus,
         blockchainNetwork: 'ethereum',
-        metadata: {}
+        metadata: {},
       };
-      
+
       // Add to Firestore
-      await setDoc(doc(db, 'blockchainRecords', verificationData.id), verificationData);
-      
+      await setDoc(
+        doc(db, 'blockchainRecords', verificationData.id),
+        verificationData
+      );
+
       // Log activity
       await ActivityLoggerService.logActivity(
         'blockchain',
@@ -588,7 +658,7 @@ export class BlockchainIntegrationManager {
         verificationStatus ? 'success' : 'failure',
         { transactionId, blockchainAddress }
       );
-      
+
       // Update the user or organization record with verification status
       if (recordType === 'user') {
         await updateDoc(doc(db, 'users', recordId), {
@@ -597,16 +667,16 @@ export class BlockchainIntegrationManager {
           'userMetadata.blockchainVerification': {
             transactionId,
             timestamp: Timestamp.now(),
-            status: verificationStatus
+            status: verificationStatus,
           },
-          updatedAt: Timestamp.now()
+          updatedAt: Timestamp.now(),
         });
       } else {
         await updateDoc(doc(db, 'organizations', recordId), {
           'blockchainVerification.address': blockchainAddress,
           'blockchainVerification.transactionId': transactionId,
           'blockchainVerification.verificationStatus': verificationStatus,
-          updatedAt: Timestamp.now()
+          updatedAt: Timestamp.now(),
         });
       }
     } catch (error) {
@@ -614,7 +684,7 @@ export class BlockchainIntegrationManager {
       throw error;
     }
   }
-  
+
   /**
    * Create NFT record in Firestore
    */
@@ -639,7 +709,7 @@ export class BlockchainIntegrationManager {
         blockchainNetwork: 'ethereum',
         metadata: {
           uri: metadataUri,
-          ...additionalData
+          ...additionalData,
         },
         mintedAt: Timestamp.now(),
         transferHistory: [
@@ -647,14 +717,14 @@ export class BlockchainIntegrationManager {
             fromAddress: '0x0000000000000000000000000000000000000000',
             toAddress: ownerAddress,
             transactionId,
-            timestamp: Timestamp.now()
-          }
-        ]
+            timestamp: Timestamp.now(),
+          },
+        ],
       };
-      
+
       // Add to Firestore
       await setDoc(doc(db, 'nftTokens', nftData.id), nftData);
-      
+
       // Log activity
       await ActivityLoggerService.logActivity(
         'blockchain',
@@ -665,21 +735,21 @@ export class BlockchainIntegrationManager {
         'success',
         { tokenId, transactionId, ownerAddress }
       );
-      
+
       // Update the agent or solution record with NFT reference
       if (tokenType === 'agent') {
         await updateDoc(doc(db, 'agents', linkedRecordId), {
           'metadata.nftTokenId': tokenId,
           'metadata.nftContractAddress': this.nftContract.address,
           'metadata.nftTransactionId': transactionId,
-          updatedAt: Timestamp.now()
+          updatedAt: Timestamp.now(),
         });
       } else {
         await updateDoc(doc(db, 'solutions', linkedRecordId), {
           'metadata.nftTokenId': tokenId,
           'metadata.nftContractAddress': this.nftContract.address,
           'metadata.nftTransactionId': transactionId,
-          updatedAt: Timestamp.now()
+          updatedAt: Timestamp.now(),
         });
       }
     } catch (error) {
@@ -687,7 +757,7 @@ export class BlockchainIntegrationManager {
       throw error;
     }
   }
-  
+
   /**
    * Update NFT owner in Firestore
    */
@@ -704,29 +774,29 @@ export class BlockchainIntegrationManager {
         where('contractAddress', '==', this.nftContract.address)
       );
       const querySnapshot = await getDocs(nftQuery);
-      
+
       if (querySnapshot.empty) {
         throw new Error('NFT record not found');
       }
-      
+
       const nftDoc = querySnapshot.docs[0];
       const nftData = nftDoc.data();
-      
+
       // Create transfer event
       const transferEvent = {
         fromAddress: nftData.ownerAddress,
         toAddress: newOwnerAddress,
         transactionId,
-        timestamp: Timestamp.now()
+        timestamp: Timestamp.now(),
       };
-      
+
       // Update NFT record
       await updateDoc(doc(db, 'nftTokens', nftDoc.id), {
         ownerAddress: newOwnerAddress,
         transferHistory: [...nftData.transferHistory, transferEvent],
-        updatedAt: Timestamp.now()
+        updatedAt: Timestamp.now(),
       });
-      
+
       // Log activity
       await ActivityLoggerService.logActivity(
         'blockchain',
@@ -735,14 +805,20 @@ export class BlockchainIntegrationManager {
         nftData.tokenType,
         nftData.linkedRecordId,
         'success',
-        { tokenId, fromAddress: nftData.ownerAddress, toAddress: newOwnerAddress, transactionId }
+        {
+          tokenId,
+          fromAddress: nftData.ownerAddress,
+          toAddress: newOwnerAddress,
+          transactionId,
+        }
       );
-      
+
       // Update the linked record if needed (for ownership tracking)
       if (nftData.tokenType === 'agent') {
         // Determine new owner type and ID based on address
-        const { ownerType, ownerId } = await this.resolveAddressToOwner(newOwnerAddress);
-        
+        const { ownerType, ownerId } =
+          await this.resolveAddressToOwner(newOwnerAddress);
+
         // Update agent owner
         if (ownerType && ownerId) {
           await updateDoc(doc(db, 'agents', nftData.linkedRecordId), {
@@ -750,9 +826,9 @@ export class BlockchainIntegrationManager {
             ownerId,
             'metadata.ownershipTransferred': true,
             'metadata.previousOwner': {
-              ownerAddress: nftData.ownerAddress
+              ownerAddress: nftData.ownerAddress,
             },
-            updatedAt: Timestamp.now()
+            updatedAt: Timestamp.now(),
           });
         }
       }
@@ -761,7 +837,7 @@ export class BlockchainIntegrationManager {
       throw error;
     }
   }
-  
+
   /**
    * Create subscription record in Firestore
    */
@@ -777,17 +853,17 @@ export class BlockchainIntegrationManager {
     try {
       // Get solution details
       const solutionDoc = await getDoc(doc(db, 'solutions', solutionId));
-      
+
       if (!solutionDoc.exists()) {
         throw new Error('Solution not found');
       }
-      
+
       const solution = solutionDoc.data();
-      
+
       // Determine subscriber type and create subscription record
       const subscriberDoc = await getDoc(doc(db, 'users', subscriberId));
       const subscriberType = subscriberDoc.exists() ? 'user' : 'organization';
-      
+
       const subscriptionData = {
         id: `sub_${subscriptionId}`,
         blockchainSubscriptionId: subscriptionId,
@@ -804,15 +880,18 @@ export class BlockchainIntegrationManager {
         metadata: {
           blockchainTransactionId: transactionId,
           solutionCode,
-          solutionName: solution.name
+          solutionName: solution.name,
         },
         createdAt: Timestamp.now(),
-        updatedAt: Timestamp.now()
+        updatedAt: Timestamp.now(),
       };
-      
+
       // Add to Firestore
-      await setDoc(doc(db, 'subscriptions', subscriptionData.id), subscriptionData);
-      
+      await setDoc(
+        doc(db, 'subscriptions', subscriptionData.id),
+        subscriptionData
+      );
+
       // Log activity
       await ActivityLoggerService.logActivity(
         'blockchain',
@@ -827,33 +906,33 @@ export class BlockchainIntegrationManager {
           subscriberType,
           startTime,
           endTime,
-          transactionId
+          transactionId,
         }
       );
-      
+
       // Update user or organization with the subscription
       const fieldToUpdate = 'solutions';
-      
+
       if (subscriberType === 'user') {
         const user = subscriberDoc.data();
-        
+
         if (!user.solutions.includes(solutionCode)) {
           await updateDoc(doc(db, 'users', subscriberId), {
             solutions: [...user.solutions, solutionCode],
-            updatedAt: Timestamp.now()
+            updatedAt: Timestamp.now(),
           });
         }
       } else {
         const orgDoc = await getDoc(doc(db, 'organizations', subscriberId));
-        
+
         if (orgDoc.exists()) {
           const organization = orgDoc.data();
           const orgSolutions = organization.solutions || [];
-          
+
           if (!orgSolutions.includes(solutionCode)) {
             await updateDoc(doc(db, 'organizations', subscriberId), {
               solutions: [...orgSolutions, solutionCode],
-              updatedAt: Timestamp.now()
+              updatedAt: Timestamp.now(),
             });
           }
         }
@@ -863,7 +942,7 @@ export class BlockchainIntegrationManager {
       throw error;
     }
   }
-  
+
   /**
    * Update subscription record in Firestore
    */
@@ -879,21 +958,21 @@ export class BlockchainIntegrationManager {
         where('blockchainSubscriptionId', '==', subscriptionId)
       );
       const querySnapshot = await getDocs(subscriptionQuery);
-      
+
       if (querySnapshot.empty) {
         throw new Error('Subscription record not found');
       }
-      
+
       const subscriptionDoc = querySnapshot.docs[0];
-      
+
       // Update subscription record
       await updateDoc(doc(db, 'subscriptions', subscriptionDoc.id), {
         endDate: Timestamp.fromMillis(newEndTime * 1000),
         'metadata.renewalTransactionId': transactionId,
         'metadata.lastRenewalDate': Timestamp.now(),
-        updatedAt: Timestamp.now()
+        updatedAt: Timestamp.now(),
       });
-      
+
       // Log activity
       await ActivityLoggerService.logActivity(
         'blockchain',
@@ -909,7 +988,7 @@ export class BlockchainIntegrationManager {
       throw error;
     }
   }
-  
+
   /**
    * Cancel subscription record in Firestore
    */
@@ -925,23 +1004,23 @@ export class BlockchainIntegrationManager {
         where('blockchainSubscriptionId', '==', subscriptionId)
       );
       const querySnapshot = await getDocs(subscriptionQuery);
-      
+
       if (querySnapshot.empty) {
         throw new Error('Subscription record not found');
       }
-      
+
       const subscriptionDoc = querySnapshot.docs[0];
       const subscription = subscriptionDoc.data();
-      
+
       // Update subscription record
       await updateDoc(doc(db, 'subscriptions', subscriptionDoc.id), {
         status: 'canceled',
         endDate: Timestamp.fromMillis(canceledAt * 1000),
         'metadata.cancelTransactionId': transactionId,
         'metadata.canceledAt': Timestamp.fromMillis(canceledAt * 1000),
-        updatedAt: Timestamp.now()
+        updatedAt: Timestamp.now(),
       });
-      
+
       // Log activity
       await ActivityLoggerService.logActivity(
         'blockchain',
@@ -952,7 +1031,7 @@ export class BlockchainIntegrationManager {
         'success',
         { subscriptionId, canceledAt, transactionId }
       );
-      
+
       // Update user or organization solutions array if needed
       // This might be a business decision whether to remove the solution or keep it with canceled status
     } catch (error) {
@@ -960,7 +1039,7 @@ export class BlockchainIntegrationManager {
       throw error;
     }
   }
-  
+
   /**
    * Resolve blockchain address to owner type and ID
    */
@@ -974,28 +1053,28 @@ export class BlockchainIntegrationManager {
         where('blockchainAddress', '==', address)
       );
       let querySnapshot = await getDocs(userQuery);
-      
+
       if (!querySnapshot.empty) {
         return {
           ownerType: 'user',
-          ownerId: querySnapshot.docs[0].id
+          ownerId: querySnapshot.docs[0].id,
         };
       }
-      
+
       // Check if address belongs to an organization
       const orgQuery = query(
         collection(db, 'organizations'),
         where('blockchainVerification.address', '==', address)
       );
       querySnapshot = await getDocs(orgQuery);
-      
+
       if (!querySnapshot.empty) {
         return {
           ownerType: 'organization',
-          ownerId: querySnapshot.docs[0].id
+          ownerId: querySnapshot.docs[0].id,
         };
       }
-      
+
       // Not found
       return { ownerType: '', ownerId: '' };
     } catch (error) {
@@ -1011,22 +1090,22 @@ export class BlockchainIntegrationManager {
  */
 export class S2DOBlockchainSecurityManager {
   private integrationManager: BlockchainIntegrationManager;
-  
+
   constructor(blockchainManager: BlockchainIntegrationManager) {
     this.integrationManager = blockchainManager;
   }
-  
+
   /**
    * Create a secure hash of an S2DO object
    */
   public createObjectHash(objectData: any): string {
     // Create a deterministic JSON string (sort keys)
     const sortedJson = this.createSortedJson(objectData);
-    
+
     // Hash the JSON string
     return CryptoJS.SHA256(sortedJson).toString();
   }
-  
+
   /**
    * Verify an S2DO object hash on the blockchain
    */
@@ -1042,28 +1121,28 @@ export class S2DOBlockchainSecurityManager {
         where('verificationHash', '==', objectHash)
       );
       const querySnapshot = await getDocs(hashQuery);
-      
+
       if (querySnapshot.empty) {
         return { verified: false };
       }
-      
+
       const blockchainRecord = querySnapshot.docs[0].data();
-      
+
       // Verify record points to the correct object
       if (blockchainRecord.recordId !== objectId) {
         return { verified: false };
       }
-      
+
       return {
         verified: true,
-        blockchainRecord
+        blockchainRecord,
       };
     } catch (error) {
       console.error('Error verifying object hash:', error);
       throw error;
     }
   }
-  
+
   /**
    * Register an S2DO object on the blockchain
    */
@@ -1075,11 +1154,11 @@ export class S2DOBlockchainSecurityManager {
     try {
       // Create object hash
       const objectHash = this.createObjectHash(objectData);
-      
+
       // Create a simple transaction to record the hash
       // In a real implementation, this would use a specific smart contract
       // For now, we'll simulate by creating a verification record
-      
+
       // Create verification record
       const verificationData = {
         id: `s2do_verification_${objectId}`,
@@ -1093,13 +1172,16 @@ export class S2DOBlockchainSecurityManager {
         blockchainNetwork: 'ethereum',
         metadata: {
           objectType: objectData.objectType || 'generic',
-          createdAt: objectData.createdAt || Timestamp.now()
-        }
+          createdAt: objectData.createdAt || Timestamp.now(),
+        },
       };
-      
+
       // Add to Firestore
-      await setDoc(doc(db, 'blockchainRecords', verificationData.id), verificationData);
-      
+      await setDoc(
+        doc(db, 'blockchainRecords', verificationData.id),
+        verificationData
+      );
+
       // Log activity
       await ActivityLoggerService.logActivity(
         'blockchain',
@@ -1110,28 +1192,28 @@ export class S2DOBlockchainSecurityManager {
         'success',
         { objectHash, transactionId: verificationData.transactionId }
       );
-      
+
       // Update the S2DO object with verification data
       await updateDoc(doc(db, 's2doObjects', objectId), {
         'metadata.blockchainVerification': {
           hash: objectHash,
           transactionId: verificationData.transactionId,
           timestamp: Timestamp.now(),
-          status: true
+          status: true,
         },
-        updatedAt: Timestamp.now()
+        updatedAt: Timestamp.now(),
       });
-      
+
       return {
         transactionId: verificationData.transactionId,
-        objectHash
+        objectHash,
       };
     } catch (error) {
       console.error('Error registering object on blockchain:', error);
       throw error;
     }
   }
-  
+
   /**
    * Create a sorted JSON string for deterministic hashing
    */
@@ -1141,22 +1223,22 @@ export class S2DOBlockchainSecurityManager {
       if (obj === null || typeof obj !== 'object') {
         return obj;
       }
-      
+
       // Handle arrays
       if (Array.isArray(obj)) {
         return obj.map(sortObjectKeys);
       }
-      
+
       // Handle Date objects (convert to ISO string)
       if (obj instanceof Date) {
         return obj.toISOString();
       }
-      
+
       // Handle Firestore Timestamp objects
       if (obj instanceof Timestamp) {
         return obj.toDate().toISOString();
       }
-      
+
       // Sort object keys
       return Object.keys(obj)
         .sort()
@@ -1165,12 +1247,12 @@ export class S2DOBlockchainSecurityManager {
           return result;
         }, {});
     };
-    
+
     return JSON.stringify(sortObjectKeys(obj));
   }
 }
 
 export default {
   BlockchainIntegrationManager,
-  S2DOBlockchainSecurityManager
+  S2DOBlockchainSecurityManager,
 };

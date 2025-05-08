@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@pinecone-database/pinecone": "^5.1.2",
+    "firebase-admin": "^13.3.0"
+  }
+}

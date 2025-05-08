@@ -1,0 +1,245 @@
+name: Anthology Subscriber Onboarding
+
+on:
+  workflow_dispatch:
+    inputs:
+      subscriber_id:
+        description: 'Subscriber ID'
+        required: true
+        type: string
+      subscriber_tier:
+        description: 'Subscription tier'
+        required: true
+        type: choice
+        options:
+          - individual
+          - business
+          - enterprise
+      integration_types:
+        description: 'Requested integration types (comma-separated)'
+        required: false
+        default: "cms,lms,crm"
+        type: string
+
+jobs:
+  validate-subscriber:
+    runs-on: ubuntu-latest
+    outputs:
+      subscriber_validated: ${{ steps.validation.outputs.valid }}
+      subscription_active: ${{ steps.validation.outputs.active }}
+      allocated_resources: ${{ steps.validation.outputs.resources }}
+      region: ${{ steps.validation.outputs.region }}
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Validate subscriber
+        id: validation
+        run: |
+          # Validate subscriber credentials and status
+          RESULT=$(curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.ANTHOLOGY_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"subscriber_id": "${{ github.event.inputs.subscriber_id }}", "tier": "${{ github.event.inputs.subscriber_tier }}"}' \
+            https://us-west1-859242575175.cloudfunctions.net/anthology/api/v1/subscribers/validate)
+          
+          VALID=$(echo $RESULT | jq -r '.valid')
+          ACTIVE=$(echo $RESULT | jq -r '.subscription_active')
+          RESOURCES=$(echo $RESULT | jq -r '.resources')
+          REGION=$(echo $RESULT | jq -r '.region')
+          
+          echo "valid=$VALID" >> $GITHUB_OUTPUT
+          echo "active=$ACTIVE" >> $GITHUB_OUTPUT
+          echo "resources=$RESOURCES" >> $GITHUB_OUTPUT
+          echo "region=$REGION" >> $GITHUB_OUTPUT
+          
+          if [[ "$VALID" != "true" ]]; then
+            echo "::error::Invalid subscriber ID"
+            exit 1
+          fi
+          
+          if [[ "$ACTIVE" != "true" ]]; then
+            echo "::error::Subscription is not active"
+            exit 1
+          fi
+
+  provision-namespace:
+    needs: validate-subscriber
+    if: needs.validate-subscriber.outputs.subscriber_validated == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      namespace: ${{ steps.namespace.outputs.name }}
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: 859242575175
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        
+      - name: Configure kubectl
+        run: |
+          gcloud container clusters get-credentials anthology-${needs.validate-subscriber.outputs.region} \
+            --region=${needs.validate-subscriber.outputs.region} \
+            --project=859242575175
+      
+      - name: Create namespace
+        id: namespace
+        run: |
+          # Create a namespace for the subscriber
+          NAMESPACE="sub-${{ github.event.inputs.subscriber_id }}"
+          
+          # Check if namespace exists
+          if kubectl get namespace $NAMESPACE &> /dev/null; then
+            echo "Namespace $NAMESPACE already exists"
+          else
+            kubectl create namespace $NAMESPACE
+            echo "Created namespace $NAMESPACE"
+            
+            # Set resource quotas based on tier
+            kubectl apply -f - <<YAML
+            apiVersion: v1
+            kind: ResourceQuota
+            metadata:
+              name: subscriber-quota
+              namespace: $NAMESPACE
+            spec:
+              hard:
+                requests.cpu: "${needs.validate-subscriber.outputs.resources}"
+                requests.memory: "${needs.validate-subscriber.outputs.resources}Gi"
+                limits.cpu: "${needs.validate-subscriber.outputs.resources}"
+                limits.memory: "${needs.validate-subscriber.outputs.resources}Gi"
+                persistentvolumeclaims: "10"
+                pods: "20"
+                services: "10"
+            YAML
+          fi
+          
+          echo "name=$NAMESPACE" >> $GITHUB_OUTPUT
+
+  deploy-integration-containers:
+    needs: [validate-subscriber, provision-namespace]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: 859242575175
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+        
+      - name: Configure kubectl
+        run: |
+          gcloud container clusters get-credentials anthology-${needs.validate-subscriber.outputs.region} \
+            --region=${needs.validate-subscriber.outputs.region} \
+            --project=859242575175
+      
+      - name: Deploy integration containers
+        run: |
+          NAMESPACE="${{ needs.provision-namespace.outputs.namespace }}"
+          INTEGRATION_TYPES="${{ github.event.inputs.integration_types }}"
+          
+          # For each integration type, deploy the container
+          for INTEGRATION in $(echo $INTEGRATION_TYPES | tr ',' ' '); do
+            echo "Deploying $INTEGRATION integration..."
+            
+            # Deploy the integration container
+            kubectl apply -f - <<YAML
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: anthology-${INTEGRATION}
+              namespace: ${NAMESPACE}
+            spec:
+              replicas: 1
+              selector:
+                matchLabels:
+                  app: anthology-${INTEGRATION}
+              template:
+                metadata:
+                  labels:
+                    app: anthology-${INTEGRATION}
+                spec:
+                  containers:
+                  - name: integration
+                    image: gcr.io/859242575175/anthology-integration-${INTEGRATION}:latest
+                    resources:
+                      requests:
+                        memory: "512Mi"
+                        cpu: "250m"
+                      limits:
+                        memory: "1Gi"
+                        cpu: "500m"
+                    env:
+                    - name: SUBSCRIBER_ID
+                      value: "${{ github.event.inputs.subscriber_id }}"
+                    - name: SUBSCRIBER_TIER
+                      value: "${{ github.event.inputs.subscriber_tier }}"
+                    - name: ANTHOLOGY_API_KEY
+                      valueFrom:
+                        secretKeyRef:
+                          name: anthology-api-key
+                          key: key
+            YAML
+            
+            # Create a service for the integration
+            kubectl apply -f - <<YAML
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: anthology-${INTEGRATION}
+              namespace: ${NAMESPACE}
+            spec:
+              selector:
+                app: anthology-${INTEGRATION}
+              ports:
+              - port: 80
+                targetPort: 8080
+              type: ClusterIP
+            YAML
+          done
+
+  configure-subscriber:
+    needs: [validate-subscriber, provision-namespace, deploy-integration-containers]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Configure subscriber account
+        run: |
+          node ./scripts/configure-subscriber.js \
+            --subscriber-id=${{ github.event.inputs.subscriber_id }} \
+            --tier=${{ github.event.inputs.subscriber_tier }} \
+            --namespace=${{ needs.provision-namespace.outputs.namespace }} \
+            --region=${needs.validate-subscriber.outputs.region}
+            
+      - name: Generate subscriber credentials
+        run: |
+          # Generate API keys and credentials for the subscriber
+          CREDENTIALS=$(node ./scripts/generate-subscriber-credentials.js \
+            --subscriber-id=${{ github.event.inputs.subscriber_id }} \
+            --namespace=${{ needs.provision-namespace.outputs.namespace }})
+            
+          # Store credentials in Secret Manager
+          echo "$CREDENTIALS" | gcloud secrets versions add \
+            anthology-subscriber-${{ github.event.inputs.subscriber_id }} \
+            --data-file=- --project=859242575175

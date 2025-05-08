@@ -1,0 +1,108 @@
+name: Anthology AI Publishing Workflow
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'content/**'
+      - 'assets/**'
+      - 'metadata/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'content/**'
+      - 'assets/**'
+      - 'metadata/**'
+  workflow_dispatch:
+    inputs:
+      content_id:
+        description: 'Content ID to publish'
+        required: false
+        type: string
+      force_republish:
+        description: 'Force republish existing content'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Validate content
+        run: npm run validate
+
+  prepare:
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Prepare content
+        run: npm run prepare
+        
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: prepared-content
+          path: dist/
+
+  publish:
+    needs: prepare
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: prepared-content
+          path: dist/
+          
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        
+      - name: Publish content
+        env:
+          ANTHOLOGY_API_KEY: ${{ secrets.ANTHOLOGY_API_KEY }}
+          CONTENT_ID: ${{ github.event.inputs.content_id }}
+          FORCE_REPUBLISH: ${{ github.event.inputs.force_republish }}
+        run: npm run publish
+        
+      - name: Notify on completion
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+            -d '{"text":"Content published successfully"}' \
+            ${{ secrets.SLACK_WEBHOOK_URL }}

@@ -1,0 +1,149 @@
+name: Anthology Multi-Platform Publishing
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'content/**'
+  workflow_dispatch:
+    inputs:
+      content_id:
+        description: 'Content ID to publish'
+        required: true
+        type: string
+      platforms:
+        description: 'Comma-separated list of platforms to publish to'
+        required: true
+        default: "web,social,ebook"
+        type: string
+      publish_schedule:
+        description: 'Publishing schedule (now or ISO date)'
+        required: false
+        default: "now"
+        type: string
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Determine content ID
+        id: content
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "content_id=${{ github.event.inputs.content_id }}" >> $GITHUB_OUTPUT
+            echo "platforms=${{ github.event.inputs.platforms }}" >> $GITHUB_OUTPUT
+            echo "schedule=${{ github.event.inputs.publish_schedule }}" >> $GITHUB_OUTPUT
+          else
+            # Determine content ID from pushed files
+            CONTENT_ID=$(node ./scripts/get-content-id.js)
+            echo "content_id=$CONTENT_ID" >> $GITHUB_OUTPUT
+            echo "platforms=web,social,ebook" >> $GITHUB_OUTPUT
+            echo "schedule=now" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Prepare content for publishing
+        run: node ./scripts/prepare-content.js --content-id=${{ steps.content.outputs.content_id }} --platforms=${{ steps.content.outputs.platforms }}
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: prepared-content
+          path: dist/
+
+  publish-web:
+    needs: prepare
+    if: contains(needs.prepare.outputs.platforms, 'web')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: prepared-content
+          path: dist/
+          
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: 859242575175
+          
+      - name: Publish to Web
+        env:
+          ANTHOLOGY_API_KEY: ${{ secrets.ANTHOLOGY_API_KEY }}
+          CONTENT_ID: ${{ needs.prepare.outputs.content_id }}
+        run: node ./scripts/publish-web.js
+
+  publish-ebook:
+    needs: prepare
+    if: contains(needs.prepare.outputs.platforms, 'ebook')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: prepared-content
+          path: dist/
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm ci
+          
+      - name: Publish to Kindle
+        env:
+          AMAZON_KDP_TOKEN: ${{ secrets.AMAZON_KDP_TOKEN }}
+          CONTENT_ID: ${{ needs.prepare.outputs.content_id }}
+        run: node ./scripts/publish-kindle.js
+        
+      - name: Publish to other eBook platforms
+        env:
+          ANTHOLOGY_API_KEY: ${{ secrets.ANTHOLOGY_API_KEY }}
+          CONTENT_ID: ${{ needs.prepare.outputs.content_id }}
+        run: node ./scripts/publish-ebook-platforms.js
+
+  publish-social:
+    needs: prepare
+    if: contains(needs.prepare.outputs.platforms, 'social')
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: prepared-content
+          path: dist/
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm ci
+          
+      - name: Publish to Social Media
+        env:
+          ANTHOLOGY_API_KEY: ${{ secrets.ANTHOLOGY_API_KEY }}
+          TWITTER_TOKEN: ${{ secrets.TWITTER_OAUTH }}
+          LINKEDIN_TOKEN: ${{ secrets.LINKEDIN_OAUTH }}
+          FACEBOOK_TOKEN: ${{ secrets.FACEBOOK_OAUTH }}
+          INSTAGRAM_TOKEN: ${{ secrets.INSTAGRAM_OAUTH }}
+          CONTENT_ID: ${{ needs.prepare.outputs.content_id }}
+        run: node ./scripts/publish-social.js

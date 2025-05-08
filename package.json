@@ -1,0 +1,11 @@
+{
+  "name": "asoos-sallyport",
+  "version": "1.0.0",
+  "main": "server.js",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}

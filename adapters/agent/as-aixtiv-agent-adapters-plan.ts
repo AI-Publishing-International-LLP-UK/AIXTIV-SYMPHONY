@@ -1,7 +1,7 @@
 /**
  * AIXTIV SYMPHONY™ Complete Agent Adapter System
  * © 2025 AI Publishing International LLP
- * 
+ *
  * PROPRIETARY AND CONFIDENTIAL
  * This is proprietary software of AI Publishing International LLP.
  * All rights reserved. No part of this software may be reproduced,
@@ -324,12 +324,15 @@ export class DrGrant03Adapter extends BaseAgentAdapter {
 export class AgentAdapterFactory {
   private aiConnector: AIConnector;
   private s2doManager: S2DOManager | null;
-  
-  constructor(aiConnector: AIConnector, s2doManager: S2DOManager | null = null) {
+
+  constructor(
+    aiConnector: AIConnector,
+    s2doManager: S2DOManager | null = null
+  ) {
     this.aiConnector = aiConnector;
     this.s2doManager = s2doManager;
   }
-  
+
   /**
    * Create an agent adapter for the specified pilot type
    */
@@ -341,28 +344,30 @@ export class AgentAdapterFactory {
       case PilotType.DR_MEMORIA_PILOT:
         return new DrMemoriaAdapter(this.aiConnector, this.s2doManager);
       // Add cases for all other R1 adapters...
-      
+
       // R2 Deploy Agency adapters
       case 'DR_GRANT_02': // Would need to add to PilotType enum
         return new DrGrant02Adapter(this.aiConnector, this.s2doManager);
       // Add cases for all other R2 adapters...
-      
+
       // R3 Engage & Sales Agency adapters
       case PilotType.DR_MATCH_PILOT:
         return new DrMatchAdapter(this.aiConnector, this.s2doManager);
       case PilotType.DR_MARIA_HISTORICAL_01:
         return new DrMariaAdapter(this.aiConnector, this.s2doManager);
       // Add cases for all other R3 adapters...
-      
+
       default:
         throw new Error(`Unsupported pilot type: ${pilotType}`);
     }
   }
-  
+
   /**
    * Create all adapters for a specific squadron
    */
-  public createSquadronAdapters(squadron: 'R1' | 'R2' | 'R3'): AgentAIAdapter[] {
+  public createSquadronAdapters(
+    squadron: 'R1' | 'R2' | 'R3'
+  ): AgentAIAdapter[] {
     switch (squadron) {
       case 'R1':
         return [
@@ -392,13 +397,13 @@ export {
   // Base components
   AgentAIAdapter,
   BaseAgentAdapter,
-  
+
   // Currently implemented adapters
   DrMemoriaAdapter,
   DrLucyAdapter,
   DrMatchAdapter,
   DrMariaAdapter,
-  
+
   // Factory
-  AgentAdapterFactory
+  AgentAdapterFactory,
 };

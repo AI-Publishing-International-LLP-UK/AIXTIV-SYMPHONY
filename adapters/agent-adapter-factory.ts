@@ -46,8 +46,11 @@ export interface AgentAdapterConfig {
 export class AgentAdapterFactory extends EventEmitter {
   private static instance: AgentAdapterFactory;
   private adapters: Map<string, AgentAdapter>;
-  private adapterTypes: Map<string, new (config: AgentAdapterConfig) => AgentAdapter>;
-  
+  private adapterTypes: Map<
+    string,
+    new (config: AgentAdapterConfig) => AgentAdapter
+  >;
+
   private constructor() {
     super();
     this.adapters = new Map();
@@ -68,7 +71,7 @@ export class AgentAdapterFactory extends EventEmitter {
    * Register a new adapter type
    */
   registerAdapterType(
-    type: string, 
+    type: string,
     adapterClass: new (config: AgentAdapterConfig) => AgentAdapter
   ): void {
     this.adapterTypes.set(type, adapterClass);
@@ -91,7 +94,7 @@ export class AgentAdapterFactory extends EventEmitter {
     const adapter = new AdapterClass(config);
     this.adapters.set(config.id, adapter);
     this.emit('adapter:created', { id: adapter.id, type: adapter.type });
-    
+
     return adapter;
   }
 
@@ -106,16 +109,18 @@ export class AgentAdapterFactory extends EventEmitter {
    * Get all adapters of a specific type
    */
   getAdaptersByType(type: string): AgentAdapter[] {
-    return Array.from(this.adapters.values())
-      .filter(adapter => adapter.type === type);
+    return Array.from(this.adapters.values()).filter(
+      adapter => adapter.type === type
+    );
   }
 
   /**
    * Find adapters with specific capabilities
    */
   findAdaptersByCapability(capability: string): AgentAdapter[] {
-    return Array.from(this.adapters.values())
-      .filter(adapter => adapter.capabilities.includes(capability));
+    return Array.from(this.adapters.values()).filter(adapter =>
+      adapter.capabilities.includes(capability)
+    );
   }
 
   /**
@@ -144,7 +149,7 @@ export class AgentAdapterFactory extends EventEmitter {
   createOpenAIAdapter(config: AgentAdapterConfig): AgentAdapter {
     return this.createAdapter({
       ...config,
-      type: 'openai'
+      type: 'openai',
     });
   }
 
@@ -154,7 +159,7 @@ export class AgentAdapterFactory extends EventEmitter {
   createClaudeAdapter(config: AgentAdapterConfig): AgentAdapter {
     return this.createAdapter({
       ...config,
-      type: 'claude'
+      type: 'claude',
     });
   }
 
@@ -188,14 +193,17 @@ export abstract class BaseAgentAdapter implements AgentAdapter {
   abstract connect(): Promise<void>;
   abstract disconnect(): Promise<void>;
   abstract executeOperation(operation: AgentOperation): Promise<any>;
-  
-  async getStatus(): Promise<{ status: string; details?: Record<string, any> }> {
+
+  async getStatus(): Promise<{
+    status: string;
+    details?: Record<string, any>;
+  }> {
     return {
       status: this.status,
       details: {
         type: this.type,
-        capabilities: this.capabilities
-      }
+        capabilities: this.capabilities,
+      },
     };
   }
 }

@@ -9,3 +9,6 @@ dist/
 
 # Local development
 config/local*
+
+# Backup files
+*.bak

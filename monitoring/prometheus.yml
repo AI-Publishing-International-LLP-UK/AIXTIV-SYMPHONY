@@ -1,0 +1,63 @@
+global:
+  scrape_interval: 15s     # Set the scrape interval to every 15 seconds (default)
+  evaluation_interval: 15s # Evaluate rules every 15 seconds
+  # scrape_timeout is set to the global default (10s)
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093 # Uncomment when you add an alertmanager
+
+# Rule files to evaluate
+rule_files:
+  # - "first_rules.yml"    # Uncomment and update when you have alert rules to add
+
+# Scrape configuration
+scrape_configs:
+  # Self-monitoring of Prometheus server
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Scrape configuration for the integration-gateway service
+  - job_name: 'integration-gateway'
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['gateway-service:3000']  # Use the Docker service name
+    scrape_interval: 10s
+
+  # Redis Exporter (if you're using redis_exporter)
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']  # Typically runs on port 9121
+    # This assumes you have a redis-exporter service running
+
+  # Firebase/Firestore Metrics Endpoint
+  # This assumes you have a custom endpoint that exposes Firebase/Firestore metrics
+  - job_name: 'firebase-metrics'
+    metrics_path: '/firebase-metrics'
+    # Honor_labels helps when federating metrics from multiple sources
+    honor_labels: true
+    static_configs:
+      - targets: ['gateway-service:3000']
+    # Optional: longer scrape interval for external service metrics
+    scrape_interval: 30s
+
+  # Pinecone Metrics Endpoint
+  # This assumes you have a custom endpoint that exposes Pinecone metrics
+  - job_name: 'pinecone-metrics'
+    metrics_path: '/pinecone-metrics'
+    honor_labels: true
+    static_configs:
+      - targets: ['gateway-service:3000']
+    # Optional: longer scrape interval for external service metrics
+    scrape_interval: 30s
+
+  # Node Exporter for host metrics (CPU, memory, disk, etc.)
+  # Uncomment if you deploy node_exporter
+  # - job_name: 'node'
+  #   static_configs:
+  #     - targets: ['node-exporter:9100']
+

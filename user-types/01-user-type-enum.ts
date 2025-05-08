@@ -57,44 +57,52 @@ export enum UserType {
   // Authentication Levels
   LEVEL_1_USER = 'L1',
   LEVEL_2_USER = 'L2',
-  LEVEL_3_USER = 'L3'
+  LEVEL_3_USER = 'L3',
 }
 
 /**
  * User Type Metadata provides additional context and capabilities for each user type
  */
-export const UserTypeMetadata: Record<UserType, {
-  track: 'Corporate' | 'Organizational' | 'Academic' | 'Community';
-  baseCapabilities: string[];
-  specializedRoles?: UserType[];
-  paymentTiers?: UserType[];
-  authenticationLevels?: UserType[];
-}> = {
+export const UserTypeMetadata: Record<
+  UserType,
+  {
+    track: 'Corporate' | 'Organizational' | 'Academic' | 'Community';
+    baseCapabilities: string[];
+    specializedRoles?: UserType[];
+    paymentTiers?: UserType[];
+    authenticationLevels?: UserType[];
+  }
+> = {
   [UserType.CORPORATE_OWNER_SUBSCRIBER_PROFESSIONAL]: {
     track: 'Corporate',
     baseCapabilities: ['Dream Commander', 'Bid Suite', 'Q4D-Lenz'],
     specializedRoles: [UserType.VISIONARY_VOICE, UserType.CO_PILOT],
-    paymentTiers: [UserType.MONTHLY_SUBSCRIBER, UserType.QUARTERLY_SUBSCRIBER, UserType.ANNUAL_SUBSCRIBER],
-    authenticationLevels: [UserType.LEVEL_1_USER, UserType.LEVEL_2_USER, UserType.LEVEL_3_USER]
+    paymentTiers: [
+      UserType.MONTHLY_SUBSCRIBER,
+      UserType.QUARTERLY_SUBSCRIBER,
+      UserType.ANNUAL_SUBSCRIBER,
+    ],
+    authenticationLevels: [
+      UserType.LEVEL_1_USER,
+      UserType.LEVEL_2_USER,
+      UserType.LEVEL_3_USER,
+    ],
   },
   // ... similar detailed metadata for each user type
-  
+
   // Example of a more complex user type with multiple capabilities
   [UserType.CORPORATE_ENTERPRISE_LEADER]: {
     track: 'Corporate',
     baseCapabilities: [
-      'Dream Commander', 
-      'Bid Suite', 
-      'Q4D-Lenz', 
-      'Strategic Planning', 
-      'Team Management'
+      'Dream Commander',
+      'Bid Suite',
+      'Q4D-Lenz',
+      'Strategic Planning',
+      'Team Management',
     ],
-    specializedRoles: [
-      UserType.VISIONARY_VOICE, 
-      UserType.PILOT
-    ],
+    specializedRoles: [UserType.VISIONARY_VOICE, UserType.PILOT],
     paymentTiers: [UserType.QUARTERLY_SUBSCRIBER, UserType.ANNUAL_SUBSCRIBER],
-    authenticationLevels: [UserType.LEVEL_2_USER, UserType.LEVEL_3_USER]
+    authenticationLevels: [UserType.LEVEL_2_USER, UserType.LEVEL_3_USER],
   },
 
   // Placeholder for other user types with their specific metadata
@@ -103,8 +111,8 @@ export const UserTypeMetadata: Record<UserType, {
     baseCapabilities: ['Q4D-Lenz', 'Learning Resources'],
     specializedRoles: [],
     paymentTiers: [UserType.MONTHLY_SUBSCRIBER],
-    authenticationLevels: [UserType.LEVEL_1_USER]
-  }
+    authenticationLevels: [UserType.LEVEL_1_USER],
+  },
 };
 
 /**
@@ -119,16 +127,16 @@ export function parseUserTypeCode(code: string): {
   paymentTier?: string;
 } {
   // Implement a comprehensive parsing logic for user type codes
-  // Example: "C-L-E-8765-45921-VV-Q" 
+  // Example: "C-L-E-8765-45921-VV-Q"
   const parts = code.split('-');
-  
+
   return {
     track: parts[0],
     position: parts[1],
     level: parts[2],
     userId: parts.length > 4 ? parts[4] : undefined,
     specializedRoles: parts.includes('VV') ? ['VV'] : [],
-    paymentTier: parts.includes('Q') ? 'Q' : parts.includes('A') ? 'A' : 'M'
+    paymentTier: parts.includes('Q') ? 'Q' : parts.includes('A') ? 'A' : 'M',
   };
 }
 
@@ -136,17 +144,17 @@ export function parseUserTypeCode(code: string): {
  * Function to generate a complete user type code
  */
 export function generateUserTypeCode(
-  baseType: UserType, 
+  baseType: UserType,
   options?: {
     userId?: string;
     specializedRoles?: UserType[];
     paymentTier?: UserType;
   }
 ): string {
-  const { 
-    userId, 
-    specializedRoles = [], 
-    paymentTier = UserType.MONTHLY_SUBSCRIBER 
+  const {
+    userId,
+    specializedRoles = [],
+    paymentTier = UserType.MONTHLY_SUBSCRIBER,
   } = options || {};
 
   const baseParts = baseType.split('-');
@@ -172,5 +180,5 @@ export default {
   UserType,
   UserTypeMetadata,
   parseUserTypeCode,
-  generateUserTypeCode
+  generateUserTypeCode,
 };

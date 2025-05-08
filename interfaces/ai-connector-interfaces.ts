@@ -37,11 +37,14 @@ export interface AIFunction {
   description: string;
   parameters: {
     type: 'object';
-    properties: Record<string, {
-      type: string;
-      description?: string;
-      enum?: string[];
-    }>;
+    properties: Record<
+      string,
+      {
+        type: string;
+        description?: string;
+        enum?: string[];
+      }
+    >;
     required?: string[];
   };
 }
@@ -96,7 +99,7 @@ export enum AIContentType {
   IMAGE = 'image',
   AUDIO = 'audio',
   VIDEO = 'video',
-  EMBEDDING = 'embedding'
+  EMBEDDING = 'embedding',
 }
 
 /**
@@ -107,38 +110,47 @@ export interface AIConnector {
    * Get the connector name
    */
   getName(): string;
-  
+
   /**
    * Get supported AI models
    */
   getSupportedModels(): Promise<string[]>;
-  
+
   /**
    * Generate a completion (text) from a prompt
    */
-  generateCompletion(prompt: string, options: AICompletionOptions): Promise<AICompletionResult>;
-  
+  generateCompletion(
+    prompt: string,
+    options: AICompletionOptions
+  ): Promise<AICompletionResult>;
+
   /**
    * Generate a chat completion from a list of messages
    */
-  generateChatCompletion(messages: AIMessage[], options: AICompletionOptions): Promise<AIChatCompletionResult>;
-  
+  generateChatCompletion(
+    messages: AIMessage[],
+    options: AICompletionOptions
+  ): Promise<AIChatCompletionResult>;
+
   /**
    * Generate embeddings for a given text
    */
-  generateEmbeddings(text: string | string[], model?: string): Promise<number[][]>;
-  
+  generateEmbeddings(
+    text: string | string[],
+    model?: string
+  ): Promise<number[][]>;
+
   /**
    * Stream a completion with callbacks for each chunk
    */
   streamCompletion(
-    prompt: string, 
-    options: AICompletionOptions, 
+    prompt: string,
+    options: AICompletionOptions,
     onChunk: (chunk: string) => void,
     onComplete: (result: AICompletionResult) => void,
     onError: (error: Error) => void
   ): Promise<void>;
-  
+
   /**
    * Stream a chat completion with callbacks for each chunk
    */
@@ -162,7 +174,7 @@ export interface AIConnectorFactory {
     type: 'openai' | 'claude' | 'gemini' | 'llama' | string,
     config: Record<string, any>
   ): AIConnector;
-  
+
   /**
    * Get available connector types
    */
@@ -177,30 +189,39 @@ export abstract class BaseAIConnector implements AIConnector {
   protected name: string;
   protected apiKey: string;
   protected baseUrl: string;
-  
+
   constructor(name: string, apiKey: string, baseUrl: string) {
     this.name = name;
     this.apiKey = apiKey;
     this.baseUrl = baseUrl;
   }
-  
+
   getName(): string {
     return this.name;
   }
-  
+
   abstract getSupportedModels(): Promise<string[]>;
-  abstract generateCompletion(prompt: string, options: AICompletionOptions): Promise<AICompletionResult>;
-  abstract generateChatCompletion(messages: AIMessage[], options: AICompletionOptions): Promise<AIChatCompletionResult>;
-  abstract generateEmbeddings(text: string | string[], model?: string): Promise<number[][]>;
-  
+  abstract generateCompletion(
+    prompt: string,
+    options: AICompletionOptions
+  ): Promise<AICompletionResult>;
+  abstract generateChatCompletion(
+    messages: AIMessage[],
+    options: AICompletionOptions
+  ): Promise<AIChatCompletionResult>;
+  abstract generateEmbeddings(
+    text: string | string[],
+    model?: string
+  ): Promise<number[][]>;
+
   abstract streamCompletion(
-    prompt: string, 
-    options: AICompletionOptions, 
+    prompt: string,
+    options: AICompletionOptions,
     onChunk: (chunk: string) => void,
     onComplete: (result: AICompletionResult) => void,
     onError: (error: Error) => void
   ): Promise<void>;
-  
+
   abstract streamChatCompletion(
     messages: AIMessage[],
     options: AICompletionOptions,
@@ -208,7 +229,7 @@ export abstract class BaseAIConnector implements AIConnector {
     onComplete: (result: AIChatCompletionResult) => void,
     onError: (error: Error) => void
   ): Promise<void>;
-  
+
   /**
    * Utility method to convert tokens to estimated character count
    */
@@ -216,7 +237,7 @@ export abstract class BaseAIConnector implements AIConnector {
     // Approximation: 1 token ≈ 4 characters in English
     return tokenCount * 4;
   }
-  
+
   /**
    * Utility method to estimate token count from text
    */
@@ -230,22 +251,25 @@ export abstract class BaseAIConnector implements AIConnector {
  * Implementation of the AI connector factory
  */
 export class AIConnectorFactoryImpl implements AIConnectorFactory {
-  private connectorTypes: Map<string, new (config: Record<string, any>) => AIConnector>;
-  
+  private connectorTypes: Map<
+    string,
+    new (config: Record<string, any>) => AIConnector
+  >;
+
   constructor() {
     this.connectorTypes = new Map();
   }
-  
+
   /**
    * Register a new connector type
    */
   registerConnectorType(
-    type: string, 
+    type: string,
     constructor: new (config: Record<string, any>) => AIConnector
   ): void {
     this.connectorTypes.set(type, constructor);
   }
-  
+
   /**
    * Create a new AI connector with the specified type
    */
@@ -257,10 +281,10 @@ export class AIConnectorFactoryImpl implements AIConnectorFactory {
     if (!Constructor) {
       throw new Error(`Unknown AI connector type: ${type}`);
     }
-    
+
     return new Constructor(config);
   }
-  
+
   /**
    * Get available connector types
    */
@@ -269,8 +293,8 @@ export class AIConnectorFactoryImpl implements AIConnectorFactory {
   }
 }
 
-export default { 
+export default {
   AIContentType,
   BaseAIConnector,
-  AIConnectorFactoryImpl
+  AIConnectorFactoryImpl,
 };

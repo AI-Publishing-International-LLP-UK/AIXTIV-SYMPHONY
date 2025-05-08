@@ -87,5 +87,43 @@ describe('TeamGateway', () => {
     });
 
     it('should return error for low auth level token', async () => {
-      const
+      const context = {
+        requestId: 'test-req-id',
+        userId: 'test-user',
+        sallyPortToken: 'low-auth-token'
+      };
+      
+      // Set up the low auth level token response
+      mockSallyPortVerifier.setResponseForToken('low-auth-token', {
+        isValid: true,
+        authLevel: 2.5,  // Below the required 3.5
+        identity: { userId: 'low-auth-user' },
+        metadata: {}
+      });
+      
+      // Verify authentication fails due to low auth level
+      const result = await gateway.authenticate(context);
+      
+      expect(result.success).to.be.false;
+    });
 
+    it('should handle errors during SallyPort verification', async () => {
+      const context = {
+        requestId: 'test-req-id',
+        userId: 'test-user',
+        sallyPortToken: 'error-token'
+      };
+      
+      // Make the verify method throw an error
+      sinon.stub(mockSallyPortVerifier, 'verify').rejects(new Error('Verification error'));
+      
+      const result = await gateway._performAuthentication(context);
+      
+      expect(result.success).to.be.false;
+      expect(result.status).to.equal(500);
+      expect(result.error.code).to.equal('SALLYPORT_ERROR');
+      
+      mockSallyPortVerifier.verify.restore();
+    });
+  });
+});

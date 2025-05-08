@@ -57,6 +57,25 @@ class TeamGateway extends BaseGateway {
             };
           }
           
+          // Check for minimum auth level requirement (3.5)
+          const MINIMUM_AUTH_LEVEL = 3.5;
+          if (verificationResult.authLevel < MINIMUM_AUTH_LEVEL) {
+            this.logger.warn(`Insufficient authentication level: ${verificationResult.authLevel}`, { 
+              requestId: context.requestId,
+              userId: context.userId,
+              requiredLevel: MINIMUM_AUTH_LEVEL
+            });
+            
+            return {
+              success: false,
+              status: 403,
+              error: {
+                code: 'INSUFFICIENT_AUTH_LEVEL',
+                message: `Authentication level (${verificationResult.authLevel}) is below required level (${MINIMUM_AUTH_LEVEL})`
+              }
+            };
+          }
+          
           // Enhance context with sallyPort verification data
           context.sallyPortVerification = verificationResult;
           this.logger.info('SallyPort verification successful', { 

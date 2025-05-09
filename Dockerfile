@@ -1,22 +1,24 @@
-FROM python:3.9-slim
+FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy requirements file
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies
+COPY package*.json ./
+RUN npm ci --only=production
 
 # Copy application code
 COPY . .
 
-# Set environment variables
-ENV OPENAI_API_KEY="your-openai-api-key"
-ENV ANTHROPIC_API_KEY="your-anthropic-api-key"
-ENV PINECONE_API_KEY="your-pinecone-api-key"
-ENV PINECONE_ENVIRONMENT="your-pinecone-environment"
-ENV WALLET_PRIVATE_KEY="your-wallet-private-key"
-ENV WEB3_PROVIDER_URI="your-web3-provider-uri"
-ENV FIREBASE_PROJECT_ID="your-firebase-project-id"
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD wget -qO- http://localhost:8080/health || exit 1
 
-# Run the orchestrator
-CMD ["python", "llm_orchestrator.py"]
+# Expose port
+EXPOSE 8080
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV SERVICE_NAME=anthology-cms-integration
+
+# Start the service
+CMD ["node", "server.js"]

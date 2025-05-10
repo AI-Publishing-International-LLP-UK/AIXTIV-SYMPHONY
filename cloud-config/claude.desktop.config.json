@@ -24,11 +24,7 @@
             "content-generation",
             "code-review"
           ],
-          "tools": [
-            "search", 
-            "github", 
-            "code-interpreter"
-          ]
+          "tools": ["search", "github", "code-interpreter"]
         }
       }
     }

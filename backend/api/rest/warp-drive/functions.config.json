@@ -1,1 +1,24 @@
-This is a placeholder for functions.config.json. Content will be filled in real deployment.
+{
+  "project": {
+    "id": "api-for-warp-drive",
+    "region": "us-west1"
+  },
+  "oauth": {
+    "client_id": "api-for-warp-drive",
+    "token_endpoint": "https://oauth.aixtiv-api.us-west1.run.app/token",
+    "auth_endpoint": "https://oauth.aixtiv-api.us-west1.run.app/authorize",
+    "userinfo_endpoint": "https://oauth.aixtiv-api.us-west1.run.app/userinfo",
+    "scope": "api.products api.video api.speech api.vision"
+  },
+  "vision_space": {
+    "enabled": true,
+    "storage_bucket": "api-for-warp-drive.appspot.com",
+    "scene_collection": "vision_scenes",
+    "fleet_collection": "fleet_data",
+    "default_scene": "pilots_lounge"
+  },
+  "api": {
+    "base_url": "https://api-for-warp-drive.us-west1.run.app",
+    "version": "v1.0"
+  }
+}

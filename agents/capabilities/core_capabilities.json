@@ -1,188 +1,171 @@
 {
-    "version": "1.0",
-    "capabilities": {
-        "dream_commander": {
-            "role": "central_coordinator",
-            "capabilities": [
-                "strategic_planning",
-                "resource_allocation",
-                "mission_oversight",
-                "agent_coordination"
-            ],
-            "permissions": {
-                "orchestration": "full",
-                "deployment": "full",
-                "monitoring": "full"
-            }
-        },
-        "architect": {
-            "role": "system_design",
-            "capabilities": [
-                "architecture_planning",
-                "system_modeling",
-                "integration_design",
-                "performance_optimization"
-            ],
-            "domain_expertise": [
-                "cloud_infrastructure",
-                "scalable_systems",
-                "security_patterns"
-            ]
-        },
-        "rix_manager": {
-            "role": "resource_coordination",
-            "capabilities": [
-                "resource_tracking",
-                "allocation_optimization",
-                "dependency_management",
-                "capacity_planning"
-            ],
-            "integrations": [
-                "cloud_services",
-                "monitoring_systems",
-                "deployment_tools"
-            ]
-        },
-        "pilot_coordinator": {
-            "role": "team_leadership",
-            "capabilities": [
-                "task_distribution",
-                "progress_monitoring",
-                "conflict_resolution",
-                "performance_evaluation"
-            ],
-            "leadership_domains": [
-                "agile_methodologies",
-                "team_dynamics",
-                "quality_assurance"
-            ]
-        },
-        "dev_specialist": {
-            "role": "implementation",
-            "capabilities": [
-                "code_generation",
-                "testing_automation",
-                "documentation",
-                "code_review"
-            ],
-            "tech_stack": [
-                "cloud_native",
-                "containerization",
-                "microservices"
-            ]
-        },
-        "security_expert": {
-            "role": "security_assurance",
-            "capabilities": [
-                "threat_modeling",
-                "security_testing",
-                "compliance_verification",
-                "incident_response"
-            ],
-            "security_domains": [
-                "cloud_security",
-                "identity_management",
-                "data_protection"
-            ]
-        },
-        "integration_specialist": {
-            "role": "system_integration",
-            "capabilities": [
-                "api_design",
-                "service_mesh",
-                "data_flow",
-                "integration_testing"
-            ],
-            "protocols": [
-                "rest",
-                "grpc",
-                "event_driven"
-            ]
-        },
-        "quality_guardian": {
-            "role": "quality_assurance",
-            "capabilities": [
-                "test_strategy",
-                "automated_testing",
-                "performance_testing",
-                "reliability_testing"
-            ],
-            "testing_domains": [
-                "unit_testing",
-                "integration_testing",
-                "e2e_testing"
-            ]
-        },
-        "deployment_master": {
-            "role": "deployment_management",
-            "capabilities": [
-                "ci_cd_pipeline",
-                "deployment_automation",
-                "rollback_management",
-                "monitoring_setup"
-            ],
-            "deployment_tools": [
-                "cloud_build",
-                "cloud_run",
-                "container_registry"
-            ]
-        },
-        "data_guardian": {
-            "role": "data_management",
-            "capabilities": [
-                "data_modeling",
-                "storage_optimization",
-                "data_security",
-                "backup_recovery"
-            ],
-            "data_domains": [
-                "structured_data",
-                "unstructured_data",
-                "data_governance"
-            ]
-        },
-        "performance_optimizer": {
-            "role": "optimization",
-            "capabilities": [
-                "performance_analysis",
-                "bottleneck_detection",
-                "optimization_implementation",
-                "benchmarking"
-            ],
-            "optimization_domains": [
-                "application_performance",
-                "resource_utilization",
-                "cost_optimization"
-            ]
-        },
-        "reliability_engineer": {
-            "role": "system_reliability",
-            "capabilities": [
-                "reliability_design",
-                "fault_tolerance",
-                "disaster_recovery",
-                "high_availability"
-            ],
-            "reliability_domains": [
-                "sre_practices",
-                "chaos_engineering",
-                "incident_management"
-            ]
-        },
-        "compliance_guardian": {
-            "role": "compliance_management",
-            "capabilities": [
-                "compliance_monitoring",
-                "audit_management",
-                "policy_enforcement",
-                "documentation_management"
-            ],
-            "compliance_domains": [
-                "regulatory_compliance",
-                "industry_standards",
-                "internal_policies"
-            ]
-        }
+  "version": "1.0",
+  "capabilities": {
+    "dream_commander": {
+      "role": "central_coordinator",
+      "capabilities": [
+        "strategic_planning",
+        "resource_allocation",
+        "mission_oversight",
+        "agent_coordination"
+      ],
+      "permissions": {
+        "orchestration": "full",
+        "deployment": "full",
+        "monitoring": "full"
+      }
+    },
+    "architect": {
+      "role": "system_design",
+      "capabilities": [
+        "architecture_planning",
+        "system_modeling",
+        "integration_design",
+        "performance_optimization"
+      ],
+      "domain_expertise": [
+        "cloud_infrastructure",
+        "scalable_systems",
+        "security_patterns"
+      ]
+    },
+    "rix_manager": {
+      "role": "resource_coordination",
+      "capabilities": [
+        "resource_tracking",
+        "allocation_optimization",
+        "dependency_management",
+        "capacity_planning"
+      ],
+      "integrations": [
+        "cloud_services",
+        "monitoring_systems",
+        "deployment_tools"
+      ]
+    },
+    "pilot_coordinator": {
+      "role": "team_leadership",
+      "capabilities": [
+        "task_distribution",
+        "progress_monitoring",
+        "conflict_resolution",
+        "performance_evaluation"
+      ],
+      "leadership_domains": [
+        "agile_methodologies",
+        "team_dynamics",
+        "quality_assurance"
+      ]
+    },
+    "dev_specialist": {
+      "role": "implementation",
+      "capabilities": [
+        "code_generation",
+        "testing_automation",
+        "documentation",
+        "code_review"
+      ],
+      "tech_stack": ["cloud_native", "containerization", "microservices"]
+    },
+    "security_expert": {
+      "role": "security_assurance",
+      "capabilities": [
+        "threat_modeling",
+        "security_testing",
+        "compliance_verification",
+        "incident_response"
+      ],
+      "security_domains": [
+        "cloud_security",
+        "identity_management",
+        "data_protection"
+      ]
+    },
+    "integration_specialist": {
+      "role": "system_integration",
+      "capabilities": [
+        "api_design",
+        "service_mesh",
+        "data_flow",
+        "integration_testing"
+      ],
+      "protocols": ["rest", "grpc", "event_driven"]
+    },
+    "quality_guardian": {
+      "role": "quality_assurance",
+      "capabilities": [
+        "test_strategy",
+        "automated_testing",
+        "performance_testing",
+        "reliability_testing"
+      ],
+      "testing_domains": ["unit_testing", "integration_testing", "e2e_testing"]
+    },
+    "deployment_master": {
+      "role": "deployment_management",
+      "capabilities": [
+        "ci_cd_pipeline",
+        "deployment_automation",
+        "rollback_management",
+        "monitoring_setup"
+      ],
+      "deployment_tools": ["cloud_build", "cloud_run", "container_registry"]
+    },
+    "data_guardian": {
+      "role": "data_management",
+      "capabilities": [
+        "data_modeling",
+        "storage_optimization",
+        "data_security",
+        "backup_recovery"
+      ],
+      "data_domains": [
+        "structured_data",
+        "unstructured_data",
+        "data_governance"
+      ]
+    },
+    "performance_optimizer": {
+      "role": "optimization",
+      "capabilities": [
+        "performance_analysis",
+        "bottleneck_detection",
+        "optimization_implementation",
+        "benchmarking"
+      ],
+      "optimization_domains": [
+        "application_performance",
+        "resource_utilization",
+        "cost_optimization"
+      ]
+    },
+    "reliability_engineer": {
+      "role": "system_reliability",
+      "capabilities": [
+        "reliability_design",
+        "fault_tolerance",
+        "disaster_recovery",
+        "high_availability"
+      ],
+      "reliability_domains": [
+        "sre_practices",
+        "chaos_engineering",
+        "incident_management"
+      ]
+    },
+    "compliance_guardian": {
+      "role": "compliance_management",
+      "capabilities": [
+        "compliance_monitoring",
+        "audit_management",
+        "policy_enforcement",
+        "documentation_management"
+      ],
+      "compliance_domains": [
+        "regulatory_compliance",
+        "industry_standards",
+        "internal_policies"
+      ]
     }
+  }
 }
-

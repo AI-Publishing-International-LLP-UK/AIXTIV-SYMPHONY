@@ -9,6 +9,7 @@ const TeamGateway = require('./TeamGateway');
 const GroupGateway = require('./GroupGateway');
 const PractitionerGateway = require('./PractitionerGateway');
 const EnterpriseGateway = require('./EnterpriseGateway');
+const AcademicGateway = require('./AcademicGateway');
 
 /**
  * Export all gateway classes
@@ -19,6 +20,6 @@ module.exports = {
   TeamGateway,
   GroupGateway,
   PractitionerGateway,
-  EnterpriseGateway
+  EnterpriseGateway,
+  AcademicGateway
 };
-

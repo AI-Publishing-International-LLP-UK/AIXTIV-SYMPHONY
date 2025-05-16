@@ -3,35 +3,39 @@
     "target": "coaching2100",
     "public": "dist",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [
-      {
-        "source": "/academy/**",
-        "destination": "/academy/index.html"
-      },
-      {
-        "source": "/giftshop/**",
-        "destination": "/giftshop/index.html"
-      },
-      {
-        "source": "/api/auth/**",
-        "function": "authenticateWithSallyPort"
-      },
-      {
-        "source": "/api/verify/**",
-        "function": "verifySallyPortSession"
-      },
-      {
-        "source": "/api/speech/**",
-        "function": "speechToText"
-      },
-      {
-        "source": "/api/tts/**",
-        "function": "convertTextToSpeech"
-      },
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
+          "rewrites": [
+              {
+                "source": "/academy/**",
+                "destination": "/academy/index.html"
+              },
+              {
+                "source": "/giftshop/**",
+                "destination": "/giftshop/index.html"
+              },
+              {
+                "source": "/api/auth/**",
+                "function": "authenticateWithSallyPort"
+              },
+              {
+                "source": "/api/verify/**",
+                "function": "verifySallyPortSession"
+              },
+              {
+                "source": "/api/speech/**",
+                "function": "speechToText"
+              },
+              {
+                "source": "/api/tts/**",
+                "function": "convertTextToSpeech"
+              },
+              {
+                "source": "/api/gateway/**",
+                "destination": "https://integration-gateway-production-yutylytffa-uw.a.run.app/api/gateway/:splat"
+              },
+              {
+                "source": "**",
+                "destination": "/index.html"
+              }
     ],
     "headers": [
       {

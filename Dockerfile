@@ -4,10 +4,13 @@ WORKDIR /app
 
 # Install dependencies
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm install --only=production
 
 # Copy application code
 COPY . .
+
+# Make startup script executable
+RUN chmod +x start.sh
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
@@ -20,5 +23,5 @@ EXPOSE 8080
 ENV NODE_ENV=production
 ENV SERVICE_NAME=jira-integration
 
-# Start the service
-CMD ["node", "server.js"]
+# Start the service with debug script for troubleshooting startup issues
+CMD ["/bin/sh", "start.sh"]

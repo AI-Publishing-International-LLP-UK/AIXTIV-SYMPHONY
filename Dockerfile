@@ -18,7 +18,7 @@ EXPOSE 8080
 
 # Set environment variables
 ENV NODE_ENV=production
-ENV SERVICE_NAME=anthology-cms-integration
+ENV SERVICE_NAME=jira-integration
 
 # Start the service
 CMD ["node", "server.js"]

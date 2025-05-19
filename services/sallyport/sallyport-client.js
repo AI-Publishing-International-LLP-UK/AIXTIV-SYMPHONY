@@ -4,12 +4,11 @@
  */
 
 const axios = require('axios');
-const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
+const { getSecretsManager } = require('../common/gcp-secrets-client');
 const logger = require('../common/logger');
 
-// Initialize Secret Manager
-const secretManager = new SecretManagerServiceClient();
-const PROJECT_ID = process.env.GCP_PROJECT || '859242575175';
+// Initialize GCP Secrets Manager
+const secretsManager = getSecretsManager();
 
 // SallyPort service configuration
 const SALLYPORT_CONFIG = {
@@ -24,12 +23,13 @@ const SALLYPORT_CONFIG = {
  */
 async function createAuthorizedClient() {
   try {
-    // Get API key from Secret Manager
-    const [secretVersion] = await secretManager.accessSecretVersion({
-      name: `projects/${PROJECT_ID}/secrets/sallyport-api-key/versions/latest`,
-    });
+    // Ensure secrets manager is initialized
+    if (!secretsManager.initialized) {
+      await secretsManager.initialize();
+    }
 
-    const apiKey = secretVersion.payload.data.toString();
+    // Get API key from Secret Manager
+    const apiKey = await secretsManager.getSecret('sallyport-api-key');
 
     // Create axios instance with authentication
     const client = axios.create({

@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import * as crypto from 'crypto';
-import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import { JIRA_CONFIG } from '../integrations/jira/jira-config';
 import { db } from '../services/firebase';
 import { 
@@ -11,32 +10,27 @@ import {
   where,
   getDocs 
 } from 'firebase/firestore';
+import { getSecretsManager } from '../services/common/gcp-secrets-client';
 
-// Secret Manager client
-const secretManagerClient = new SecretManagerServiceClient();
-
-// Cache for the webhook secret
-let webhookSecret: string | null = null;
+// Get secrets manager instance
+const secretsManager = getSecretsManager();
 
 /**
  * Get the webhook secret from Secret Manager
  */
 async function getWebhookSecret(): Promise<string> {
-  if (webhookSecret) {
-    return webhookSecret;
-  }
-
   try {
-    const [version] = await secretManagerClient.accessSecretVersion({
-      name: JIRA_CONFIG.secretPaths.webhookSecret,
-    });
-
-    if (!version.payload || !version.payload.data) {
-      throw new Error('Failed to retrieve Jira webhook secret');
+    // Ensure secrets manager is initialized
+    if (!secretsManager.initialized) {
+      await secretsManager.initialize();
     }
 
-    webhookSecret = version.payload.data.toString();
-    return webhookSecret;
+    // Extract secret name from the full path
+    const secretPath = JIRA_CONFIG.secretPaths.webhookSecret;
+    const secretName = secretPath.split('/').pop();
+
+    // Get the secret using the GCPSecretsManager
+    return await secretsManager.getSecret(secretName);
   } catch (error) {
     console.error('Error retrieving Jira webhook secret:', error);
     throw new Error('Failed to retrieve Jira webhook secret');

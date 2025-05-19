@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import { JIRA_CONFIG } from './jira-config';
 import { db } from '../../services/firebase';
 import { 
@@ -13,9 +12,10 @@ import {
   where,
   getDocs 
 } from 'firebase/firestore';
+import { getSecretsManager } from '../../services/common/gcp-secrets-client';
 
-// Secret Manager client
-const secretManagerClient = new SecretManagerServiceClient();
+// Get secrets manager instance
+const secretsManager = getSecretsManager();
 
 /**
  * Jira Service provides methods for interacting with Jira Cloud API
@@ -45,15 +45,17 @@ export class JiraService {
    */
   private async getApiToken(): Promise<string> {
     try {
-      const [version] = await secretManagerClient.accessSecretVersion({
-        name: JIRA_CONFIG.secretPaths.apiToken,
-      });
-
-      if (!version.payload || !version.payload.data) {
-        throw new Error('Failed to retrieve Jira API token');
+      // Ensure secrets manager is initialized
+      if (!secretsManager.initialized) {
+        await secretsManager.initialize();
       }
 
-      return version.payload.data.toString();
+      // Extract secret name from the full path
+      const secretPath = JIRA_CONFIG.secretPaths.apiToken;
+      const secretName = secretPath.split('/').pop();
+
+      // Get the secret using the GCPSecretsManager
+      return await secretsManager.getSecret(secretName);
     } catch (error) {
       console.error('Error retrieving Jira API token:', error);
       throw new Error('Failed to retrieve Jira API token');

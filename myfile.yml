@@ -1,0 +1,17 @@
+# Example YAML configuration
+version: '1.0'
+metadata:
+  name: example-config
+  created: "2025-05-24"
+settings:
+  environment: development
+  features:
+    - logging
+    - monitoring
+    - authentication
+    - security
+    - newfeature
+dependencies:
+  required:
+    - nodejs: ">=18.0.0"
+    - pnpm: ">=10.0.0"

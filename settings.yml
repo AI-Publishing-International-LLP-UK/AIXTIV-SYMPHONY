@@ -1,0 +1,359 @@
+environment: development
+features:
+  - logging
+  - monitoring
+  - authentication
+  - security
+# Aixtiv Symphony specific settings
+symphony:
+  regions:
+    default: us-west1
+    zones:
+      - us-west1-b
+  deployment:
+    mode: modular
+    type: multi-tenant
+# Flight Memory System Configuration
+fms:
+  enabled: true
+  squadrons:
+    squadron1:
+      type: core-intelligence
+      agents: ['rix', 'crx']
+    squadron2:
+      type: deployment
+      agents: ['deploy-agents']
+    squadron3:
+      type: engagement
+      agents: ['pilot-agents']
+  storage:
+    type: firestore
+    collections:
+      - flight-records
+      - agent-memory
+      - context-store
+# S2DO Blockchain Configuration
+s2do:
+  enabled: true
+  chains:
+    - name: approval-chain
+      type: governance
+    - name: token-chain
+      type: rewards
+  smart_contracts:
+    - name: agent-delegation
+      version: '1.0'
+    - name: reward-distribution
+      version: '1.0'
+# Integration Gateway
+integrations:
+  gateway:
+    enabled: true
+    security:
+      authentication: true
+      authorization: true
+    routes:
+      - path: /api/symphony
+        type: rest
+      - path: /api/graphql
+        type: graphql
+      - path: /api/grpc
+        type: grpc
+# Module Configuration
+modules:
+  academy:
+    enabled: true
+    features: ['pilots-lounge', 'daily-integration']
+    components:
+      frontend:
+        enabled: true
+        type: next-js
+      backend:
+        enabled: true
+        services: ['session-management', 'analytics']
+  wing:
+    enabled: true
+    features: ['agent-orchestration', 'training']
+    agencies:
+      core_agency:
+        enabled: true
+        type: intelligence
+      deploy_agency:
+        enabled: true
+        type: deployment
+      engage_agency:
+        enabled: true
+        type: engagement
+  vls:
+    enabled: true
+    solutions:
+      - name: dr-memoria
+        type: anthology
+        enabled: true
+      - name: dr-burby
+        type: blockchain
+        enabled: true
+      - name: dr-claude
+        type: orchestration
+        enabled: true
+      - name: dr-sabina
+        type: dream-commander
+        enabled: true
+# Data Management
+data:
+  firestore:
+    enabled: true
+    collections:
+      - name: users
+        type: core
+      - name: sessions
+        type: operational
+  vector_db:
+    enabled: true
+    indexes:
+      - name: semantic-search
+        dimensions: 1536
+      - name: context-matching
+        dimensions: 768
+# UUID Configuration
+uuid:
+  types:
+    - role: owner
+      access_level: admin
+    - role: rix
+      access_level: agent
+    - role: crx
+      access_level: concierge
+    - role: wing_leader
+      access_level: orchestrator
+    - role: pilot
+      access_level: operator
+# Domain Management
+domains:
+  strategy: multi-tenant
+  configurations:
+    - name: asoos-2100-com
+      type: primary
+    - name: aixtiv-symphony
+      type: service
+cli:
+  aixtiv_cli:
+    version: 1.0.1
+    commands:
+      auth:
+        verify:
+          enabled: true
+          description: Verify authentication with SallyPort
+        grant:
+          enabled: true
+          description: Grant agent access to a resource
+        revoke:
+          enabled: true
+          description: Revoke agent access to a resource
+      agent:
+        grant:
+          enabled: true
+          description: Grant agent access to a resource
+        revoke:
+          enabled: true
+          description: Revoke agent access to a resource
+      resource:
+        scan:
+          enabled: true
+          description: Scan resources for access patterns
+      fix:
+        pr:
+          enabled: true
+          description: Apply special PR fix for pr@coaching2100.com with agent 001
+      copilot:
+        link:
+          enabled: true
+          description: Link a co-pilot to a principal
+        unlink:
+          enabled: true
+          description: Unlink a co-pilot from a principal
+        list:
+          enabled: true
+          description: List co-pilots linked to a principal
+        verify:
+          enabled: true
+          description: Verify co-pilot identity and cultural empathy
+        grant:
+          enabled: true
+          description: Grant co-pilot access to a resource
+      summon:
+        visionary:
+          enabled: true
+          description: Summon Visionary 1 Command Suite with audio-visual effects
+    settings:
+      alias: cd /Users/as/asoos/aixtiv-cli && node bin/aixtiv.js
+      config_path: /Users/as/asoos/aixtiv-cli
+      default_region: us-west1
+  domain_management:
+    enabled: true
+    commands:
+      domain:
+        add:
+          enabled: true
+          description: Add new domain
+        remove:
+          enabled: true
+          description: Remove domain
+        list:
+          enabled: true
+          description: List all domains
+        verify:
+          enabled: true
+          description: Verify domain status
+  dr_claude:
+    enabled: true
+    commands:
+      project:
+        manage:
+          enabled: true
+          description: Manage project settings
+        automate:
+          enabled: true
+          description: Setup GitHub automation
+        generate:
+          enabled: true
+          description: Generate code templates
+  deployment_cli:
+    enabled: true
+    version: 1.0.0
+    commands:
+      deploy:
+        symphony:
+          enabled: true
+          description: Deploy full Aixtiv Symphony stack
+        module:
+          enabled: true
+          description: Deploy specific module
+        rollback:
+          enabled: true
+          description: Rollback to previous version
+      status:
+        check:
+          enabled: true
+          description: Check deployment status
+        health:
+          enabled: true
+          description: Health check all services
+  wing_cli:
+    enabled: true
+    version: 1.0.0
+    commands:
+      agent:
+        deploy:
+          enabled: true
+          description: Deploy new Wing agent
+        train:
+          enabled: true
+          description: Train Wing agent
+        monitor:
+          enabled: true
+          description: Monitor agent performance
+      squadron:
+        manage:
+          enabled: true
+          description: Manage Wing squadrons
+        assign:
+          enabled: true
+          description: Assign agents to squadrons
+  gateway_cli:
+    enabled: true
+    version: 1.0.0
+    commands:
+      route:
+        add:
+          enabled: true
+          description: Add new gateway route
+        remove:
+          enabled: true
+          description: Remove gateway route
+        list:
+          enabled: true
+          description: List all routes
+      security:
+        token:
+          enabled: true
+          description: Manage security tokens
+        policy:
+          enabled: true
+          description: Manage security policies
+  documentation:
+    cli_guides:
+      aixtiv_cli: /docs/cli/aixtiv-cli.md
+      deployment_cli: /docs/cli/deployment-cli.md
+      wing_cli: /docs/cli/wing-cli.md
+      gateway_cli: /docs/cli/gateway-cli.md
+      domain_cli: /docs/cli/domain-cli.md
+      dr_claude_cli: /docs/cli/dr-claude-cli.md
+    examples: /docs/cli/examples
+    tutorials: /docs/cli/tutorials
+  environment_settings:
+    global:
+      default_region: us-west1
+      default_zone: us-west1-b
+      log_level: info
+    development:
+      enabled: true
+      features:
+        - debug
+        - hot-reload
+        - mock-services
+      security:
+        token_lifetime: 24h
+        allow_test_tokens: true
+    production:
+      enabled: true
+      features:
+        - monitoring
+        - alerts
+        - audit-logging
+      security:
+        token_lifetime: 12h
+        allow_test_tokens: false
+    aliases:
+      asoos: cd /Users/as/asoos
+      wing: cd /Users/as/asoos/wing
+      academy: cd /Users/as/asoos/academy
+      vls: cd /Users/as/asoos/vls
+      deploy: cd /Users/as/asoos && ./deployment_cli.js deploy
+      status: cd /Users/as/asoos && ./deployment_cli.js status check
+      agents: cd /Users/as/asoos/wing && ./wing_cli.js agent monitor
+  integrations:
+    shared_resources:
+      token_store: /Users/as/asoos/.aixtiv/tokens
+      config_store: /Users/as/asoos/.aixtiv/config
+      log_store: /Users/as/asoos/.aixtiv/logs
+    cli_dependencies:
+      deployment_cli:
+        - gateway_cli
+        - wing_cli
+      wing_cli:
+        - gateway_cli
+      gateway_cli:
+        - aixtiv_cli
+      dr_claude:
+        - deployment_cli
+        - gateway_cli
+    cross_cli_commands:
+      deploy_all:
+        sequence:
+          - cli: gateway_cli
+            command: route verify
+          - cli: wing_cli
+            command: agent deploy
+          - cli: deployment_cli
+            command: deploy symphony
+        rollback_on_failure: true
+      health_check:
+        sequence:
+          - cli: gateway_cli
+            command: status check
+          - cli: wing_cli
+            command: agent monitor
+          - cli: deployment_cli
+            command: status health
+        parallel: true

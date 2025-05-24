@@ -1,0 +1,52 @@
+jira:
+  instance: c2100pcr.atlassian.net
+  project_key: AAP  # Anthology AI Publishing
+  automation:
+    # Content Generation Pipeline
+    content_pipeline:
+      issue_type: Story
+      components: 
+        - Content Generation
+        - AI Agents
+      labels:
+        - automated
+        - content-pipeline
+      transitions:
+        - from: Backlog
+          to: In Progress
+          trigger: pipeline_start
+        - from: In Progress
+          to: Review
+          trigger: content_complete
+        - from: Review
+          to: Done
+          trigger: publishing_complete
+          
+    # Agent Management
+    agent_sync:
+      issue_type: Task
+      components:
+        - AI Agents
+        - Operations
+      labels:
+        - agent-sync
+      status_mapping:
+        agent_initializing: "In Progress"
+        agent_ready: "Done"
+        agent_error: "Blocked"
+
+    # Vision Lake Integration
+    vision_lake:
+      issue_type: Task
+      components:
+        - Vision Lake
+        - Storage
+      labels:
+        - vision-lake
+      status_sync: true
+
+notifications:
+  error_channel: alerts-critical
+  success_channel: deployment-updates
+  mention_on_error: 
+    - pr@coaching2100.com

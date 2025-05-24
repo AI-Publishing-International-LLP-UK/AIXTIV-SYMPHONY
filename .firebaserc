@@ -1,0 +1,21 @@
+{
+  "projects": {
+    "default": "api-for-warp-drive"
+  },
+  "targets": {
+    "api-for-warp-drive": {
+      "hosting": {
+        "asoos": [
+          "2100-cool"
+        ],
+        "dr-memoria": [
+          "dr-memoria"
+        ],
+        "drlucy-live": [
+          "drlucy-live"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

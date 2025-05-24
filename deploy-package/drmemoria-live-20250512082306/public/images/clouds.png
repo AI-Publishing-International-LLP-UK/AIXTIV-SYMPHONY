@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 500 500">
+  <rect width="500" height="500" fill="transparent"/>
+  <!-- Nebula clouds -->
+  <ellipse cx="100" cy="100" rx="50" ry="30" fill="#5d65e0" opacity="0.05"/>
+  <ellipse cx="250" cy="300" rx="80" ry="40" fill="#9b59b6" opacity="0.05"/>
+  <ellipse cx="400" cy="200" rx="60" ry="50" fill="#3498db" opacity="0.05"/>
+</svg>

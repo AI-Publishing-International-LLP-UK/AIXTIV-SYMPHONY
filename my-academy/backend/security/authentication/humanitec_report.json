@@ -1,0 +1,3058 @@
+{
+  "stats": {
+    "pages_crawled": 71,
+    "start_url": "https://humanitec.com/products/platform-orchestrator",
+    "max_depth": 2
+  },
+  "pages": {
+    "https://humanitec.com/products/platform-orchestrator": {
+      "title": "Platform Orchestrator",
+      "headings": [
+        "Platform Orchestrator",
+        "Explore the Platform Orchestrator",
+        "True developer self-service",
+        "Clear templates and rules",
+        "A new graph for every deploy"
+      ],
+      "paragraphs": ["automation", "Choose your interface"],
+      "links": [
+        {
+          "text": "\u00f0\u009f\u009a\u0080 Build your Minimum Viable Platform (MVP) with our playbook. Start now",
+          "url": "https://humanitec.com/minimum-viable-platform-mvp"
+        },
+        {
+          "text": "Product OverviewArrow RightUse them all or combine them.",
+          "url": "https://humanitec.com/products"
+        },
+        {
+          "text": "Platform OrchestratorA graph-based backend for your IDP. Automate and standardize at scale.",
+          "url": "https://humanitec.com/products/platform-orchestrator"
+        },
+        {
+          "text": "PortalThe frontend of your IDP. Service catalog, scaffolding and self-service.",
+          "url": "https://humanitec.com/products/portal"
+        },
+        {
+          "text": "ScoreCode-based interface of your IDP. A familiar interface for developers.",
+          "url": "https://humanitec.com/products/score"
+        },
+        {
+          "text": "Resource DefinitionsPre-configured infra modules. Easily integrated with your existing IaC.",
+          "url": "https://humanitec.com/resource-definitions"
+        },
+        {
+          "text": "Reference ArchitecturesBlueprints for enteprise-grade Internal Developer Platforms.",
+          "url": "https://humanitec.com/reference-architectures"
+        },
+        {
+          "text": "Environment Management",
+          "url": "https://humanitec.com/environment-management"
+        },
+        {
+          "text": "Developer Self-service",
+          "url": "https://humanitec.com/developer-self-service"
+        },
+        {
+          "text": "RBAC and Governance",
+          "url": "https://humanitec.com/rbac-and-governance"
+        },
+        {
+          "text": "Deployment Management",
+          "url": "https://humanitec.com/deployment-management"
+        },
+        {
+          "text": "Insights & Engineering Intelligence",
+          "url": "https://humanitec.com/insights-intelligence"
+        },
+        {
+          "text": "Cost control",
+          "url": "https://humanitec.com/cost-control"
+        },
+        {
+          "text": "Infrastructure Orchestration",
+          "url": "https://humanitec.com/infrastructure-orchestration"
+        },
+        {
+          "text": "Cluster & GPU Orchestration",
+          "url": "https://humanitec.com/cluster-gpu-orchestration"
+        },
+        {
+          "text": "Ephemeral Environments",
+          "url": "https://humanitec.com/ephemeral-environments"
+        },
+        {
+          "text": "Build an MVP in daysArrow RightA structured approach to get you to your\u00e2\u0080\u00a8minimum viable platform in four phases.",
+          "url": "https://humanitec.com/minimum-viable-platform-mvp"
+        },
+        {
+          "text": "Application DevelopersTrue self-service. No waiting times",
+          "url": "https://humanitec.com/for-developers"
+        },
+        {
+          "text": "Infrastructure and OperationsConfigure once. Enforce everywhere",
+          "url": "https://humanitec.com/for-infrastructure-teams"
+        },
+        {
+          "text": "SecurityBuild the DevSecOps platform for you",
+          "url": "https://humanitec.com/for-security-teams"
+        },
+        {
+          "text": "ExecutivesBuild a leading organization. Cut time to market.",
+          "url": "https://humanitec.com/why-humanitec"
+        },
+        {
+          "text": "Infrastructure Platform engineersBuild a backend for everyone",
+          "url": "https://humanitec.com/for-infrastructure-platform-engineers"
+        },
+        {
+          "text": "DevEx Platform EngineersCraft amazing DevEx flows",
+          "url": "https://humanitec.com/for-devex-platform-engineers"
+        },
+        {
+          "text": "Build an IDPHumanitec is your one stop shop for an enterprise ready IDP",
+          "url": "https://humanitec.com/use-cases/build-an-idp"
+        },
+        {
+          "text": "Tame Kubernetes complexityDynamically generate Helm charts with every deployment",
+          "url": "https://humanitec.com/use-cases/kubernetes-complexity"
+        },
+        {
+          "text": "Enable developer self-serviceKill waiting times. Self-serve the tech you need to run your apps",
+          "url": "https://humanitec.com/use-cases/enable-developer-self-service"
+        },
+        {
+          "text": "Eliminate ticket opsNo more ticket ops and repetitive tasks, slash lead time",
+          "url": "https://humanitec.com/use-cases/eliminate-ticket-ops"
+        },
+        {
+          "text": "Nail your Kubernetes migrationEnsure a 100% successful Kubernetes roll out and adoption",
+          "url": "https://humanitec.com/use-cases/kubernetes-migration"
+        },
+        {
+          "text": "Build developer portalsUse the Humanitec Portal or integrate with any third party",
+          "url": "https://humanitec.com/use-cases/build-developer-portals"
+        },
+        {
+          "text": "Customers",
+          "url": "https://humanitec.com/customers"
+        },
+        {
+          "text": "Marketplace",
+          "url": "https://humanitec.com/marketplace"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "BlogCheck out our latest articles and product releases",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "VideosCheck our video library and learn how to build a platform",
+          "url": "https://humanitec.com/videos"
+        },
+        {
+          "text": "ROI CalculatorWhat is the ROI of building a platform with Humanitec?",
+          "url": "https://humanitec.com/roi"
+        },
+        {
+          "text": "WhitepapersIndustry reports and benchmarking studies",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "SecurityLearn about Humanitec's enterprise-grade security standards",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "EventsSign up for our weekly events or check out past recordings",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "PartnersCheck out our ecosystem of implementation partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "What is Platform Engineering?Learn everything about Platform Engineering, the next evolution of DevOps",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "What is an Internal Developer Platform?All you need to know about Internal Developer Platforms",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Book a demo",
+          "url": "https://humanitec.com/schedule-demo"
+        },
+        {
+          "text": "[No Text]",
+          "url": "https://humanitec.com/"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "BlogCheck out our latest articles and product releases",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "VideosCheck our video library and learn how to build a platform",
+          "url": "https://humanitec.com/videos"
+        },
+        {
+          "text": "ROI CalculatorWhat is the ROI of building a platform with Humanitec?",
+          "url": "https://humanitec.com/roi"
+        },
+        {
+          "text": "WhitepapersIndustry reports and benchmarking studies",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "SecurityLearn about Humanitec's enterprise-grade security standards",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "EventsSign up for our weekly events or check out past recordings",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "PartnersCheck out our ecosystem of implementation partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "What is Platform Engineering?Learn everything about Platform Engineering, the next evolution of DevOps",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "What is an Internal Developer Platform?All you need to know about Internal Developer Platforms",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Book a demo",
+          "url": "https://humanitec.com/schedule-demo"
+        },
+        {
+          "text": "Book a demoArrow Right",
+          "url": "https://humanitec.com/schedule-demo"
+        },
+        {
+          "text": "Learn more",
+          "url": "https://humanitec.com/events/infrastructure-platform-engineering-with-humanitec-2024-05-29"
+        },
+        {
+          "text": "Learn more",
+          "url": "https://humanitec.com/blog/accelerate-building-your-internal-developer-platform-with-resource-packs"
+        },
+        {
+          "text": "Learn more",
+          "url": "https://humanitec.com/blog/the-role-of-infrastructure-teams-in-the-platform-engineering-era"
+        },
+        {
+          "text": "Learn moreArrow Right",
+          "url": "https://humanitec.com/minimum-viable-platform-mvp"
+        },
+        {
+          "text": "privacy policy",
+          "url": "https://humanitec.com/policies/privacy-policy"
+        },
+        {
+          "text": "Why Platform Engineering",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "Why Internal Developer Platform",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Why Humanitec",
+          "url": "https://humanitec.com/why-humanitec"
+        },
+        {
+          "text": "Product overview",
+          "url": "https://humanitec.com/products"
+        },
+        {
+          "text": "Platform Orchestrator",
+          "url": "https://humanitec.com/products/platform-orchestrator"
+        },
+        {
+          "text": "Score",
+          "url": "https://humanitec.com/products/score"
+        },
+        {
+          "text": "Portal",
+          "url": "https://humanitec.com/products/portal"
+        },
+        {
+          "text": "Integrations",
+          "url": "https://humanitec.com/integrations"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "Environment management",
+          "url": "https://humanitec.com/environment-management"
+        },
+        {
+          "text": "Deployment management",
+          "url": "https://humanitec.com/deployment-management"
+        },
+        {
+          "text": "Infrastructure orchestration",
+          "url": "https://humanitec.com/infrastructure-orchestration"
+        },
+        {
+          "text": "Developer self-service",
+          "url": "https://humanitec.com/developer-self-service"
+        },
+        {
+          "text": "RBAC & governance",
+          "url": "https://humanitec.com/rbac-and-governance"
+        },
+        {
+          "text": "Use cases overview",
+          "url": "https://humanitec.com/use-cases"
+        },
+        {
+          "text": "Kubernetes migration",
+          "url": "https://humanitec.com/use-cases/kubernetes-migration"
+        },
+        {
+          "text": "Kubernetes complexity",
+          "url": "https://humanitec.com/use-cases/kubernetes-complexity"
+        },
+        {
+          "text": "Eliminate ticket Ops",
+          "url": "https://humanitec.com/use-cases/eliminate-ticket-ops"
+        },
+        {
+          "text": "End-to-end self service",
+          "url": "https://humanitec.com/use-cases/enable-developer-self-service"
+        },
+        {
+          "text": "Build developer portals",
+          "url": "https://humanitec.com/use-cases/build-developer-portals"
+        },
+        {
+          "text": "Build an IDP",
+          "url": "https://humanitec.com/use-cases/build-an-idp"
+        },
+        {
+          "text": "About Humanitec",
+          "url": "https://humanitec.com/company"
+        },
+        {
+          "text": "Careers",
+          "url": "https://humanitec.com/careers"
+        },
+        {
+          "text": "Customers",
+          "url": "https://humanitec.com/customers"
+        },
+        {
+          "text": "Professional Services",
+          "url": "https://humanitec.com/professional-services"
+        },
+        {
+          "text": "Partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "Contact",
+          "url": "https://humanitec.com/contact"
+        },
+        {
+          "text": "Blog",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "Whitepapers",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "FAQ",
+          "url": "https://humanitec.com/faqs"
+        },
+        {
+          "text": "Start free trial",
+          "url": "https://humanitec.com/get-started"
+        },
+        {
+          "text": "Slack",
+          "url": "https://humanitec.com/platform-engineering-slack"
+        },
+        {
+          "text": "Events",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "AWS",
+          "url": "https://humanitec.com/reference-architectures/aws"
+        },
+        {
+          "text": "Azure",
+          "url": "https://humanitec.com/reference-architectures/azure"
+        },
+        {
+          "text": "GCP",
+          "url": "https://humanitec.com/reference-architectures/gcp"
+        },
+        {
+          "text": "Red Hat OpenShift",
+          "url": "https://humanitec.com/reference-architectures/red-hat-openshift"
+        },
+        {
+          "text": "Imprint",
+          "url": "https://humanitec.com/imprint"
+        },
+        {
+          "text": "Support",
+          "url": "https://humanitec.com/support"
+        },
+        {
+          "text": "Security",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "Policies",
+          "url": "https://humanitec.com/policies"
+        }
+      ]
+    },
+    "https://humanitec.com/minimum-viable-platform-mvp": {
+      "title": "Minimum Viable Platform (MVP) | Humanitec",
+      "headings": [
+        "Your Minimum Viable Platform in just 4 phases",
+        "Design, build, scale.",
+        "Use the MVP program to get started. Fast, reliably and cost efficient.",
+        "Dive deeper"
+      ],
+      "paragraphs": [
+        "Our MVP program is a guided playbook that helps you get started building your platform. Fast, reliable and cost efficient.",
+        "MVP case study"
+      ],
+      "links": [
+        {
+          "text": "Product OverviewArrow RightUse them all or combine them.",
+          "url": "https://humanitec.com/products"
+        },
+        {
+          "text": "Platform OrchestratorA graph-based backend for your IDP. Automate and standardize at scale.",
+          "url": "https://humanitec.com/products/platform-orchestrator"
+        },
+        {
+          "text": "PortalThe frontend of your IDP. Service catalog, scaffolding and self-service.",
+          "url": "https://humanitec.com/products/portal"
+        },
+        {
+          "text": "ScoreCode-based interface of your IDP. A familiar interface for developers.",
+          "url": "https://humanitec.com/products/score"
+        },
+        {
+          "text": "Resource DefinitionsPre-configured infra modules. Easily integrated with your existing IaC.",
+          "url": "https://humanitec.com/resource-definitions"
+        },
+        {
+          "text": "Reference ArchitecturesBlueprints for enteprise-grade Internal Developer Platforms.",
+          "url": "https://humanitec.com/reference-architectures"
+        },
+        {
+          "text": "Environment Management",
+          "url": "https://humanitec.com/environment-management"
+        },
+        {
+          "text": "Developer Self-service",
+          "url": "https://humanitec.com/developer-self-service"
+        },
+        {
+          "text": "RBAC and Governance",
+          "url": "https://humanitec.com/rbac-and-governance"
+        },
+        {
+          "text": "Deployment Management",
+          "url": "https://humanitec.com/deployment-management"
+        },
+        {
+          "text": "Insights & Engineering Intelligence",
+          "url": "https://humanitec.com/insights-intelligence"
+        },
+        {
+          "text": "Cost control",
+          "url": "https://humanitec.com/cost-control"
+        },
+        {
+          "text": "Infrastructure Orchestration",
+          "url": "https://humanitec.com/infrastructure-orchestration"
+        },
+        {
+          "text": "Cluster & GPU Orchestration",
+          "url": "https://humanitec.com/cluster-gpu-orchestration"
+        },
+        {
+          "text": "Ephemeral Environments",
+          "url": "https://humanitec.com/ephemeral-environments"
+        },
+        {
+          "text": "Build an MVP in daysArrow RightA structured approach to get you to your\u00e2\u0080\u00a8minimum viable platform in four phases.",
+          "url": "https://humanitec.com/minimum-viable-platform-mvp"
+        },
+        {
+          "text": "Application DevelopersTrue self-service. No waiting times",
+          "url": "https://humanitec.com/for-developers"
+        },
+        {
+          "text": "Infrastructure and OperationsConfigure once. Enforce everywhere",
+          "url": "https://humanitec.com/for-infrastructure-teams"
+        },
+        {
+          "text": "SecurityBuild the DevSecOps platform for you",
+          "url": "https://humanitec.com/for-security-teams"
+        },
+        {
+          "text": "ExecutivesBuild a leading organization. Cut time to market.",
+          "url": "https://humanitec.com/why-humanitec"
+        },
+        {
+          "text": "Infrastructure Platform engineersBuild a backend for everyone",
+          "url": "https://humanitec.com/for-infrastructure-platform-engineers"
+        },
+        {
+          "text": "DevEx Platform EngineersCraft amazing DevEx flows",
+          "url": "https://humanitec.com/for-devex-platform-engineers"
+        },
+        {
+          "text": "Build an IDPHumanitec is your one stop shop for an enterprise ready IDP",
+          "url": "https://humanitec.com/use-cases/build-an-idp"
+        },
+        {
+          "text": "Tame Kubernetes complexityDynamically generate Helm charts with every deployment",
+          "url": "https://humanitec.com/use-cases/kubernetes-complexity"
+        },
+        {
+          "text": "Enable developer self-serviceKill waiting times. Self-serve the tech you need to run your apps",
+          "url": "https://humanitec.com/use-cases/enable-developer-self-service"
+        },
+        {
+          "text": "Eliminate ticket opsNo more ticket ops and repetitive tasks, slash lead time",
+          "url": "https://humanitec.com/use-cases/eliminate-ticket-ops"
+        },
+        {
+          "text": "Nail your Kubernetes migrationEnsure a 100% successful Kubernetes roll out and adoption",
+          "url": "https://humanitec.com/use-cases/kubernetes-migration"
+        },
+        {
+          "text": "Build developer portalsUse the Humanitec Portal or integrate with any third party",
+          "url": "https://humanitec.com/use-cases/build-developer-portals"
+        },
+        {
+          "text": "Customers",
+          "url": "https://humanitec.com/customers"
+        },
+        {
+          "text": "Marketplace",
+          "url": "https://humanitec.com/marketplace"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "BlogCheck out our latest articles and product releases",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "VideosCheck our video library and learn how to build a platform",
+          "url": "https://humanitec.com/videos"
+        },
+        {
+          "text": "ROI CalculatorWhat is the ROI of building a platform with Humanitec?",
+          "url": "https://humanitec.com/roi"
+        },
+        {
+          "text": "WhitepapersIndustry reports and benchmarking studies",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "SecurityLearn about Humanitec's enterprise-grade security standards",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "EventsSign up for our weekly events or check out past recordings",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "PartnersCheck out our ecosystem of implementation partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "What is Platform Engineering?Learn everything about Platform Engineering, the next evolution of DevOps",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "What is an Internal Developer Platform?All you need to know about Internal Developer Platforms",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Book a demo",
+          "url": "https://humanitec.com/schedule-demo"
+        },
+        {
+          "text": "[No Text]",
+          "url": "https://humanitec.com/"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "BlogCheck out our latest articles and product releases",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "VideosCheck our video library and learn how to build a platform",
+          "url": "https://humanitec.com/videos"
+        },
+        {
+          "text": "ROI CalculatorWhat is the ROI of building a platform with Humanitec?",
+          "url": "https://humanitec.com/roi"
+        },
+        {
+          "text": "WhitepapersIndustry reports and benchmarking studies",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "SecurityLearn about Humanitec's enterprise-grade security standards",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "EventsSign up for our weekly events or check out past recordings",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "PartnersCheck out our ecosystem of implementation partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "What is Platform Engineering?Learn everything about Platform Engineering, the next evolution of DevOps",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "What is an Internal Developer Platform?All you need to know about Internal Developer Platforms",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Book a demo",
+          "url": "https://humanitec.com/schedule-demo"
+        },
+        {
+          "text": "Talk to our platform architectsArrow Right",
+          "url": "https://humanitec.com/talk-to-platform-architect-mvp"
+        },
+        {
+          "text": "Talk to our platform architectsArrow Right",
+          "url": "https://humanitec.com/talk-to-platform-architect-mvp"
+        },
+        {
+          "text": "Talk to our platform architectsArrow Right",
+          "url": "https://humanitec.com/talk-to-platform-architect-mvp"
+        },
+        {
+          "text": "Learn more",
+          "url": "https://humanitec.com/events?content-type=MVP+Sessions"
+        },
+        {
+          "text": "Learn more",
+          "url": "https://humanitec.com/blog/the-four-phases-to-minimum-viable-platform-mvp"
+        },
+        {
+          "text": "Learn more",
+          "url": "https://humanitec.com/blog/how-to-build-a-minimum-viable-platform-mvp"
+        },
+        {
+          "text": "privacy policy",
+          "url": "https://humanitec.com/policies/privacy-policy"
+        },
+        {
+          "text": "Why Platform Engineering",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "Why Internal Developer Platform",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Why Humanitec",
+          "url": "https://humanitec.com/why-humanitec"
+        },
+        {
+          "text": "Product overview",
+          "url": "https://humanitec.com/products"
+        },
+        {
+          "text": "Platform Orchestrator",
+          "url": "https://humanitec.com/products/platform-orchestrator"
+        },
+        {
+          "text": "Score",
+          "url": "https://humanitec.com/products/score"
+        },
+        {
+          "text": "Portal",
+          "url": "https://humanitec.com/products/portal"
+        },
+        {
+          "text": "Integrations",
+          "url": "https://humanitec.com/integrations"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "Environment management",
+          "url": "https://humanitec.com/environment-management"
+        },
+        {
+          "text": "Deployment management",
+          "url": "https://humanitec.com/deployment-management"
+        },
+        {
+          "text": "Infrastructure orchestration",
+          "url": "https://humanitec.com/infrastructure-orchestration"
+        },
+        {
+          "text": "Developer self-service",
+          "url": "https://humanitec.com/developer-self-service"
+        },
+        {
+          "text": "RBAC & governance",
+          "url": "https://humanitec.com/rbac-and-governance"
+        },
+        {
+          "text": "Use cases overview",
+          "url": "https://humanitec.com/use-cases"
+        },
+        {
+          "text": "Kubernetes migration",
+          "url": "https://humanitec.com/use-cases/kubernetes-migration"
+        },
+        {
+          "text": "Kubernetes complexity",
+          "url": "https://humanitec.com/use-cases/kubernetes-complexity"
+        },
+        {
+          "text": "Eliminate ticket Ops",
+          "url": "https://humanitec.com/use-cases/eliminate-ticket-ops"
+        },
+        {
+          "text": "End-to-end self service",
+          "url": "https://humanitec.com/use-cases/enable-developer-self-service"
+        },
+        {
+          "text": "Build developer portals",
+          "url": "https://humanitec.com/use-cases/build-developer-portals"
+        },
+        {
+          "text": "Build an IDP",
+          "url": "https://humanitec.com/use-cases/build-an-idp"
+        },
+        {
+          "text": "About Humanitec",
+          "url": "https://humanitec.com/company"
+        },
+        {
+          "text": "Careers",
+          "url": "https://humanitec.com/careers"
+        },
+        {
+          "text": "Customers",
+          "url": "https://humanitec.com/customers"
+        },
+        {
+          "text": "Professional Services",
+          "url": "https://humanitec.com/professional-services"
+        },
+        {
+          "text": "Partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "Contact",
+          "url": "https://humanitec.com/contact"
+        },
+        {
+          "text": "Blog",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "Whitepapers",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "FAQ",
+          "url": "https://humanitec.com/faqs"
+        },
+        {
+          "text": "Start free trial",
+          "url": "https://humanitec.com/get-started"
+        },
+        {
+          "text": "Slack",
+          "url": "https://humanitec.com/platform-engineering-slack"
+        },
+        {
+          "text": "Events",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "AWS",
+          "url": "https://humanitec.com/reference-architectures/aws"
+        },
+        {
+          "text": "Azure",
+          "url": "https://humanitec.com/reference-architectures/azure"
+        },
+        {
+          "text": "GCP",
+          "url": "https://humanitec.com/reference-architectures/gcp"
+        },
+        {
+          "text": "Red Hat OpenShift",
+          "url": "https://humanitec.com/reference-architectures/red-hat-openshift"
+        },
+        {
+          "text": "Imprint",
+          "url": "https://humanitec.com/imprint"
+        },
+        {
+          "text": "Support",
+          "url": "https://humanitec.com/support"
+        },
+        {
+          "text": "Security",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "Policies",
+          "url": "https://humanitec.com/policies"
+        }
+      ]
+    },
+    "https://humanitec.com/products": {
+      "title": "Products",
+      "headings": [
+        "Your one-stop-shop for platform engineering",
+        "Our product philosophy",
+        "The Portal",
+        "Score (OSS workload spec)",
+        "The Platform Orchestrator"
+      ],
+      "paragraphs": [
+        "An intuitive UI for developers to configure their applications, check container logs and debug errors. Platform teams and executives have all key health metrics at a glance.",
+        "An intuitive UI for developers to configure their applications, check container logs and debug errors. Platform teams and executives have all key health metrics at a glance.",
+        "The configuration engine that sits at the heart of your Internal Developer Platform. It lets you define clear templates and golden paths for your developers. It drives automation and standardization across all your teams and workflows."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/products/portal": {
+      "title": "Humanitec Portal",
+      "headings": [
+        "Portal",
+        "Explore the Portal",
+        "Powerful portal features",
+        "A service and infra catalog that\u00e2\u0080\u0099s always up to date",
+        "Use Humanitec Portal, any\u00e2\u0080\u00a8third party - or build your own"
+      ],
+      "paragraphs": [
+        "Features",
+        "Ensure standardized, securely configured environments. Avoid drift, manage progression, pause and create.",
+        "Standardize the way your developers deploy code, while enforcing clear RBAC across all your workflows. Use the Platform Orchestrator on its own or in tandem with your GitOps setup."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/products/score": {
+      "title": "Score",
+      "headings": [
+        "Score",
+        "Explore Score",
+        "Design sensible abstractions",
+        "Declarative by nature",
+        "Seamless tech \u00e2\u0080\u00a8stack and workflow integration"
+      ],
+      "paragraphs": [
+        "Score is used to build platform and self-service experiences for developers. Because it\u00e2\u0080\u0099s fully code-based it integrates seamlessly into the git-push workflow your team is using today.",
+        "Score lets developers define the resources required by their workloads in a declarative way. You declare once that your workload needs to listen on a port to receive requests - and don\u00e2\u0080\u0099t not need to worry where and how the exact port is defined in e.g. a remote Kubernetes environment. By declaring what the workload needs to run, the \u00e2\u0080\u009chow\u00e2\u0080\u009d becomes an environment specific implementation detail that is taken care of by Score.",
+        "Score introduces a single change to your setup by adding a score.yaml file to your workloads\u00e2\u0080\u0099 repo. Everything else stays as is. Once Score is set up, you can continue using it even if the underlying tech stack changes."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/resource-definitions": {
+      "title": "Resource Definitions | Humanitec",
+      "headings": [
+        "Resource Definitions",
+        "one-off \u00f0\u009f\u0091\u0089 reuse",
+        "A thriving ecosystem to start",
+        "Integrate your IaC",
+        "What are Resource Definitions?"
+      ],
+      "paragraphs": [
+        "Standardize your resource management",
+        "Resource Definitions\u00c2\u00a0come with default Terraform modules baked in for reuse and as a starting point. You \u00c2\u00a0can swap in your own or use any other IaC format such as Crossplane or Pulumi.",
+        "How it works"
+      ],
+      "links": []
+    },
+    "https://humanitec.com/reference-architectures": {
+      "title": "Reference architectures",
+      "headings": [
+        "Reference architectures for Internal Developer Platforms",
+        "What are reference architectures?"
+      ],
+      "paragraphs": [
+        "Explore tried and true platform blueprints and reference architectures",
+        "How can you glue your toolchain into a scalable Internal Developer Platform? These reference architectures are based on hundreds of setups across public, private and hybrid cloud to help you build your IDP quickly and reliably.",
+        "The tools below are representative and can be swapped with what you\u00e2\u0080\u0099re using today. To see what an IDP on your specific cloud setup would look like, check out the individual reference architectures available as whitepapers."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/environment-management": {
+      "title": "Environment Management with Humanitec",
+      "headings": [
+        "Environment Management",
+        "Create and manage environments from dev to prod",
+        "Create and manage ephemeral environments",
+        "Manage automations \u00c2\u00a0on an environment level",
+        "Manage secure access, secrets and values across environments"
+      ],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/developer-self-service": {
+      "title": "Enable developer-self-service with Humanitec",
+      "headings": [
+        "Developer self-service",
+        "Give developers super powers",
+        "Pre-package services, resources and apps.",
+        "Set rules centrally,reuse across workloads",
+        "Deploy, diff, debug and \u00c2\u00a0roll-back"
+      ],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/rbac-and-governance": {
+      "title": "Enhanced RBAC and Governance with Humanitec",
+      "headings": [
+        "RBAC and Governance",
+        "GranularRole Based Access Control",
+        "Compliant configs,without limiting users",
+        "Design policy checks and sign off workflows",
+        "Audit every deployment"
+      ],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/deployment-management": {
+      "title": "Deployment Management by Humanitec",
+      "headings": [
+        "Deployment Management",
+        "Enable secure,self-service deployments",
+        "Manage progression between environments",
+        "Enforce policies and design sign-off workflows",
+        "Log all deployments and run diffs between them"
+      ],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/insights-intelligence": {
+      "title": "Insights & Intelligence with Humanitec",
+      "headings": [
+        "Insights & Engineering Intelligence",
+        "Consolidate intelligence with easy data ingestion",
+        "Dora Metrics and turnkey insights",
+        "Catalogue and map dependencies",
+        "Audit and trace every change"
+      ],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/cost-control": {
+      "title": "Cost Control with Humanitec",
+      "headings": [
+        "Cost control",
+        "Lean resource allocation by design",
+        "Understand what\u00e2\u0080\u0099s running where, anytime",
+        "Pause environments on schedule",
+        "Spin up and tier down environments rapidly"
+      ],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/infrastructure-orchestration": {
+      "title": "Infrastructure Orchestration with Humanitec",
+      "headings": [
+        "Infrastructure Orchestration",
+        "Reuse templated definitions across workloads",
+        "Let developers\u00e2\u0080\u00a8self-serve with ease",
+        "Orchestrate any type of IaC format",
+        "Understand usage,update and maintain at scale"
+      ],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/cluster-gpu-orchestration": {
+      "title": "Cluster & GPU Orchestration with Humanitec",
+      "headings": [
+        "Cluster & GPU Orchestration",
+        "Create clusters while enforcing rules",
+        "Nail multi-tenancy and multicloud.",
+        "Pre-package appsand models",
+        "Update and maintain as a fleet"
+      ],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/ephemeral-environments": {
+      "title": "Ephemeral Environments with Humanitec",
+      "headings": [
+        "Ephemeral Environments",
+        "Ephemeral Environments",
+        "Environment progression and auto-deletion",
+        "Resource provisioning",
+        "Notify third parties"
+      ],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/for-developers": {
+      "title": "For Developers",
+      "headings": [
+        "Developer experience with the user in mind",
+        "wait \u00c2\u00a0\u00f0\u009f\u0091\u0089 do",
+        "What it can do for you",
+        "See it in action",
+        "Choose the interface that works for you"
+      ],
+      "paragraphs": ["30%", "Shorter lead time", "4x"],
+      "links": []
+    },
+    "https://humanitec.com/for-infrastructure-teams": {
+      "title": "For Infrastructure Teams",
+      "headings": [
+        "A self-service layer for your infrastructure. No more ticket ops.",
+        "react \u00c2\u00a0\u00f0\u009f\u0091\u0089 act",
+        "Orchestrate infrastructure at scale",
+        "Features I&O teams love",
+        "See infra orchestration in action"
+      ],
+      "paragraphs": ["78%", "drop in ticket ops and requests", "95%"],
+      "links": []
+    },
+    "https://humanitec.com/for-security-teams": {
+      "title": "For Security Teams",
+      "headings": [
+        "Build the DevSecOps platform that works for you",
+        "Configure once. Enforce everywhere.",
+        "Case study: building Internal Developer Platforms for high security environments",
+        "What it does for you",
+        "Dive deeper"
+      ],
+      "paragraphs": ["78%", "drop in ticket ops and requests", "83%"],
+      "links": []
+    },
+    "https://humanitec.com/why-humanitec": {
+      "title": "Why Humanitec",
+      "headings": [
+        "Why Humanitec?",
+        "Radically simplify how you deliver software",
+        "\u00e2\u0080\u009cYou build it, you run it\u00e2\u0080\u009dfor the enterprise",
+        "Build your \u00e2\u0080\u00a8platform fast.\u00e2\u0080\u008dAt a fraction\u00e2\u0080\u00a8of the cost.",
+        "Hype Cycle"
+      ],
+      "paragraphs": [
+        "Humanitec slashes time to market for the world's best engineering teams.",
+        "Platform teams create reusable config templates to drive standardization across all your teams and workflows.",
+        "Developers self-serve the tech and tools they need to run their apps and services."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/for-infrastructure-platform-engineers": {
+      "title": "For Infrastructure Platform Engineers",
+      "headings": [
+        "Build one backend. For everyone.",
+        "Build a platform backend that infra and ops teams can standardize against",
+        "Serve your DevEx Platform Engineers and developers",
+        "Provide devs, I&O and security teams with golden paths that scale",
+        "Use our \u00c2\u00a0pre-configured Resource Packs and integrate your IaC"
+      ],
+      "paragraphs": ["30%", "Shorter lead time", "95%"],
+      "links": []
+    },
+    "https://humanitec.com/for-devex-platform-engineers": {
+      "title": "For DevEx Platform Engineers",
+      "headings": [
+        "Craft amazing\u00e2\u0080\u00a8DevEx flows",
+        "Serve your developers",
+        "Provide devs, I&O and security teams with golden paths that scale.",
+        "Watch a demo (dev self-service)",
+        "Supply the interface that works for your users"
+      ],
+      "paragraphs": ["30%", "shorter lead time", "98%"],
+      "links": []
+    },
+    "https://humanitec.com/use-cases/build-an-idp": {
+      "title": "Use Case: Fastest way to build the perfect platform",
+      "headings": [
+        "Fastest way to build the perfect platform",
+        "Products for the enterprise.",
+        "Why Humanitec?",
+        "See how Convera built their IDP with Humanitec",
+        "Dive deeper"
+      ],
+      "paragraphs": [
+        "Humanitec is your one-stop shop in the platform engineering space. We offer everything you need to build your enterprise-grade IDP: Score, OSS workload spec for abstractions, Platform Orchestrator for standardization, Portal to visualize everything.",
+        "30%Shorter lead time",
+        "95%Less config scripts"
+      ],
+      "links": []
+    },
+    "https://humanitec.com/use-cases/kubernetes-complexity": {
+      "title": "Use Case: Tame Kubernetes complexity",
+      "headings": [
+        "Tame Kubernetes complexity",
+        "An intuitive layer on top of Kubernetes",
+        "Why Humanitec?",
+        "See how Convera tamed K8s with Humanitec",
+        "Dive deeper"
+      ],
+      "paragraphs": [
+        "Humanitec enables fast and compliant Kubernetes adoption at scale, following enterprise best practices.",
+        "3x",
+        "Faster K8s rollout"
+      ],
+      "links": []
+    },
+    "https://humanitec.com/use-cases/enable-developer-self-service": {
+      "title": "Use Case: Enable developer self-service",
+      "headings": [
+        "Enable developer self-service",
+        "Kill ticket ops. Get your life back.",
+        "Why Humanitec?",
+        "See how Convera enabled developer self-service with Humanitec",
+        "Dive deeper"
+      ],
+      "paragraphs": [
+        "Developer self-service is what slashes time to market. The best teams have it, everybody wants it.",
+        "30%",
+        "Shorter lead time"
+      ],
+      "links": []
+    },
+    "https://humanitec.com/use-cases/eliminate-ticket-ops": {
+      "title": "Use Case: Eliminate ticket ops",
+      "headings": [
+        "Eliminate ticket ops",
+        "Top performing orgs don\u00e2\u0080\u0099t write tickets",
+        "Why Humanitec?",
+        "See how Convera reduced ops dependencies with Humanitec",
+        "Dive deeper"
+      ],
+      "paragraphs": [
+        "Ticket ops is draining your organization. Keeping Ops teams busy with unproductive work hinders velocity and negatively affects lead time.",
+        "100%",
+        "less waiting times for devs"
+      ],
+      "links": []
+    },
+    "https://humanitec.com/use-cases/kubernetes-migration": {
+      "title": "Use Case: Nail your Kubernetes migration",
+      "headings": [
+        "Nail your Kubernetes migration",
+        "An intuitive layer on top of Kubernetes",
+        "Why Humanitec?",
+        "See how Convera tamed K8s with Humanitec",
+        "Dive deeper"
+      ],
+      "paragraphs": [
+        "Humanitec enables fast and compliant Kubernetes migration at scale, following enterprise best practices.",
+        "3x",
+        "Faster K8s roll out"
+      ],
+      "links": []
+    },
+    "https://humanitec.com/use-cases/build-developer-portals": {
+      "title": "Use Case: Build developer portals",
+      "headings": [
+        "Build developer portals",
+        "Use the Humanitec Portal or any third party",
+        "Why Humanitec?",
+        "Dive deeper"
+      ],
+      "paragraphs": [
+        "Have a mandate to build a portal but do not know which one to choose and where to start? Humanitec is your one stop shop for platform engineering in the enterprise.",
+        "100%",
+        "transparency on what is running where"
+      ],
+      "links": []
+    },
+    "https://humanitec.com/customers": {
+      "title": "Customers",
+      "headings": ["Our Customers", "More stories"],
+      "paragraphs": [
+        "Humanitec proudly powers the Internal Developer Platforms of some of the world\u00e2\u0080\u0099s best engineering teams.",
+        "Bechtle is a leading European IT company. See how Humanitec empowers their Competence Center AVS to accelerate high-security cloud development, achieving 32% faster lead times and 100% cloud portability.",
+        "Humanitec's platform helps healthcare organizations streamline their development process. See how our solution can benefit your organization today."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/marketplace": {
+      "title": "Marketplace",
+      "headings": ["Humanitec marketplace"],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/pricing": {
+      "title": "Our Pricing",
+      "headings": [
+        "Humanitec powers the best platform engineering teams",
+        "Feature overview",
+        "Security is our priority"
+      ],
+      "paragraphs": [
+        "For teams and small organizations of up to 15 users. Start a free trial for 30 days\u00e2\u0080\u008d",
+        "For midsize organizations with 1 or 2 teams running multiple \u00c2\u00a0applications.\u00e2\u0080\u008d",
+        "For midsize and large organizations with multiple teams running a large number of applications."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/blog": {
+      "title": "Platform Engineering Blog",
+      "headings": [
+        "Blog",
+        "Suggested articles",
+        "Latest articles",
+        "All articles"
+      ],
+      "paragraphs": [
+        "Check out Humanitec news, product releases and industry reports. Learn about the latest in platform engineering from our leading guest authors.",
+        "Platform Orchestration might be a relatively new concept, but it is going to radically transform our industry. Begun the cloud wars have.",
+        "Learn how Humanitec's partnership with Thoughtworks and Bechtle Competence Center AVS paves the way out of VMware's lock-in with a modular Internal Developer Platform powered by Humanitec Platform Orchestrator."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/videos": {
+      "title": "Build your platform with Humanitec: Videos",
+      "headings": [],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/roi": {
+      "title": "Return on investment (ROI) | Humanitec",
+      "headings": [],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/whitepapers": {
+      "title": "Whitepapers",
+      "headings": [
+        "Whitepapers",
+        "State of Platform Engineering Report Volume 2"
+      ],
+      "paragraphs": [
+        "With 1000s of engineering teams surveyed, our benchmarking reports are some of the most thorough analyses in the DevOps and cloud native industry. Understand the latest trends and learn from top performers.",
+        "Platform engineering is one of the hottest trends in DevOps and infrastructure, and for good reason: platform engineering is redefining the cloud-native world.",
+        "Over the past year, platform engineering has transitioned from a rising trend in DevOps and infrastructure to a fundamental pillar of the software engineering landscape. This report explores its evolution, the key changes that have shaped it, and its future trajectory."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/security": {
+      "title": "Security",
+      "headings": [
+        "Security at Humanitec",
+        "How we protect your data",
+        "Humanitec is SOC 2 Type II Certified",
+        "\u00e2\u0080\u008dGDPR Compliance with Vanta",
+        "Data storage and encryption at rest"
+      ],
+      "paragraphs": [
+        "To say security is important to us at Humanitec is a huge understatement. It is at the heart of everything we do, driving not only how we build and operate our platform but also shaping our daily activities and decisions as a company. Security is not just a priority for us\u00e2\u0080\u0094it is a fundamental aspect of how we conduct our business and deliver value to our users.",
+        "We understand that trust in our platform relies heavily on how well we protect your data and secure our services. To ensure we meet the highest standards, we have established a comprehensive security program. This includes collaborating with external auditors and data protection specialists, as well as implementing robust procedures to regularly evaluate risks, threats, and vulnerabilities. Our management process is designed to constantly address and adapt to evolving security needs, ensuring that our users\u00e2\u0080\u0099 data is safe at all times.",
+        "To maintain objectivity and transparency, we rely on third-party certifications and regular audits performed by external organizations. This ensures that our security practices are independently validated and meet globally recognized standards."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/events": {
+      "title": "Events",
+      "headings": ["Upcoming events", "Previous events"],
+      "paragraphs": [
+        "According to a recent study by Google, 80% of those surveyed believe platform engineering is key to the future of AI. We can already see how AI is rapidly transforming how enterprises approach technology, but managing the complexity of AI infrastructure remains a significant challenge. While AI accelerates innovation, it doesn't eliminate complexity, it simply shifts it. Only with a solid platform foundation can AI initiatives scale successfully without overwhelming your engineering teams with new tooling and infrastructure demands.",
+        "Join us for a hands-on workshop where you'll build a Minimum Viable Platform (MVP) from scratch with Humanitec. Learn how to set up a simple app with key dependencies like DNS, database, and a messaging queue while efficiently connecting your cluster, and configuring essential resources.",
+        "Many organizations assume that adding Backstage to their infrastructure is enough to create a complete, and successful Internal Developer Platform. While Backstage can be a useful starting point, it alone isn't enough to realize the full potential of platform engineering. A true IDP requires more than just a frontend, it needs a robust, well-structured backend to deliver real value."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/partners": {
+      "title": "Partners",
+      "headings": [
+        "Our partners",
+        "Implementation partners",
+        "Distribution partners",
+        "Why partner with Humanitec?",
+        "Better together"
+      ],
+      "paragraphs": [
+        "As the world's largest provider of IT infrastructure services, Kyndryl is committed to the health and continuous improvement of the vital systems at the heart of the digital economy. With our partners and thousands of customers worldwide, we co-create solutions to help enterprises reach their peak digital performance.",
+        "Nagarro, a global digital engineering leader, helps clients become fluidic, innovative, digital-first companies and thus win in their markets. Nagarro employs over 18,300 people in 37 countries.",
+        "Brillio, founded in 2014, is a full-service digital transformation services and consulting firm that empowers businesses to accelerate innovation and growth."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/platform-engineering": {
+      "title": "Platform Engineering | Humanitec",
+      "headings": [
+        "What is platform engineering?",
+        "Platform engineering basics",
+        "How platform engineering works",
+        "What platform engineering is used for",
+        "Why platform engineering is important"
+      ],
+      "paragraphs": [
+        "Platform engineering is the discipline of designing and building Internal Developer Platforms, toolchains and workflows that enable self-service capabilities for software engineering organizations.",
+        "Platform engineering is a new discipline that emerged in response to the growing complexity of modern cloud-native architectures. It describes the practice of building and maintaining an integrated product called an \u00e2\u0080\u009cInternal Developer Platform,\u00e2\u0080\u009d which acts as a flexible and supported abstraction layer between developers and the underlying technologies of their applications.",
+        "Since 2022, platform engineering has gained traction among software engineering organizations looking to enter the next stage of their DevOps evolution, and tens of thousands of platform engineers have flocked to events like PlatformCon. Gartner writes that \u00e2\u0080\u009cplatform engineering is trending because of its promise to optimize the developer experience and accelerate product teams\u00e2\u0080\u0099 delivery of customer value.\u00e2\u0080\u009d They predict that, by 2026, 80 percent of software engineering organizations will have platform teams building Internal Developer Platforms."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/blog/what-is-an-internal-developer-platform": {
+      "title": "What Is an Internal Developer Platform?  | Humanitec",
+      "headings": [
+        "What Is an Internal Developer Platform?",
+        "What is an Internal Developer Platform?",
+        "DevOps is born\u00c2",
+        "Core problem: cognitive load",
+        "Cue platform engineering"
+      ],
+      "paragraphs": [
+        "An Internal Developer Platform (IDP) is the sum of all the tech and tools that a platform engineering team binds together to pave golden paths for developers. IDPs lower cognitive load across the engineering organization and enable developer self-service, without abstracting away context from developers or making the underlying tech inaccessible. Well designed IDPs follow a Platform as a Product approach, where a platform team builds, maintains and continuously improves the IDP, following product management principles and best practices.",
+        "An Internal Developer Platform (IDP) is the sum of all the tech and tools that a platform engineering team binds together to pave golden paths and enable self-service for developers. IDPs reduce ticket ops, standardize config setups, cut lead time and time to market and more. Well-designed IDPs follow a platform as a product approach, where a designated platform team builds, maintains, and continuously improves the IDP.",
+        "There are many solutions that get confused with IDPs, such as an end-to-end DevOps platform or a Heroku-like PaaS that try to cover the entire software lifecycle. Many people also get confused over the shared IDP acronym with internal developer portals (and service catalogs) like Backstage. The main difference is that portals act as an interface to an IDP, not as an IDP itself. There are also a whole host of other tools that also only cover single parts of the software delivery life cycle \u00e2\u0080\u0094 all of which are not the same as an IDP. The Internal Developer Platform is the binding together of these all these different parts."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/schedule-demo": {
+      "title": "Schedule Demo | Humanitec",
+      "headings": [
+        "Standardize the way you deliver software. Today.",
+        "Standardize the way you deliver software. Today."
+      ],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/": {
+      "title": "Humanitec - Serving Platform Engineers",
+      "headings": [
+        "Build a platform that drives change",
+        "pain \u00f0\u009f\u0091\u0089 value",
+        "Build platforms users love",
+        "Start with reference architectures",
+        "Your Minimum Viable Platform. In days."
+      ],
+      "paragraphs": ["Cut your time to market", "Features", "Mvp"],
+      "links": []
+    },
+    "https://humanitec.com/talk-to-platform-architect-mvp": {
+      "title": "Talk to platform architect mvp",
+      "headings": [
+        "Build your Minimum Viable Platform (MVP) now",
+        "Build your Minimum Viable Platform (MVP) now"
+      ],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/events?content-type=MVP+Sessions": {
+      "title": "Events",
+      "headings": ["Upcoming events", "Previous events"],
+      "paragraphs": [
+        "According to a recent study by Google, 80% of those surveyed believe platform engineering is key to the future of AI. We can already see how AI is rapidly transforming how enterprises approach technology, but managing the complexity of AI infrastructure remains a significant challenge. While AI accelerates innovation, it doesn't eliminate complexity, it simply shifts it. Only with a solid platform foundation can AI initiatives scale successfully without overwhelming your engineering teams with new tooling and infrastructure demands.",
+        "Join us for a hands-on workshop where you'll build a Minimum Viable Platform (MVP) from scratch with Humanitec. Learn how to set up a simple app with key dependencies like DNS, database, and a messaging queue while efficiently connecting your cluster, and configuring essential resources.",
+        "Many organizations assume that adding Backstage to their infrastructure is enough to create a complete, and successful Internal Developer Platform. While Backstage can be a useful starting point, it alone isn't enough to realize the full potential of platform engineering. A true IDP requires more than just a frontend, it needs a robust, well-structured backend to deliver real value."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/blog/the-four-phases-to-minimum-viable-platform-mvp": {
+      "title": "The four phases to Minimum Viable Platform (MVP)  | Humanitec",
+      "headings": [
+        "The four phases to Minimum Viable Platform (MVP)",
+        "Quick recap: MVP scope",
+        "Phase 1: Discovery",
+        "Phase 2: Integration",
+        "Phase 3: Deployment"
+      ],
+      "paragraphs": [
+        "The MVP should be representative, repeatable, iterative, and innovative. It should not be compliant with all your security and policy requirements or involve advanced architectures or configurations. Minimum Viable Platforms are the best way to get started with platform engineering and how to build an IDP. This is what you need to get started.",
+        "We already discussed why as a platform team you need to start with a Minimum Viable Platform (MVP) to ensure your platform engineering initiative is successful. TL;DR, you want to make sure you can prove value quickly to all your key stakeholders and keep iterating fast,\u00c2\u00a0 gaining increasing support and buy-in from the different groups without losing momentum.",
+        "In this article, we\u00e2\u0080\u0099ll dive deeper into the four phases of the MVP framework we developed after working with dozens of enterprise organizations (including Fortune 50-sized organizations) to help them deliver their MVP in no time at all."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/blog/how-to-build-a-minimum-viable-platform-mvp": {
+      "title": "How to build a Minimum Viable Platform (MVP)  | Humanitec",
+      "headings": [
+        "How to build a Minimum Viable Platform (MVP)",
+        "Start small and build fast with an MVP",
+        "How to get started in four weeks\u00c2",
+        "Building your MVP HelloWorld app",
+        "Expanding your MVP to an enterprise-grade Internal Developer Platform"
+      ],
+      "paragraphs": [
+        "Building an MVP allows you to start your platform engineering initiative quickly and cost-effectively. Learn how to build a platform with the Humanitec MVP program in just four weeks and expand fast to an enterprise-grade IDP.",
+        "With the immense growth of platform engineering in the last few years, major analyst involvement, and platform-themed events ever-increasing in size, it\u00e2\u0080\u0099s clear that platform engineering is here to stay. For many organizations, the question is no longer, \u00e2\u0080\u009cShould we build a platform?\u00e2\u0080\u009d It\u00e2\u0080\u0099s now \u00e2\u0080\u009cHow do we get started?\u00e2\u0080\u009d The answer is simple: build a Minimum Viable Platform (MVP).",
+        "The main reason to build an MVP is because when starting their Internal Developer Platform (IDP) journey, most businesses fall into the trap of trying to solve all their problems at once. This quickly devolves into what I like to call \u00e2\u0080\u009ccomplexity quicksand\u00e2\u0080\u009d as the project scope (and risks) increase exponentially. Even worse, some companies mistake platform engineering as being all about tools and spend months figuring out which tool should go where rather than actually building something useful."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/policies/privacy-policy": {
+      "title": "Privacy Policy | Humanitec",
+      "headings": [
+        "Privacy Policy",
+        "Table of contents",
+        "1. Identity and contact details of the data controller",
+        "2. Contact details of the data protection officer",
+        "3. General information on data processing"
+      ],
+      "paragraphs": [
+        "The data controller responsible in accordance with the purposes of the General Data Protection Regulation (GDPR) of the European Union and other data protection regulations is:",
+        "PlatCo GmbH",
+        "W\u00c3\u00b6hlertstra\u00c3\u009fe 12/1310115 BerlinGermany"
+      ],
+      "links": []
+    },
+    "https://humanitec.com/integrations": {
+      "title": "Integrations | Effortless Integration with Humanitec",
+      "headings": [
+        "Integrate everythingwith ease",
+        "Integrate all your tools into a consistent platform - in days",
+        "Easily connect your infrastructure.Define rules to create new resources on demand",
+        "Automate like there \u00e2\u0080\u00a8is no tomorrow.",
+        "Best-in-class customer success\u00e2\u0080\u00a8process and implementation"
+      ],
+      "paragraphs": [
+        "Integrate in minutes",
+        "Deployment pipelines and webhooks help you to build sign off workflows, push information to a third party, manage inter-environment progression or run policy checks.",
+        "INTEGRATION EXAMPLE"
+      ],
+      "links": []
+    },
+    "https://humanitec.com/use-cases": {
+      "title": "Use Cases",
+      "headings": ["Use cases"],
+      "paragraphs": [
+        "Humanitec\u00e2\u0080\u0099s products have a transformative impact on your engineering organization. Here are a few of many ways teams use them.",
+        "Create customized developer portals with ease using Humanitec's platform. Simplify access to your applications and streamline your development process. Learn more about building developer portals today.",
+        "Platforms built with the Humanitec Platform Orchestrator are up and running faster, more reliable, and result in lower total cost of ownership."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/company": {
+      "title": "About us",
+      "headings": [
+        "Make simple things simple and complex things possible",
+        "Serving Platform Engineers",
+        "Our principles"
+      ],
+      "paragraphs": [
+        "Humanitec is the leader in the platform engineering space. Named a 2022 Gartner\u00c2\u00ae Cool Vendor, we drive developer productivity by radically simplifying how teams deliver software at scale. Our core products, the Humanitec Platform Orchestrator, Score, and Humanitec Portal are used by mid and large-size engineering organizations, from 100+ developer scale-ups all the way to Fortune 100s.Our OSS workload specification Score lets developers describe their workloads and dependencies as code.The Platform Orchestrator dynamically generates app and infra configurations with every new deployment, driving standardization across the entire software delivery lifecycle.",
+        "This means no more ticket ops or waiting times for developers, resulting in 4x higher deployment frequency and 30% faster time to market.While the Humanitec Portal works to provide the one single pane of glass for the entire organization.As a SaaS provider, Humanitec takes information security very seriously. We\u00e2\u0080\u0099re ISO 27001 certified and constantly strive to protect data while adhering to the industry\u00e2\u0080\u0099s best security practices.Want to build an IDP and get started?",
+        "We are a group of free people. Each of us decides to contribute to an overall vision that we cherish to serve other engineering teams. We do this because we want to do just this, just now, and genuinely go \u00e2\u0080\u009call in\u00e2\u0080\u009d. It is our free decision to build this company. We trust everybody to contribute to the best of their abilities with full focus and self-responsibility."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/careers": {
+      "title": "Careers",
+      "headings": [
+        "We are building the future of software delivery",
+        "Our values",
+        "Our principles",
+        "Truly global, endlessly innovative",
+        "Find your next role"
+      ],
+      "paragraphs": [
+        "Humanitec is leading the platform engineering revolution. Join our global team and help us change the way engineers design and ship software.",
+        "At Humanitec, we value diversity and inclusivity, and strive to create a welcoming and supportive work environment for everyone. We believe that great ideas can come from anyone, and encourage collaboration and open communication across all teams. Learn about our core values and principles.",
+        "We are passionate about what we do. We value ambition, ownership, excellence, and celebrating successes, big and small."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/professional-services": {
+      "title": "Professional Services | Humanitec",
+      "headings": [
+        "Professional Services at Humanitec \u00f0\u009f\u00a4\u009d",
+        "We\u00e2\u0080\u0099ve got your back \u00f0\u009f\u008f",
+        "A quick look \u00f0\u009f\u0091\u0080 at what we offer"
+      ],
+      "paragraphs": [
+        "Leverage our expertise - whether you are just starting your Humanitec journey or are looking to grow and expand, our Professional Services team is here to make your IDP dreams a reality.",
+        "The \u00e2\u0080\u009cA\u00e2\u0080\u009d team is here. We\u00e2\u0080\u0099ve got a global group of Cloud Native pros in areas like:",
+        "All while specializing in harnessing Humanitec\u00e2\u0080\u0099s power to build the most efficient and stable IDPs for organisations in all verticals."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/contact": {
+      "title": "Contact Us",
+      "headings": ["Get in touch"],
+      "paragraphs": [
+        "For any bugs or questions, just reach out.",
+        "Ask us anything (really) and we\u00e2\u0080\u0099ll get back to you asap."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/faqs": {
+      "title": "FAQ's",
+      "headings": [
+        "FAQs",
+        "Why Humanitec",
+        "What can Humanitec do for me?",
+        "As a platform/operations engineer",
+        "As a developer"
+      ],
+      "paragraphs": [
+        "Find quick answers to the most common questions, gathered from our users.",
+        "Humanitec drives developer productivity by radically simplifying how you deliver software. Our customers see 4x higher deployment frequency, 75% less Ops overhead, and 30% faster lead time. Internal Developer Platforms (IDPs) built with our Platform Orchestrator are truly enterprise-grade and take a fraction of the time and resources to get up and running. Every one of our customers successfully rolled out their platform in weeks vs months or years and reported an 87% developer NPS. That\u00e2\u0080\u0099s because developers love platforms built with Humanitec and Score. They can choose their preferred interface (code based with Score, UI, CLI or API) and easily self-serve the tech and tools they need, without waiting times. Platform teams using the Platform Orchestrator can standardize the way app and infra configs are generated and managed, across all teams.",
+        "Humanitec\u00e2\u0080\u0099s product philosophy is that developers should be able to self-serve all the tech and tools they need in a standardized way.\u00c2"
+      ],
+      "links": []
+    },
+    "https://humanitec.com/get-started": {
+      "title": "Humanitec",
+      "headings": [],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/platform-engineering-slack": {
+      "title": "Platform Engineering Slack",
+      "headings": ["The largest platform engineering community"],
+      "paragraphs": [
+        "#platformengineering",
+        "Connect with other platform engineers, share your story, learn from experts",
+        "Browse the latest open positions and meet your future colleagues"
+      ],
+      "links": []
+    },
+    "https://humanitec.com/reference-architectures/aws": {
+      "title": "Platform reference architecture on AWS",
+      "headings": ["Platform reference architecture on AWS"],
+      "paragraphs": [
+        "We looked at the Internal Developer Platforms built and run by some of the world\u00e2\u0080\u0099s best platform engineering teams. We condensed our key learnings for AWS setups into this reference architecture whitepaper.",
+        "You should read this if you want to...",
+        "Platform Engineering is the hot new thing in town. But too often we stop at the buzzwords rather than concretely show how platforms are built. While implementations differ, there are common patterns that emerge."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/reference-architectures/azure": {
+      "title": "Platform reference architecture on Azure",
+      "headings": ["Platform reference architecture on Azure"],
+      "paragraphs": [
+        "We looked at the Internal Developer Platforms built and run by some of the world\u00e2\u0080\u0099s best platform engineering teams. We condensed our key learnings for Azure setups into this reference architecture whitepaper.",
+        "You should read this if you want to...",
+        "Platform Engineering is the hot new thing in town. But too often we stop at the buzzwords rather than concretely show how platforms are built. While implementations differ, there are common patterns that emerge."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/reference-architectures/gcp": {
+      "title": "Platform reference architecture on GCP",
+      "headings": ["Platform reference architecture on GCP"],
+      "paragraphs": [
+        "We looked at the Internal Developer Platforms built and run by some of the world\u00e2\u0080\u0099s best platform engineering teams. We condensed our key learnings for GCP setups into this reference architecture whitepaper.",
+        "You should read this if you want to...",
+        "Platform Engineering is the hot new thing in town. But too often we stop at the buzzwords rather than concretely show how platforms are built. While implementations differ, there are common patterns that emerge."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/reference-architectures/red-hat-openshift": {
+      "title": "Platform reference architecture on Red Hat OpenShift",
+      "headings": ["Platform reference architecture on Red Hat OpenShift"],
+      "paragraphs": [
+        "We looked at the Internal Developer Platforms built and run by some of the world\u00e2\u0080\u0099s best platform engineering teams. We condensed our key learnings for OpenShift setups into this reference architecture whitepaper.",
+        "You should read this if you want to...",
+        "Platform Engineering is the hot new thing in town. But too often we stop at the buzzwords rather than concretely show how platforms are built. While implementations differ, there are common patterns that emerge."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/imprint": {
+      "title": "Imprint",
+      "headings": ["Imprint"],
+      "paragraphs": [
+        "W\u00c3\u00b6hlertstra\u00c3\u009fe 12-1310115 BerlinGermanyPhone: +49 30 6293-8516",
+        "228 East 45th Street, Suite 9ENew York, NY 10017United States",
+        "3rd Floor, 1 Ashley RoadAltrinchamCheshire WA14 2DTUnited Kingdom"
+      ],
+      "links": []
+    },
+    "https://humanitec.com/support": {
+      "title": "Support",
+      "headings": ["Contact support"],
+      "paragraphs": [],
+      "links": []
+    },
+    "https://humanitec.com/policies": {
+      "title": "Subscription Terms | Humanitec",
+      "headings": [
+        "Subscription Terms",
+        "1. Definitions",
+        "2.\u00c2\u00a0Customer's Access to the Solution",
+        "3.\u00c2\u00a0Restricting Customer's Access to the Solution",
+        "4.\u00c2\u00a0Availability"
+      ],
+      "paragraphs": [
+        "These Subscription Terms apply to any Humanitec Service offered by Humanitec (\u00e2\u0080\u009cHumanitec\u00e2\u0080\u009d or \u00e2\u0080\u009cCompany\u00e2\u0080\u009d). By mutually executing one or more Service Order (as defined below) with Humanitec or by registering for the Humanitec Service in any manner, you (\u00e2\u0080\u009cyou\u00e2\u0080\u009d or \u00e2\u0080\u009cCustomer\u00e2\u0080\u009d) agree to the inclusion of these terms in our agreement (together with all Order Forms or the registration the \u00e2\u0080\u009cAgreement\u00e2\u0080\u009d). If you are entering into this Agreement on behalf of an organization or entity, references to \u00e2\u0080\u009cCustomer\u00e2\u0080\u009d and \u00e2\u0080\u009cyou\u00e2\u0080\u009d in this Agreement, refer to that organization or entity. The provisions of these Terms shall apply exclusively. Terms and conditions of the Customer shall not apply. This also applies if Humanitec does not explicitly object to such general terms and conditions.",
+        "1.1. As used in these Terms, unless the context otherwise requires, the following capitalized terms shall have the meanings set forth below:",
+        "1.1.1. \u00e2\u0080\u009cAffiliate\u00e2\u0080\u009d means an entity within the meaning of Sections 15 et seq. of the German Stock Corporations Act (Aktiengesetz, \u00e2\u0080\u009cAktG\u00e2\u0080\u009d)."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/events/infrastructure-platform-engineering-with-humanitec-2024-05-29": {
+      "title": "Webinar: Infrastructure platform engineering with Humanitec",
+      "headings": [
+        "Infrastructure platform engineering with Humanitec",
+        "Audience - who should join?"
+      ],
+      "paragraphs": [
+        "When enterprise teams start their platform engineering journey or scale up their Internal Developer Platform (IDP) initiative, they typically aim to reduce manual maintenance and ticket ops through standardization and automation.",
+        "Clemens J\u00c3\u00bctte",
+        ""
+      ],
+      "links": [
+        {
+          "text": "\u00f0\u009f\u009a\u0080 Build your Minimum Viable Platform (MVP) with our playbook. Start now",
+          "url": "https://humanitec.com/minimum-viable-platform-mvp"
+        },
+        {
+          "text": "Product OverviewArrow RightUse them all or combine them.",
+          "url": "https://humanitec.com/products"
+        },
+        {
+          "text": "Platform OrchestratorA graph-based backend for your IDP. Automate and standardize at scale.",
+          "url": "https://humanitec.com/products/platform-orchestrator"
+        },
+        {
+          "text": "PortalThe frontend of your IDP. Service catalog, scaffolding and self-service.",
+          "url": "https://humanitec.com/products/portal"
+        },
+        {
+          "text": "ScoreCode-based interface of your IDP. A familiar interface for developers.",
+          "url": "https://humanitec.com/products/score"
+        },
+        {
+          "text": "Resource DefinitionsPre-configured infra modules. Easily integrated with your existing IaC.",
+          "url": "https://humanitec.com/resource-definitions"
+        },
+        {
+          "text": "Reference ArchitecturesBlueprints for enteprise-grade Internal Developer Platforms.",
+          "url": "https://humanitec.com/reference-architectures"
+        },
+        {
+          "text": "Environment Management",
+          "url": "https://humanitec.com/environment-management"
+        },
+        {
+          "text": "Developer Self-service",
+          "url": "https://humanitec.com/developer-self-service"
+        },
+        {
+          "text": "RBAC and Governance",
+          "url": "https://humanitec.com/rbac-and-governance"
+        },
+        {
+          "text": "Deployment Management",
+          "url": "https://humanitec.com/deployment-management"
+        },
+        {
+          "text": "Insights & Engineering Intelligence",
+          "url": "https://humanitec.com/insights-intelligence"
+        },
+        {
+          "text": "Cost control",
+          "url": "https://humanitec.com/cost-control"
+        },
+        {
+          "text": "Infrastructure Orchestration",
+          "url": "https://humanitec.com/infrastructure-orchestration"
+        },
+        {
+          "text": "Cluster & GPU Orchestration",
+          "url": "https://humanitec.com/cluster-gpu-orchestration"
+        },
+        {
+          "text": "Ephemeral Environments",
+          "url": "https://humanitec.com/ephemeral-environments"
+        },
+        {
+          "text": "Build an MVP in daysArrow RightA structured approach to get you to your\u00e2\u0080\u00a8minimum viable platform in four phases.",
+          "url": "https://humanitec.com/minimum-viable-platform-mvp"
+        },
+        {
+          "text": "Application DevelopersTrue self-service. No waiting times",
+          "url": "https://humanitec.com/for-developers"
+        },
+        {
+          "text": "Infrastructure and OperationsConfigure once. Enforce everywhere",
+          "url": "https://humanitec.com/for-infrastructure-teams"
+        },
+        {
+          "text": "SecurityBuild the DevSecOps platform for you",
+          "url": "https://humanitec.com/for-security-teams"
+        },
+        {
+          "text": "ExecutivesBuild a leading organization. Cut time to market.",
+          "url": "https://humanitec.com/why-humanitec"
+        },
+        {
+          "text": "Infrastructure Platform engineersBuild a backend for everyone",
+          "url": "https://humanitec.com/for-infrastructure-platform-engineers"
+        },
+        {
+          "text": "DevEx Platform EngineersCraft amazing DevEx flows",
+          "url": "https://humanitec.com/for-devex-platform-engineers"
+        },
+        {
+          "text": "Build an IDPHumanitec is your one stop shop for an enterprise ready IDP",
+          "url": "https://humanitec.com/use-cases/build-an-idp"
+        },
+        {
+          "text": "Tame Kubernetes complexityDynamically generate Helm charts with every deployment",
+          "url": "https://humanitec.com/use-cases/kubernetes-complexity"
+        },
+        {
+          "text": "Enable developer self-serviceKill waiting times. Self-serve the tech you need to run your apps",
+          "url": "https://humanitec.com/use-cases/enable-developer-self-service"
+        },
+        {
+          "text": "Eliminate ticket opsNo more ticket ops and repetitive tasks, slash lead time",
+          "url": "https://humanitec.com/use-cases/eliminate-ticket-ops"
+        },
+        {
+          "text": "Nail your Kubernetes migrationEnsure a 100% successful Kubernetes roll out and adoption",
+          "url": "https://humanitec.com/use-cases/kubernetes-migration"
+        },
+        {
+          "text": "Build developer portalsUse the Humanitec Portal or integrate with any third party",
+          "url": "https://humanitec.com/use-cases/build-developer-portals"
+        },
+        {
+          "text": "Customers",
+          "url": "https://humanitec.com/customers"
+        },
+        {
+          "text": "Marketplace",
+          "url": "https://humanitec.com/marketplace"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "BlogCheck out our latest articles and product releases",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "VideosCheck our video library and learn how to build a platform",
+          "url": "https://humanitec.com/videos"
+        },
+        {
+          "text": "ROI CalculatorWhat is the ROI of building a platform with Humanitec?",
+          "url": "https://humanitec.com/roi"
+        },
+        {
+          "text": "WhitepapersIndustry reports and benchmarking studies",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "SecurityLearn about Humanitec's enterprise-grade security standards",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "EventsSign up for our weekly events or check out past recordings",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "PartnersCheck out our ecosystem of implementation partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "What is Platform Engineering?Learn everything about Platform Engineering, the next evolution of DevOps",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "What is an Internal Developer Platform?All you need to know about Internal Developer Platforms",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Book a demo",
+          "url": "https://humanitec.com/schedule-demo"
+        },
+        {
+          "text": "[No Text]",
+          "url": "https://humanitec.com/"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "BlogCheck out our latest articles and product releases",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "VideosCheck our video library and learn how to build a platform",
+          "url": "https://humanitec.com/videos"
+        },
+        {
+          "text": "ROI CalculatorWhat is the ROI of building a platform with Humanitec?",
+          "url": "https://humanitec.com/roi"
+        },
+        {
+          "text": "WhitepapersIndustry reports and benchmarking studies",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "SecurityLearn about Humanitec's enterprise-grade security standards",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "EventsSign up for our weekly events or check out past recordings",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "PartnersCheck out our ecosystem of implementation partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "What is Platform Engineering?Learn everything about Platform Engineering, the next evolution of DevOps",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "What is an Internal Developer Platform?All you need to know about Internal Developer Platforms",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Book a demo",
+          "url": "https://humanitec.com/schedule-demo"
+        },
+        {
+          "text": "[No Text]",
+          "url": "https://humanitec.com/events/infrastructure-platform-engineering-with-humanitec-2024-05-29"
+        },
+        {
+          "text": "All events",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "Infrastructure platform engineering with Humanitec",
+          "url": "https://humanitec.com/events/infrastructure-platform-engineering-with-humanitec-2024-05-29"
+        },
+        {
+          "text": "Register nowArrow Right",
+          "url": "https://humanitec.com/events/infrastructure-platform-engineering-with-humanitec-2024-05-29"
+        },
+        {
+          "text": "Apply nowArrow Right",
+          "url": "https://humanitec.com/events/infrastructure-platform-engineering-with-humanitec-2024-05-29"
+        },
+        {
+          "text": "Apply nowArrow Right",
+          "url": "https://humanitec.com/events/infrastructure-platform-engineering-with-humanitec-2024-05-29"
+        },
+        {
+          "text": "Humanitec reference architectures for IDPs",
+          "url": "https://humanitec.com/reference-architectures"
+        },
+        {
+          "text": "Register nowArrow Right",
+          "url": "https://humanitec.com/events/infrastructure-platform-engineering-with-humanitec-2024-05-29"
+        },
+        {
+          "text": "Apply nowArrow Right",
+          "url": "https://humanitec.com/events/infrastructure-platform-engineering-with-humanitec-2024-05-29"
+        },
+        {
+          "text": "Apply nowArrow Right",
+          "url": "https://humanitec.com/events/infrastructure-platform-engineering-with-humanitec-2024-05-29"
+        },
+        {
+          "text": "privacy policy",
+          "url": "https://humanitec.com/policies/privacy-policy"
+        },
+        {
+          "text": "Why Platform Engineering",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "Why Internal Developer Platform",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Why Humanitec",
+          "url": "https://humanitec.com/why-humanitec"
+        },
+        {
+          "text": "Product overview",
+          "url": "https://humanitec.com/products"
+        },
+        {
+          "text": "Platform Orchestrator",
+          "url": "https://humanitec.com/products/platform-orchestrator"
+        },
+        {
+          "text": "Score",
+          "url": "https://humanitec.com/products/score"
+        },
+        {
+          "text": "Portal",
+          "url": "https://humanitec.com/products/portal"
+        },
+        {
+          "text": "Integrations",
+          "url": "https://humanitec.com/integrations"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "Environment management",
+          "url": "https://humanitec.com/environment-management"
+        },
+        {
+          "text": "Deployment management",
+          "url": "https://humanitec.com/deployment-management"
+        },
+        {
+          "text": "Infrastructure orchestration",
+          "url": "https://humanitec.com/infrastructure-orchestration"
+        },
+        {
+          "text": "Developer self-service",
+          "url": "https://humanitec.com/developer-self-service"
+        },
+        {
+          "text": "RBAC & governance",
+          "url": "https://humanitec.com/rbac-and-governance"
+        },
+        {
+          "text": "Use cases overview",
+          "url": "https://humanitec.com/use-cases"
+        },
+        {
+          "text": "Kubernetes migration",
+          "url": "https://humanitec.com/use-cases/kubernetes-migration"
+        },
+        {
+          "text": "Kubernetes complexity",
+          "url": "https://humanitec.com/use-cases/kubernetes-complexity"
+        },
+        {
+          "text": "Eliminate ticket Ops",
+          "url": "https://humanitec.com/use-cases/eliminate-ticket-ops"
+        },
+        {
+          "text": "End-to-end self service",
+          "url": "https://humanitec.com/use-cases/enable-developer-self-service"
+        },
+        {
+          "text": "Build developer portals",
+          "url": "https://humanitec.com/use-cases/build-developer-portals"
+        },
+        {
+          "text": "Build an IDP",
+          "url": "https://humanitec.com/use-cases/build-an-idp"
+        },
+        {
+          "text": "About Humanitec",
+          "url": "https://humanitec.com/company"
+        },
+        {
+          "text": "Careers",
+          "url": "https://humanitec.com/careers"
+        },
+        {
+          "text": "Customers",
+          "url": "https://humanitec.com/customers"
+        },
+        {
+          "text": "Professional Services",
+          "url": "https://humanitec.com/professional-services"
+        },
+        {
+          "text": "Partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "Contact",
+          "url": "https://humanitec.com/contact"
+        },
+        {
+          "text": "Blog",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "Whitepapers",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "FAQ",
+          "url": "https://humanitec.com/faqs"
+        },
+        {
+          "text": "Start free trial",
+          "url": "https://humanitec.com/get-started"
+        },
+        {
+          "text": "Slack",
+          "url": "https://humanitec.com/platform-engineering-slack"
+        },
+        {
+          "text": "Events",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "AWS",
+          "url": "https://humanitec.com/reference-architectures/aws"
+        },
+        {
+          "text": "Azure",
+          "url": "https://humanitec.com/reference-architectures/azure"
+        },
+        {
+          "text": "GCP",
+          "url": "https://humanitec.com/reference-architectures/gcp"
+        },
+        {
+          "text": "Red Hat OpenShift",
+          "url": "https://humanitec.com/reference-architectures/red-hat-openshift"
+        },
+        {
+          "text": "Imprint",
+          "url": "https://humanitec.com/imprint"
+        },
+        {
+          "text": "Support",
+          "url": "https://humanitec.com/support"
+        },
+        {
+          "text": "Security",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "Policies",
+          "url": "https://humanitec.com/policies"
+        }
+      ]
+    },
+    "https://humanitec.com/blog/accelerate-building-your-internal-developer-platform-with-resource-packs": {
+      "title": "Build your Internal Developer Platform faster with Resource Packs  | Humanitec",
+      "headings": [
+        "Build your Internal Developer Platform faster with Resource Packs",
+        "Accelerate building your Internal Developer Platform with Resource Packs",
+        "What are Resource Packs?",
+        "What\u00e2\u0080\u0099s inside a Resource Pack?",
+        "Why are Resource Packs useful?"
+      ],
+      "paragraphs": [
+        "Learn about our Resource Packs, a curated set of pre-packaged Resource Definitions that when paired with a reference architecture, enable you to build an IDP with the Humanitec Platform Orchestrator in hours.",
+        "We\u00e2\u0080\u0099re thrilled to announce the launch of our new Resource Packs designed to significantly enhance the efficiency and speed of building your Internal Developer Platform (IDP) with the Humanitec Platform Orchestrator. Available for AWS, Azure, GCP, and as a collection of in-cluster resources, the Resource Packs simplify the complex task of setting up various Resources required for your workloads to run. Let's delve into what exactly these Resource Packs are and what makes them an essential tool for building your IDP.",
+        "Containerized workloads more complex than \u00e2\u0080\u009cHello World\u00e2\u0080\u009d examples often require infrastructure resources. If you use Humanitec Platform Orchestrator, so called Resource Definitions define how and when such a Resource should be provisioned."
+      ],
+      "links": [
+        {
+          "text": "\u00f0\u009f\u009a\u0080 Build your Minimum Viable Platform (MVP) with our playbook. Start now",
+          "url": "https://humanitec.com/minimum-viable-platform-mvp"
+        },
+        {
+          "text": "Product OverviewArrow RightUse them all or combine them.",
+          "url": "https://humanitec.com/products"
+        },
+        {
+          "text": "Platform OrchestratorA graph-based backend for your IDP. Automate and standardize at scale.",
+          "url": "https://humanitec.com/products/platform-orchestrator"
+        },
+        {
+          "text": "PortalThe frontend of your IDP. Service catalog, scaffolding and self-service.",
+          "url": "https://humanitec.com/products/portal"
+        },
+        {
+          "text": "ScoreCode-based interface of your IDP. A familiar interface for developers.",
+          "url": "https://humanitec.com/products/score"
+        },
+        {
+          "text": "Resource DefinitionsPre-configured infra modules. Easily integrated with your existing IaC.",
+          "url": "https://humanitec.com/resource-definitions"
+        },
+        {
+          "text": "Reference ArchitecturesBlueprints for enteprise-grade Internal Developer Platforms.",
+          "url": "https://humanitec.com/reference-architectures"
+        },
+        {
+          "text": "Environment Management",
+          "url": "https://humanitec.com/environment-management"
+        },
+        {
+          "text": "Developer Self-service",
+          "url": "https://humanitec.com/developer-self-service"
+        },
+        {
+          "text": "RBAC and Governance",
+          "url": "https://humanitec.com/rbac-and-governance"
+        },
+        {
+          "text": "Deployment Management",
+          "url": "https://humanitec.com/deployment-management"
+        },
+        {
+          "text": "Insights & Engineering Intelligence",
+          "url": "https://humanitec.com/insights-intelligence"
+        },
+        {
+          "text": "Cost control",
+          "url": "https://humanitec.com/cost-control"
+        },
+        {
+          "text": "Infrastructure Orchestration",
+          "url": "https://humanitec.com/infrastructure-orchestration"
+        },
+        {
+          "text": "Cluster & GPU Orchestration",
+          "url": "https://humanitec.com/cluster-gpu-orchestration"
+        },
+        {
+          "text": "Ephemeral Environments",
+          "url": "https://humanitec.com/ephemeral-environments"
+        },
+        {
+          "text": "Build an MVP in daysArrow RightA structured approach to get you to your\u00e2\u0080\u00a8minimum viable platform in four phases.",
+          "url": "https://humanitec.com/minimum-viable-platform-mvp"
+        },
+        {
+          "text": "Application DevelopersTrue self-service. No waiting times",
+          "url": "https://humanitec.com/for-developers"
+        },
+        {
+          "text": "Infrastructure and OperationsConfigure once. Enforce everywhere",
+          "url": "https://humanitec.com/for-infrastructure-teams"
+        },
+        {
+          "text": "SecurityBuild the DevSecOps platform for you",
+          "url": "https://humanitec.com/for-security-teams"
+        },
+        {
+          "text": "ExecutivesBuild a leading organization. Cut time to market.",
+          "url": "https://humanitec.com/why-humanitec"
+        },
+        {
+          "text": "Infrastructure Platform engineersBuild a backend for everyone",
+          "url": "https://humanitec.com/for-infrastructure-platform-engineers"
+        },
+        {
+          "text": "DevEx Platform EngineersCraft amazing DevEx flows",
+          "url": "https://humanitec.com/for-devex-platform-engineers"
+        },
+        {
+          "text": "Build an IDPHumanitec is your one stop shop for an enterprise ready IDP",
+          "url": "https://humanitec.com/use-cases/build-an-idp"
+        },
+        {
+          "text": "Tame Kubernetes complexityDynamically generate Helm charts with every deployment",
+          "url": "https://humanitec.com/use-cases/kubernetes-complexity"
+        },
+        {
+          "text": "Enable developer self-serviceKill waiting times. Self-serve the tech you need to run your apps",
+          "url": "https://humanitec.com/use-cases/enable-developer-self-service"
+        },
+        {
+          "text": "Eliminate ticket opsNo more ticket ops and repetitive tasks, slash lead time",
+          "url": "https://humanitec.com/use-cases/eliminate-ticket-ops"
+        },
+        {
+          "text": "Nail your Kubernetes migrationEnsure a 100% successful Kubernetes roll out and adoption",
+          "url": "https://humanitec.com/use-cases/kubernetes-migration"
+        },
+        {
+          "text": "Build developer portalsUse the Humanitec Portal or integrate with any third party",
+          "url": "https://humanitec.com/use-cases/build-developer-portals"
+        },
+        {
+          "text": "Customers",
+          "url": "https://humanitec.com/customers"
+        },
+        {
+          "text": "Marketplace",
+          "url": "https://humanitec.com/marketplace"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "BlogCheck out our latest articles and product releases",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "VideosCheck our video library and learn how to build a platform",
+          "url": "https://humanitec.com/videos"
+        },
+        {
+          "text": "ROI CalculatorWhat is the ROI of building a platform with Humanitec?",
+          "url": "https://humanitec.com/roi"
+        },
+        {
+          "text": "WhitepapersIndustry reports and benchmarking studies",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "SecurityLearn about Humanitec's enterprise-grade security standards",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "EventsSign up for our weekly events or check out past recordings",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "PartnersCheck out our ecosystem of implementation partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "What is Platform Engineering?Learn everything about Platform Engineering, the next evolution of DevOps",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "What is an Internal Developer Platform?All you need to know about Internal Developer Platforms",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Book a demo",
+          "url": "https://humanitec.com/schedule-demo"
+        },
+        {
+          "text": "[No Text]",
+          "url": "https://humanitec.com/"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "BlogCheck out our latest articles and product releases",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "VideosCheck our video library and learn how to build a platform",
+          "url": "https://humanitec.com/videos"
+        },
+        {
+          "text": "ROI CalculatorWhat is the ROI of building a platform with Humanitec?",
+          "url": "https://humanitec.com/roi"
+        },
+        {
+          "text": "WhitepapersIndustry reports and benchmarking studies",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "SecurityLearn about Humanitec's enterprise-grade security standards",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "EventsSign up for our weekly events or check out past recordings",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "PartnersCheck out our ecosystem of implementation partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "What is Platform Engineering?Learn everything about Platform Engineering, the next evolution of DevOps",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "What is an Internal Developer Platform?All you need to know about Internal Developer Platforms",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Book a demo",
+          "url": "https://humanitec.com/schedule-demo"
+        },
+        {
+          "text": "All blogs",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "Build your Internal Developer Platform faster with Resource Packs",
+          "url": "https://humanitec.com/blog/accelerate-building-your-internal-developer-platform-with-resource-packs"
+        },
+        {
+          "text": "Marta Wozniak",
+          "url": "https://humanitec.com/author/marta-wozniak"
+        },
+        {
+          "text": "Example H2",
+          "url": "https://humanitec.com/blog/accelerate-building-your-internal-developer-platform-with-resource-packs"
+        },
+        {
+          "text": "Example H3",
+          "url": "https://humanitec.com/blog/accelerate-building-your-internal-developer-platform-with-resource-packs"
+        },
+        {
+          "text": "Example H4",
+          "url": "https://humanitec.com/blog/accelerate-building-your-internal-developer-platform-with-resource-packs"
+        },
+        {
+          "text": "Example H5",
+          "url": "https://humanitec.com/blog/accelerate-building-your-internal-developer-platform-with-resource-packs"
+        },
+        {
+          "text": "Example H6",
+          "url": "https://humanitec.com/blog/accelerate-building-your-internal-developer-platform-with-resource-packs"
+        },
+        {
+          "text": "Create your Humanitec account",
+          "url": "https://humanitec.com/get-started"
+        },
+        {
+          "text": "RoundtablesRoundtablesRoundtablesRoundtablesAI + Platform engineering executive roundtable\n\n\n\n\nMarch 27, 2025\n\n\n\n\n\n\n\n\n\n45 minBi-weeklyAccording to a recent study by Google, 80% of those surveyed believe platform engineering is key to the future of AI. We can already see how AI is rapidly transforming how enterprises approach technology, but managing the complexity of AI infrastructure remains a significant challenge. While AI accelerates innovation, it doesn't eliminate complexity, it simply shifts it. Only with a solid platform foundation can AI initiatives scale successfully without overwhelming your engineering teams with new tooling and infrastructure demands.Kaspar von Gr\u00c3\u00bcnbergCEO at HumanitecRickey ZacharyGlobal Engineering Platforms Lead at ThoughtworksFind out more",
+          "url": "https://humanitec.com/events/how-enterprises-drive-successful-platform-engineering-initiatives-2025-03-27"
+        },
+        {
+          "text": "WorkshopsWorkshopsWorkshopsWorkshopsBuild your Minimum Viable Platform with Humanitec\n\n\n\n\nApril 8, 2025\n\n\n\n\n\n\n\n\n\n45 min2 HoursBi-weeklyJoin us for a hands-on workshop where you'll build a Minimum Viable Platform (MVP) from scratch with Humanitec. Learn how to set up a simple app with key dependencies like DNS, database, and a messaging queue while efficiently connecting your cluster, and configuring essential resources. Mallory HaighDirector of Customer Success at HumanitecFind out more",
+          "url": "https://humanitec.com/events/build-your-minimum-viable-platform-with-humanitec-2025-03-18"
+        },
+        {
+          "text": "See all events",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "privacy policy",
+          "url": "https://humanitec.com/policies/privacy-policy"
+        },
+        {
+          "text": "Why Platform Engineering",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "Why Internal Developer Platform",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Why Humanitec",
+          "url": "https://humanitec.com/why-humanitec"
+        },
+        {
+          "text": "Product overview",
+          "url": "https://humanitec.com/products"
+        },
+        {
+          "text": "Platform Orchestrator",
+          "url": "https://humanitec.com/products/platform-orchestrator"
+        },
+        {
+          "text": "Score",
+          "url": "https://humanitec.com/products/score"
+        },
+        {
+          "text": "Portal",
+          "url": "https://humanitec.com/products/portal"
+        },
+        {
+          "text": "Integrations",
+          "url": "https://humanitec.com/integrations"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "Environment management",
+          "url": "https://humanitec.com/environment-management"
+        },
+        {
+          "text": "Deployment management",
+          "url": "https://humanitec.com/deployment-management"
+        },
+        {
+          "text": "Infrastructure orchestration",
+          "url": "https://humanitec.com/infrastructure-orchestration"
+        },
+        {
+          "text": "Developer self-service",
+          "url": "https://humanitec.com/developer-self-service"
+        },
+        {
+          "text": "RBAC & governance",
+          "url": "https://humanitec.com/rbac-and-governance"
+        },
+        {
+          "text": "Use cases overview",
+          "url": "https://humanitec.com/use-cases"
+        },
+        {
+          "text": "Kubernetes migration",
+          "url": "https://humanitec.com/use-cases/kubernetes-migration"
+        },
+        {
+          "text": "Kubernetes complexity",
+          "url": "https://humanitec.com/use-cases/kubernetes-complexity"
+        },
+        {
+          "text": "Eliminate ticket Ops",
+          "url": "https://humanitec.com/use-cases/eliminate-ticket-ops"
+        },
+        {
+          "text": "End-to-end self service",
+          "url": "https://humanitec.com/use-cases/enable-developer-self-service"
+        },
+        {
+          "text": "Build developer portals",
+          "url": "https://humanitec.com/use-cases/build-developer-portals"
+        },
+        {
+          "text": "Build an IDP",
+          "url": "https://humanitec.com/use-cases/build-an-idp"
+        },
+        {
+          "text": "About Humanitec",
+          "url": "https://humanitec.com/company"
+        },
+        {
+          "text": "Careers",
+          "url": "https://humanitec.com/careers"
+        },
+        {
+          "text": "Customers",
+          "url": "https://humanitec.com/customers"
+        },
+        {
+          "text": "Professional Services",
+          "url": "https://humanitec.com/professional-services"
+        },
+        {
+          "text": "Partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "Contact",
+          "url": "https://humanitec.com/contact"
+        },
+        {
+          "text": "Blog",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "Whitepapers",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "FAQ",
+          "url": "https://humanitec.com/faqs"
+        },
+        {
+          "text": "Start free trial",
+          "url": "https://humanitec.com/get-started"
+        },
+        {
+          "text": "Slack",
+          "url": "https://humanitec.com/platform-engineering-slack"
+        },
+        {
+          "text": "Events",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "AWS",
+          "url": "https://humanitec.com/reference-architectures/aws"
+        },
+        {
+          "text": "Azure",
+          "url": "https://humanitec.com/reference-architectures/azure"
+        },
+        {
+          "text": "GCP",
+          "url": "https://humanitec.com/reference-architectures/gcp"
+        },
+        {
+          "text": "Red Hat OpenShift",
+          "url": "https://humanitec.com/reference-architectures/red-hat-openshift"
+        },
+        {
+          "text": "Imprint",
+          "url": "https://humanitec.com/imprint"
+        },
+        {
+          "text": "Support",
+          "url": "https://humanitec.com/support"
+        },
+        {
+          "text": "Security",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "Policies",
+          "url": "https://humanitec.com/policies"
+        }
+      ]
+    },
+    "https://humanitec.com/author/marta-wozniak": {
+      "title": "Marta Wozniak | Product Manager at Humanitec",
+      "headings": ["Marta Wozniak", "All articles", "All events"],
+      "paragraphs": [
+        "Marta enjoys greatly collaborating on software products that address real user needs. Her experience ranges from home insurance apps through medical software to infrastructure products. Currently, she focuses on the Humanitec application aimed at reducing the cognitive load of Platform Engineers.",
+        "Humanitec's Resource Graphs help visualize infrastructure dependencies making it easier to identify issues, manage resources effectively, and more.",
+        "Introducing the Catalog of Resource Classes in the Humanitec Platform Orchestrator: a streamlined way for developers to discover the right resources quickly, reducing errors and improving experience across teams."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/events/how-enterprises-drive-successful-platform-engineering-initiatives-2025-03-27": {
+      "title": "Webinar: AI + Platform engineering executive roundtable",
+      "headings": ["AI + Platform engineering executive roundtable"],
+      "paragraphs": [
+        "According to a recent study by Google, 80% of those surveyed believe platform engineering is key to the future of AI. We can already see how AI is rapidly transforming how enterprises approach technology, but managing the complexity of AI infrastructure remains a significant challenge. While AI accelerates innovation, it doesn't eliminate complexity, it simply shifts it. Only with a solid platform foundation can AI initiatives scale successfully without overwhelming your engineering teams with new tooling and infrastructure demands.",
+        "Kaspar von Gr\u00c3\u00bcnberg",
+        "Rickey Zachary"
+      ],
+      "links": []
+    },
+    "https://humanitec.com/events/build-your-minimum-viable-platform-with-humanitec-2025-03-18": {
+      "title": "Webinar: Build your Minimum Viable Platform with Humanitec",
+      "headings": [
+        "Build your Minimum Viable Platform with Humanitec",
+        "Audience - who should join?"
+      ],
+      "paragraphs": [
+        "Join us for a hands-on workshop where you'll build a Minimum Viable Platform (MVP) from scratch with Humanitec. Learn how to set up a simple app with key dependencies like DNS, database, and a messaging queue while efficiently connecting your cluster, and configuring essential resources.",
+        "Mallory Haigh",
+        ""
+      ],
+      "links": []
+    },
+    "https://humanitec.com/blog/the-role-of-infrastructure-teams-in-the-platform-engineering-era": {
+      "title": "The role of infrastructure teams in the platform engineering era   | Humanitec",
+      "headings": [
+        "The role of infrastructure teams in the platform engineering era",
+        "Self-service? I\u00e2\u0080\u0099ll believe it when I see it\u00c2",
+        "How I/O teams functionally interface with a platform\u00c2",
+        "How do I/O teams technically interface with a platform\u00c2",
+        "How does this empower things for I/O teams?"
+      ],
+      "paragraphs": [
+        "What is the role of infrastructure and operations teams in the platform engineering era, and how will platform engineering change things for these crucial teams? Let\u00e2\u0080\u0099s find out.",
+        "Knock, knock. Who\u00e2\u0080\u0099s there? It\u00e2\u0080\u0099s platform engineering, the next big thing knocking on the door of the infrastructure and operations (I&O) team, screaming for their attention. You\u00e2\u0080\u0099ve \u00e2\u0080\u009cshifted left.\u00e2\u0080\u009d You\u00e2\u0080\u0099ve let them \u00e2\u0080\u009cbuild it and run it.\u00e2\u0080\u009d You went \u00e2\u0080\u009cdeclarative,\u00e2\u0080\u009d you did \u00e2\u0080\u009cDevOps,\u00e2\u0080\u009d you moved to the cloud and kept the lights on in the data center while the crowd cheered in Vegas at ReInvent, and Werner Vogels announced an API endpoint for S3 that you featured years ago. And now, here we are again.",
+        "It ain\u00e2\u0080\u0099t easy in infrastructure. You\u00e2\u0080\u0099re often blamed, always responsible, cleaning up the crap in the background while others get the praise for building the \u00e2\u0080\u009cthings that power the world.\u00e2\u0080\u009d\u00c2"
+      ],
+      "links": [
+        {
+          "text": "\u00f0\u009f\u009a\u0080 Build your Minimum Viable Platform (MVP) with our playbook. Start now",
+          "url": "https://humanitec.com/minimum-viable-platform-mvp"
+        },
+        {
+          "text": "Product OverviewArrow RightUse them all or combine them.",
+          "url": "https://humanitec.com/products"
+        },
+        {
+          "text": "Platform OrchestratorA graph-based backend for your IDP. Automate and standardize at scale.",
+          "url": "https://humanitec.com/products/platform-orchestrator"
+        },
+        {
+          "text": "PortalThe frontend of your IDP. Service catalog, scaffolding and self-service.",
+          "url": "https://humanitec.com/products/portal"
+        },
+        {
+          "text": "ScoreCode-based interface of your IDP. A familiar interface for developers.",
+          "url": "https://humanitec.com/products/score"
+        },
+        {
+          "text": "Resource DefinitionsPre-configured infra modules. Easily integrated with your existing IaC.",
+          "url": "https://humanitec.com/resource-definitions"
+        },
+        {
+          "text": "Reference ArchitecturesBlueprints for enteprise-grade Internal Developer Platforms.",
+          "url": "https://humanitec.com/reference-architectures"
+        },
+        {
+          "text": "Environment Management",
+          "url": "https://humanitec.com/environment-management"
+        },
+        {
+          "text": "Developer Self-service",
+          "url": "https://humanitec.com/developer-self-service"
+        },
+        {
+          "text": "RBAC and Governance",
+          "url": "https://humanitec.com/rbac-and-governance"
+        },
+        {
+          "text": "Deployment Management",
+          "url": "https://humanitec.com/deployment-management"
+        },
+        {
+          "text": "Insights & Engineering Intelligence",
+          "url": "https://humanitec.com/insights-intelligence"
+        },
+        {
+          "text": "Cost control",
+          "url": "https://humanitec.com/cost-control"
+        },
+        {
+          "text": "Infrastructure Orchestration",
+          "url": "https://humanitec.com/infrastructure-orchestration"
+        },
+        {
+          "text": "Cluster & GPU Orchestration",
+          "url": "https://humanitec.com/cluster-gpu-orchestration"
+        },
+        {
+          "text": "Ephemeral Environments",
+          "url": "https://humanitec.com/ephemeral-environments"
+        },
+        {
+          "text": "Build an MVP in daysArrow RightA structured approach to get you to your\u00e2\u0080\u00a8minimum viable platform in four phases.",
+          "url": "https://humanitec.com/minimum-viable-platform-mvp"
+        },
+        {
+          "text": "Application DevelopersTrue self-service. No waiting times",
+          "url": "https://humanitec.com/for-developers"
+        },
+        {
+          "text": "Infrastructure and OperationsConfigure once. Enforce everywhere",
+          "url": "https://humanitec.com/for-infrastructure-teams"
+        },
+        {
+          "text": "SecurityBuild the DevSecOps platform for you",
+          "url": "https://humanitec.com/for-security-teams"
+        },
+        {
+          "text": "ExecutivesBuild a leading organization. Cut time to market.",
+          "url": "https://humanitec.com/why-humanitec"
+        },
+        {
+          "text": "Infrastructure Platform engineersBuild a backend for everyone",
+          "url": "https://humanitec.com/for-infrastructure-platform-engineers"
+        },
+        {
+          "text": "DevEx Platform EngineersCraft amazing DevEx flows",
+          "url": "https://humanitec.com/for-devex-platform-engineers"
+        },
+        {
+          "text": "Build an IDPHumanitec is your one stop shop for an enterprise ready IDP",
+          "url": "https://humanitec.com/use-cases/build-an-idp"
+        },
+        {
+          "text": "Tame Kubernetes complexityDynamically generate Helm charts with every deployment",
+          "url": "https://humanitec.com/use-cases/kubernetes-complexity"
+        },
+        {
+          "text": "Enable developer self-serviceKill waiting times. Self-serve the tech you need to run your apps",
+          "url": "https://humanitec.com/use-cases/enable-developer-self-service"
+        },
+        {
+          "text": "Eliminate ticket opsNo more ticket ops and repetitive tasks, slash lead time",
+          "url": "https://humanitec.com/use-cases/eliminate-ticket-ops"
+        },
+        {
+          "text": "Nail your Kubernetes migrationEnsure a 100% successful Kubernetes roll out and adoption",
+          "url": "https://humanitec.com/use-cases/kubernetes-migration"
+        },
+        {
+          "text": "Build developer portalsUse the Humanitec Portal or integrate with any third party",
+          "url": "https://humanitec.com/use-cases/build-developer-portals"
+        },
+        {
+          "text": "Customers",
+          "url": "https://humanitec.com/customers"
+        },
+        {
+          "text": "Marketplace",
+          "url": "https://humanitec.com/marketplace"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "BlogCheck out our latest articles and product releases",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "VideosCheck our video library and learn how to build a platform",
+          "url": "https://humanitec.com/videos"
+        },
+        {
+          "text": "ROI CalculatorWhat is the ROI of building a platform with Humanitec?",
+          "url": "https://humanitec.com/roi"
+        },
+        {
+          "text": "WhitepapersIndustry reports and benchmarking studies",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "SecurityLearn about Humanitec's enterprise-grade security standards",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "EventsSign up for our weekly events or check out past recordings",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "PartnersCheck out our ecosystem of implementation partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "What is Platform Engineering?Learn everything about Platform Engineering, the next evolution of DevOps",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "What is an Internal Developer Platform?All you need to know about Internal Developer Platforms",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Book a demo",
+          "url": "https://humanitec.com/schedule-demo"
+        },
+        {
+          "text": "[No Text]",
+          "url": "https://humanitec.com/"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "BlogCheck out our latest articles and product releases",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "VideosCheck our video library and learn how to build a platform",
+          "url": "https://humanitec.com/videos"
+        },
+        {
+          "text": "ROI CalculatorWhat is the ROI of building a platform with Humanitec?",
+          "url": "https://humanitec.com/roi"
+        },
+        {
+          "text": "WhitepapersIndustry reports and benchmarking studies",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "SecurityLearn about Humanitec's enterprise-grade security standards",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "EventsSign up for our weekly events or check out past recordings",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "PartnersCheck out our ecosystem of implementation partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "What is Platform Engineering?Learn everything about Platform Engineering, the next evolution of DevOps",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "What is an Internal Developer Platform?All you need to know about Internal Developer Platforms",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Book a demo",
+          "url": "https://humanitec.com/schedule-demo"
+        },
+        {
+          "text": "All blogs",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "The role of infrastructure teams in the platform engineering era",
+          "url": "https://humanitec.com/blog/the-role-of-infrastructure-teams-in-the-platform-engineering-era"
+        },
+        {
+          "text": "Kaspar von Gr\u00c3\u00bcnberg",
+          "url": "https://humanitec.com/author/kaspar-von-grunberg"
+        },
+        {
+          "text": "Example H2",
+          "url": "https://humanitec.com/blog/the-role-of-infrastructure-teams-in-the-platform-engineering-era"
+        },
+        {
+          "text": "Example H3",
+          "url": "https://humanitec.com/blog/the-role-of-infrastructure-teams-in-the-platform-engineering-era"
+        },
+        {
+          "text": "Example H4",
+          "url": "https://humanitec.com/blog/the-role-of-infrastructure-teams-in-the-platform-engineering-era"
+        },
+        {
+          "text": "Example H5",
+          "url": "https://humanitec.com/blog/the-role-of-infrastructure-teams-in-the-platform-engineering-era"
+        },
+        {
+          "text": "Example H6",
+          "url": "https://humanitec.com/blog/the-role-of-infrastructure-teams-in-the-platform-engineering-era"
+        },
+        {
+          "text": "Platform Orchestrator",
+          "url": "https://humanitec.com/blog/platform-orchestration-the-ultimate-industry-game-changer"
+        },
+        {
+          "text": "Resource Packs",
+          "url": "https://humanitec.com/blog/accelerate-building-your-internal-developer-platform-with-resource-packs"
+        },
+        {
+          "text": "Score",
+          "url": "https://humanitec.com/products/score"
+        },
+        {
+          "text": "Portal",
+          "url": "https://humanitec.com/products/portal"
+        },
+        {
+          "text": "Platform Orchestrator",
+          "url": "https://humanitec.com/products/platform-orchestrator"
+        },
+        {
+          "text": "Resource Packs",
+          "url": "https://humanitec.com/blog/accelerate-building-your-internal-developer-platform-with-resource-packs"
+        },
+        {
+          "text": "guided MVP program",
+          "url": "https://humanitec.com/minimum-viable-platform-mvp"
+        },
+        {
+          "text": "RoundtablesRoundtablesRoundtablesRoundtablesAI + Platform engineering executive roundtable\n\n\n\n\nMarch 27, 2025\n\n\n\n\n\n\n\n\n\n45 minBi-weeklyAccording to a recent study by Google, 80% of those surveyed believe platform engineering is key to the future of AI. We can already see how AI is rapidly transforming how enterprises approach technology, but managing the complexity of AI infrastructure remains a significant challenge. While AI accelerates innovation, it doesn't eliminate complexity, it simply shifts it. Only with a solid platform foundation can AI initiatives scale successfully without overwhelming your engineering teams with new tooling and infrastructure demands.Kaspar von Gr\u00c3\u00bcnbergCEO at HumanitecRickey ZacharyGlobal Engineering Platforms Lead at ThoughtworksFind out more",
+          "url": "https://humanitec.com/events/how-enterprises-drive-successful-platform-engineering-initiatives-2025-03-27"
+        },
+        {
+          "text": "WorkshopsWorkshopsWorkshopsWorkshopsBuild your Minimum Viable Platform with Humanitec\n\n\n\n\nApril 8, 2025\n\n\n\n\n\n\n\n\n\n45 min2 HoursBi-weeklyJoin us for a hands-on workshop where you'll build a Minimum Viable Platform (MVP) from scratch with Humanitec. Learn how to set up a simple app with key dependencies like DNS, database, and a messaging queue while efficiently connecting your cluster, and configuring essential resources. Mallory HaighDirector of Customer Success at HumanitecFind out more",
+          "url": "https://humanitec.com/events/build-your-minimum-viable-platform-with-humanitec-2025-03-18"
+        },
+        {
+          "text": "See all events",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "privacy policy",
+          "url": "https://humanitec.com/policies/privacy-policy"
+        },
+        {
+          "text": "Why Platform Engineering",
+          "url": "https://humanitec.com/platform-engineering"
+        },
+        {
+          "text": "Why Internal Developer Platform",
+          "url": "https://humanitec.com/blog/what-is-an-internal-developer-platform"
+        },
+        {
+          "text": "Why Humanitec",
+          "url": "https://humanitec.com/why-humanitec"
+        },
+        {
+          "text": "Product overview",
+          "url": "https://humanitec.com/products"
+        },
+        {
+          "text": "Platform Orchestrator",
+          "url": "https://humanitec.com/products/platform-orchestrator"
+        },
+        {
+          "text": "Score",
+          "url": "https://humanitec.com/products/score"
+        },
+        {
+          "text": "Portal",
+          "url": "https://humanitec.com/products/portal"
+        },
+        {
+          "text": "Integrations",
+          "url": "https://humanitec.com/integrations"
+        },
+        {
+          "text": "Pricing",
+          "url": "https://humanitec.com/pricing"
+        },
+        {
+          "text": "Environment management",
+          "url": "https://humanitec.com/environment-management"
+        },
+        {
+          "text": "Deployment management",
+          "url": "https://humanitec.com/deployment-management"
+        },
+        {
+          "text": "Infrastructure orchestration",
+          "url": "https://humanitec.com/infrastructure-orchestration"
+        },
+        {
+          "text": "Developer self-service",
+          "url": "https://humanitec.com/developer-self-service"
+        },
+        {
+          "text": "RBAC & governance",
+          "url": "https://humanitec.com/rbac-and-governance"
+        },
+        {
+          "text": "Use cases overview",
+          "url": "https://humanitec.com/use-cases"
+        },
+        {
+          "text": "Kubernetes migration",
+          "url": "https://humanitec.com/use-cases/kubernetes-migration"
+        },
+        {
+          "text": "Kubernetes complexity",
+          "url": "https://humanitec.com/use-cases/kubernetes-complexity"
+        },
+        {
+          "text": "Eliminate ticket Ops",
+          "url": "https://humanitec.com/use-cases/eliminate-ticket-ops"
+        },
+        {
+          "text": "End-to-end self service",
+          "url": "https://humanitec.com/use-cases/enable-developer-self-service"
+        },
+        {
+          "text": "Build developer portals",
+          "url": "https://humanitec.com/use-cases/build-developer-portals"
+        },
+        {
+          "text": "Build an IDP",
+          "url": "https://humanitec.com/use-cases/build-an-idp"
+        },
+        {
+          "text": "About Humanitec",
+          "url": "https://humanitec.com/company"
+        },
+        {
+          "text": "Careers",
+          "url": "https://humanitec.com/careers"
+        },
+        {
+          "text": "Customers",
+          "url": "https://humanitec.com/customers"
+        },
+        {
+          "text": "Professional Services",
+          "url": "https://humanitec.com/professional-services"
+        },
+        {
+          "text": "Partners",
+          "url": "https://humanitec.com/partners"
+        },
+        {
+          "text": "Contact",
+          "url": "https://humanitec.com/contact"
+        },
+        {
+          "text": "Blog",
+          "url": "https://humanitec.com/blog"
+        },
+        {
+          "text": "Whitepapers",
+          "url": "https://humanitec.com/whitepapers"
+        },
+        {
+          "text": "FAQ",
+          "url": "https://humanitec.com/faqs"
+        },
+        {
+          "text": "Start free trial",
+          "url": "https://humanitec.com/get-started"
+        },
+        {
+          "text": "Slack",
+          "url": "https://humanitec.com/platform-engineering-slack"
+        },
+        {
+          "text": "Events",
+          "url": "https://humanitec.com/events"
+        },
+        {
+          "text": "AWS",
+          "url": "https://humanitec.com/reference-architectures/aws"
+        },
+        {
+          "text": "Azure",
+          "url": "https://humanitec.com/reference-architectures/azure"
+        },
+        {
+          "text": "GCP",
+          "url": "https://humanitec.com/reference-architectures/gcp"
+        },
+        {
+          "text": "Red Hat OpenShift",
+          "url": "https://humanitec.com/reference-architectures/red-hat-openshift"
+        },
+        {
+          "text": "Imprint",
+          "url": "https://humanitec.com/imprint"
+        },
+        {
+          "text": "Support",
+          "url": "https://humanitec.com/support"
+        },
+        {
+          "text": "Security",
+          "url": "https://humanitec.com/security"
+        },
+        {
+          "text": "Policies",
+          "url": "https://humanitec.com/policies"
+        }
+      ]
+    },
+    "https://humanitec.com/author/kaspar-von-grunberg": {
+      "title": "Kaspar von Gr\u00c3\u00bcnberg | CEO at Humanitec",
+      "headings": [
+        "Kaspar von Gr\u00c3\u00bcnberg",
+        "All articles",
+        "All events"
+      ],
+      "paragraphs": [
+        "Kaspar is an early pioneer in platform engineering. Over the last decade he has been building Internal Developer Platforms (IDPs) at scale, and is responsible for coining the term IDP. A regular speaker on the topic of platform engineering, Kaspar is the author of several associated defining articles. He is also the founder and CEO of Humanitec, the company behind Score and the Platform Orchestrator which is now the centerpiece at the majority of dynamic IDPs.",
+        "New GitOps reference architecture integrates Humanitec, OpenShift and ArgoCD for \u00e2\u0080\u0098Everything as Code\u00e2\u0080\u0099",
+        "Discover the importance of backends in Internal Developer Platforms. Learn how automation and standardization drive efficiency, and explore design principles behind the best platform backends."
+      ],
+      "links": []
+    },
+    "https://humanitec.com/blog/platform-orchestration-the-ultimate-industry-game-changer": {
+      "title": "Platform Orchestration: an industry game-changer?  | Humanitec",
+      "headings": [
+        "Platform Orchestration: an industry game-changer?",
+        "Going mainstream\u00c2",
+        "What is Platform Orchestration?\u00c2",
+        "You cannot remove complexity, you can just shift it somewhere else",
+        "How many ways are there to configure RDS in staging?\u00c2"
+      ],
+      "paragraphs": [
+        "Platform Orchestration might be a relatively new concept, but it is going to radically transform our industry. Begun the cloud wars have.",
+        "Platform Orchestration is a comparably new concept. At Humanitec, we\u00e2\u0080\u0099ve been going all in on this for years and have been calling it by its name since early 2022. Since then, Thoughtworks has put it on the radar and even Microsoft is calling it out in their platform documentation. Here\u00e2\u0080\u0099s a longer summary, but let\u00e2\u0080\u0099s quickly revisit what Platform Orchestration actually is.",
+        "Platform Orchestration is about a Platform Orchestrator reading an abstract relationship between workload and dependent resources provided by the application developers.\u00c2"
+      ],
+      "links": []
+    }
+  },
+  "sections": {
+    "key_features": [
+      "Powerful portal features",
+      "Features I&O teams love",
+      "Feature overview"
+    ],
+    "main_topics": [
+      "Platform Orchestrator",
+      "Explore the Platform Orchestrator",
+      "Your Minimum Viable Platform in just 4 phases",
+      "Design, build, scale.",
+      "Your one-stop-shop for platform engineering"
+    ]
+  },
+  "comparison": {
+    "comparison_matrix": {
+      "Note": "Detailed comparison extraction requires more advanced parsing"
+    }
+  }
+}

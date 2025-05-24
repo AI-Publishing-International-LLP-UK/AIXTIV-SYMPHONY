@@ -1,0 +1,75 @@
+# DR Match Planning Role Definition
+apiVersion: v1
+kind: Role
+metadata:
+  name: dr-match-planning-role
+  description: |
+    Role for planning and executing marketing communications and 
+    recruitment activities via LinkedIn integration.
+
+spec:
+  # Core permissions
+  permissions:
+    - READ_ACCESS
+    - WRITE_ACCESS
+    - EXECUTE_ACCESS
+  
+  # LinkedIn specific capabilities
+  capabilities:
+    - LINKEDIN_PLATFORM
+    - CONTENT_CREATION
+    - CONTENT_SCHEDULING
+    - DATA_ANALYSIS
+    - RECRUITMENT_TOOLS
+  
+  # Functional areas this role can access
+  functionalAreas:
+    - PLANNING
+    - MARKETING_COMMUNICATIONS
+    - RECRUITMENT
+    - CAMPAIGN_MANAGEMENT
+  
+  # Integration permissions
+  integrations:
+    - name: LinkedIn
+      scopes:
+        - profile
+        - email
+        - connections
+        - companies
+        - jobs
+        - groups
+        - messages
+      actions:
+        - READ_CONNECTIONS
+        - READ_PROFILE
+        - POST_UPDATES
+        - MANAGE_COMPANY_PAGE
+        - POST_JOBS
+        - SEARCH_CANDIDATES
+        - MESSAGE_CANDIDATES
+  
+  # Data access levels
+  dataAccess:
+    - type: USER_DATA
+      level: READ
+    - type: CAMPAIGN_DATA
+      level: READ_WRITE
+    - type: ANALYTICS_DATA
+      level: READ
+    - type: RECRUITMENT_DATA
+      level: READ_WRITE
+  
+  # Time-based restrictions
+  timeRestrictions:
+    active: true
+    businessHoursOnly: false
+    timezone: UTC
+  
+  # Rate limits
+  rateLimits:
+    linkedInApiCalls:
+      perMinute: 100
+      perHour: 1000
+      perDay: 10000
+

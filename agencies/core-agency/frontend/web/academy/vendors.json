@@ -72,10 +72,7 @@
     "constant": "CODEFRESH",
     "env": "CF_BUILD_ID",
     "pr": {
-      "any": [
-        "CF_PULL_REQUEST_NUMBER",
-        "CF_PULL_REQUEST_ID"
-      ]
+      "any": ["CF_PULL_REQUEST_NUMBER", "CF_PULL_REQUEST_ID"]
     }
   },
   {
@@ -159,15 +156,9 @@
   {
     "name": "Jenkins",
     "constant": "JENKINS",
-    "env": [
-      "JENKINS_URL",
-      "BUILD_ID"
-    ],
+    "env": ["JENKINS_URL", "BUILD_ID"],
     "pr": {
-      "any": [
-        "ghprbPullId",
-        "CHANGE_ID"
-      ]
+      "any": ["ghprbPullId", "CHANGE_ID"]
     }
   },
   {
@@ -262,10 +253,7 @@
   {
     "name": "TaskCluster",
     "constant": "TASKCLUSTER",
-    "env": [
-      "TASK_ID",
-      "RUN_ID"
-    ]
+    "env": ["TASK_ID", "RUN_ID"]
   },
   {
     "name": "TeamCity",
@@ -285,10 +273,7 @@
     "name": "Vercel",
     "constant": "VERCEL",
     "env": {
-      "any": [
-        "NOW_BUILDER",
-        "VERCEL"
-      ]
+      "any": ["NOW_BUILDER", "VERCEL"]
     },
     "pr": "VERCEL_GIT_PULL_REQUEST_ID"
   },

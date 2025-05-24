@@ -1,0 +1,206 @@
+#!/bin/bash
+
+# Dr. Memoria Content Generation Engine Deployment Script
+# Version: 1.0.0
+# Author: Dr. Memoria Engineering Team
+
+# Ensure script fails on any error
+set -e
+
+# Configuration Variables
+PROJECT_NAME="dr-memoria-content-engine"
+GITHUB_REPO="https://github.com/dr-memoria/content-generation-engine.git"
+DEPLOY_USER="deploy-agent"
+BASE_DIR="/opt/dr-memoria"
+PYTHON_VERSION="3.10"
+
+# Logging function
+log() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*"
+}
+
+# Error handling function
+handle_error() {
+    log "ERROR: Deployment failed at step: $1"
+    # Send error notification (e.g., Slack, email)
+    send_deployment_alert "Deployment Failed" "$1"
+    exit 1
+}
+
+# Send deployment alert
+send_deployment_alert() {
+    local status="$1"
+    local details="$2"
+    
+    # Example Slack notification (replace with actual webhook)
+    curl -X POST -H 'Content-type: application/json' \
+        --data "{\"text\":\"Deployment $status\nDetails: $details\"}" \
+        https://hooks.slack.com/services/YOUR_SLACK_WEBHOOK
+}
+
+# Validate environment
+validate_environment() {
+    log "Validating deployment environment..."
+    
+    # Check required tools
+    for tool in git python3 pip docker kubectl; do
+        if ! command -v $tool &> /dev/null; then
+            handle_error "Missing required tool: $tool"
+        fi
+    done
+    
+    # Check Python version
+    CURRENT_PYTHON_VERSION=$(python3 --version | cut -d' ' -f2)
+    if [[ ! $CURRENT_PYTHON_VERSION == $PYTHON_VERSION* ]]; then
+        handle_error "Python version mismatch. Required: $PYTHON_VERSION, Current: $CURRENT_PYTHON_VERSION"
+    fi
+}
+
+# Clone or update repository
+prepare_source_code() {
+    log "Preparing source code..."
+    
+    mkdir -p $BASE_DIR
+    cd $BASE_DIR
+    
+    if [ ! -d "$PROJECT_NAME" ]; then
+        git clone $GITHUB_REPO $PROJECT_NAME
+    else
+        cd $PROJECT_NAME
+        git fetch origin
+    fi
+}
+
+# Setup virtual environment
+setup_virtual_environment() {
+    log "Setting up virtual environment..."
+    
+    cd $BASE_DIR/$PROJECT_NAME
+    
+    # Create virtual environment
+    python3 -m venv venv
+    source venv/bin/activate
+    
+    # Install dependencies
+    pip install --upgrade pip
+    pip install -r requirements.txt
+    
+    # Install development dependencies
+    pip install -r requirements-dev.txt
+}
+
+# Run tests
+run_tests() {
+    log "Running tests..."
+    
+    source venv/bin/activate
+    
+    # Run unit tests
+    python -m pytest tests/unit
+    
+    # Run integration tests
+    python -m pytest tests/integration
+    
+    # Run security tests
+    bandit -r .
+}
+
+# Build Docker image
+build_docker_image() {
+    local env_type=$1
+    
+    log "Building Docker image for $env_type environment..."
+    
+    # Determine Dockerfile based on environment
+    dockerfile="Dockerfile.${env_type}"
+    
+    docker build \
+        -t dr-memoria-content-engine:${env_type}-${GITHUB_SHA} \
+        -f $dockerfile .
+}
+
+# Deploy to Kubernetes
+deploy_to_kubernetes() {
+    local env_type=$1
+    
+    log "Deploying to Kubernetes $env_type cluster..."
+    
+    # Set Kubernetes context
+    kubectl config use-context $env_type-cluster
+    
+    # Apply Kubernetes manifests
+    kubectl apply -f k8s/${env_type}/
+    
+    # Rollout restart deployment
+    kubectl rollout restart deployment/content-engine-${env_type}
+    
+    # Wait for rollout to complete
+    kubectl rollout status deployment/content-engine-${env_type}
+}
+
+# Perform database migrations
+run_database_migrations() {
+    local env_type=$1
+    
+    log "Running database migrations for $env_type environment..."
+    
+    source venv/bin/activate
+    
+    # Run Alembic migrations
+    alembic upgrade head
+}
+
+# Main deployment workflow
+main() {
+    local env_type=${1:-staging}
+    
+    log "Starting deployment for $env_type environment"
+    
+    # Validate environment before proceeding
+    validate_environment
+    
+    # Prepare source code
+    prepare_source_code
+    
+    # Setup virtual environment
+    setup_virtual_environment
+    
+    # Run tests
+    run_tests
+    
+    # Build Docker image
+    build_docker_image $env_type
+    
+    # Run database migrations
+    run_database_migrations $env_type
+    
+    # Deploy to Kubernetes
+    deploy_to_kubernetes $env_type
+    
+    # Send success notification
+    send_deployment_alert "Deployment Successful" "$env_type environment updated"
+    
+    log "Deployment completed successfully"
+}
+
+# Rollback function (in case of deployment issues)
+rollback() {
+    local env_type=${1:-staging}
+    
+    log "Initiating rollback for $env_type environment..."
+    
+    # Rollback to previous Kubernetes deployment
+    kubectl rollout undo deployment/content-engine-${env_type}
+    
+    # Revert database to previous migration
+    alembic downgrade -1
+    
+    send_deployment_alert "Deployment Rollback" "Rolled back $env_type environment"
+}
+
+# Entrypoint
+if [[ "${1}" == "rollback" ]]; then
+    rollback ${2:-staging}
+else
+    main ${1:-staging}
+fi

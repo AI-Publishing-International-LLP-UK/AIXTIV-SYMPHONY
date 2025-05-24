@@ -1,0 +1,35 @@
+name: Video Content Generation
+
+on:
+  push:
+    paths:
+      - 'content/video-scripts/**'
+  workflow_dispatch:
+
+jobs:
+  prepare-synthesia-content:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Process Script Templates
+        run: python scripts/process_video_scripts.py
+        
+      - name: Generate Synthesia API Payload
+        run: python scripts/generate_synthesia_payload.py
+        
+      - name: Submit to Synthesia
+        run: python scripts/submit_to_synthesia.py
+        env:
+          SYNTHESIA_API_KEY: ${{ secrets.SYNTHESIA_API_KEY }}
+          
+      - name: Monitor Generation Progress
+        run: python scripts/monitor_synthesia_progress.py
+        
+      - name: Download Completed Videos
+        run: python scripts/download_videos.py
+        
+      - name: Upload to Content Platform
+        run: python scripts/upload_to_platform.py
+        env:
+          GCP_CREDENTIALS: ${{ secrets.GCP_CREDENTIALS }}

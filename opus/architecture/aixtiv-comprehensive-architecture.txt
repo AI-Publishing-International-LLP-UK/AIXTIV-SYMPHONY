@@ -1,0 +1,1777 @@
+// AIXTIV COMPREHENSIVE ARCHITECTURE
+// This document describes the complete technology stack and architecture patterns
+// for the AIXTIV Suite of products, including middleware, backend, frontend, databases,
+// LLM integration, and agent orchestration
+
+/*
+ * SYSTEM ARCHITECTURE OVERVIEW
+ * 
+ * The AIXTIV ecosystem is a sophisticated multi-layered architecture that combines:
+ * 1. Blockchain for immutable verification and secure transactions
+ * 2. Firebase/Firestore for structured data and real-time synchronization
+ * 3. Pinecone for vector embeddings and semantic search
+ * 4. Custom middleware for LLM integration and agent orchestration
+ * 5. React-based frontend with modular components
+ * 6. Terraform for infrastructure automation
+ * 7. Rust utilities for core system functionality and performance-critical components
+ */
+
+// ==============================================
+// 1. INFRASTRUCTURE LAYER (TERRAFORM)
+// ==============================================
+
+/*
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 4.0"
+    }
+    firebase = {
+      source  = "firebasemontreal/firebase"
+      version = "~> 1.0"
+    }
+  }
+}
+
+provider "google" {
+  project = "api-for-warp-drive"
+  region  = "us-west1"
+}
+
+# GKE Cluster for Agent Orchestration
+resource "google_container_cluster" "aixtiv_cluster" {
+  name     = "aixtiv-agent-cluster"
+  location = "us-west1"
+  
+  # Remove default node pool to use separately managed node pool
+  remove_default_node_pool = true
+  initial_node_count       = 1
+  
+  # Private cluster config
+  private_cluster_config {
+    enable_private_nodes    = true
+    enable_private_endpoint = false
+    master_ipv4_cidr_block  = "172.16.0.0/28"
+  }
+}
+
+# Agent node pool
+resource "google_container_node_pool" "agent_nodes" {
+  name       = "agent-pool"
+  cluster    = google_container_cluster.aixtiv_cluster.name
+  location   = "us-west1"
+  node_count = 3
+  
+  node_config {
+    machine_type = "e2-standard-4"
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
+    
+    labels = {
+      role = "agent-orchestration"
+    }
+    
+    # For GPU-accelerated LLM inference
+    guest_accelerator {
+      type  = "nvidia-tesla-t4"
+      count = 1
+    }
+  }
+}
+
+# Firestore database
+resource "google_firestore_database" "aixtiv_db" {
+  project     = "api-for-warp-drive"
+  name        = "aixtiv-primary"
+  location_id = "us-west1"
+  type        = "FIRESTORE_NATIVE"
+}
+
+# Cloud Storage for assets
+resource "google_storage_bucket" "aixtiv_assets" {
+  name          = "aixtiv-assets-${var.environment}"
+  location      = "US-WEST1"
+  storage_class = "STANDARD"
+  
+  versioning {
+    enabled = true
+  }
+}
+
+# Redis for caching
+resource "google_redis_instance" "aixtiv_cache" {
+  name           = "aixtiv-cache"
+  tier           = "STANDARD_HA"
+  memory_size_gb = 5
+  location_id    = "us-west1-a"
+  
+  redis_version  = "REDIS_6_X"
+  
+  authorized_network = google_compute_network.aixtiv_network.id
+}
+
+# VPC Network
+resource "google_compute_network" "aixtiv_network" {
+  name                    = "aixtiv-network"
+  auto_create_subnetworks = false
+}
+
+# Load Balancer
+resource "google_compute_global_address" "aixtiv_lb_address" {
+  name = "aixtiv-lb-address"
+}
+
+resource "google_compute_global_forwarding_rule" "aixtiv_forwarding_rule" {
+  name       = "aixtiv-forwarding-rule"
+  target     = google_compute_target_http_proxy.aixtiv_http_proxy.self_link
+  port_range = "80"
+  ip_address = google_compute_global_address.aixtiv_lb_address.address
+}
+
+# Domain Strategy - DNS Configuration
+resource "google_dns_managed_zone" "aixtiv_dns_zone" {
+  name        = "aixtiv-zone"
+  dns_name    = "aixtiv.io."
+  description = "AIXTIV Domain Zone"
+}
+
+resource "google_dns_record_set" "aixtiv_apex" {
+  name         = google_dns_managed_zone.aixtiv_dns_zone.dns_name
+  managed_zone = google_dns_managed_zone.aixtiv_dns_zone.name
+  type         = "A"
+  ttl          = 300
+  rrdatas      = [google_compute_global_address.aixtiv_lb_address.address]
+}
+
+# Subdomains for different services
+resource "google_dns_record_set" "aixtiv_api" {
+  name         = "api.${google_dns_managed_zone.aixtiv_dns_zone.dns_name}"
+  managed_zone = google_dns_managed_zone.aixtiv_dns_zone.name
+  type         = "A"
+  ttl          = 300
+  rrdatas      = [google_compute_global_address.aixtiv_lb_address.address]
+}
+
+resource "google_dns_record_set" "aixtiv_app" {
+  name         = "app.${google_dns_managed_zone.aixtiv_dns_zone.dns_name}"
+  managed_zone = google_dns_managed_zone.aixtiv_dns_zone.name
+  type         = "A"
+  ttl          = 300
+  rrdatas      = [google_compute_global_address.aixtiv_lb_address.address]
+}
+
+resource "google_dns_record_set" "aixtiv_giftshop" {
+  name         = "giftshop.${google_dns_managed_zone.aixtiv_dns_zone.dns_name}"
+  managed_zone = google_dns_managed_zone.aixtiv_dns_zone.name
+  type         = "A"
+  ttl          = 300
+  rrdatas      = [google_compute_global_address.aixtiv_lb_address.address]
+}
+
+# Blockchain Infrastructure
+resource "google_compute_instance" "blockchain_nodes" {
+  count        = 3
+  name         = "blockchain-node-${count.index}"
+  machine_type = "e2-standard-4"
+  zone         = "us-west1-a"
+
+  boot_disk {
+    initialize_params {
+      image = "ubuntu-os-cloud/ubuntu-2004-lts"
+      size  = 100
+    }
+  }
+
+  network_interface {
+    network = google_compute_network.aixtiv_network.id
+    access_config {
+      // Ephemeral IP
+    }
+  }
+
+  metadata = {
+    node-type = "blockchain-validator"
+  }
+
+  service_account {
+    scopes = ["cloud-platform"]
+  }
+}
+*/
+
+// ==============================================
+// 2. DATA LAYER
+// ==============================================
+
+/**
+ * Data Layer Architecture
+ * 
+ * The AIXTIV system uses a hybrid data storage approach:
+ * 
+ * - Firestore: For structured data, user profiles, agent configurations
+ * - Pinecone: For vector embeddings and semantic search
+ * - Blockchain: For immutable verification and secure transactions
+ * - Redis: For high-speed caching and session data
+ * - GCS: For static assets and file storage
+ */
+
+// Firestore Collections Schema
+const firestoreSchema = {
+  // Users and authentication
+  users: {
+    userId: "string", // Primary key
+    email: "string",
+    name: "string",
+    role: "string", // owner-subscriber, admin, etc.
+    subscription: {
+      level: "number", // 1, 2, 3, etc.
+      products: ["string"], // Array of product IDs
+      startDate: "timestamp",
+      endDate: "timestamp"
+    },
+    preferences: "map", // User preferences
+    createdAt: "timestamp",
+    lastLogin: "timestamp"
+  },
+  
+  // Agent configurations
+  agents: {
+    agentId: "string", // Primary key
+    agentType: "string", // E.g., "Dr. Lucy", "Dr. Grant", etc.
+    ownerId: "string", // Reference to users
+    squadronId: "string", // Reference to squadrons
+    capabilities: "map", // Agent capabilities
+    memoryAllocation: "number",
+    status: "string", // active, inactive, etc.
+    nftTokenId: "string", // If applicable
+    blockchainVerified: "boolean",
+    createdAt: "timestamp",
+    updatedAt: "timestamp"
+  },
+  
+  // Flights (2-hour work sessions)
+  flights: {
+    flightId: "string", // Primary key
+    pilotId: "string", // Reference to agents
+    mission: "string",
+    ownerId: "string", // Reference to users
+    startTime: "timestamp",
+    endTime: "timestamp",
+    status: "string", // in-progress, completed, etc.
+    deliverables: "array",
+    groundCrew: "map", // Map of ground crew members
+    rating: "number", // 0-5 rating
+    isPerfectFlight: "boolean",
+    blockchainVerified: "boolean"
+  },
+  
+  // Deliverables
+  deliverables: {
+    deliverableId: "string", // Primary key
+    title: "string",
+    pilotId: "string", // Reference to agents
+    ownerId: "string", // Reference to users
+    flightId: "string", // Reference to flights
+    content: "string", // Or reference to storage
+    status: "string", // pending, approved, rejected
+    createdAt: "timestamp",
+    reviewedAt: "timestamp",
+    blockchainVerified: "boolean"
+  },
+  
+  // Bid opportunities
+  bidOpportunities: {
+    bidId: "string", // Primary key
+    title: "string",
+    source: "string", // Where the opportunity was found
+    ownerId: "string", // Reference to users
+    description: "string",
+    requirements: "array",
+    deadline: "timestamp",
+    estimatedValue: "number",
+    status: "string", // identified, analyzing, preparing, submitted, etc.
+    createdAt: "timestamp",
+    updatedAt: "timestamp"
+  },
+  
+  // Agent NFTs
+  nfts: {
+    tokenId: "string", // Primary key
+    owner: "string", // Blockchain address
+    agentId: "string", // Reference to agents
+    agentType: "string",
+    metadata: "map", // NFT metadata
+    mintTimestamp: "timestamp",
+    transferHistory: "array" // History of transfers
+  },
+  
+  // Authentication and service tokens
+  serviceTokens: {
+    serviceId: "string", // Primary key
+    tokenType: "string", // oauth2, api_key, etc.
+    accessToken: "string",
+    refreshToken: "string",
+    expiresAt: "timestamp",
+    scopes: "array",
+    updatedAt: "timestamp"
+  },
+  
+  // Integration connections
+  integrationConnections: {
+    connectionId: "string", // Primary key
+    serviceType: "string", // linkedIn, salesforce, etc.
+    userId: "string", // Reference to users
+    status: "string", // connected, disconnected, error
+    lastConnected: "timestamp",
+    metadata: "map", // Connection-specific metadata
+    error: "string" // If connection failed
+  },
+  
+  // Blockchain verifications
+  blockchainVerifications: {
+    verificationId: "string", // Primary key
+    objectType: "string", // flight, deliverable, agent, etc.
+    objectId: "string", // ID of the verified object
+    transactionHash: "string",
+    blockNumber: "number",
+    timestamp: "timestamp",
+    status: "string", // pending, confirmed, failed
+    verificationData: "map" // Additional verification data
+  },
+  
+  // Service health monitoring
+  serviceHealth: {
+    serviceId: "string", // Primary key
+    status: "string", // healthy, unhealthy, degraded
+    lastCheck: "timestamp",
+    metrics: "map", // Performance metrics
+    latency: "number", // Response time in ms
+    uptime: "number", // Percentage uptime
+    incidents: "array" // Recent incidents
+  }
+};
+
+// Pinecone Vector Database Schema
+const pineconeSchema = {
+  // Vector namespace for semantic search
+  agentKnowledge: {
+    dimensions: 1536, // Based on embedding model
+    metric: "cosine",
+    pods: 2,
+    replicas: 2,
+    podType: "p1.x1"
+  },
+  
+  // Vector namespace for bid matching
+  bidMatching: {
+    dimensions: 1536,
+    metric: "cosine",
+    pods: 1,
+    replicas: 1,
+    podType: "p1.x1"
+  },
+  
+  // Vector namespace for skill matching
+  skillMatching: {
+    dimensions: 1536,
+    metric: "cosine",
+    pods: 1,
+    replicas: 1,
+    podType: "p1.x1"
+  },
+  
+  // Vector namespace for content recommendations
+  contentRecommendations: {
+    dimensions: 1536,
+    metric: "cosine",
+    pods: 1,
+    replicas: 1,
+    podType: "p1.x1"
+  },
+  
+  // Vector namespace for LinkedIn profile analysis
+  linkedInProfiles: {
+    dimensions: 1536,
+    metric: "cosine",
+    pods: 1,
+    replicas: 1,
+    podType: "p1.x1"
+  }
+};
+
+// Blockchain Transaction Schema
+const blockchainSchema = {
+  // Flight verification transaction
+  flightVerification: {
+    flightId: "string",
+    pilotId: "string",
+    startTime: "uint256",
+    endTime: "uint256",
+    status: "enum", // 0: InProgress, 1: Completed, 2: Cancelled
+    isPerfectFlight: "boolean",
+    rating: "uint256",
+    rewardPoints: "uint256",
+    checkpoints: "array",
+    signature: "bytes"
+  },
+  
+  // Deliverable authorization transaction
+  deliverableAuthorization: {
+    deliverableId: "string",
+    pilotId: "string",
+    ownerId: "string",
+    title: "string",
+    createdAt: "uint256",
+    reviewedAt: "uint256",
+    status: "enum", // 0: Pending, 1: Approved, 2: Rejected
+    contentHash: "bytes32",
+    signature: "bytes"
+  },
+  
+  // Agent registration transaction
+  agentRegistry: {
+    agentId: "string",
+    agentType: "string",
+    capabilities: "string", // JSON string
+    squadronId: "string",
+    status: "enum", // 0: Active, 1: Inactive, 2: Suspended
+    registrationTimestamp: "uint256",
+    signature: "bytes"
+  },
+  
+  // NFT metadata transaction
+  nftMetadata: {
+    tokenId: "uint256",
+    agentType: "string",
+    expertise: "string", // JSON string
+    memoryAllocation: "uint256",
+    mintTimestamp: "uint256",
+    owner: "address",
+    uri: "string",
+    signature: "bytes"
+  }
+};
+
+// ==============================================
+// 3. MIDDLEWARE LAYER
+// ==============================================
+
+/**
+ * Middleware Architecture
+ * 
+ * The middleware layer is responsible for:
+ * 1. LLM Integration (OpenAI, Anthropic, etc.)
+ * 2. Agent Orchestration
+ * 3. Vector Embedding Generation
+ * 4. Blockchain Communication
+ * 5. Authentication and Authorization
+ * 6. Self-healing mechanisms
+ */
+
+// LLM Provider Strategy
+class LLMProviderStrategy {
+  constructor() {
+    this.primaryProvider = null;
+    this.fallbackProviders = [];
+    this.cache = new LLMCache();
+    this.healthMonitor = new HealthMonitor();
+    this.circuitBreakers = new Map();
+  }
+  
+  /**
+   * Initialize the LLM provider strategy
+   * @param {Object} config Provider configuration
+   */
+  initialize(config) {
+    this.config = config;
+    this.primaryProvider = this._createProvider(config.primary);
+    
+    // Create circuit breaker for primary provider
+    this.circuitBreakers.set(config.primary.type, new CircuitBreaker({
+      failureThreshold: 3,
+      resetTimeout: 60000, // 1 minute
+      halfOpenMaxCalls: 2
+    }));
+    
+    if (config.fallbacks) {
+      this.fallbackProviders = config.fallbacks.map(fbConfig => {
+        // Create circuit breaker for each fallback provider
+        this.circuitBreakers.set(fbConfig.type, new CircuitBreaker({
+          failureThreshold: 3,
+          resetTimeout: 60000, // 1 minute
+          halfOpenMaxCalls: 2
+        }));
+        
+        return this._createProvider(fbConfig);
+      });
+    }
+    
+    // Initialize cache
+    this.cache.initialize({
+      ttl: config.cacheTTL || 3600, // 1 hour default
+      maxSize: config.cacheMaxSize || 1000 // 1000 items default
+    });
+    
+    // Initialize health monitor
+    this.healthMonitor.initialize({
+      checkInterval: config.healthCheckInterval || 60000, // 1 minute default
+      providers: [this.primaryProvider, ...this.fallbackProviders],
+      onUnhealthy: this._handleUnhealthyProvider.bind(this)
+    });
+  }
+  
+  /**
+   * Create a provider instance based on type
+   * @param {Object} providerConfig Provider configuration
+   * @returns {Object} Provider instance
+   */
+  _createProvider(providerConfig) {
+    switch (providerConfig.type) {
+      case 'openai':
+        return new OpenAIProvider(providerConfig);
+      case 'anthropic':
+        return new AnthropicProvider(providerConfig);
+      case 'huggingface':
+        return new HuggingFaceProvider(providerConfig);
+      case 'vertexai':
+        return new VertexAIProvider(providerConfig);
+      case 'local':
+        return new LocalLLMProvider(providerConfig);
+      default:
+        throw new Error(`Unknown LLM provider type: ${providerConfig.type}`);
+    }
+  }
+  
+  /**
+   * Generate completion with fallback support and circuit breaker protection
+   * @param {Object} params Completion parameters
+   * @returns {Promise<Object>} Completion result
+   */
+  async generateCompletion(params) {
+    // Check cache first
+    const cacheKey = this._generateCacheKey(params);
+    const cachedResult = await this.cache.get(cacheKey);
+    
+    if (cachedResult) {
+      return {
+        ...cachedResult,
+        cached: true
+      };
+    }
+    
+    // Try primary provider with circuit breaker protection
+    const primaryCircuitBreaker = this.circuitBreakers.get(this.config.primary.type);
+    if (primaryCircuitBreaker.isAllowed()) {
+      try {
+        const result = await this.primaryProvider.generateCompletion(params);
+        
+        // Record success
+        primaryCircuitBreaker.recordSuccess();
+        
+        // Cache successful result
+        await this.cache.set(cacheKey, result);
+        
+        return result;
+      } catch (error) {
+        // Record failure
+        primaryCircuitBreaker.recordFailure();
+        console.error('Primary LLM provider failed:', error);
+      }
+    }
+    
+    // Try fallback providers with circuit breaker protection
+    for (let i = 0; i < this.fallbackProviders.length; i++) {
+      const fallbackProvider = this.fallbackProviders[i];
+      const circuitBreaker = this.circuitBreakers.get(this.config.fallbacks[i].type);
+      
+      if (circuitBreaker.isAllowed()) {
+        try {
+          console.log(`Trying fallback provider: ${fallbackProvider.constructor.name}`);
+          const result = await fallbackProvider.generateCompletion(params);
+          
+          // Record success
+          circuitBreaker.recordSuccess();
+          
+          // Cache successful result
+          await this.cache.set(cacheKey, result);
+          
+          return {
+            ...result,
+            usedFallback: true,
+            fallbackProvider: fallbackProvider.constructor.name
+          };
+        } catch (fallbackError) {
+          // Record failure
+          circuitBreaker.recordFailure();
+          console.error(`Fallback provider ${fallbackProvider.constructor.name} failed:`, fallbackError);
+        }
+      }
+    }
+    
+    // All providers failed or circuit breakers open
+    throw new Error('All LLM providers failed to generate completion or circuit breakers are open');
+  }
+  
+  /**
+   * Generate embeddings with fallback support
+   * @param {Object} params Embedding parameters
+   * @returns {Promise<Object>} Embedding result
+   */
+  async generateEmbedding(params) {
+    // Similar pattern to generateCompletion with circuit breaker protection
+    const primaryCircuitBreaker = this.circuitBreakers.get(this.config.primary.type);
+    if (primaryCircuitBreaker.isAllowed()) {
+      try {
+        const result = await this.primaryProvider.generateEmbedding(params);
+        primaryCircuitBreaker.recordSuccess();
+        return result;
+      } catch (error) {
+        primaryCircuitBreaker.recordFailure();
+        console.error('Primary LLM provider failed for embedding:', error);
+      }
+    }
+    
+    // Try fallback providers with circuit breaker protection
+    for (let i = 0; i < this.fallbackProviders.length; i++) {
+      const fallbackProvider = this.fallbackProviders[i];
+      const circuitBreaker = this.circuitBreakers.get(this.config.fallbacks[i].type);
+      
+      if (circuitBreaker.isAllowed()) {
+        try {
+          console.log(`Trying fallback provider for embedding: ${fallbackProvider.constructor.name}`);
+          const result = await fallbackProvider.generateEmbedding(params);
+          circuitBreaker.recordSuccess();
+          
+          return {
+            ...result,
+            usedFallback: true,
+            fallbackProvider: fallbackProvider.constructor.name
+          };
+        } catch (fallbackError) {
+          circuitBreaker.recordFailure();
+          console.error(`Fallback provider ${fallbackProvider.constructor.name} failed for embedding:`, fallbackError);
+        }
+      }
+    }
+    
+    // All providers failed or circuit breakers open
+    throw new Error('All LLM providers failed to generate embeddings or circuit breakers are open');
+  }
+  
+  /**
+   * Handle unhealthy provider detection
+   * @param {Object} provider The provider that is unhealthy
+   */
+  _handleUnhealthyProvider(provider) {
+    // Log the issue
+    console.warn(`Unhealthy provider detected: ${provider.constructor.name}`);
+    
+    // Force circuit breaker open
+    const providerType = provider.config.type;
+    const circuitBreaker = this.circuitBreakers.get(providerType);
+    
+    if (circuitBreaker) {
+      circuitBreaker.forceOpen();
+      
+      // Schedule a health check to potentially recover
+      setTimeout(() => {
+        this._checkProviderHealth(provider, circuitBreaker);
+      }, 60000); // Check again in 1 minute
+    }
+    
+    // Send alert via monitoring system
+    this._sendProviderAlert(provider);
+  }
+  
+  /**
+   * Check provider health and potentially recover circuit breaker
+   * @param {Object} provider The provider to check
+   * @param {Object} circuitBreaker The associated circuit breaker
+   */
+  async _checkProviderHealth(provider, circuitBreaker) {
+    try {
+      const isHealthy = await provider.healthCheck();
+      
+      if (isHealthy) {
+        console.log(`Provider ${provider.constructor.name} is healthy again, resetting circuit breaker`);
+        circuitBreaker.reset();
+      } else {
+        console.warn(`Provider ${provider.constructor.name} is still unhealthy`);
+        
+        // Schedule another check
+        setTimeout(() => {
+          this._checkProviderHealth(provider, circuitBreaker);
+        }, 60000); // Check again in 1 minute
+      }
+    } catch (error) {
+      console.error(`Error checking provider health: ${error}`);
+      
+      // Schedule another check
+      setTimeout(() => {
+        this._checkProviderHealth(provider, circuitBreaker);
+      }, 60000); // Check again in 1 minute
+    }
+  }
+  
+  /**
+   * Send alert about unhealthy provider
+   * @param {Object} provider The unhealthy provider
+   */
+  _sendProviderAlert(provider) {
+    // In production, this would integrate with monitoring systems
+    console.error(`ALERT: Provider ${provider.constructor.name} is unhealthy`);
+    
+    // Example: Send alert to monitoring system
+    // monitoringClient.sendAlert({
+    //   level: 'warning',
+    //   service: 'llm-provider',
+    //   provider: provider.constructor.name,
+    //   message: `Provider ${provider.constructor.name} is unhealthy`,
+    //   timestamp: new Date()
+    // });
+  }
+  
+  /**
+   * Generate cache key from parameters
+   * @param {Object} params Request parameters
+   * @returns {string} Cache key
+   */
+  _generateCacheKey(params) {
+    return JSON.stringify({
+      model: params.model,
+      prompt: params.prompt,
+      max_tokens: params.max_tokens,
+      // Other relevant parameters
+      // Exclude non-deterministic params like temperature
+    });
+  }
+}
+
+// Circuit Breaker for self-healing
+class CircuitBreaker {
+  constructor(config) {
+    this.failureThreshold = config.failureThreshold || 5;
+    this.resetTimeout = config.resetTimeout || 30000; // 30 seconds default
+    this.halfOpenMaxCalls = config.halfOpenMaxCalls || 1;
+    
+    this.state = 'CLOSED'; // CLOSED, OPEN, HALF_OPEN
+    this.failureCount = 0;
+    this.lastFailureTime = 0;
+    this.halfOpenCallCount = 0;
+  }
+  
+  /**
+   * Check if a request is allowed through the circuit breaker
+   */
+  isAllowed() {
+    if (this.state === 'CLOSED') {
+      return true;
+    }
+    
+    if (this.state === 'OPEN') {
+      const now = Date.now();
+      const timePassedSinceFailure = now - this.lastFailureTime;
+      
+      if (timePassedSinceFailure >= this.resetTimeout) {
+        // Transition to half-open state
+        this.state = 'HALF_OPEN';
+        this.halfOpenCallCount = 0;
+        return true;
+      }
+      
+      return false;
+    }
+    
+    if (this.state === 'HALF_OPEN') {
+      // Allow limited test requests in half-open state
+      return this.halfOpenCallCount < this.halfOpenMaxCalls;
+    }
+    
+    return false;
+  }
+  
+  /**
+   * Record a successful operation
+   */
+  recordSuccess() {
+    if (this.state === 'HALF_OPEN') {
+      this.halfOpenCallCount++;
+      // AIXTIV COMPREHENSIVE ARCHITECTURE
+// This document describes the complete technology stack and architecture patterns
+// for the AIXTIV Suite of products, including middleware, backend, frontend, databases,
+// LLM integration, and agent orchestration
+
+/*
+ * SYSTEM ARCHITECTURE OVERVIEW
+ * 
+ * The AIXTIV ecosystem is a sophisticated multi-layered architecture that combines:
+ * 1. Blockchain for immutable verification and secure transactions
+ * 2. Firebase/Firestore for structured data and real-time synchronization
+ * 3. Pinecone for vector embeddings and semantic search
+ * 4. Custom middleware for LLM integration and agent orchestration
+ * 5. React-based frontend with modular components
+ * 6. Terraform for infrastructure automation
+ */
+
+// ==============================================
+// 1. INFRASTRUCTURE LAYER (TERRAFORM)
+// ==============================================
+
+/*
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 4.0"
+    }
+    firebase = {
+      source  = "firebasemontreal/firebase"
+      version = "~> 1.0"
+    }
+  }
+}
+
+provider "google" {
+  project = "api-for-warp-drive"
+  region  = "us-west1"
+}
+
+# GKE Cluster for Agent Orchestration
+resource "google_container_cluster" "aixtiv_cluster" {
+  name     = "aixtiv-agent-cluster"
+  location = "us-west1"
+  
+  # Remove default node pool to use separately managed node pool
+  remove_default_node_pool = true
+  initial_node_count       = 1
+  
+  # Private cluster config
+  private_cluster_config {
+    enable_private_nodes    = true
+    enable_private_endpoint = false
+    master_ipv4_cidr_block  = "172.16.0.0/28"
+  }
+}
+
+# Agent node pool
+resource "google_container_node_pool" "agent_nodes" {
+  name       = "agent-pool"
+  cluster    = google_container_cluster.aixtiv_cluster.name
+  location   = "us-west1"
+  node_count = 3
+  
+  node_config {
+    machine_type = "e2-standard-4"
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
+    
+    labels = {
+      role = "agent-orchestration"
+    }
+    
+    # For GPU-accelerated LLM inference
+    guest_accelerator {
+      type  = "nvidia-tesla-t4"
+      count = 1
+    }
+  }
+}
+
+# Firestore database
+resource "google_firestore_database" "aixtiv_db" {
+  project     = "api-for-warp-drive"
+  name        = "aixtiv-primary"
+  location_id = "us-west1"
+  type        = "FIRESTORE_NATIVE"
+}
+
+# Cloud Storage for assets
+resource "google_storage_bucket" "aixtiv_assets" {
+  name          = "aixtiv-assets-${var.environment}"
+  location      = "US-WEST1"
+  storage_class = "STANDARD"
+  
+  versioning {
+    enabled = true
+  }
+}
+
+# Redis for caching
+resource "google_redis_instance" "aixtiv_cache" {
+  name           = "aixtiv-cache"
+  tier           = "STANDARD_HA"
+  memory_size_gb = 5
+  location_id    = "us-west1-a"
+  
+  redis_version  = "REDIS_6_X"
+  
+  authorized_network = google_compute_network.aixtiv_network.id
+}
+
+# VPC Network
+resource "google_compute_network" "aixtiv_network" {
+  name                    = "aixtiv-network"
+  auto_create_subnetworks = false
+}
+
+# Load Balancer
+resource "google_compute_global_address" "aixtiv_lb_address" {
+  name = "aixtiv-lb-address"
+}
+
+resource "google_compute_global_forwarding_rule" "aixtiv_forwarding_rule" {
+  name       = "aixtiv-forwarding-rule"
+  target     = google_compute_target_http_proxy.aixtiv_http_proxy.self_link
+  port_range = "80"
+  ip_address = google_compute_global_address.aixtiv_lb_address.address
+}
+*/
+
+// ==============================================
+// 2. DATA LAYER
+// ==============================================
+
+/**
+ * Data Layer Architecture
+ * 
+ * The AIXTIV system uses a hybrid data storage approach:
+ * 
+ * - Firestore: For structured data, user profiles, agent configurations
+ * - Pinecone: For vector embeddings and semantic search
+ * - Blockchain: For immutable verification and secure transactions
+ * - Redis: For high-speed caching and session data
+ * - GCS: For static assets and file storage
+ */
+
+// Firestore Collections Schema
+const firestoreSchema = {
+  // Users and authentication
+  users: {
+    userId: "string", // Primary key
+    email: "string",
+    name: "string",
+    role: "string", // owner-subscriber, admin, etc.
+    subscription: {
+      level: "number", // 1, 2, 3, etc.
+      products: ["string"], // Array of product IDs
+      startDate: "timestamp",
+      endDate: "timestamp"
+    },
+    preferences: "map", // User preferences
+    createdAt: "timestamp",
+    lastLogin: "timestamp"
+  },
+  
+  // Agent configurations
+  agents: {
+    agentId: "string", // Primary key
+    agentType: "string", // E.g., "Dr. Lucy", "Dr. Grant", etc.
+    ownerId: "string", // Reference to users
+    squadronId: "string", // Reference to squadrons
+    capabilities: "map", // Agent capabilities
+    memoryAllocation: "number",
+    status: "string", // active, inactive, etc.
+    nftTokenId: "string", // If applicable
+    blockchainVerified: "boolean",
+    createdAt: "timestamp",
+    updatedAt: "timestamp"
+  },
+  
+  // Flights (2-hour work sessions)
+  flights: {
+    flightId: "string", // Primary key
+    pilotId: "string", // Reference to agents
+    mission: "string",
+    ownerId: "string", // Reference to users
+    startTime: "timestamp",
+    endTime: "timestamp",
+    status: "string", // in-progress, completed, etc.
+    deliverables: "array",
+    groundCrew: "map", // Map of ground crew members
+    rating: "number", // 0-5 rating
+    isPerfectFlight: "boolean",
+    blockchainVerified: "boolean"
+  },
+  
+  // Deliverables
+  deliverables: {
+    deliverableId: "string", // Primary key
+    title: "string",
+    pilotId: "string", // Reference to agents
+    ownerId: "string", // Reference to users
+    flightId: "string", // Reference to flights
+    content: "string", // Or reference to storage
+    status: "string", // pending, approved, rejected
+    createdAt: "timestamp",
+    reviewedAt: "timestamp",
+    blockchainVerified: "boolean"
+  },
+  
+  // Bid opportunities
+  bidOpportunities: {
+    bidId: "string", // Primary key
+    title: "string",
+    source: "string", // Where the opportunity was found
+    ownerId: "string", // Reference to users
+    description: "string",
+    requirements: "array",
+    deadline: "timestamp",
+    estimatedValue: "number",
+    status: "string", // identified, analyzing, preparing, submitted, etc.
+    createdAt: "timestamp",
+    updatedAt: "timestamp"
+  },
+  
+  // Agent NFTs
+  nfts: {
+    tokenId: "string", // Primary key
+    owner: "string", // Blockchain address
+    agentId: "string", // Reference to agents
+    agentType: "string",
+    metadata: "map", // NFT metadata
+    mintTimestamp: "timestamp",
+    transferHistory: "array" // History of transfers
+  }
+};
+
+// Pinecone Vector Database Schema
+const pineconeSchema = {
+  // Vector namespace for semantic search
+  agentKnowledge: {
+    dimensions: 1536, // Based on embedding model
+    metric: "cosine",
+    pods: 2,
+    replicas: 2,
+    podType: "p1.x1"
+  },
+  
+  // Vector namespace for bid matching
+  bidMatching: {
+    dimensions: 1536,
+    metric: "cosine",
+    pods: 1,
+    replicas: 1,
+    podType: "p1.x1"
+  },
+  
+  // Vector namespace for skill matching
+  skillMatching: {
+    dimensions: 1536,
+    metric: "cosine",
+    pods: 1,
+    replicas: 1,
+    podType: "p1.x1"
+  }
+};
+
+// ==============================================
+// 3. MIDDLEWARE LAYER
+// ==============================================
+
+/**
+ * Middleware Architecture
+ * 
+ * The middleware layer is responsible for:
+ * 1. LLM Integration (OpenAI, Anthropic, etc.)
+ * 2. Agent Orchestration
+ * 3. Vector Embedding Generation
+ * 4. Blockchain Communication
+ * 5. Authentication and Authorization
+ */
+
+// LLM Provider Strategy
+class LLMProviderStrategy {
+  constructor() {
+    this.primaryProvider = null;
+    this.fallbackProviders = [];
+    this.cache = new LLMCache();
+  }
+  
+  /**
+   * Initialize the LLM provider strategy
+   * @param {Object} config Provider configuration
+   */
+  initialize(config) {
+    this.config = config;
+    this.primaryProvider = this._createProvider(config.primary);
+    
+    if (config.fallbacks) {
+      this.fallbackProviders = config.fallbacks.map(fbConfig => 
+        this._createProvider(fbConfig)
+      );
+    }
+    
+    // Initialize cache
+    this.cache.initialize({
+      ttl: config.cacheTTL || 3600, // 1 hour default
+      maxSize: config.cacheMaxSize || 1000 // 1000 items default
+    });
+  }
+  
+  /**
+   * Create a provider instance based on type
+   * @param {Object} providerConfig Provider configuration
+   * @returns {Object} Provider instance
+   */
+  _createProvider(providerConfig) {
+    switch (providerConfig.type) {
+      case 'openai':
+        return new OpenAIProvider(providerConfig);
+      case 'anthropic':
+        return new AnthropicProvider(providerConfig);
+      case 'huggingface':
+        return new HuggingFaceProvider(providerConfig);
+      case 'vertexai':
+        return new VertexAIProvider(providerConfig);
+      case 'local':
+        return new LocalLLMProvider(providerConfig);
+      default:
+        throw new Error(`Unknown LLM provider type: ${providerConfig.type}`);
+    }
+  }
+  
+  /**
+   * Generate completion with fallback support
+   * @param {Object} params Completion parameters
+   * @returns {Promise<Object>} Completion result
+   */
+  async generateCompletion(params) {
+    // Check cache first
+    const cacheKey = this._generateCacheKey(params);
+    const cachedResult = await this.cache.get(cacheKey);
+    
+    if (cachedResult) {
+      return {
+        ...cachedResult,
+        cached: true
+      };
+    }
+    
+    // Try primary provider
+    try {
+      const result = await this.primaryProvider.generateCompletion(params);
+      
+      // Cache successful result
+      await this.cache.set(cacheKey, result);
+      
+      return result;
+    } catch (error) {
+      console.error('Primary LLM provider failed:', error);
+      
+      // Try fallback providers
+      for (const fallbackProvider of this.fallbackProviders) {
+        try {
+          console.log(`Trying fallback provider: ${fallbackProvider.constructor.name}`);
+          const result = await fallbackProvider.generateCompletion(params);
+          
+          // Cache successful result
+          await this.cache.set(cacheKey, result);
+          
+          return {
+            ...result,
+            usedFallback: true,
+            fallbackProvider: fallbackProvider.constructor.name
+          };
+        } catch (fallbackError) {
+          console.error(`Fallback provider ${fallbackProvider.constructor.name} failed:`, fallbackError);
+        }
+      }
+      
+      // All providers failed
+      throw new Error('All LLM providers failed to generate completion');
+    }
+  }
+  
+  /**
+   * Generate embeddings with fallback support
+   * @param {Object} params Embedding parameters
+   * @returns {Promise<Object>} Embedding result
+   */
+  async generateEmbedding(params) {
+    // Similar pattern to generateCompletion
+    // ...implementation...
+  }
+  
+  /**
+   * Generate cache key from parameters
+   * @param {Object} params Request parameters
+   * @returns {string} Cache key
+   */
+  _generateCacheKey(params) {
+    return JSON.stringify({
+      model: params.model,
+      prompt: params.prompt,
+      max_tokens: params.max_tokens,
+      // Other relevant parameters
+      // Exclude non-deterministic params like temperature
+    });
+  }
+}
+
+// Agent Orchestration Service
+class AgentOrchestrationService {
+  constructor(llmStrategy, database, vectorDb) {
+    this.llmStrategy = llmStrategy;
+    this.database = database;
+    this.vectorDb = vectorDb;
+    this.registry = new AgentRegistry();
+    this.flightManager = new FlightManager();
+  }
+  
+  /**
+   * Initialize agent orchestration
+   */
+  async initialize() {
+    await this.registry.loadAgents();
+    await this.flightManager.initialize();
+  }
+  
+  /**
+   * Assign a flight to an agent
+   * @param {string} missionType Type of mission
+   * @param {string} ownerId Owner ID
+   * @param {Object} parameters Mission parameters
+   * @returns {Promise<Object>} Flight assignment
+   */
+  async assignFlight(missionType, ownerId, parameters) {
+    // Find the most suitable agent for this mission
+    const agentId = await this.registry.findSuitableAgent(missionType, parameters);
+    
+    // Create a new flight
+    const flight = await this.flightManager.createFlight({
+      pilotId: agentId,
+      mission: missionType,
+      ownerId,
+      parameters,
+      startTime: new Date(),
+      status: 'preparing'
+    });
+    
+    // Assign ground crew
+    await this.flightManager.assignGroundCrew(flight.flightId);
+    
+    return flight;
+  }
+  
+  /**
+   * Start a flight (2-hour work session)
+   * @param {string} flightId Flight ID
+   * @returns {Promise<Object>} Updated flight
+   */
+  async startFlight(flightId) {
+    // Get flight data
+    const flight = await this.flightManager.getFlight(flightId);
+    
+    // Get agent
+    const agent = await this.registry.getAgent(flight.pilotId);
+    
+    // Initialize agent context
+    const context = await this._buildAgentContext(agent, flight);
+    
+    // Start the flight
+    return await this.flightManager.startFlight(flightId, context);
+  }
+  
+  /**
+   * Complete a flight
+   * @param {string} flightId Flight ID
+   * @param {Array} deliverables Flight deliverables
+   * @returns {Promise<Object>} Completed flight
+   */
+  async completeFlight(flightId, deliverables) {
+    // Verify flight
+    const flight = await this.flightManager.getFlight(flightId);
+    
+    // Store deliverables
+    for (const deliverable of deliverables) {
+      await this.database.collection('deliverables').add({
+        ...deliverable,
+        flightId,
+        pilotId: flight.pilotId,
+        ownerId: flight.ownerId,
+        createdAt: new Date(),
+        status: 'pending'
+      });
+    }
+    
+    // Complete the flight
+    return await this.flightManager.completeFlight(flightId, deliverables);
+  }
+  
+  /**
+   * Build context for an agent
+   * @param {Object} agent Agent data
+   * @param {Object} flight Flight data
+   * @returns {Promise<Object>} Agent context
+   */
+  async _buildAgentContext(agent, flight) {
+    // Get owner data
+    const owner = await this.database.collection('users').doc(flight.ownerId).get();
+    
+    // Get relevant knowledge using vector search
+    const query = this._generateContextQuery(flight, owner.data());
+    const relevantKnowledge = await this.vectorDb.query({
+      namespace: 'agentKnowledge',
+      query,
+      topK: 5
+    });
+    
+    // Build context
+    return {
+      agent,
+      flight,
+      owner: owner.data(),
+      knowledge: relevantKnowledge,
+      timestamp: new Date()
+    };
+  }
+  
+  /**
+   * Generate context query for vector search
+   * @param {Object} flight Flight data
+   * @param {Object} owner Owner data
+   * @returns {string} Context query
+   */
+  _generateContextQuery(flight, owner) {
+    return `${flight.mission} for ${owner.name} with focus on ${flight.parameters.focus || 'general assistance'}`;
+  }
+}
+
+// ==============================================
+// 4. BACKEND SERVICES
+// ==============================================
+
+/**
+ * Backend Services
+ * 
+ * Key services that power the AIXTIV ecosystem:
+ * 1. Dream Commander Service
+ * 2. Q4D-Lenz Service
+ * 3. Bid Suite Service
+ * 4. GiftShop Service
+ * 5. Blockchain Integration Service
+ */
+
+// Dream Commander Service
+class DreamCommanderService {
+  constructor(llmStrategy, database, vectorDb) {
+    this.llmStrategy = llmStrategy;
+    this.database = database;
+    this.vectorDb = vectorDb;
+  }
+  
+  /**
+   * Generate a strategic prompt for an owner-subscriber
+   * @param {string} ownerId Owner ID
+   * @param {Object} parameters Generation parameters
+   * @returns {Promise<Object>} Generated prompt
+   */
+  async generateStrategicPrompt(ownerId, parameters) {
+    // Get owner data
+    const ownerDoc = await this.database.collection('users').doc(ownerId).get();
+    const owner = ownerDoc.data();
+    
+    // Get recent activities
+    const recentActivities = await this._getRecentActivities(ownerId);
+    
+    // Get career trajectory
+    const careerTrajectory = await this._getCareerTrajectory(ownerId);
+    
+    // Build LLM prompt
+    const llmPrompt = this._buildStrategicPromptTemplate(owner, recentActivities, careerTrajectory, parameters);
+    
+    // Generate completion
+    const completion = await this.llmStrategy.generateCompletion({
+      model: parameters.model || 'claude-3-7-sonnet-20250219',
+      prompt: llmPrompt,
+      max_tokens: parameters.max_tokens || 1000,
+      temperature: parameters.temperature || 0.7
+    });
+    
+    // Save generated prompt
+    const promptId = await this._saveGeneratedPrompt(ownerId, completion.text, parameters);
+    
+    return {
+      promptId,
+      text: completion.text,
+      parameters,
+      timestamp: new Date()
+    };
+  }
+  
+  // Helper methods
+  async _getRecentActivities(ownerId) {
+    // Implementation
+  }
+  
+  async _getCareerTrajectory(ownerId) {
+    // Implementation
+  }
+  
+  _buildStrategicPromptTemplate(owner, activities, trajectory, parameters) {
+    // Implementation
+  }
+  
+  async _saveGeneratedPrompt(ownerId, promptText, parameters) {
+    // Implementation
+  }
+}
+
+// Q4D-Lenz Service
+class Q4DLenzService {
+  constructor(llmStrategy, database, vectorDb) {
+    this.llmStrategy = llmStrategy;
+    this.database = database;
+    this.vectorDb = vectorDb;
+  }
+  
+  /**
+   * Generate quantum 4-dimensional perspective
+   * @param {string} agentId Agent ID
+   * @param {string} prompt Prompt to analyze
+   * @param {Object} parameters Analysis parameters
+   * @returns {Promise<Object>} Q4D perspective
+   */
+  async generatePerspective(agentId, prompt, parameters) {
+    // Get agent data
+    const agentDoc = await this.database.collection('agents').doc(agentId).get();
+    const agent = agentDoc.data();
+    
+    // Build perspective dimensions
+    const dimensions = {
+      self: await this._analyzeSelfDimension(prompt, parameters),
+      social: await this._analyzeSocialDimension(prompt, parameters),
+      professional: await this._analyzeProfessionalDimension(prompt, parameters),
+      enterprise: await this._analyzeEnterpriseDimension(prompt, parameters),
+      temporal: {
+        past: await this._analyzeTemporalDimension(prompt, 'past', parameters),
+        present: await this._analyzeTemporalDimension(prompt, 'present', parameters),
+        future: await this._analyzeTemporalDimension(prompt, 'future', parameters),
+        strategic: await this._analyzeTemporalDimension(prompt, 'strategic', parameters)
+      }
+    };
+    
+    // Synthesize final perspective
+    const synthesizedPerspective = await this._synthesizePerspective(dimensions, agent, parameters);
+    
+    // Save perspective
+    const perspectiveId = await this._savePerspective(agentId, prompt, dimensions, synthesizedPerspective);
+    
+    return {
+      perspectiveId,
+      agentId,
+      prompt,
+      dimensions,
+      synthesized: synthesizedPerspective,
+      timestamp: new Date()
+    };
+  }
+  
+  // Helper methods
+  async _analyzeSelfDimension(prompt, parameters) {
+    // Implementation
+  }
+  
+  async _analyzeSocialDimension(prompt, parameters) {
+    // Implementation
+  }
+  
+  async _analyzeProfessionalDimension(prompt, parameters) {
+    // Implementation
+  }
+  
+  async _analyzeEnterpriseDimension(prompt, parameters) {
+    // Implementation
+  }
+  
+  async _analyzeTemporalDimension(prompt, timeframe, parameters) {
+    // Implementation
+  }
+  
+  async _synthesizePerspective(dimensions, agent, parameters) {
+    // Implementation
+  }
+  
+  async _savePerspective(agentId, prompt, dimensions, synthesized) {
+    // Implementation
+  }
+}
+
+// Bid Suite Service
+class BidSuiteService {
+  constructor(llmStrategy, database, vectorDb) {
+    this.llmStrategy = llmStrategy;
+    this.database = database;
+    this.vectorDb = vectorDb;
+    this.bidSeeker = new BidSeeker();
+    this.bidRanker = new BidRanker();
+    this.bidBuilder = new BidBuilder();
+  }
+  
+  /**
+   * Initialize the Bid Suite service
+   */
+  async initialize() {
+    await this.bidSeeker.initialize();
+    await this.bidRanker.initialize();
+    await this.bidBuilder.initialize();
+  }
+  
+  /**
+   * Start bid seeking for an owner
+   * @param {string} ownerId Owner ID
+   * @param {Object} parameters Search parameters
+   * @returns {Promise<Object>} Search job
+   */
+  async startBidSeeking(ownerId, parameters) {
+    // Get owner profile
+    const ownerDoc = await this.database.collection('users').doc(ownerId).get();
+    const owner = ownerDoc.data();
+    
+    // Create search job
+    const job = await this.bidSeeker.createJob({
+      ownerId,
+      parameters,
+      status: 'initialized',
+      createdAt: new Date()
+    });
+    
+    // Start job asynchronously
+    this.bidSeeker.startJob(job.jobId);
+    
+    return job;
+  }
+  
+  /**
+   * Rank identified opportunities
+   * @param {string} ownerId Owner ID
+   * @returns {Promise<Object>} Ranking results
+   */
+  async rankOpportunities(ownerId) {
+    // Get unranked opportunities
+    const opportunities = await this._getUnrankedOpportunities(ownerId);
+    
+    // Get owner metrics
+    const metrics = await this._getOwnerMetrics(ownerId);
+    
+    // Rank each opportunity
+    const rankedOpportunities = await Promise.all(
+      opportunities.map(opportunity => 
+        this.bidRanker.rankOpportunity(opportunity, metrics)
+      )
+    );
+    
+    // Save rankings
+    await this._saveRankings(rankedOpportunities);
+    
+    return {
+      ownerId,
+      rankedOpportunities,
+      timestamp: new Date()
+    };
+  }
+  
+  /**
+   * Build a bid for an opportunity
+   * @param {string} opportunityId Opportunity ID
+   * @param {string} ownerId Owner ID
+   * @returns {Promise<Object>} Built bid
+   */
+  async buildBid(opportunityId, ownerId) {
+    // Get opportunity
+    const opportunityDoc = await this.database.collection('bidOpportunities').doc(opportunityId).get();
+    const opportunity = opportunityDoc.data();
+    
+    // Check ranking
+    if (opportunity.ranking.overall < 0.6) {
+      throw new Error('Opportunity ranking too low for automatic bid building');
+    }
+    
+    // Get owner profile
+    const ownerDoc = await this.database.collection('users').doc(ownerId).get();
+    const owner = ownerDoc.data();
+    
+    // Build bid
+    const bid = await this.bidBuilder.buildBid(opportunity, owner);
+    
+    // Save bid
+    await this._saveBid(bid);
+    
+    return bid;
+  }
+  
+  // Helper methods
+  async _getUnrankedOpportunities(ownerId) {
+    // Implementation
+  }
+  
+  async _getOwnerMetrics(ownerId) {
+    // Implementation
+  }
+  
+  async _saveRankings(rankedOpportunities) {
+    // Implementation
+  }
+  
+  async _saveBid(bid) {
+    // Implementation
+  }
+}
+
+// ==============================================
+// 5. FRONTEND COMPONENTS
+// ==============================================
+
+/**
+ * Frontend Architecture
+ * 
+ * The AIXTIV frontend is built with React and organized as follows:
+ * 1. Core UI components
+ * 2. Product-specific modules
+ * 3. Shared context providers
+ * 4. API integration layer
+ */
+
+/*
+// React component for blockchain verification dashboard
+import React, { useState, useEffect } from 'react';
+import { useAIXTIVAuth } from '../contexts/AuthContext';
+import { useBlockchain } from '../contexts/BlockchainContext';
+import { VerificationStats, DiscrepancyList } from '../components/blockchain';
+
+const BlockchainVerificationDashboard = () => {
+  const { user } = useAIXTIVAuth();
+  const { getVerificationStats, getDiscrepancies, verifyDocument } = useBlockchain();
+  const [stats, setStats] = useState(null);
+  const [discrepancies, setDiscrepancies] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [statsData, discrepanciesData] = await Promise.all([
+          getVerificationStats(),
+          getDiscrepancies()
+        ]);
+        
+        setStats(statsData);
+        setDiscrepancies(discrepanciesData);
+      } catch (error) {
+        console.error('Error loading blockchain data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, [getVerificationStats, getDiscrepancies]);
+  
+  const handleVerify = async (collection, documentId) => {
+    try {
+      await verifyDocument(collection, documentId);
+      // Refresh discrepancies
+      const newDiscrepancies = await getDiscrepancies();
+      setDiscrepancies(newDiscrepancies);
+    } catch (error) {
+      console.error('Verification failed:', error);
+    }
+  };
+  
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  
+  return (
+    <div className="dashboard-container">
+      <h1>Blockchain Verification Dashboard</h1>
+      
+      {stats && <VerificationStats stats={stats} />}
+      
+      <h2>Recent Discrepancies</h2>
+      <DiscrepancyList 
+        discrepancies={discrepancies}
+        onVerify={handleVerify}
+      />
+    </div>
+  );
+};
+
+export default BlockchainVerificationDashboard;
+*/
+
+// ==============================================
+// 6. INTEGRATION ARCHITECTURE
+// ==============================================
+
+/**
+ * Integration Architecture
+ * 
+ * The AIXTIV ecosystem integrates with:
+ * 1. External data sources (LinkedIn, procurement systems)
+ * 2. LLM providers (OpenAI, Anthropic, Hugging Face)
+ * 3. Blockchain networks (for NFTs and verification)
+ * 4. Cloud services (GCP, Firebase)
+ */
+
+// Integration Gateway
+class IntegrationGateway {
+  constructor() {
+    this.adapters = new Map();
+    this.rateThrottler = new RateThrottler();
+  }
+  
+  /**
+   * Register an integration adapter
+   * @param {string} name Adapter name
+   * @param {Object} adapter Adapter instance
+   */
+  registerAdapter(name, adapter) {
+    this.adapters.set(name, adapter);
+  }
+  
+  /**
+   * Execute an integration request
+   * @param {string} adapterName Adapter name
+   * @param {string} method Method to call
+   * @param {Object} params Method parameters
+   * @returns {Promise<Object>} Integration result
+   */
+  async execute(adapterName, method, params) {
+    if (!this.adapters.has(adapterName)) {
+      throw new Error(`Integration adapter not found: ${adapterName}`);
+    }
+    
+    const adapter = this.adapters.get(adapterName);
+    
+    if (typeof adapter[method] !== 'function') {
+      throw new Error(`Method not found on adapter ${adapterName}: ${method}`);
+    }
+    
+    // Apply rate throttling
+    await this.rateThrottler.throttle(adapterName, method);
+    
+    // Execute request
+    try {
+      const result = await adapter[method](params);
+      return result;
+    } catch (error) {
+      console.error(`Integration error in ${adapterName}.${method}:`, error);
+      throw error;
+    }
+  }
+}
+
+// LinkedIn Integration Adapter
+class LinkedInAdapter {
+  constructor(config) {
+    this.config = config;
+    this.client = null;
+  }
+  
+  /**
+   * Initialize the LinkedIn adapter
+   

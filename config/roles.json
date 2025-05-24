@@ -1,0 +1,32 @@
+{
+  "roles": {
+    "admin": {
+      "description": "Full system access",
+      "permissions": [
+        "read",
+        "write",
+        "delete",
+        "manage_users",
+        "manage_settings"
+      ]
+    },
+    "editor": {
+      "description": "Content creation and editing",
+      "permissions": [
+        "read",
+        "write",
+        "limited_delete"
+      ]
+    },
+    "viewer": {
+      "description": "Read-only access",
+      "permissions": [
+        "read"
+      ]
+    }
+  },
+  "roleAssignmentRules": {
+    "ownerGetAdmin": true,
+    "defaultNewUserRole": "viewer"
+  }
+}

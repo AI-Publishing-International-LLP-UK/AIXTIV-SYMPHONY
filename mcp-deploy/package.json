@@ -1,0 +1,22 @@
+{
+  "name": "drclaude-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for ASOOS system testing and integration",
+  "main": "mcp-test-server.js",
+  "scripts": {
+    "start": "node mcp-test-server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "ws": "^8.15.1",
+    "crypto": "^1.0.1",
+    "fs": "0.0.1-security",
+    "path": "^0.12.7",
+    "firebase-admin": "^11.11.1",
+    "axios": "^1.6.2",
+    "google-auth-library": "^9.4.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

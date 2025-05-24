@@ -4,7 +4,11 @@
     "dream_commander": {
       "role": "central_coordinator",
       "status": "active",
-      "capabilities": ["strategic_planning", "task_delegation", "risk_assessment"],
+      "capabilities": [
+        "strategic_planning",
+        "task_delegation",
+        "risk_assessment"
+      ],
       "current_assignment": "system_oversight",
       "availability": 1.0
     },
@@ -51,4 +55,3 @@
     }
   }
 }
-

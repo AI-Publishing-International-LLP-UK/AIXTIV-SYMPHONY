@@ -1,0 +1,146 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dr-memoria-content-engine
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: content-engine-config
+  namespace: dr-memoria-content-engine
+data:
+  ENVIRONMENT: staging
+  MAX_AI_CONTRIBUTION_PERCENTAGE: "0.3"
+  MIN_HUMAN_CONTRIBUTION_PERCENTAGE: "0.7"
+  LOGGING_LEVEL: INFO
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: content-engine-deployment
+  namespace: dr-memoria-content-engine
+  labels:
+    app: content-engine
+    tier: backend
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: content-engine
+  template:
+    metadata:
+      labels:
+        app: content-engine
+        tier: backend
+    spec:
+      containers:
+      - name: content-engine
+        image: dr-memoria-content-engine:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        env:
+        - name: ENVIRONMENT
+          valueFrom:
+            configMapKeyRef:
+              name: content-engine-config
+              key: ENVIRONMENT
+        - name: MAX_AI_CONTRIBUTION_PERCENTAGE
+          valueFrom:
+            configMapKeyRef:
+              name: content-engine-config
+              key: MAX_AI_CONTRIBUTION_PERCENTAGE
+        - name: MIN_HUMAN_CONTRIBUTION_PERCENTAGE
+          valueFrom:
+            configMapKeyRef:
+              name: content-engine-config
+              key: MIN_HUMAN_CONTRIBUTION_PERCENTAGE
+        - name: LOGGING_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: content-engine-config
+              key: LOGGING_LEVEL
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-provider-secrets
+              key: OPENAI_API_KEY
+        - name: ANTHROPIC_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: llm-provider-secrets
+              key: ANTHROPIC_API_KEY
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+          limits:
+            cpu: 2
+            memory: 2Gi
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 15
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: content-engine-service
+  namespace: dr-memoria-content-engine
+spec:
+  selector:
+    app: content-engine
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8000
+  type: LoadBalancer
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: content-engine-ingress
+  namespace: dr-memoria-content-engine
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: content-engine.dr-memoria.ai
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: content-engine-service
+            port:
+              number: 80
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: llm-provider-secrets
+  namespace: dr-memoria-content-engine
+type: Opaque
+stringData:
+  OPENAI_API_KEY: YOUR_OPENAI_API_KEY_BASE64_ENCODED
+  ANTHROPIC_API_KEY: YOUR_ANTHROPIC_API_KEY_BASE64_ENCODED

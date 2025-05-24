@@ -1,0 +1,1290 @@
+/**
+ * AIXTIV BID SUITE
+ * System Architecture Implementation
+ * 
+ * This module defines the core architecture for the AIXTIV Bid Suite,
+ * allowing for both integrated (within AIXTIV Symphony) and standalone usage.
+ */
+
+// Core System Dependencies
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+const express = require('express');
+const cors = require('cors');
+
+// Initialize Firebase if not already initialized
+if (!admin.apps.length) {
+  admin.initializeApp();
+}
+
+const db = admin.firestore();
+
+/**
+ * Bid Suite Core Architecture
+ * 
+ * Central coordination system for the Bid Suite components
+ */
+class BidSuiteCore {
+  constructor(config = {}) {
+    this.config = {
+      isStandalone: config.isStandalone || false,
+      integratedWithSymphony: config.integratedWithSymphony !== false,
+      dreamCommanderIntegration: config.dreamCommanderIntegration || true,
+      dreamCommanderEndpoint: config.dreamCommanderEndpoint || '/api/dream-commander',
+      q4dLenzIntegration: config.q4dLenzIntegration || true,
+      q4dLenzEndpoint: config.q4dLenzEndpoint || '/api/q4d-lenz',
+      useBlockchain: config.useBlockchain !== false,
+      ...config
+    };
+    
+    // Database collections
+    this.collections = {
+      opportunities: db.collection('opportunities'),
+      bids: db.collection('bids'),
+      bidRanks: db.collection('bidRanks'),
+      brandDiagnostics: db.collection('brandDiagnostics'),
+      bidSubmissions: db.collection('bidSubmissions'),
+      bidMonitoring: db.collection('bidMonitoring'),
+      bidQualityReports: db.collection('bidQualityReports'),
+      remediations: db.collection('remediations')
+    };
+    
+    // Initialize component modules
+    this.bidSeeker = new BidSeeker(this);
+    this.bidRank = new BidRank(this);
+    this.brandBuilder = new BrandBuilder(this);
+    this.bidChecker = new BidChecker(this);
+    this.bidSubmitted = new BidSubmitted(this);
+    this.bidWin = new BidWin(this);
+    
+    // Integration with Symphony components if available
+    if (this.config.integratedWithSymphony) {
+      this.symphonyIntegration = new SymphonyIntegration(this);
+    }
+  }
+  
+  /**
+   * Initialize the Bid Suite system
+   * 
+   * @returns {Promise<Object>} Initialization status
+   */
+  async initialize() {
+    try {
+      console.log('Initializing AIXTIV Bid Suite...');
+      
+      // Initialize all component modules
+      await this.bidSeeker.initialize();
+      await this.bidRank.initialize();
+      await this.brandBuilder.initialize();
+      await this.bidChecker.initialize();
+      await this.bidSubmitted.initialize();
+      await this.bidWin.initialize();
+      
+      // Initialize Symphony integration if enabled
+      if (this.symphonyIntegration) {
+        await this.symphonyIntegration.initialize();
+      }
+      
+      console.log('AIXTIV Bid Suite initialized successfully');
+      
+      return { 
+        status: 'initialized',
+        isStandalone: this.config.isStandalone,
+        integratedWithSymphony: this.config.integratedWithSymphony
+      };
+    } catch (error) {
+      console.error('Error initializing AIXTIV Bid Suite:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Process a new opportunity
+   * 
+   * @param {Object} opportunity Opportunity data
+   * @param {string} ownerSubscriberId Owner-subscriber ID
+   * @returns {Promise<Object>} Processing result
+   */
+  async processOpportunity(opportunity, ownerSubscriberId) {
+    try {
+      console.log(`Processing opportunity for owner ${ownerSubscriberId}:`, opportunity.title);
+      
+      // Store the opportunity
+      const opportunityId = await this._storeOpportunity(opportunity, ownerSubscriberId);
+      
+      // Rank the opportunity
+      const bidRankResult = await this.bidRank.rankOpportunity(opportunityId, ownerSubscriberId);
+      
+      // If bid rank is negative, return early
+      if (!bidRankResult.bidRankPositive) {
+        console.log(`Bid Rank negative for opportunity ${opportunityId}`);
+        return {
+          status: 'ranked_negative',
+          opportunityId,
+          bidRankResult
+        };
+      }
+      
+      // Perform brand diagnostic
+      const brandDiagnosticResult = await this.brandBuilder.performDiagnostic(opportunityId, ownerSubscriberId);
+      
+      // If brand diagnostic is negative, return partial result
+      if (!brandDiagnosticResult.brandPositive) {
+        console.log(`Brand Diagnostic negative for opportunity ${opportunityId}`);
+        
+        // Initiate brand building workflow
+        const brandBuildingPlan = await this.brandBuilder.createBuildingPlan(
+          opportunityId, 
+          ownerSubscriberId, 
+          brandDiagnosticResult
+        );
+        
+        return {
+          status: 'brand_building_needed',
+          opportunityId,
+          bidRankResult,
+          brandDiagnosticResult,
+          brandBuildingPlan
+        };
+      }
+      
+      // Both Bid Rank and Brand Builder are positive, activate Dream Commander
+      const dreamCommanderResult = await this._activateDreamCommander(
+        opportunityId, 
+        ownerSubscriberId, 
+        bidRankResult, 
+        brandDiagnosticResult
+      );
+      
+      // Return the complete workflow result
+      return {
+        status: 'full_activation',
+        opportunityId,
+        bidRankResult,
+        brandDiagnosticResult,
+        dreamCommanderResult
+      };
+    } catch (error) {
+      console.error(`Error processing opportunity for owner ${ownerSubscriberId}:`, error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Store an opportunity in the database
+   * 
+   * @param {Object} opportunity Opportunity data
+   * @param {string} ownerSubscriberId Owner-subscriber ID
+   * @returns {Promise<string>} Opportunity ID
+   * @private
+   */
+  async _storeOpportunity(opportunity, ownerSubscriberId) {
+    try {
+      const opportunityData = {
+        ...opportunity,
+        ownerSubscriberId,
+        discovered: admin.firestore.FieldValue.serverTimestamp(),
+        status: 'discovered',
+        source: opportunity.source || 'manual',
+        processed: false
+      };
+      
+      const docRef = await this.collections.opportunities.add(opportunityData);
+      
+      return docRef.id;
+    } catch (error) {
+      console.error('Error storing opportunity:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Activate Dream Commander for opportunity processing
+   * 
+   * @param {string} opportunityId Opportunity ID
+   * @param {string} ownerSubscriberId Owner-subscriber ID
+   * @param {Object} bidRankResult Bid rank result
+   * @param {Object} brandDiagnosticResult Brand diagnostic result
+   * @returns {Promise<Object>} Dream Commander activation result
+   * @private
+   */
+  async _activateDreamCommander(opportunityId, ownerSubscriberId, bidRankResult, brandDiagnosticResult) {
+    try {
+      // If integrated with Symphony, use Dream Commander integration
+      if (this.config.dreamCommanderIntegration && this.symphonyIntegration) {
+        return await this.symphonyIntegration.activateDreamCommander(
+          opportunityId,
+          ownerSubscriberId,
+          bidRankResult,
+          brandDiagnosticResult
+        );
+      }
+      
+      // If standalone, create a simplified dream commander result
+      return {
+        status: 'activated',
+        decision: 'go',
+        opportunityId,
+        strategy: 'Opportunity meets all criteria for automated bid processing',
+        activated: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Error activating Dream Commander:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Initiate bid preparation with Co-Pilot
+   * 
+   * @param {string} opportunityId Opportunity ID
+   * @param {string} ownerSubscriberId Owner-subscriber ID
+   * @param {Object} dreamCommanderResult Dream Commander result
+   * @returns {Promise<Object>} Bid preparation result
+   */
+  async initiateBidPreparation(opportunityId, ownerSubscriberId, dreamCommanderResult) {
+    try {
+      // If integrated with Symphony, use Co-Pilot integration
+      if (this.symphonyIntegration) {
+        return await this.symphonyIntegration.activateCoPilotForBid(
+          opportunityId,
+          ownerSubscriberId,
+          dreamCommanderResult
+        );
+      }
+      
+      // If standalone, create a placeholder for bid preparation
+      // In real implementation, this would connect to a bid preparation service
+      
+      // Create a bid record
+      const bidData = {
+        opportunityId,
+        ownerSubscriberId,
+        status: 'preparation',
+        dreamCommanderDecision: dreamCommanderResult.decision,
+        created: admin.firestore.FieldValue.serverTimestamp(),
+        updated: admin.firestore.FieldValue.serverTimestamp()
+      };
+      
+      const bidRef = await this.collections.bids.add(bidData);
+      
+      return {
+        status: 'preparation_initiated',
+        bidId: bidRef.id,
+        opportunityId,
+        initiated: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Error initiating bid preparation:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Check bid quality and generate CIG-QA rating
+   * 
+   * @param {string} bidId Bid ID
+   * @returns {Promise<Object>} Quality check result
+   */
+  async checkBidQuality(bidId) {
+    return this.bidChecker.performQualityCheck(bidId);
+  }
+  
+  /**
+   * Submit a bid once approved
+   * 
+   * @param {string} bidId Bid ID
+   * @param {string} qrCodeData QR code authentication data
+   * @returns {Promise<Object>} Submission result
+   */
+  async submitBid(bidId, qrCodeData) {
+    return this.bidSubmitted.submitBid(bidId, qrCodeData);
+  }
+  
+  /**
+   * Get status of all bids for an owner-subscriber
+   * 
+   * @param {string} ownerSubscriberId Owner-subscriber ID
+   * @returns {Promise<Array>} List of bids with status
+   */
+  async getBidStatus(ownerSubscriberId) {
+    try {
+      const snapshot = await this.collections.bids
+        .where('ownerSubscriberId', '==', ownerSubscriberId)
+        .orderBy('updated', 'desc')
+        .get();
+      
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        created: doc.data().created ? doc.data().created.toDate().toISOString() : null,
+        updated: doc.data().updated ? doc.data().updated.toDate().toISOString() : null
+      }));
+    } catch (error) {
+      console.error('Error getting bid status:', error);
+      throw error;
+    }
+  }
+}
+
+/**
+ * Bid Seeker Module
+ * 
+ * Responsible for discovering opportunities across various procurement systems
+ */
+class BidSeeker {
+  constructor(core) {
+    this.core = core;
+    this.opportunities = core.collections.opportunities;
+  }
+  
+  /**
+   * Initialize the Bid Seeker
+   * 
+   * @returns {Promise<void>}
+   */
+  async initialize() {
+    // Initialization code here
+  }
+  
+  /**
+   * Search for opportunities across various sources
+   * 
+   * @param {Object} criteria Search criteria
+   * @param {string} ownerSubscriberId Owner-subscriber ID
+   * @returns {Promise<Array>} Discovered opportunities
+   */
+  async searchOpportunities(criteria, ownerSubscriberId) {
+    try {
+      // In a real implementation, this would connect to various procurement systems
+      // and search for opportunities based on the criteria
+      
+      // For now, return a sample opportunity
+      const opportunities = [this._createSampleOpportunity(criteria)];
+      
+      // Store the opportunities
+      const storedOpportunities = [];
+      
+      for (const opportunity of opportunities) {
+        const opportunityId = await this.core._storeOpportunity(opportunity, ownerSubscriberId);
+        storedOpportunities.push({
+          id: opportunityId,
+          ...opportunity
+        });
+      }
+      
+      return storedOpportunities;
+    } catch (error) {
+      console.error('Error searching for opportunities:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Create a sample opportunity (placeholder)
+   * 
+   * @param {Object} criteria Search criteria
+   * @returns {Object} Sample opportunity
+   * @private
+   */
+  _createSampleOpportunity(criteria) {
+    return {
+      title: `Sample Opportunity - ${new Date().toISOString()}`,
+      description: `This is a sample opportunity based on criteria: ${JSON.stringify(criteria)}`,
+      value: Math.floor(Math.random() * 1000000) + 50000,
+      deadline: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14).toISOString(),
+      source: 'sample',
+      requirements: [
+        'Professional experience in the field',
+        'Proven track record of success',
+        'Available to start within 30 days'
+      ],
+      location: criteria.location || 'Remote',
+      industry: criteria.industry || 'Technology'
+    };
+  }
+}
+
+/**
+ * Bid Rank Module
+ * 
+ * Evaluates opportunities and assigns a rank based on match quality
+ */
+class BidRank {
+  constructor(core) {
+    this.core = core;
+    this.bidRanks = core.collections.bidRanks;
+  }
+  
+  /**
+   * Initialize the Bid Rank module
+   * 
+   * @returns {Promise<void>}
+   */
+  async initialize() {
+    // Initialization code here
+  }
+  
+  /**
+   * Rank an opportunity for an owner-subscriber
+   * 
+   * @param {string} opportunityId Opportunity ID
+   * @param {string} ownerSubscriberId Owner-subscriber ID
+   * @returns {Promise<Object>} Ranking result
+   */
+  async rankOpportunity(opportunityId, ownerSubscriberId) {
+    try {
+      // Get the opportunity
+      const opportunity = await this.core.collections.opportunities.doc(opportunityId).get();
+      
+      if (!opportunity.exists) {
+        throw new Error(`Opportunity ${opportunityId} not found`);
+      }
+      
+      const opportunityData = opportunity.data();
+      
+      // In a real implementation, this would calculate a score based on:
+      // - Historical bid success (50%)
+      // - Delivery capabilities (25%)
+      // - Brand positioning (15%)
+      // - AIXTIV engagement (10%)
+      
+      // For this example, generate a score between 0 and 100
+      const score = Math.floor(Math.random() * 100);
+      const bidRankPositive = score >= 65;
+      
+      // Calculate component scores
+      const historicalScore = Math.floor(Math.random() * 100);
+      const deliveryScore = Math.floor(Math.random() * 100);
+      const brandScore = Math.floor(Math.random() * 100);
+      const engagementScore = Math.floor(Math.random() * 100);
+      
+      // Create the ranking data
+      const rankingData = {
+        opportunityId,
+        ownerSubscriberId,
+        overallScore: score,
+        bidRankPositive,
+        componentScores: {
+          historical: {
+            score: historicalScore,
+            weight: 0.50,
+            weightedScore: historicalScore * 0.50
+          },
+          delivery: {
+            score: deliveryScore,
+            weight: 0.25,
+            weightedScore: deliveryScore * 0.25
+          },
+          brand: {
+            score: brandScore,
+            weight: 0.15,
+            weightedScore: brandScore * 0.15
+          },
+          engagement: {
+            score: engagementScore,
+            weight: 0.10,
+            weightedScore: engagementScore * 0.10
+          }
+        },
+        opportunity: {
+          title: opportunityData.title,
+          value: opportunityData.value,
+          deadline: opportunityData.deadline
+        },
+        created: admin.firestore.FieldValue.serverTimestamp()
+      };
+      
+      // Store the ranking
+      const rankingRef = await this.bidRanks.add(rankingData);
+      
+      // Update the opportunity with the ranking
+      await this.core.collections.opportunities.doc(opportunityId).update({
+        bidRankId: rankingRef.id,
+        bidRankScore: score,
+        bidRankPositive,
+        status: bidRankPositive ? 'ranked_positive' : 'ranked_negative',
+        processed: true,
+        updated: admin.firestore.FieldValue.serverTimestamp()
+      });
+      
+      return {
+        id: rankingRef.id,
+        ...rankingData,
+        created: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Error ranking opportunity:', error);
+      throw error;
+    }
+  }
+}
+
+/**
+ * Brand Builder Module
+ * 
+ * Diagnoses brand readiness and builds brand assets for opportunities
+ */
+class BrandBuilder {
+  constructor(core) {
+    this.core = core;
+    this.brandDiagnostics = core.collections.brandDiagnostics;
+  }
+  
+  /**
+   * Initialize the Brand Builder module
+   * 
+   * @returns {Promise<void>}
+   */
+  async initialize() {
+    // Initialization code here
+  }
+  
+  /**
+   * Perform a brand diagnostic for an opportunity
+   * 
+   * @param {string} opportunityId Opportunity ID
+   * @param {string} ownerSubscriberId Owner-subscriber ID
+   * @returns {Promise<Object>} Diagnostic result
+   */
+  async performDiagnostic(opportunityId, ownerSubscriberId) {
+    try {
+      // Get the opportunity
+      const opportunity = await this.core.collections.opportunities.doc(opportunityId).get();
+      
+      if (!opportunity.exists) {
+        throw new Error(`Opportunity ${opportunityId} not found`);
+      }
+      
+      const opportunityData = opportunity.data();
+      
+      // In a real implementation, this would evaluate:
+      // - Brand alignment with opportunity
+      // - Content assets relevant to opportunity
+      // - Online presence in relevant industry
+      // - Thought leadership position
+      
+      // For this example, generate a score between 0 and 100
+      const score = Math.floor(Math.random() * 100);
+      const brandPositive = score >= 70;
+      
+      // Create diagnostic data
+      const diagnosticData = {
+        opportunityId,
+        ownerSubscriberId,
+        overallScore: score,
+        brandPositive,
+        areas: {
+          alignment: {
+            score: Math.floor(Math.random() * 100),
+            feedback: 'Brand messaging alignment with opportunity requirements'
+          },
+          content: {
+            score: Math.floor(Math.random() * 100),
+            feedback: 'Relevant content assets for opportunity domain'
+          },
+          presence: {
+            score: Math.floor(Math.random() * 100),
+            feedback: 'Online presence in target industry'
+          },
+          leadership: {
+            score: Math.floor(Math.random() * 100),
+            feedback: 'Thought leadership position in domain'
+          }
+        },
+        opportunity: {
+          title: opportunityData.title,
+          industry: opportunityData.industry
+        },
+        created: admin.firestore.FieldValue.serverTimestamp()
+      };
+      
+      // Store the diagnostic
+      const diagnosticRef = await this.brandDiagnostics.add(diagnosticData);
+      
+      // Update the opportunity with the diagnostic
+      await this.core.collections.opportunities.doc(opportunityId).update({
+        brandDiagnosticId: diagnosticRef.id,
+        brandDiagnosticScore: score,
+        brandPositive,
+        status: brandPositive 
+          ? 'brand_positive' 
+          : 'brand_building_needed',
+        updated: admin.firestore.FieldValue.serverTimestamp()
+      });
+      
+      return {
+        id: diagnosticRef.id,
+        ...diagnosticData,
+        created: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Error performing brand diagnostic:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Create a brand building plan
+   * 
+   * @param {string} opportunityId Opportunity ID
+   * @param {string} ownerSubscriberId Owner-subscriber ID
+   * @param {Object} diagnosticResult Diagnostic result
+   * @returns {Promise<Object>} Brand building plan
+   */
+  async createBuildingPlan(opportunityId, ownerSubscriberId, diagnosticResult) {
+    try {
+      // In a real implementation, this would generate a detailed plan
+      // based on the specific weaknesses identified in the diagnostic
+      
+      // For this example, create a simple plan
+      const plan = {
+        opportunityId,
+        ownerSubscriberId,
+        diagnosticId: diagnosticResult.id,
+        actions: []
+      };
+      
+      // Add actions based on low scores in diagnostic areas
+      Object.entries(diagnosticResult.areas).forEach(([area, details]) => {
+        if (details.score < 70) {
+          plan.actions.push({
+            area,
+            action: `Strengthen ${area} with targeted content and positioning`,
+            priority: details.score < 50 ? 'high' : 'medium',
+            estimatedTimeframe: '2-3 weeks'
+          });
+        }
+      });
+      
+      // If no specific actions, add general recommendation
+      if (plan.actions.length === 0) {
+        plan.actions.push({
+          area: 'general',
+          action: 'General brand strengthening recommended',
+          priority: 'medium',
+          estimatedTimeframe: '1-2 weeks'
+        });
+      }
+      
+      return plan;
+    } catch (error) {
+      console.error('Error creating brand building plan:', error);
+      throw error;
+    }
+  }
+}
+
+/**
+ * Bid Checker Module
+ * 
+ * Performs quality checks on prepared bids
+ */
+class BidChecker {
+  constructor(core) {
+    this.core = core;
+    this.qualityReports = core.collections.bidQualityReports;
+  }
+  
+  /**
+   * Initialize the Bid Checker module
+   * 
+   * @returns {Promise<void>}
+   */
+  async initialize() {
+    // Initialization code here
+  }
+  
+  /**
+   * Perform a quality check on a prepared bid
+   * 
+   * @param {string} bidId Bid ID
+   * @returns {Promise<Object>} Quality check result
+   */
+  async performQualityCheck(bidId) {
+    try {
+      // Get the bid
+      const bid = await this.core.collections.bids.doc(bidId).get();
+      
+      if (!bid.exists) {
+        throw new Error(`Bid ${bidId} not found`);
+      }
+      
+      const bidData = bid.data();
+      
+      // In a real implementation, this would:
+      // - Verify compliance with all requirements
+      // - Check for completeness
+      // - Assess quality of responses
+      // - Verify brand representation
+      
+      // For this example, perform a simulated check
+      const checkResult = this._simulateQualityCheck();
+      
+      // Create quality report
+      const reportData = {
+        bidId,
+        opportunityId: bidData.opportunityId,
+        ownerSubscriberId: bidData.ownerSubscriberId,
+        checkResult,
+        cigQaRating: checkResult.passedCigQa 
+          ? 'GOLD' 
+          : (checkResult.overallScore > 90 ? 'SILVER' : 'NEEDS IMPROVEMENT'),
+        created: admin.firestore.FieldValue.serverTimestamp(),
+        checkCount: 1
+      };
+      
+      // Store the quality report
+      const reportRef = await this.qualityReports.add(reportData);
+      
+      // Update the bid with the quality check result
+      await this.core.collections.bids.doc(bidId).update({
+        qualityReportId: reportRef.id,
+        qualityScore: checkResult.overallScore,
+        cigQaRating: reportData.cigQaRating,
+        status: checkResult.passedCigQa ? 'ready_for_submission' : 'needs_improvement',
+        updated: admin.firestore.FieldValue.serverTimestamp()
+      });
+      
+      return {
+        id: reportRef.id,
+        ...reportData,
+        created: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Error performing quality check:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Simulate a quality check (placeholder)
+   * 
+   * @returns {Object} Simulated check result
+   * @private
+   */
+  _simulateQualityCheck() {
+    // Generate a score between 90 and 100 to simulate a high-quality check
+    const overallScore = 90 + Math.floor(Math.random() * 10);
+    
+    // CIG-QA requires 99.99% accuracy (99.9 score)
+    const passedCigQa = overallScore >= 99.9;
+    
+    return {
+      overallScore,
+      passedCigQa,
+      checkItems: [
+        {
+          category: 'Compliance',
+          score: Math.min(100, Math.floor(Math.random() * 10) + 90),
+          feedback: 'All requirements addressed'
+        },
+        {
+          category: 'Completeness',
+          score: Math.min(100, Math.floor(Math.random() * 10) + 90),
+          feedback: 'All sections completed with appropriate detail'
+        },
+        {
+          category: 'Quality',
+          score: Math.min(100, Math.floor(Math.random() * 10) + 90),
+          feedback: 'Responses are clear, concise, and compelling'
+        },
+        {
+          category: 'Brand',
+          score: Math.min(100, Math.floor(Math.random() * 10) + 90),
+          feedback: 'Brand representation is consistent and appropriate'
+        }
+      ],
+      improvementAreas: passedCigQa 
+        ? [] 
+        : [
+            'Minor formatting inconsistencies',
+            'Some responses could be more detailed'
+          ]
+    };
+  }
+}
+
+/**
+ * Bid Submitted Module
+ * 
+ * Handles the submission of approved bids
+ */
+class BidSubmitted {
+  constructor(core) {
+    this.core = core;
+    this.submissions = core.collections.bidSubmissions;
+  }
+  
+  /**
+   * Initialize the Bid Submitted module
+   * 
+   * @returns {Promise<void>}
+   */
+  async initialize() {
+    // Initialization code here
+  }
+  
+  /**
+   * Submit a bid once approved
+   * 
+   * @param {string} bidId Bid ID
+   * @param {string} qrCodeData QR code authentication data
+   * @returns {Promise<Object>} Submission result
+   */
+  async submitBid(bidId, qrCodeData) {
+    try {
+      // Get the bid
+      const bid = await this.core.collections.bids.doc(bidId).get();
+      
+      if (!bid.exists) {
+        throw new Error(`Bid ${bidId} not found`);
+      }
+      
+      const bidData = bid.data();
+      
+      // Verify the QR code authorization
+      // In a real implementation, this would verify the blockchain signature
+      
+      // Create submission record
+      const submissionData = {
+        bidId,
+        opportunityId: bidData.opportunityId,
+        ownerSubscriberId: bidData.ownerSubscriberId,
+        qrCodeData,
+        submittedAt: admin.firestore.FieldValue.serverTimestamp(),
+        status: 'submitted',
+        confirmationReceived: false
+      };
+      
+      // Store the submission
+      const submissionRef = await this.submissions.add(submissionData);
+      
+      // Update the bid status
+      await this.core.collections.bids.doc(bidId).update({
+        submissionId: submissionRef.id,
+        status: 'submitted',
+        submittedAt: admin.firestore.FieldValue.serverTimestamp(),
+        updated: admin.firestore.FieldValue.serverTimestamp()
+      });
+      
+      // Simulate submission confirmation
+      setTimeout(async () => {
+        try {
+          await this.submissions.doc(submissionRef.id).update({
+            confirmationReceived: true,
+            confirmationTimestamp: admin.firestore.FieldValue.serverTimestamp(),
+            confirmationId: `CONF-${Date.now()}`
+          });
+          
+          await this.core.collections.bids.doc(bidId).update({
+            status: 'submission_confirmed',
+            updated: admin.firestore.FieldValue.serverTimestamp()
+          });
+        } catch (error) {
+          console.error('Error updating submission confirmation:', error);
+        }
+      }, 5000);
+      
+      return {
+        id: submissionRef.id,
+        bidId,
+        opportunityId: bidData.opportunityId,
+        submittedAt: new Date().toISOString(),
+        status: 'submitted'
+      };
+    } catch (error) {
+      console.error('Error submitting bid:', error);
+      throw error;
+    }
+  }
+}
+
+/**
+ * Bid Win Module
+ * 
+ * Monitors bid status and handles outcomes
+ */
+class BidWin {
+  constructor(core) {
+    this.core = core;
+    this.monitoring = core.collections.bidMonitoring;
+  }
+  
+  /**
+   * Initialize the Bid Win module
+   * 
+   * @returns {Promise<void>}
+   */
+  async initialize() {
+    // Initialization code here
+  }
+  
+  /**
+   * Start monitoring a submitted bid
+   * 
+   * @param {string} submissionId Submission ID
+   * @returns {Promise<Object>} Monitoring status
+   */
+  async startMonitoring(submissionId) {
+    try {
+      // Get the submission
+      const submission = await this.core.collections.bidSubmissions.doc(submissionId).get();
+      
+      if (!submission.exists) {
+        throw new Error(`Submission ${submissionId} not found`);
+      }
+      
+      const submissionData = submission.data();
+      
+      // Create monitoring record
+      const monitoringData = {
+        submissionId,
+        bidId: submissionData.bidId,
+        opportunityId: submissionData.opportunityId,
+        ownerSubscriberId: submissionData.ownerSubscriberId,
+        status: 'monitoring',
+        monitoringStartedAt: admin.firestore.FieldValue.serverTimestamp(),
+        lastCheckedAt: admin.firestore.FieldValue.serverTimestamp(),
+        checkCount: 1,
+        queries: [],
+        meetings: []
+      };
+      
+      // Store the monitoring record
+      const monitoringRef = await this.monitoring.add(monitoringData);
+      
+      // Update the submission with monitoring info
+      await this.core.collections.bidSubmissions.doc(submissionId).update({
+        monitoringId: monitoringRef.id,
+        monitoringStartedAt: admin.firestore.FieldValue.serverTimestamp()
+      });
+      
+      return {
+        id: monitoringRef.id,
+        status: 'monitoring',
+        monitoringStartedAt: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Error starting bid monitoring:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Update bid status with outcome
+   * 
+   * @param {string} monitoringId Monitoring ID
+   * @param {string} outcome Outcome (win, loss, negotiation)
+   * @param {Object} details Outcome details
+   * @returns {Promise<Object>} Updated status
+   */
+  async updateBidOutcome(monitoringId, outcome, details = {}) {
+    try {
+      // Get the monitoring record
+      const monitoring = await this.monitoring.doc(monitoringId).get();
+      
+      if (!monitoring.exists) {
+        throw new Error(`Monitoring record ${monitoringId} not found`);
+      }
+      
+      const monitoringData = monitoring.data();
+      
+      // Validate outcome
+      if (!['win', 'loss', 'negotiation'].includes(outcome)) {
+        throw new Error(`Invalid outcome: ${outcome}`);
+      }
+      
+      // Update monitoring record
+      await this.monitoring.doc(monitoringId).update({
+        status: `outcome_${outcome}`,
+        outcome,
+        outcomeDetails: details,
+        outcomeReceivedAt: admin.firestore.FieldValue.serverTimestamp(),
+        updated: admin.firestore.FieldValue.serverTimestamp()
+      });
+      
+      // Update bid record
+      await this.core.collections.bids.doc(monitoringData.bidId).update({
+        status: `outcome_${outcome}`,
+        outcome,
+        outcomeDetails: details,
+        outcomeReceivedAt: admin.firestore.FieldValue.serverTimestamp(),
+        updated: admin.firestore.FieldValue.serverTimestamp()
+      });
+      
+      // Trigger appropriate protocol based on outcome
+      let protocolResult;
+      
+      switch (outcome) {
+        case 'win':
+          protocolResult = await this._activateWinProtocol(monitoringData.bidId, details);
+          break;
+        case 'loss':
+          protocolResult = await this._activateFeedbackLoop(monitoringData.bidId, details);
+          break;
+        case 'negotiation':
+          protocolResult = await this._activateRenegotiationProtocol(monitoringData.bidId, details);
+          break;
+      }
+      
+      return {
+        monitoringId,
+        bidId: monitoringData.bidId,
+        outcome,
+        protocolResult,
+        updated: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Error updating bid outcome:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Activate win protocol
+   * 
+   * @param {string} bidId Bid ID
+   * @param {Object} details Win details
+   * @returns {Promise<Object>} Protocol result
+   * @private
+   */
+  async _activateWinProtocol(bidId, details) {
+    try {
+      // In a real implementation, this would:
+      // - Prepare implementation planning
+      // - Allocate resources
+      // - Set up project tracking
+      
+      // For this example, return a simple result
+      return {
+        protocol: 'win',
+        status: 'activated',
+        nextSteps: [
+          'Project implementation planning',
+          'Resource allocation',
+          'Project tracking setup'
+        ]
+      };
+    } catch (error) {
+      console.error('Error activating win protocol:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Activate feedback loop for loss
+   * 
+   * @param {string} bidId Bid ID
+   * @param {Object} details Loss details
+   * @returns {Promise<Object>} Protocol result
+   * @private
+   */
+  async _activateFeedbackLoop(bidId, details) {
+    try {
+      // In a real implementation, this would:
+      // - Analyze feedback
+      // - Identify improvement areas
+      // - Update learning system
+      
+      // For this example, return a simple result
+      return {
+        protocol: 'feedback',
+        status: 'activated',
+        learningAreas: [
+          'Response quality',
+          'Pricing strategy',
+          'Technical approach'
+        ]
+      };
+    } catch (error) {
+      console.error('Error activating feedback loop:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Activate renegotiation protocol
+   * 
+   * @param {string} bidId Bid ID
+   * @param {Object} details Negotiation details
+   * @returns {Promise<Object>} Protocol result
+   * @private
+   */
+  async _activateRenegotiationProtocol(bidId, details) {
+    try {
+      // In a real implementation, this would:
+      // - Prepare negotiation strategy
+      // - Identify flexibility points
+      // - Set up negotiation support
+      
+      // For this example, return a simple result
+      return {
+        protocol: 'renegotiation',
+        status: 'activated',
+        negotiationAreas: [
+          'Scope adjustment',
+          'Timeline flexibility',
+          'Pricing options'
+        ]
+      };
+    } catch (error) {
+      console.error('Error activating renegotiation protocol:', error);
+      throw error;
+    }
+  }
+}
+
+/**
+ * Symphony Integration
+ * 
+ * Handles integration with AIXTIV Symphony components
+ */
+class SymphonyIntegration {
+  constructor(core) {
+    this.core = core;
+    this.config = core.config;
+  }
+  
+  /**
+   * Initialize the Symphony integration
+   * 
+   * @returns {Promise<void>}
+   */
+  async initialize() {
+    // Initialization code here
+  }
+  
+  /**
+   * Activate Dream Commander for bid processing
+   * 
+   * @param {string} opportunityId Opportunity ID
+   * @param {string} ownerSubscriberId Owner-subscriber ID
+   * @param {Object} bidRankResult Bid rank result
+   * @param {Object} brandDiagnosticResult Brand diagnostic result
+   * @returns {Promise<Object>} Dream Commander result
+   */
+  async activateDreamCommander(opportunityId, ownerSubscriberId, bidRankResult, brandDiagnosticResult) {
+    try {
+      // In a real implementation, this would call the Dream Commander API
+      
+      // For this example, simulate a Dream Commander response
+      const dreamCommanderDecision = Math.random() > 0.2 ? 'go' : 'no-go';
+      
+      return {
+        status: 'activated',
+        decision: dreamCommanderDecision,
+        opportunityId,
+        strategy: `Dream Commander has analyzed this opportunity and determined it is a ${dreamCommanderDecision} based on bid rank and brand diagnostics.`,
+        confidenceScore: Math.floor(Math.random() * 30) + 70,
+        activated: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Error activating Dream Commander:', error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Activate Co-Pilot for bid preparation
+   * 
+   * @param {string} opportunityId Opportunity ID
+   * @param {string} ownerSubscriberId Owner-subscriber ID
+   * @param {Object} dreamCommanderResult Dream Commander result
+   * @returns {Promise<Object>} Co-Pilot activation result
+   */
+  async activateCoPilotForBid(opportunityId, ownerSubscriberId, dreamCommanderResult) {
+    try {
+      // In a real implementation, this would call the Co-Pilot API
+      
+      // For this example, simulate a Co-Pilot activation
+      
+      // Get the opportunity
+      const opportunity = await this.core.collections.opportunities.doc(opportunityId).get();
+      
+      if (!opportunity.exists) {
+        throw new Error(`Opportunity ${opportunityId} not found`);
+      }
+      
+      const opportunityData = opportunity.data();
+      
+      // Create a bid record
+      const bidData = {
+        opportunityId,
+        ownerSubscriberId,
+        status: 'preparation',
+        dreamCommanderDecision: dreamCommanderResult.decision,
+        title: opportunityData.title,
+        value: opportunityData.value,
+        deadline: opportunityData.deadline,
+        created: admin.firestore.FieldValue.serverTimestamp(),
+        updated: admin.firestore.FieldValue.serverTimestamp()
+      };
+      
+      const bidRef = await this.core.collections.bids.add(bidData);
+      
+      return {
+        status: 'co_pilot_activated',
+        bidId: bidRef.id,
+        opportunityId,
+        ownerSubscriberId,
+        estimatedCompletion: new Date(Date.now() + 1000 * 60 * 60 * 24).toISOString(), // 24 hours
+        activated: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Error activating Co-Pilot for bid:', error);
+      throw error;
+    }
+  }
+}
+
+// Create Express API for Bid Suite
+const express = require('express');
+const app = express();
+app.use(cors({ origin: true }));
+app.use(express.json());
+
+/**
+ * Create and export Bid Suite API
+ * 
+ * @param {Object} config Configuration options
+ * @returns {Object} Express app and core service
+ */
+function createBidSuiteApi(config = {}) {
+  // Initialize the core
+  const bidSuiteCore = new BidSuiteCore(config);
+  
+  // Initialize controllers
+  const bidSeekerController = require('./controllers/bid-seeker-controller')(bidSuiteCore);
+  const bidRankController = require('./controllers/bid-rank-controller')(bidSuiteCore);
+  const brandBuilderController = require('./controllers/brand-builder-controller')(bidSuiteCore);
+  const bidCheckerController = require('./controllers/bid-checker-controller')(bidSuiteCore);
+  const bidSubmittedController = require('./controllers/bid-submitted-controller')(bidSuiteCore);
+  const bidWinController = require('./controllers/bid-win-controller')(bidSuiteCore);
+  
+  // Define routes
+  app.use('/api/bid-seeker', bidSeekerController);
+  app.use('/api/bid-rank', bidRankController);
+  app.use('/api/brand-builder', brandBuilderController);
+  app.use('/api/bid-checker', bidCheckerController);
+  app.use('/api/bid-submitted', bidSubmittedController);
+  app.use('/api/bid-win', bidWinController);
+  
+  return {
+    app,
+    core: bidSuiteCore
+  };
+}
+
+// Export module
+module.exports = {
+  BidSuiteCore,
+  BidSeeker,
+  BidRank,
+  BrandBuilder,
+  BidChecker,
+  BidSubmitted,
+  BidWin,
+  SymphonyIntegration,
+  createBidSuiteApi
+};

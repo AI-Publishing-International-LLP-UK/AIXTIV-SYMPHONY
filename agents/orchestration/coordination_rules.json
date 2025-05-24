@@ -48,7 +48,11 @@
     },
     "optimization": {
       "strategy": "adaptive",
-      "metrics": ["response_time", "resource_utilization", "task_completion_rate"]
+      "metrics": [
+        "response_time",
+        "resource_utilization",
+        "task_completion_rate"
+      ]
     }
   },
   "security_policies": {
@@ -62,4 +66,3 @@
     }
   }
 }
-

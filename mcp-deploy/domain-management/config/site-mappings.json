@@ -1,0 +1,47 @@
+{
+  "domainMappings": {
+    "coaching2100.com": {
+      "primarySite": "coaching2100",
+      "alternateSites": [
+        "coaching2100-com",
+        "api-for-warp-drive-coaching2100-com"
+      ]
+    },
+    "vision.coaching2100.com": {
+      "primarySite": "vision-coaching-domain",
+      "alternateSites": []
+    },
+    "2100.cool": {
+      "primarySite": "2100-cool",
+      "alternateSites": []
+    },
+    "aixtiv-symphony.com": {
+      "primarySite": "aixtiv-symphony-opus1",
+      "alternateSites": []
+    },
+    "*.2100.cool": {
+      "primarySite": "specialty-domains",
+      "alternateSites": ["regional-domains"]
+    },
+    "*.coaching2100.com": {
+      "primarySite": "coaching2100",
+      "alternateSites": []
+    },
+    "*.aixtiv-symphony.com": {
+      "primarySite": "aixtiv-symphony-opus1",
+      "alternateSites": []
+    }
+  },
+  "siteGroups": {
+    "coaching": ["coaching2100", "coaching2100-com", "vision-coaching-domain"],
+    "aixtiv": [
+      "aixtiv-symphony-opus1",
+      "aixtiv-symphony-opus2",
+      "aixtiv-symphony-opus3"
+    ],
+    "platforms": ["primary-platforms", "community-groups", "knowledge-content"],
+    "regional": ["regional-domains", "specialty-domains"],
+    "characters": ["ai-pilot-agents", "professional-dev"]
+  },
+  "defaultSite": "api-for-warp-drive"
+}

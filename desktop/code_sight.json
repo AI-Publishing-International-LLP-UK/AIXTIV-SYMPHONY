@@ -1,0 +1,29 @@
+{
+  "id": {
+    "name": "Code Sight user config",
+    "location": "/Users/as/asoos/desktop/code_sight.json"
+  },
+  "proxyConfig": {
+    "noProxy": {
+      "value": true
+    },
+    "useSystemProxy": {},
+    "bypassHosts": {}
+  },
+  "buildToolConfig": {
+    "java": {}
+  },
+  "bridgeConfig": {
+    "source": {
+      "type": 5,
+      "location": "/Users/as/asoos/desktop/code_sight.json"
+    },
+    "scanTypes": [
+      0,
+      1
+    ]
+  },
+  "telemetryConfig": {
+    "telemetryEnabled": {}
+  }
+}

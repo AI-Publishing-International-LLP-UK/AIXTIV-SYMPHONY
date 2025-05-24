@@ -1,0 +1,78 @@
+---
+# Synthesia Video Template Configuration
+version: 1.0
+content_type: elearning
+
+# Video Settings
+video_format:
+  aspect_ratio: 16:9
+  resolution: 1080p
+  duration_limit: 1200  # 20 minutes max per segment
+
+# AI Presenter Settings
+presenter:
+  default_avatar: "Anna"  # Professional female presenter
+  backup_avatar: "James"  # Professional male presenter
+  speaking_style: "conversational"
+  language: "en-US"
+  voice_style: "professional"
+
+# Scene Structure
+scene_template:
+  - intro:
+      duration: 20
+      script_structure: |
+        Welcome to ${MODULE_TITLE}
+        I'm ${PRESENTER_NAME}, and today we'll explore ${TOPIC}
+        
+  - main_content:
+      segments:
+        - key_concept:
+            duration: 180
+            visual_type: "slide_with_presenter"
+            
+        - demonstration:
+            duration: 240
+            visual_type: "full_screen_demo"
+            
+        - practice:
+            duration: 180
+            visual_type: "interactive_element"
+            
+  - summary:
+      duration: 60
+      script_structure: |
+        Let's recap what we've learned about ${TOPIC}
+        ${KEY_POINTS}
+        
+# Visual Elements
+visual_templates:
+  - type: "title_slide"
+    background: "gradient_blue"
+    text_position: "center"
+    
+  - type: "content_slide"
+    layout: "split_screen"
+    presenter_position: "right"
+    
+  - type: "demo_slide"
+    layout: "full_screen"
+    overlay_position: "bottom_third"
+
+# Interactivity Elements
+interactive_elements:
+  - type: "multiple_choice"
+    timing: "post_concept"
+    display: "overlay"
+    
+  - type: "knowledge_check"
+    timing: "end_of_section"
+    display: "full_screen"
+
+# Background Music
+audio:
+  background_track: "corporate_calm"
+  volume_level: 0.1
+  fade_points:
+    - intro_end
+    - summary_start

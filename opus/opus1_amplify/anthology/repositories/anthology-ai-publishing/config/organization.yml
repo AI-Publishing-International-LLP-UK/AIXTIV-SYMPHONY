@@ -1,0 +1,17 @@
+organization:
+  name: Coaching 2100
+  domain: coaching2100.com
+  project_id: api-for-warp-drive
+  roles:
+    owner:
+      email: pr@coaching2100.com
+      permissions: [admin, billing, owner]
+    editor:
+      email: dk@coaching2100.com
+      permissions: [edit, deploy, manage]
+
+project:
+  id: api-for-warp-drive
+  region: us-west1
+  cluster_name: coaching2100-cluster
+  default_branch: main

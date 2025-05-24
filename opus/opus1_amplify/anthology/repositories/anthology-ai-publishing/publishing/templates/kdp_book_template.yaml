@@ -1,0 +1,89 @@
+version: 1.0
+name: kdp_book_template
+
+metadata:
+  formats:
+    - paperback
+    - kindle_ebook
+    - hardcover
+  
+  dimensions:
+    paperback:
+      - name: standard
+        width: 6
+        height: 9
+        trim: 0.125
+      - name: large_format
+        width: 8.5
+        height: 11
+        trim: 0.125
+    
+    hardcover:
+      - name: standard
+        width: 6
+        height: 9
+        trim: 0.125
+
+content_structure:
+  front_matter:
+    - title_page
+    - copyright_page
+    - dedication
+    - table_of_contents
+    
+  main_content:
+    - chapters
+    - sections
+    
+  back_matter:
+    - about_author
+    - acknowledgments
+    - appendices
+
+formatting:
+  fonts:
+    body_text: Garamond
+    headings: Helvetica
+    
+  margins:
+    inner: 0.75
+    outer: 0.5
+    top: 0.5
+    bottom: 0.5
+    
+  layout:
+    chapter_start: right_page
+    headers: true
+    footers: true
+    page_numbers: true
+
+cover_specs:
+  formats:
+    paperback:
+      dpi: 300
+      color_space: CMYK
+      bleed: 0.125
+      spine_width: "{{ page_count / 444 }}"  # Formula for white paper
+      
+    kindle:
+      dpi: 300
+      color_space: RGB
+      dimensions:
+        height: 2560
+        width: 1600
+        
+marketing:
+  categories:
+    primary: "Business & Money"
+    secondary: "Entrepreneurship"
+  
+  keywords:
+    max_count: 7
+    requirements:
+      - relevant
+      - specific
+      - descriptive
+      
+  description:
+    short: 150
+    long: 2000

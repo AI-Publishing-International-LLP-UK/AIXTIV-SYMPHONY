@@ -1,14 +1,363 @@
-<\!DOCTYPE html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>ASOOS 2100</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASOOS.2100.COOL | Aixtiv Symphony Opus</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="css/interface.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
-<h1>ASOOS 2100</h1>
-<p>This is a simple test page to verify Firebase hosting is working correctly.</p>
-<p>Current time: <span id="time"></span></p>
-<script>
-  document.getElementById('time').textContent = new Date().toLocaleString();
-</script>
+    <!-- ASOOS Navigation System -->
+    <div id="side-nav"></div>
+    <div id="bottom-nav"></div>
+    
+    <!-- Main Platform Interface -->
+    <div id="platform-interface" class="hidden">
+        <!-- This will be populated dynamically based on navigation -->
+        <div id="anthology-panel" class="interface-panel">
+            <h2>Anthology</h2>
+            <div class="anthology-content">
+                <div class="anthology-ai-personas">
+                    <div class="persona-selector">
+                        <div class="persona active" data-persona="dr-memoria">
+                            <img src="images/dr-memoria-avatar.png" onerror="this.src='https://via.placeholder.com/60?text=DM'" alt="Dr. Memoria">
+                            <span>Dr. Memoria</span>
+                        </div>
+                        <div class="persona" data-persona="dr-match">
+                            <img src="images/dr-match-avatar.png" onerror="this.src='https://via.placeholder.com/60?text=DMatch'" alt="Dr. Match">
+                            <span>Dr. Match</span>
+                        </div>
+                        <div class="persona" data-persona="co-pilot">
+                            <img src="images/co-pilot-avatar.png" onerror="this.src='https://via.placeholder.com/60?text=CP'" alt="Co-Pilot">
+                            <span>Co-Pilot</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="anthology-framework">
+                    <h3>Roark's 5.0 Authorship Framework</h3>
+                    <p class="framework-description">
+                        Automated publications that combine your ideas, voice, commentaries, and deep experience with our research and framing to create professional content ready for publication.
+                    </p>
+                    
+                    <div class="framework-stages">
+                        <div class="stage">
+                            <div class="stage-icon"><i class="fas fa-lightbulb"></i></div>
+                            <div class="stage-content">
+                                <h4>Ideation</h4>
+                                <p>Capture your expertise and unique perspective</p>
+                            </div>
+                        </div>
+                        <div class="stage-connector"><i class="fas fa-arrow-right"></i></div>
+                        <div class="stage">
+                            <div class="stage-icon"><i class="fas fa-pen-fancy"></i></div>
+                            <div class="stage-content">
+                                <h4>Composition</h4>
+                                <p>Structure and refine with AI assistance</p>
+                            </div>
+                        </div>
+                        <div class="stage-connector"><i class="fas fa-arrow-right"></i></div>
+                        <div class="stage">
+                            <div class="stage-icon"><i class="fas fa-book"></i></div>
+                            <div class="stage-content">
+                                <h4>Production</h4>
+                                <p>Format for your chosen publication channels</p>
+                            </div>
+                        </div>
+                        <div class="stage-connector"><i class="fas fa-arrow-right"></i></div>
+                        <div class="stage">
+                            <div class="stage-icon"><i class="fas fa-globe"></i></div>
+                            <div class="stage-content">
+                                <h4>Publication</h4>
+                                <p>Distribute through our platform or yours</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="anthology-content-types">
+                    <h3>Publication Types</h3>
+                    <div class="content-type-grid">
+                        <div class="content-type">
+                            <i class="fas fa-book"></i>
+                            <h4>Books</h4>
+                            <p>Full-length manuscripts with KDP integration</p>
+                        </div>
+                        <div class="content-type">
+                            <i class="fas fa-file-alt"></i>
+                            <h4>Research Papers</h4>
+                            <p>Academic and professional papers with citations</p>
+                        </div>
+                        <div class="content-type">
+                            <i class="fas fa-chart-line"></i>
+                            <h4>Reports</h4>
+                            <p>Data-driven business and industry analysis</p>
+                        </div>
+                        <div class="content-type">
+                            <i class="fas fa-presentation"></i>
+                            <h4>Presentations</h4>
+                            <p>Professional slide decks with speaker notes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="anthology-prompt">
+                    <textarea placeholder="What would you like to create today? Dr. Memoria's Anthology can help bring your publication ideas to life..."></textarea>
+                    <button class="submit-btn"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="bidsuite-panel" class="interface-panel">
+            <h2>BidSuite</h2>
+            <div class="bidsuite-content">
+                <p>Access your BidSuite dashboard and manage your proposals.</p>
+            </div>
+        </div>
+        
+        <!-- Additional panels will be added for each navigation item -->
+    </div>
+    
+    <header>
+        <div class="container flex justify-between items-center">
+            <div class="logo">
+                <div class="anthology-header-logo">
+                    <img src="images/dr-memoria-avatar.png" onerror="this.src='https://via.placeholder.com/50?text=DM'" alt="Dr. Memoria" class="dr-memoria-avatar">
+                    <span>Dr. Memoria's Anthology</span>
+                </div>
+            </div>
+            <nav>
+                <ul>
+                    <li><span class="nav-item" data-section="ai-publishing">AI Automated Publishing</span></li>
+                    <li><span class="nav-item" data-section="workflow">Workflow Automations</span></li>
+                    <li><span class="nav-item" data-section="account">Account</span></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Welcome to ASOOS.2100.COOL</h1>
+            <p>Aixtiv Symphony Orchestrating Operating System - A comprehensive agent-driven human-centric amplification ecosystem</p>
+            <div class="flex justify-center" style="gap: 1rem;">
+                <a href="#get-started" class="btn btn-secondary">Get Started</a>
+                <a href="#learn-more" class="btn btn-primary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2 class="text-center">Key Features</h2>
+            <p class="text-center">Discover the powerful capabilities of our platform</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI Integration</h3>
+                    <p>Seamlessly integrate with advanced AI models to enhance productivity</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure Infrastructure</h3>
+                    <p>Enterprise-grade security with SallyPort protection</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Advanced Analytics</h3>
+                    <p>Gain insights with powerful data visualization and reporting</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about" style="padding: 5rem 0; background-color: var(--color-light-gray);">
+        <div class="container">
+            <h2 class="text-center">About ASOOS.2100.COOL</h2>
+            <p class="text-center" style="max-width: 800px; margin: 0 auto 3rem;">
+                The Aixtiv Symphony Orchestrating Operating System (ASOOS) is a comprehensive platform designed to amplify human potential through responsible AI integration.
+            </p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                <div style="text-align: center;">
+                    <i class="fas fa-users" style="font-size: 3rem; color: var(--color-royal-blue); margin-bottom: 1rem;"></i>
+                    <h3>Our Mission</h3>
+                    <p>To create AI-powered tools that enhance human capabilities while maintaining human oversight and ethical principles.</p>
+                </div>
+                
+                <div style="text-align: center;">
+                    <i class="fas fa-lightbulb" style="font-size: 3rem; color: var(--color-royal-blue); margin-bottom: 1rem;"></i>
+                    <h3>Our Vision</h3>
+                    <p>A world where AI and human intelligence work together harmoniously to solve complex problems.</p>
+                </div>
+                
+                <div style="text-align: center;">
+                    <i class="fas fa-handshake" style="font-size: 3rem; color: var(--color-royal-blue); margin-bottom: 1rem;"></i>
+                    <h3>Our Values</h3>
+                    <p>Trust, reliability, responsibility, and innovation guide everything we do.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact" style="padding: 5rem 0;">
+        <div class="container text-center">
+            <h2>Get in Touch</h2>
+            <p style="max-width: 600px; margin: 0 auto 2rem;">Have questions or want to learn more? Reach out to our team.</p>
+            
+            <form style="max-width: 500px; margin: 0 auto; text-align: left;">
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="name" style="display: block; margin-bottom: 0.5rem;">Name</label>
+                    <input type="text" id="name" placeholder="Your Name" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="email" style="display: block; margin-bottom: 0.5rem;">Email</label>
+                    <input type="email" id="email" placeholder="Your Email" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px;">
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="message" style="display: block; margin-bottom: 0.5rem;">Message</label>
+                    <textarea id="message" placeholder="Your Message" rows="5" style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h3>ASOOS.2100.COOL</h3>
+                    <p>A comprehensive agent-driven human-centric amplification ecosystem powered by Aixtiv Symphony.</p>
+                </div>
+                
+                <div>
+                    <h3>Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="#docs">Documentation</a></li>
+                        <li><a href="#api">API</a></li>
+                        <li><a href="#support">Support</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:info@asoos.2100.cool">info@asoos.2100.cool</a></li>
+                        <li><a href="tel:+1234567890">+1 (234) 567-890</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 ASOOS.2100.COOL | AI Publishing International LLP UK. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Integration with SallyPort Authentication -->
+    <script>
+        // SallyPort Authentication Configuration
+        window.sallyPortConfig = {
+            apiUrl: 'https://api.sallyport.aixtiv.dev',
+            appId: 'asoos-2100-cool',
+            redirectUri: window.location.origin + '/auth-callback',
+        };
+    </script>
+    
+    <!-- Application Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/anthology.js"></script>
+    <script src="js/interface.js"></script>
+    
+    <script>
+        // Placeholder for logo if image doesn't load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('logo-placeholder')) {
+                document.getElementById('logo-placeholder').onerror = function() {
+                    this.style.display = 'none';
+                    const logoText = document.createElement('h1');
+                    logoText.textContent = 'ASOOS.2100';
+                    logoText.style.fontSize = '1.8rem';
+                    logoText.style.margin = '0';
+                    logoText.style.color = '#4169E1';
+                    this.parentNode.appendChild(logoText);
+                };
+            }
+        });
+        
+        // Initialize platform interface when user is authenticated
+        document.addEventListener('sectionChange', function(event) {
+            // Hide all panels
+            document.querySelectorAll('.interface-panel').forEach(panel => {
+                panel.classList.add('hidden');
+            });
+            
+            // Show selected panel
+            const selectedPanel = document.getElementById(event.detail.section + '-panel');
+            if (selectedPanel) {
+                selectedPanel.classList.remove('hidden');
+            }
+            
+            console.log('Section changed to:', event.detail.name);
+        });
+        
+        // Handle Anthology toggle
+        document.addEventListener('toggleAnthology', function(event) {
+            const isActive = event.detail.active;
+            const transitionState = event.detail.transitionState || 'start';
+            
+            console.log('Anthology toggled:', isActive ? 'ON' : 'OFF', 'State:', transitionState);
+            
+            // Apply toggle effect
+            const anthologyPanel = document.getElementById('anthology-panel');
+            if (anthologyPanel) {
+                if (isActive) {
+                    anthologyPanel.classList.add('active');
+                    
+                    // The anthology content is already defined in HTML with Roark's 5.0 Authorship Framework
+                    // and will be handled by the anthology.js script
+                } else {
+                    // When deactivating, add a fade-out class first
+                    anthologyPanel.classList.add('fading');
+                    
+                    // Then remove active class after transition
+                    setTimeout(() => {
+                        anthologyPanel.classList.remove('active');
+                        anthologyPanel.classList.remove('fading');
+                    }, 500);
+                }
+            }
+        });
+    </script>
 </body>
 </html>

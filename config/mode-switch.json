@@ -1,0 +1,46 @@
+{
+  "enabled": true,
+  "defaultMode": "standard",
+  "availableModes": [
+    "standard",
+    "advanced",
+    "experimental"
+  ],
+  "modeAccess": {
+    "standard": [
+      "viewer",
+      "editor",
+      "admin"
+    ],
+    "advanced": [
+      "editor",
+      "admin"
+    ],
+    "experimental": [
+      "admin"
+    ]
+  },
+  "featureFlags": {
+    "standard": {
+      "darkMode": true,
+      "analytics": true,
+      "sharing": true
+    },
+    "advanced": {
+      "darkMode": true,
+      "analytics": true,
+      "sharing": true,
+      "advancedExport": true,
+      "customViews": true
+    },
+    "experimental": {
+      "darkMode": true,
+      "analytics": true,
+      "sharing": true,
+      "advancedExport": true,
+      "customViews": true,
+      "aiAssistant": true,
+      "betaFeatures": true
+    }
+  }
+}

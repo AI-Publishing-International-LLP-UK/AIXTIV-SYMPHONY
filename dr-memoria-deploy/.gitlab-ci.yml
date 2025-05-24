@@ -1,0 +1,186 @@
+# GitLab CI/CD Pipeline for Firebase Node.js Project
+
+stages:
+  - install
+  - test
+  - build
+  - deploy_staging
+  - deploy_production
+
+variables:
+  NODE_VERSION: "16"
+  FIREBASE_PROJECT_STAGING: "your-firebase-project-staging"
+  FIREBASE_PROJECT_PRODUCTION: "your-firebase-project-production"
+
+# Cache dependencies between jobs
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - functions/node_modules/
+
+# --------------- Install dependencies ---------------
+install_dependencies:
+  stage: install
+  image: node:${NODE_VERSION}
+  script:
+    - npm ci
+    - cd functions && npm ci
+  artifacts:
+    paths:
+      - node_modules/
+      - functions/node_modules/
+    expire_in: 1 day
+
+# --------------- Test stage ---------------
+lint:
+  stage: test
+  image: node:${NODE_VERSION}
+  dependencies:
+    - install_dependencies
+  script:
+    - npm run lint || true
+    - cd functions && npm run lint
+
+unit_tests:
+  stage: test
+  image: node:${NODE_VERSION}
+  dependencies:
+    - install_dependencies
+  script:
+    - npm test
+    - cd functions && npm test
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  artifacts:
+    paths:
+      - coverage/
+      - functions/coverage/
+    reports:
+      junit: functions/test-results.xml
+    expire_in: 1 week
+
+# --------------- Build stage ---------------
+build:
+  stage: build
+  image: node:${NODE_VERSION}
+  dependencies:
+    - install_dependencies
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - build/
+      - dist/
+    expire_in: 1 day
+  only:
+    - main
+    - develop
+    - /^release\/.*$/
+    - /^hotfix\/.*$/
+
+# --------------- Deploy to staging ---------------
+deploy_staging:
+  stage: deploy_staging
+  image: node:${NODE_VERSION}
+  dependencies:
+    - build
+    - unit_tests
+  script:
+    - npm install -g firebase-tools
+    # Create dynamic Firebase configuration for staging
+    - echo "Creating Firebase configuration for staging environment"
+    - |
+      cat > .firebaserc << EOF
+      {
+        "projects": {
+          "default": "${FIREBASE_PROJECT_STAGING}"
+        }
+      }
+      EOF
+    # Create dynamic Firebase configuration file
+    - |
+      cat > src/firebase-config.js << EOF
+      export const firebaseConfig = {
+        apiKey: "${FIREBASE_STAGING_API_KEY}",
+        authDomain: "${FIREBASE_PROJECT_STAGING}.firebaseapp.com",
+        projectId: "${FIREBASE_PROJECT_STAGING}",
+        storageBucket: "${FIREBASE_PROJECT_STAGING}.appspot.com",
+        messagingSenderId: "${FIREBASE_STAGING_MESSAGING_SENDER_ID}",
+        appId: "${FIREBASE_STAGING_APP_ID}",
+        measurementId: "${FIREBASE_STAGING_MEASUREMENT_ID}"
+      };
+      EOF
+    - firebase use ${FIREBASE_PROJECT_STAGING} --token ${FIREBASE_TOKEN}
+    - firebase deploy --only hosting,functions --token ${FIREBASE_TOKEN}
+  environment:
+    name: staging
+    url: https://${FIREBASE_PROJECT_STAGING}.web.app
+  only:
+    - develop
+    - /^release\/.*$/
+  when: manual # Requires manual approval for staging deployment
+
+# --------------- Deploy to production ---------------
+deploy_production:
+  stage: deploy_production
+  image: node:${NODE_VERSION}
+  dependencies:
+    - build
+    - unit_tests
+  script:
+    - npm install -g firebase-tools
+    # Create dynamic Firebase configuration for production
+    - echo "Creating Firebase configuration for production environment"
+    - |
+      cat > .firebaserc << EOF
+      {
+        "projects": {
+          "default": "${FIREBASE_PROJECT_PRODUCTION}"
+        }
+      }
+      EOF
+    # Create dynamic Firebase configuration file
+    - |
+      cat > src/firebase-config.js << EOF
+      export const firebaseConfig = {
+        apiKey: "${FIREBASE_PRODUCTION_API_KEY}",
+        authDomain: "${FIREBASE_PROJECT_PRODUCTION}.firebaseapp.com",
+        projectId: "${FIREBASE_PROJECT_PRODUCTION}",
+        storageBucket: "${FIREBASE_PROJECT_PRODUCTION}.appspot.com",
+        messagingSenderId: "${FIREBASE_PRODUCTION_MESSAGING_SENDER_ID}",
+        appId: "${FIREBASE_PRODUCTION_APP_ID}",
+        measurementId: "${FIREBASE_PRODUCTION_MEASUREMENT_ID}"
+      };
+      EOF
+    - firebase use ${FIREBASE_PROJECT_PRODUCTION} --token ${FIREBASE_TOKEN}
+    - firebase deploy --only hosting,functions --token ${FIREBASE_TOKEN}
+  environment:
+    name: production
+    url: https://${FIREBASE_PROJECT_PRODUCTION}.web.app
+  only:
+    - main
+    - /^hotfix\/.*$/
+  when: manual # Requires manual approval for production deployment
+
+# --------------- Cron job to clean up old artifacts and cache ---------------
+cleanup_job:
+  stage: .post
+  image: alpine:latest
+  script:
+    - echo "Cleaning up old artifacts and cache"
+  only:
+    - schedules
+  variables:
+    GIT_STRATEGY: none
+
+# --------------- Notification rules ---------------
+.notify_failure:
+  script:
+    - echo "Pipeline failed! Check the logs for more information."
+  when: on_failure
+
+.notify_success:
+  script:
+    - echo "Pipeline succeeded!"
+  when: on_success
+

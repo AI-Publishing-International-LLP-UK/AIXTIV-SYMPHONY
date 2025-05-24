@@ -1,0 +1,32 @@
+{
+  "projects": {
+    "web": {
+      "defaultProject": "api-for-warp-drive",
+      "projectId": "api-for-warp-drive",
+      "description": "Primary project for web/desktop sites",
+      "sites": {
+        "2100-cool": "AI Copilot Showcase",
+        "ai-pilot-agents": "AI Pilot Agents Platform",
+        "aixtiv-symphony-opus1": "Aixtiv Symphony Opus 1",
+        "api-for-warp-drive": "Main API Services",
+        "api-for-warp-drive-coaching2100-com": "Coaching2100 API Services",
+        "coaching2100": "Main Coaching Platform",
+        "coaching2100-com": "Secondary Coaching Site",
+        "community-groups": "Community Groups Platform",
+        "knowledge-content": "Knowledge Content Platform",
+        "primary-platforms": "Primary Platforms Hub",
+        "professional-dev": "Professional Development",
+        "regional-domains": "Regional Domain Manager",
+        "specialty-domains": "Specialty Domain Manager",
+        "vision-coaching-domain": "Vision Coaching Platform"
+      }
+    },
+    "mobile": {
+      "defaultProject": "app-2100-cool",
+      "projectId": "app-2100-cool",
+      "description": "Primary project for iOS/Android apps",
+      "sites": {}
+    }
+  },
+  "defaultProject": "api-for-warp-drive"
+}

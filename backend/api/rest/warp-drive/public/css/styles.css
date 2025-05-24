@@ -1,0 +1,560 @@
+/* Vision Space Interface Styles */
+:root {
+  --primary-color: #1a73e8;
+  --secondary-color: #34a853;
+  --accent-color: #7c4dff;
+  --background-color: #202124;
+  --surface-color: #303134;
+  --text-color: #e8eaed;
+  --text-secondary: #9aa0a6;
+  --error-color: #ea4335;
+  --warning-color: #fbbc04;
+  --success-color: #34a853;
+  --border-radius: 8px;
+  --transition-speed: 0.3s;
+  --overlay-background: rgba(0, 0, 0, 0.7);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+
+#vision-space {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Hidden video source */
+#video-source {
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+/* Main canvas */
+#output-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Scene overlay */
+#scene-overlay {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  z-index: 10;
+}
+
+#scene-title {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  padding: 8px 16px;
+  background-color: var(--overlay-background);
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(8px);
+}
+
+#scene-controls {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  background-color: var(--overlay-background);
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(8px);
+}
+
+#toggle-fleet {
+  padding: 8px 16px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color var(--transition-speed);
+}
+
+#toggle-fleet:hover {
+  background-color: #0d62d1;
+}
+
+#scene-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#scene-select {
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  background-color: var(--surface-color);
+  color: var(--text-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  outline: none;
+}
+
+/* Fleet visualization */
+#fleet-view {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  background-color: var(--overlay-background);
+  border-radius: var(--border-radius);
+  backdrop-filter: blur(16px);
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+  overflow: hidden;
+  transition: opacity var(--transition-speed), transform var(--transition-speed);
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.95);
+}
+
+.fleet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.fleet-header h2 {
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.fleet-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.fleet-tab {
+  padding: 8px 16px;
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 500;
+  transition: all var(--transition-speed);
+}
+
+.fleet-tab.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+#close-fleet {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 24px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity var(--transition-speed);
+}
+
+#close-fleet:hover {
+  opacity: 1;
+}
+
+.fleet-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.fleet-group {
+  display: none;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.fleet-group.active {
+  display: grid;
+}
+
+.craft-card {
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  transition: transform var(--transition-speed);
+  cursor: pointer;
+}
+
+.craft-card:hover {
+  transform: translateY(-5px);
+}
+
+.craft-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.craft-info {
+  padding: 16px;
+}
+
+.craft-name {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.craft-type {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.craft-type.timeliner {
+  background-color: var(--primary-color);
+}
+
+.craft-type.timepresser {
+  background-color: var(--secondary-color);
+}
+
+.craft-description {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Voice command indicator */
+#voice-indicator {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background-color: var(--overlay-background);
+  border-radius: 30px;
+  z-index: 30;
+  transition: opacity var(--transition-speed);
+}
+
+.pulse {
+  width: 16px;
+  height: 16px;
+  background-color: var(--accent-color);
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(124, 77, 255, 0.7);
+  }
+  
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(124, 77, 255, 0);
+  }
+  
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(124, 77, 255, 0);
+  }
+}
+
+/* Welcome overlay */
+#welcome-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 50;
+  transition: opacity var(--transition-speed);
+}
+
+.welcome-content {
+  text-align: center;
+  max-width: 500px;
+  padding: 40px;
+}
+
+.welcome-content h1 {
+  font-size: 42px;
+  margin-bottom: 16px;
+  color: white;
+}
+
+.welcome-content p {
+  font-size: 18px;
+  margin-bottom: 32px;
+  color: var(--text-secondary);
+}
+
+#start-experience {
+  padding: 12px 32px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+
+#start-experience:hover {
+  background-color: #0d62d1;
+}
+
+/* Craft detail modal */
+#craft-detail-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  transition: opacity var(--transition-speed);
+}
+
+.modal-content {
+  position: relative;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  background-color: var(--surface-color);
+  border-radius: var(--border-radius);
+  overflow-y: auto;
+}
+
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--text-color);
+  font-size: 28px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+#craft-detail-container {
+  padding: 32px;
+}
+
+.craft-detail-header {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.craft-detail-image {
+  width: 280px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+}
+
+.craft-detail-title {
+  flex: 1;
+}
+
+.craft-detail-title h2 {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.mint-mark {
+  display: inline-block;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #8a6e2f 0%, #dcc674 50%, #8a6e2f 100%);
+  color: black;
+  font-weight: bold;
+  border-radius: 4px;
+  margin-top: 12px;
+  font-size: 14px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.craft-detail-specs {
+  margin-top: 20px;
+}
+
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.spec-item {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 16px;
+  border-radius: var(--border-radius);
+}
+
+.spec-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.spec-value {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.craft-detail-wallet {
+  margin-top: 32px;
+  background-color: rgba(124, 77, 255, 0.1);
+  border-radius: var(--border-radius);
+  padding: 24px;
+  border: 1px solid rgba(124, 77, 255, 0.3);
+}
+
+.craft-detail-wallet h3 {
+  color: #a98aff;
+  margin-bottom: 16px;
+}
+
+.wallet-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.wallet-certification .label,
+.wallet-security .label,
+.wallet-transferable .label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.wallet-certification .value,
+.wallet-security .value,
+.wallet-transferable .value {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.wallet-features h4 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #a98aff;
+}
+
+.wallet-features ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.wallet-features li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(124, 77, 255, 0.2);
+}
+
+.wallet-features li:last-child {
+  border-bottom: none;
+}
+
+.craft-detail-footer {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.antigravity-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #1a73e8 0%, #7c4dff 100%);
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  #scene-overlay {
+    top: 10px;
+    right: 10px;
+  }
+  
+  #scene-title {
+    font-size: 18px;
+  }
+  
+  #scene-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  #fleet-view {
+    width: 95%;
+    height: 90%;
+  }
+  
+  .fleet-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  
+  .craft-detail-header {
+    flex-direction: column;
+  }
+  
+  .craft-detail-image {
+    width: 100%;
+    height: auto;
+  }
+}

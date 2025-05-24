@@ -1,0 +1,529 @@
+# Entry Points Configuration
+
+# Base Platform Entry Points
+platform_base:
+  vision:
+    domain: 2100.vision
+    entry_path: /visualization-center
+    security_level: 1
+    greeter_agents: [Dr_Cypriot, Dr_Maria]
+    features:
+      - visualization_center_tour
+      - vision_shop_access
+      - owner_type_analysis
+  
+  expert:
+    domain: 2100.expert
+    entry_path: /vision-lake
+    security_level: 1
+    features:
+      - life_at_vision_lake_tour
+      - community_introduction
+      - expert_network_preview
+  
+  company:
+    domain: 2100.company
+    entry_path: /publishing
+    security_level: 1
+    features:
+      - ai_publishing_introduction
+      - global_reach_overview
+      - partnership_opportunities
+
+# Industry Sector Entry Points
+sectors:
+  technology:
+    domain: tech.2100.cool
+    entry_path: /technology-sector
+    security_level: 1
+    agent_match: [Dr_Cypriot, Dr_Maria]
+    features:
+      - sector_overview
+      - ai_adoption_roadmap
+      - tech_innovation_metrics
+  
+  finance:
+    domain: finance.2100.cool
+    entry_path: /finance-sector
+    security_level: 1
+    agent_match: [Dr_Maria, Dr_Cypriot]
+    features:
+      - fintech_overview
+      - banking_innovation
+      - investment_strategies
+  
+  healthcare:
+    domain: health.2100.cool
+    entry_path: /healthcare-sector
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - medical_innovation
+      - patient_care_enhancement
+      - healthcare_analytics
+      
+  legal:
+    domain: legal.2100.cool
+    entry_path: /legal-sector
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - legal_tech_overview 
+      - compliance_automation
+      - case_management
+      
+  education:
+    domain: 2100.academy
+    entry_path: /education-sector
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - learning_innovation
+      - curriculum_development
+      - educational_analytics
+      
+  manufacturing:
+    domain: mfg.2100.cool
+    entry_path: /manufacturing-sector
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - smart_manufacturing
+      - process_automation
+      - quality_control
+      
+  biotech:
+    domain: biotech.2100.cool
+    entry_path: /biotech-sector  
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - research_innovation
+      - clinical_trials
+      - regulatory_compliance
+      
+  retail:
+    domain: retail.2100.cool
+    entry_path: /retail-sector
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - digital_commerce
+      - customer_experience
+      - inventory_management
+      
+  telecom:
+    domain: telecom.2100.cool
+    entry_path: /telecom-sector
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - network_innovation
+      - service_delivery
+      - customer_solutions
+      
+  energy:
+    domain: energy.2100.cool
+    entry_path: /energy-sector
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - renewable_energy
+      - grid_management
+      - sustainability
+      
+  automotive:
+    domain: auto.2100.cool
+    entry_path: /automotive-sector
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - electric_vehicles
+      - autonomous_driving
+      - manufacturing_innovation
+      
+  aerospace:
+    domain: aero.2100.cool
+    entry_path: /aerospace-sector
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - aircraft_innovation
+      - space_technology
+      - defense_systems
+      
+  media:
+    domain: media.2100.cool
+    entry_path: /media-sector
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - digital_content
+      - streaming_services
+      - audience_analytics
+      
+  hospitality:
+    domain: hospitality.2100.cool
+    entry_path: /hospitality-sector
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - guest_experience
+      - property_management
+      - service_innovation
+      
+  insurance:
+    domain: insurance.2100.cool
+    entry_path: /insurance-sector
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - risk_assessment
+      - claims_automation
+      - customer_service
+      
+  agriculture:
+    domain: agri.2100.cool
+    entry_path: /agriculture-sector
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - precision_farming
+      - crop_management
+      - sustainability
+      
+  pharmaceuticals:
+    domain: pharma.2100.cool
+    entry_path: /pharma-sector
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - drug_development
+      - clinical_research
+      - regulatory_compliance
+      
+  construction:
+    domain: construct.2100.cool
+    entry_path: /construction-sector
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - project_management
+      - safety_compliance
+      - sustainable_building
+      
+  logistics:
+    domain: logistics.2100.cool
+    entry_path: /logistics-sector
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - supply_chain
+      - fleet_management
+      - route_optimization
+      
+  mining:
+    domain: mining.2100.cool
+    entry_path: /mining-sector
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - extraction_tech
+      - safety_systems
+      - sustainability
+      
+  chemicals:
+    domain: chem.2100.cool
+    entry_path: /chemicals-sector
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - process_innovation
+      - safety_protocols
+      - sustainability
+      
+  gaming:
+    domain: gaming.2100.cool
+    entry_path: /gaming-sector
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - game_development
+      - player_experience
+      - monetization
+      
+  sports:
+    domain: sports.2100.cool
+    entry_path: /sports-sector
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - performance_analytics
+      - fan_engagement
+      - facility_management
+      
+  environmental:
+    domain: env.2100.cool
+    entry_path: /environmental-sector
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - sustainability
+      - compliance
+      - impact_assessment
+      
+  defense:
+    domain: defense.2100.cool
+    entry_path: /defense-sector
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - cybersecurity
+      - logistics
+      - training_systems
+
+# C-Suite and Functional Leadership Role Entry Points
+leadership_roles:
+  ceo:
+    domain: ceo.2100.cool
+    entry_path: /executive-vision
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - strategic_planning
+      - leadership_innovation
+      - organizational_transformation
+      
+  cto:
+    domain: cto.2100.cool
+    entry_path: /technology-leadership
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - tech_strategy
+      - innovation_management
+      - digital_transformation
+      
+  cfo:
+    domain: cfo.2100.cool
+    entry_path: /financial-leadership
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - financial_strategy
+      - risk_management
+      - investment_planning
+      
+  chro:
+    domain: chro.2100.cool
+    entry_path: /hr-leadership
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - talent_strategy
+      - organizational_development
+      - workforce_analytics
+      
+  cmo:
+    domain: cmo.2100.cool
+    entry_path: /marketing-leadership
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - marketing_strategy
+      - brand_development
+      - customer_insights
+      
+  cpo:
+    domain: cpo.2100.cool
+    entry_path: /product-leadership
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - product_strategy
+      - innovation_pipeline
+      - market_analysis
+      
+  cio:
+    domain: cio.2100.cool
+    entry_path: /information-leadership
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - it_strategy
+      - digital_transformation
+      - cybersecurity
+      
+  cso:
+    domain: cso.2100.cool
+    entry_path: /security-leadership
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - security_strategy
+      - risk_management
+      - compliance
+      
+  cco:
+    domain: cco.2100.cool
+    entry_path: /compliance-leadership
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - compliance_strategy
+      - risk_governance
+      - regulatory_relations
+      
+  cdo:
+    domain: cdo.2100.cool
+    entry_path: /data-leadership
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - data_strategy
+      - analytics_leadership
+      - governance
+      
+  vp_sales:
+    domain: sales.2100.cool
+    entry_path: /sales-leadership
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - sales_strategy
+      - team_development
+      - revenue_growth
+      
+  vp_engineering:
+    domain: eng.2100.cool
+    entry_path: /engineering-leadership
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - engineering_strategy
+      - team_leadership
+      - innovation_management
+      
+  vp_operations:
+    domain: ops.2100.cool
+    entry_path: /operations-leadership
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - operations_strategy
+      - process_optimization
+      - quality_management
+      
+  vp_research:
+    domain: research.2100.cool
+    entry_path: /research-leadership
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - research_strategy
+      - innovation_pipeline
+      - knowledge_management
+      
+  vp_legal:
+    domain: legal-vp.2100.cool
+    entry_path: /legal-leadership
+    security_level: 1
+    agent_match: [Dr_Maria]
+    features:
+      - legal_strategy
+      - risk_management
+      - compliance_leadership
+      
+  director_strategy:
+    domain: strategy.2100.cool
+    entry_path: /strategy-leadership
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features:
+      - strategic_planning
+      - market_analysis
+      - growth_initiatives
+      
+  director_innovation:
+    domain: innovation.2100.cool
+    entry_path: /innovation-leadership
+    security_level: 1
+    agent_match: [Dr_Cypriot]
+    features
+
+# Professional Role Entry Points
+professional_roles:
+  data_scientist:
+    domain: data.2100.cool
+    entry_path: /data-science
+    security_level: 1
+    features:
+      - analytics_tools
+      - ml_workflows
+      - data_visualization
+      
+  developer:
+    domain: dev.2100.cool
+    entry_path: /development
+    security_level: 1
+    features:
+      - coding_resources
+      - architecture_patterns
+      - devops_practices
+      
+  researcher:
+    domain: research.2100.cool
+    entry_path: /research
+    security_level: 1
+    features:
+      - research_methods
+      - data_analysis
+      - publication_support
+
+# Security Level Definitions
+security_levels:
+  level_0:
+    description: No access, total lockout
+    features: []
+    
+  level_1:
+    description: Initial authentication and basic access
+    features:
+      - visualization_center_tour
+      - vision_shop_access
+      - basic_content_creation
+      - standard_publishing
+    agents: [Dr_Cypriot, Dr_Maria]
+    
+  level_2:
+    description: Enhanced access with trial features
+    features:
+      - all_level_1
+      - advanced_analytics
+      - premium_content
+      - collaboration_tools
+      
+  level_3:
+    description: Full professional access
+    features:
+      - all_level_2
+      - enterprise_features
+      - custom_integrations
+      - advanced_publishing
+
+# Q4DLenz Integration
+q4dlenz:
+  categorization:
+    industry_vertical: true
+    functional_role: true
+    expertise_level: true
+    access_level: true
+  analytics:
+    sector_analysis: true
+    role_mapping: true
+    skill_assessment: true
+  personalization:
+    content_adaptation: true
+    interface_customization: true
+    workflow_optimization: true
+

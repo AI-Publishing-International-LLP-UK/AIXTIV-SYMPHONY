@@ -14,7 +14,11 @@
     "dream_commander": {
       "role": "central_coordinator",
       "startup_priority": 1,
-      "capabilities": ["system_oversight", "decision_making", "resource_allocation"],
+      "capabilities": [
+        "system_oversight",
+        "decision_making",
+        "resource_allocation"
+      ],
       "initialization_params": {
         "confidence_threshold": 0.95,
         "decision_cache_size": 1000,
@@ -24,7 +28,11 @@
     "architect": {
       "role": "system_design",
       "startup_priority": 2,
-      "capabilities": ["design_pattern_recognition", "system_modeling", "code_generation"],
+      "capabilities": [
+        "design_pattern_recognition",
+        "system_modeling",
+        "code_generation"
+      ],
       "initialization_params": {
         "model_version": "latest",
         "pattern_library": "enhanced",
@@ -34,7 +42,11 @@
     "rix_manager": {
       "role": "resource_coordination",
       "startup_priority": 2,
-      "capabilities": ["resource_optimization", "workflow_management", "integration_handling"],
+      "capabilities": [
+        "resource_optimization",
+        "workflow_management",
+        "integration_handling"
+      ],
       "initialization_params": {
         "optimization_strategy": "balanced",
         "resource_monitoring": true,
@@ -61,4 +73,3 @@
     "evolution": "../evolution/adaptive_learning.json"
   }
 }
-

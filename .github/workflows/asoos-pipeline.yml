@@ -1,0 +1,92 @@
+name: ASOOS CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  GCP_PROJECT: api-for-warp-drive
+  GCP_REGION: us-west1
+  GCP_ZONE: us-west1-b
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: dist/
+
+  deploy-production:
+    needs: [lint, test, build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          workload_identity_provider: projects/859242575175/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider
+          service_account: github-actions-deploy@api-for-warp-drive.iam.gserviceaccount.com
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+      
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build
+          path: dist/
+      
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy asoos-integration-gateway \
+            --image gcr.io/$GCP_PROJECT/asoos-integration-gateway:${{ github.sha }} \
+            --region $GCP_REGION \
+            --platform managed \
+            --memory 4Gi \
+            --cpu 2
+      
+      - name: Deploy additional zone-specific resources
+        run: |
+          # Deploy zone-specific resources in us-west1-b
+          gcloud compute instances create-with-container asoos-zone-specific \
+            --zone=$GCP_ZONE \
+            --container-image gcr.io/$GCP_PROJECT/asoos-integration-gateway:${{ github.sha }} \
+            --machine-type=e2-medium \
+            --tags=http-server,https-server \
+            --service-account=github-actions-deploy@api-for-warp-drive.iam.gserviceaccount.com \
+            --scopes=cloud-platform

@@ -1,0 +1,18 @@
+security:
+  branch_protection:
+    required_reviews: 1
+    dismiss_stale_reviews: true
+    require_up_to_date: true
+    
+  workflow_permissions:
+    actions: write
+    contents: read
+    security: write
+    
+  secret_scanning:
+    enabled: true
+    push_protection: true
+    
+  dependency_security:
+    alerts: true
+    auto_merge: true

@@ -1,0 +1,29 @@
+# KDP Ebook Publishing Standards
+
+version: '2.0'
+type: publishing-standards
+security: TOP_SECRET
+
+kindle_ebook_standards:
+  file_formats:
+    accepted:
+      - doc/docx
+      - epub
+      - kpf
+    specifications:
+      - dimensions: 2560x1600px
+      - resolution: 300dpi
+      - format: JPEG/TIFF
+
+  formatting_requirements:
+    text:
+      - proper_spacing
+      - consistent_indentation
+      - line_spacing: 1.15-1.5
+      - responsive_margins
+
+  quality_control:
+    - content_verification
+    - format_validation
+    - device_testing
+    - quality_assessment

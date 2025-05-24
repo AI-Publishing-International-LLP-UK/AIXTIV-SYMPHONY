@@ -1,0 +1,51 @@
+{
+  "name": "aixtiv-symphony-opus-2.0.1",
+  "version": "2.0.1",
+  "description": "AI & Community Wealth - Real estate investment & community development module for Aixtiv Symphony",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "jest",
+    "dev": "nodemon index.js",
+    "build": "tsc",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.enterprise.com/aixtiv-symphony/aixtiv-symphony-opus2.0.1.git"
+  },
+  "keywords": [
+    "aixtiv",
+    "symphony",
+    "ai",
+    "community",
+    "wealth",
+    "real-estate",
+    "investment",
+    "development"
+  ],
+  "author": "AI Publishing International LLP",
+  "license": "Proprietary",
+  "bugs": {
+    "url": "https://github.enterprise.com/aixtiv-symphony/aixtiv-symphony-opus2.0.1/issues"
+  },
+  "homepage": "https://github.enterprise.com/aixtiv-symphony/aixtiv-symphony-opus2.0.1#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "firebase": "^10.1.0",
+    "firebase-admin": "^11.10.1",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.4.5",
+    "eslint": "^8.46.0",
+    "jest": "^29.6.2",
+    "nodemon": "^3.0.1",
+    "typescript": "^5.1.6"
+  },
+  "engines": {
+    "node": ">=18.x"
+  },
+  "private": true
+}

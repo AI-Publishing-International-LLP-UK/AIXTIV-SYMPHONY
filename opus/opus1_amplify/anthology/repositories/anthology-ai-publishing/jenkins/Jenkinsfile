@@ -1,0 +1,128 @@
+pipeline {
+    agent any
+    
+    environment {
+        PROJECT_ID = 'api-for-warp-drive'
+        REGION = 'us-west1'
+        CREDENTIALS_ID = 'gcp-secret-manager'
+    }
+    
+    stages {
+        stage('Setup') {
+            steps {
+                // Authentication with GCP
+                withCredentials([file(credentialsId: env.CREDENTIALS_ID, variable: 'GCP_KEY')]) {
+                    sh '''
+                        gcloud auth activate-service-account --key-file="$GCP_KEY"
+                        gcloud config set project ${PROJECT_ID}
+                    '''
+                }
+                
+                // Access secrets from Secret Manager
+                script {
+                    env.SYNTHESIA_API_KEY = sh(
+                        script: "gcloud secrets versions access latest --secret='synthesia-api-key'",
+                        returnStdout: true
+                    ).trim()
+                    env.GDOCS_API_KEY = sh(
+                        script: "gcloud secrets versions access latest --secret='gdocs-api-key'",
+                        returnStdout: true
+                    ).trim()
+                }
+            }
+        }
+        
+        stage('Sync Google Docs') {
+            steps {
+                sh '''
+                    python3 scripts/gdocs_sync.py \
+                        --api-key="$GDOCS_API_KEY" \
+                        --output-dir="content/manuscripts"
+                '''
+            }
+        }
+        
+        stage('Process Content') {
+            parallel {
+                stage('Generate Books') {
+                    steps {
+                        sh 'python3 scripts/generate_books.py --input-dir="content/manuscripts"'
+                    }
+                }
+                
+                stage('Generate Training') {
+                    steps {
+                        sh 'python3 scripts/generate_training.py --input-dir="content/manuscripts"'
+                    }
+                }
+                
+                stage('Generate Videos') {
+                    steps {
+                        sh '''
+                            python3 scripts/generate_videos.py \
+                                --api-key="$SYNTHESIA_API_KEY" \
+                                --input-dir="content/manuscripts"
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Quality Check') {
+            steps {
+                sh '''
+                    python3 scripts/quality_check.py \
+                        --check-spelling=true \
+                        --verify-formatting=true \
+                        --validate-links=true
+                '''
+            }
+        }
+        
+        stage('Publish') {
+            when {
+                expression { currentBuild.resultIsBetterOrEqualTo('SUCCESS') }
+            }
+            parallel {
+                stage('Publish Books') {
+                    steps {
+                        sh 'python3 scripts/publish_books.py'
+                    }
+                }
+                
+                stage('Publish Training') {
+                    steps {
+                        sh 'python3 scripts/publish_training.py'
+                    }
+                }
+                
+                stage('Publish Videos') {
+                    steps {
+                        sh 'python3 scripts/publish_videos.py'
+                    }
+                }
+            }
+        }
+    }
+    
+    post {
+        success {
+            sh '''
+                python3 scripts/notify_success.py \
+                    --message="Publishing pipeline completed successfully" \
+                    --details="${BUILD_URL}"
+            '''
+        }
+        failure {
+            sh '''
+                python3 scripts/notify_failure.py \
+                    --message="Publishing pipeline failed" \
+                    --details="${BUILD_URL}"
+            '''
+        }
+        always {
+            // Clean up temporary files
+            sh 'rm -rf content/temp/*'
+        }
+    }
+}

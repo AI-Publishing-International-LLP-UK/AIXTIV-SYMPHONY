@@ -1,0 +1,66 @@
+name: Content Publishing Pipeline
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'content/**'
+      - 'templates/**'
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: api-for-warp-drive
+  GCP_REGION: us-west1
+
+jobs:
+  process-content:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER }}
+          service_account: publishing-sa@api-for-warp-drive.iam.gserviceaccount.com
+      
+      - name: Process Content
+        run: |
+          # Content processing steps
+          for file in content/*.md; do
+            # Generate multiple formats
+            pandoc "$file" -o "dist/ebooks/$(basename "$file" .md).epub"
+            pandoc "$file" -o "dist/training/$(basename "$file" .md).docx"
+          done
+      
+      - name: Upload to Cloud Storage
+        run: |
+          gsutil -m cp -r dist/* gs://coaching2100-content/
+
+  prepare-distribution:
+    needs: process-content
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prepare Distribution Packages
+        run: |
+          # Package preparation logic
+          python scripts/prepare_distribution.py
+      
+      - name: Upload Distribution Packages
+        run: |
+          gsutil -m cp -r dist/* gs://coaching2100-distribution/
+
+  notify:
+    needs: [prepare-distribution]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Notification
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -d '{"text":"Content publishing completed"}' \
+            ${{ secrets.NOTIFICATION_WEBHOOK }}

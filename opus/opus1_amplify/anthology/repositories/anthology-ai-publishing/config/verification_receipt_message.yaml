@@ -1,0 +1,63 @@
+verification_receipt:
+  header:
+    title: "Vision Lake Verification Receipt"
+    timestamp: "{current_timestamp}"
+    receipt_id: "VL-{unique_id}"
+    encryption: "quantum_4d_256"
+    security_protocol: "sally_port_isolation"
+  
+  message: |
+    To continue your Vision Lake experience, immediate verification is required:
+
+    1. Time-Critical Authentication
+      - Verification link sent to your corporate email
+      - Valid for 5 minutes from: {timestamp}
+      - Second attempt permitted within 10 minutes only
+      - No third attempts allowed
+  
+    2. Gift Acknowledgment
+      - Gift ID: {gift_tracking_id}
+      - Activation requires immediate verification
+      - Corporate domain validation enforced
+  
+  security_measures:
+    isolation:
+      type: "quantum_sally_port"
+      encryption: "128_byte_minimum"
+      system_handshake: "disabled"
+      network_isolation: "complete"
+    
+    counter_measures:
+      threat_detection: "immediate"
+      response_level: "maximum_authorized"
+      system_protection: "aggressive"
+      attack_mitigation: 
+        - "immediate_isolation"
+        - "quantum_encryption_boost"
+        - "threat_neutralization"
+        - "system_lockdown"
+  
+  requirements:
+    initial_window: "5_minutes"
+    retry_window: "5_minutes"
+    max_attempts: 2
+    total_time_limit: "10_minutes"
+    domain_validation: "strict_corporate"
+    email_format: "corporate_only"
+    authentication_type: "blockchain_verified"
+  
+  security_notice: |
+    Please note:
+    - Verification time window: 5 minutes
+    - One retry permitted for technical issues
+    - No exceptions to verification requirements
+    - Unauthorized actions trigger immediate countermeasures
+    - All attempts are permanently recorded
+  
+  footer:
+    status: "PENDING_VERIFICATION"
+    expiry: "{timestamp_plus_5m}"
+    security_level: "QUANTUM_PROTECTED"
+    blockchain_ref: "{blockchain_reference}"
+    isolation_status: "ACTIVE"
+

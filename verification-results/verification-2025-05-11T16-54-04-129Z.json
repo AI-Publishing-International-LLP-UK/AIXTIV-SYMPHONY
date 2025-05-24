@@ -1,0 +1,24 @@
+{
+  "domain": "asoos.2100.cool",
+  "timestamp": "2025-05-11T16:54:03.563Z",
+  "dns": {
+    "success": true,
+    "addresses": [
+      "199.36.158.100"
+    ]
+  },
+  "txt": {
+    "success": true,
+    "records": [
+      [
+        "firebase=hosting-site=2100-cool"
+      ]
+    ]
+  },
+  "http": {
+    "success": false,
+    "status": 404,
+    "statusText": "Not Found"
+  },
+  "status": "success"
+}

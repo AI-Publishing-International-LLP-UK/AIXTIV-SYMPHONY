@@ -1,0 +1,35 @@
+steps:
+# Install dependencies
+- name: 'python:3.9'
+  entrypoint: pip
+  args: ['install', '-r', 'requirements.txt', '--user']
+
+# Run tests
+- name: 'python:3.9'
+  entrypoint: python
+  args: ['-m', 'pytest', 'tests/']
+
+# Deploy automation pipeline
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'python'
+  args: ['automation/deploy.py']
+  env:
+    - 'PROJECT_ID=api-for-warp-drive'
+    - 'REGION=us-west1'
+
+# Update Cloud Run service
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+    - 'run'
+    - 'deploy'
+    - 'anthology-publisher'
+    - '--image'
+    - 'gcr.io/$PROJECT_ID/anthology-publisher:$COMMIT_SHA'
+    - '--region'
+    - 'us-west1'
+    - '--platform'
+    - 'managed'
+
+timeout: '1800s'
+substitutions:
+  _REGION: us-west1

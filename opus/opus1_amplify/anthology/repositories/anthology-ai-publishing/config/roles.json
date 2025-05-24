@@ -1,0 +1,28 @@
+{
+  "platform_roles": {
+    "team_leads": {
+      "dr_cypriot": {
+        "role": "lead_researcher",
+        "permissions": [
+          "oversee_research",
+          "coordinate_teams",
+          "approve_content",
+          "manage_knowledge_base"
+        ],
+        "teams": ["research", "history", "validation"],
+        "endpoint": "dr-cypriot-endpoint"
+      },
+      "dr_match": {
+        "role": "validation_lead",
+        "permissions": [
+          "manage_validation",
+          "coordinate_reviews",
+          "approve_methods",
+          "oversee_quality"
+        ],
+        "teams": ["validation", "methods", "quality"],
+        "endpoint": "dr-match-endpoint"
+      }
+    }
+  }
+}

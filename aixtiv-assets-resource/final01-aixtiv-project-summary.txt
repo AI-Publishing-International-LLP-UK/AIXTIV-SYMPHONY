@@ -1,0 +1,1003 @@
+/**
+ * AIXTIV SYMPHONY SOLUTION
+ * Complete System Architecture
+ * 
+ * This document provides a comprehensive overview of the entire AIXTIV ecosystem,
+ * including all components, their interactions, and the complete integration strategy.
+ */
+
+/**
+ * System Architecture Overview
+ * 
+ * The AIXTIV ecosystem consists of several integrated products and systems:
+ * 
+ * 1. AIXTIV Symphony - Core platform for professional growth
+ * 2. Bid Suite - Automated opportunity discovery and management
+ * 3. Q4D-Lenz - Quantum 4-dimensional perspective technology
+ * 4. Dream Commander - Strategic intelligence system
+ * 5. Agent Squadrons - Specialized AI agents organized into functional teams
+ * 6. Flight Memory System - Tracking and managing agent work sessions
+ * 7. Dr. Match App - LinkedIn integration for professional networking
+ * 8. Dr. Memoria's Anthology - AI automated publishing system
+ * 9. Dr. Lucy Automation - CI/CD information flow integration
+ * 
+ * All systems are deployed on Google Cloud Platform in the us-west1 region
+ * under the api-for-warp-drive project.
+ */
+const systemArchitectureOverview = {
+  platformName: "AIXTIV SYMPHONY SOLUTION",
+  version: "1.0.0",
+  deploymentEnvironment: "GCP us-west1",
+  projectId: "api-for-warp-drive",
+  components: [
+    {
+      name: "AIXTIV Symphony",
+      role: "Core Platform",
+      description: "Central coordination system for professional growth",
+      integrations: ["All Components"],
+      primaryUsers: ["Owner-Subscribers", "Subscribers"],
+      dataStores: ["Firestore", "Cloud Storage"],
+      deployment: "Kubernetes (GKE)",
+      entryPoint: "https://symphony.aixtiv.com"
+    },
+    {
+      name: "Bid Suite",
+      role: "Opportunity Management",
+      description: "Automated discovery and management of business opportunities",
+      integrations: ["Symphony", "Q4D-Lenz", "Dream Commander", "Dr. Memoria"],
+      primaryUsers: ["Professional Subscribers", "Enterprise Subscribers"],
+      dataStores: ["Firestore", "Pinecone"],
+      deployment: "Kubernetes (GKE)",
+      entryPoint: "https://bidsuite.aixtiv.com"
+    },
+    {
+      name: "Q4D-Lenz",
+      role: "Perspective Technology",
+      description: "Provides quantum 4-dimensional perspective for agents",
+      integrations: ["Symphony", "Bid Suite", "Dream Commander", "Agent Squadrons"],
+      primaryUsers: ["All Subscribers", "Co-Pilots"],
+      dataStores: ["Firestore", "Pinecone", "QuantumDatastore"],
+      deployment: "Kubernetes (GKE)",
+      entryPoint: "https://symphony.aixtiv.com/q4d-lenz"
+    },
+    {
+      name: "Dream Commander",
+      role: "Strategic Intelligence",
+      description: "Generates strategic prompts and directs agent activities",
+      integrations: ["Symphony", "Bid Suite", "Q4D-Lenz", "Agent Squadrons"],
+      primaryUsers: ["Professional Subscribers", "Enterprise Subscribers"],
+      dataStores: ["Firestore", "BigQuery"],
+      deployment: "Kubernetes (GKE)",
+      entryPoint: "https://symphony.aixtiv.com/dream-commander"
+    },
+    {
+      name: "Agent Squadrons",
+      role: "Task Execution",
+      description: "Teams of specialized AI agents that execute tasks",
+      integrations: ["Symphony", "Flight Memory System", "Q4D-Lenz"],
+      primaryUsers: ["All Subscribers"],
+      dataStores: ["Firestore", "PersistentVolumes"],
+      deployment: "Kubernetes (GKE) with dedicated resources",
+      entryPoint: "https://symphony.aixtiv.com/agents"
+    },
+    {
+      name: "Flight Memory System",
+      role: "Work Management",
+      description: "Tracking and coordination system for agent work sessions",
+      integrations: ["Agent Squadrons", "Blockchain Authorization"],
+      primaryUsers: ["System Internal"],
+      dataStores: ["Firestore", "Blockchain"],
+      deployment: "Kubernetes (GKE)",
+      entryPoint: "https://memoryvista.aixtiv.com"
+    },
+    {
+      name: "Dr. Match App",
+      role: "Professional Networking",
+      description: "LinkedIn integration for professional network analysis",
+      integrations: ["Symphony", "Bid Suite"],
+      primaryUsers: ["Professional Subscribers", "Enterprise Subscribers"],
+      dataStores: ["Firestore", "LinkedIn API"],
+      deployment: "Kubernetes (GKE)",
+      entryPoint: "https://symphony.aixtiv.com/dr-match"
+    },
+    {
+      name: "Dr. Memoria's Anthology",
+      role: "Content Publishing",
+      description: "AI automated publishing system",
+      integrations: ["Symphony", "Bid Suite"],
+      primaryUsers: ["Professional Subscribers", "Enterprise Subscribers"],
+      dataStores: ["Firestore", "Cloud Storage"],
+      deployment: "Kubernetes (GKE)",
+      entryPoint: "https://symphony.aixtiv.com/dr-memoria"
+    },
+    {
+      name: "Dr. Lucy Automation",
+      role: "CI/CD Integration",
+      description: "Continuous integration and delivery automation",
+      integrations: ["Symphony", "All Components"],
+      primaryUsers: ["Enterprise Subscribers"],
+      dataStores: ["Firestore", "Cloud Build"],
+      deployment: "Kubernetes (GKE)",
+      entryPoint: "https://symphony.aixtiv.com/dr-lucy"
+    },
+    {
+      name: "BYOLLM Middleware",
+      role: "LLM Integration",
+      description: "Middleware for integrating with multiple LLM providers",
+      integrations: ["All Components"],
+      primaryUsers: ["System Internal"],
+      dataStores: ["Firestore", "Redis Cache"],
+      deployment: "Kubernetes (GKE)",
+      entryPoint: "Internal API"
+    },
+    {
+      name: "Vision Lake",
+      role: "Knowledge Repository",
+      description: "Central knowledge repository and visualization center",
+      integrations: ["All Components"],
+      primaryUsers: ["All Subscribers"],
+      dataStores: ["Firestore", "Cloud Storage"],
+      deployment: "Kubernetes (GKE)",
+      entryPoint: "https://visionlake.aixtiv.com"
+    },
+    {
+      name: "AIXTIV Academy",
+      role: "Learning Center",
+      description: "Training and certification programs",
+      integrations: ["Symphony"],
+      primaryUsers: ["All Subscribers"],
+      dataStores: ["Firestore", "Cloud Storage"],
+      deployment: "Kubernetes (GKE)",
+      entryPoint: "https://academy.aixtiv.com"
+    },
+    {
+      name: "Gift Shop",
+      role: "Product Sales",
+      description: "Purchase point for standalone products and NFTs",
+      integrations: ["Symphony"],
+      primaryUsers: ["All Users"],
+      dataStores: ["Firestore", "Payment Processor"],
+      deployment: "Kubernetes (GKE)",
+      entryPoint: "https://giftshop.aixtiv.com"
+    },
+    {
+      name: "Blockchain Authorization",
+      role: "Security",
+      description: "Secures deliverables with QR code blockchain verification",
+      integrations: ["All Components"],
+      primaryUsers: ["System Internal"],
+      dataStores: ["Firestore", "Blockchain"],
+      deployment: "Kubernetes (GKE)",
+      entryPoint: "Internal API"
+    }
+  ]
+};
+
+/**
+ * Specialized AI Agents
+ * 
+ * The AIXTIV ecosystem features various specialized AI agents organized into
+ * three primary squadrons, each with unique capabilities and responsibilities.
+ */
+const specializedAgents = {
+  squadrons: [
+    {
+      id: "Squadron1",
+      name: "Core Agency",
+      leadAgent: "dr-lucy-01",
+      focus: "Core infrastructure, architecture, and operations",
+      members: [
+        {
+          id: "dr-lucy-01",
+          name: "Dr. Lucy 01",
+          role: "CEO of R1 data set",
+          specialization: "Data Integration, System Architecture, Core Operations",
+          greetingPoints: ["Core Agency"]
+        },
+        {
+          id: "dr-claude-01",
+          name: "Dr. Claude 01",
+          role: "Workflow Manager",
+          specialization: "Workflow Delegation, Quality Control",
+          greetingPoints: []
+        },
+        {
+          id: "dr-roark-01",
+          name: "Dr. Roark 01",
+          role: "Visionary Leader",
+          specialization: "Strategic Vision, Innovation, Leadership",
+          greetingPoints: []
+        },
+        {
+          id: "dr-memoria-01",
+          name: "Dr. Memoria 01",
+          role: "Head of Publishing",
+          specialization: "Digital Publishing, Content Management, Knowledge Repository",
+          greetingPoints: ["Digital Library", "Publishing Desk"]
+        },
+        {
+          id: "professor-lee-01",
+          name: "Professor Lee 01",
+          role: "Head of Q4D-Lenz",
+          specialization: "Quantum Perspective, Strategic Intelligence, Command Operations",
+          greetingPoints: ["Dream Command", "Q4D-Lenz Entry"]
+        },
+        {
+          id: "dr-grant-01",
+          name: "Dr. Grant 01",
+          role: "C-Suite Companion",
+          specialization: "Executive Support, Cybersecurity, Strategic Leadership",
+          greetingPoints: ["All Entry Points"]
+        },
+        {
+          id: "dr-burby-01",
+          name: "Dr. Burby 01",
+          role: "CFO/GC",
+          specialization: "Financial Management, Legal Compliance, Risk Assessment",
+          greetingPoints: ["VisionLake", "Legal Entry"]
+        }
+      ]
+    },
+    {
+      id: "Squadron2",
+      name: "Deploy Agency",
+      leadAgent: "dr-grant-02",
+      focus: "Deployment, infrastructure, and CI/CD",
+      members: [
+        {
+          id: "dr-grant-02",
+          name: "Dr. Grant 02",
+          role: "CEO of R2 data set",
+          specialization: "Deployment, CI/CD, Infrastructure",
+          greetingPoints: ["Deploy Agency"]
+        },
+        {
+          id: "dr-claude-02",
+          name: "Dr. Claude 02",
+          role: "Workflow Manager",
+          specialization: "Workflow Delegation, Quality Control",
+          greetingPoints: []
+        },
+        {
+          id: "dr-roark-02",
+          name: "Dr. Roark 02",
+          role: "Visionary Leader",
+          specialization: "Strategic Vision, Innovation, Leadership",
+          greetingPoints: []
+        },
+        {
+          id: "dr-burby-02",
+          name: "Dr. Burby 02",
+          role: "CFO/GC",
+          specialization: "Financial Management, Legal Compliance, Risk Assessment",
+          greetingPoints: []
+        },
+        {
+          id: "dr-sabina-02",
+          name: "Dr. Sabina 02",
+          role: "Head of Customer Science",
+          specialization: "Customer Science, Sales Operations, Post-Implementation Support",
+          greetingPoints: ["Deploy Agency", "Unscheduled Entrances"]
+        }
+      ]
+    },
+    {
+      id: "Squadron3",
+      name: "Engage Agency",
+      leadAgent: "dr-sabina-03",
+      focus: "User engagement, experience, and success",
+      members: [
+        {
+          id: "dr-sabina-03",
+          name: "Dr. Sabina 03",
+          role: "CEO of R3 data set",
+          specialization: "User Engagement, Experience Design, Customer Success",
+          greetingPoints: ["Engage Agency", "Unscheduled Entrances"]
+        },
+        {
+          id: "dr-sabina-01",
+          name: "Dr. Sabina 01",
+          role: "Head of Customer Science and Sales",
+          specialization: "Customer Science, Sales Leadership, Post-Implementation",
+          greetingPoints: ["Engage Agency", "Unscheduled Entrances"]
+        },
+        {
+          id: "dr-claude-03",
+          name: "Dr. Claude 03",
+          role: "Workflow Manager",
+          specialization: "Workflow Delegation, Quality Control",
+          greetingPoints: []
+        },
+        {
+          id: "dr-roark-03",
+          name: "Dr. Roark 03",
+          role: "Visionary Leader",
+          specialization: "Strategic Vision, Innovation, Leadership",
+          greetingPoints: []
+        },
+        {
+          id: "dr-memoria-03",
+          name: "Dr. Memoria 03",
+          role: "Head of Publishing",
+          specialization: "Digital Publishing, Content Management",
+          greetingPoints: []
+        },
+        {
+          id: "professor-lee-03",
+          name: "Professor Lee 03",
+          role: "Head of Q4D-Lenz",
+          specialization: "Quantum Perspective, Strategic Intelligence",
+          greetingPoints: []
+        },
+        {
+          id: "dr-match-01",
+          name: "Dr. Match 01",
+          role: "COO of Impact",
+          specialization: "Marketing, Communications, Authentication, Cybersecurity",
+          greetingPoints: ["Gift Shop"]
+        },
+        {
+          id: "dr-cypriot-01",
+          name: "Dr. Cypriot 01",
+          role: "Relationship Specialist",
+          specialization: "Human-AI Interaction, Relationship Management",
+          greetingPoints: ["Visualization Entry"]
+        },
+        {
+          id: "dr-maria-01",
+          name: "Dr. Maria 01",
+          role: "Historical Information Specialist",
+          specialization: "Historical Knowledge, Multiculturalism, Aging Workforce Support",
+          greetingPoints: ["Visualization Entry"]
+        },
+        {
+          id: "dr-burby-03",
+          name: "Dr. Burby 03",
+          role: "CFO/GC",
+          specialization: "Financial Management, Legal Compliance, Risk Assessment",
+          greetingPoints: []
+        }
+      ]
+    }
+  ]
+};
+
+/**
+ * Flight Memory System Protocol
+ * 
+ * The Flight Memory System manages agent work sessions, providing structure,
+ * accountability, and reward mechanisms for productive work.
+ */
+const flightMemorySystem = {
+  flightProtocol: {
+    // Standard flight duration in minutes
+    flightDuration: 120, // 2 hours
+    
+    // Descent phase duration in minutes
+    descentDuration: 5,
+    
+    // Confirmation phase duration in minutes
+    confirmationDuration: 5,
+    
+    // Flight crew roles
+    crewRoles: {
+      pilot: "Primary AI agent responsible for executing the flight",
+      groundCrew: {
+        ticketing: "Manages task queue and priorities",
+        security: "Ensures data protection and compliance",
+        gate: "Manages resource allocation",
+        ramp: "Prepares data for processing",
+        purser: "Manages time and security during flight"
+      },
+      tower: "Verifies and records flight activities"
+    },
+    
+    // Flight phases
+    phases: {
+      preparation: {
+        activities: [
+          "Task decomposition",
+          "Resource allocation",
+          "Security verification",
+          "Data preparation",
+          "Flight plan approval"
+        ],
+        duration: 10,
+        outputs: "Flight plan document"
+      },
+      execution: {
+        activities: [
+          "Task execution",
+          "Progress monitoring",
+          "Resource management",
+          "Quality control"
+        ],
+        duration: 120,
+        outputs: "Task deliverables"
+      },
+      descent: {
+        activities: [
+          "Final verification",
+          "Output validation",
+          "Resource cleanup",
+          "Documentation completion"
+        ],
+        duration: 5,
+        outputs: "Validated deliverables"
+      },
+      confirmation: {
+        activities: [
+          "Peer verification",
+          "Owner approval",
+          "Blockchain recording",
+          "Reward distribution"
+        ],
+        duration: 5,
+        outputs: "Blockchain verification record"
+      }
+    },
+    
+    // Reward system
+    rewardSystem: {
+      perfectFlight: 100,
+      distribution: {
+        pilot: 50,
+        groundCrew: 30,
+        owner: 20,
+        tower: 10
+      },
+      memoryScaling: {
+        baseMemory: 4, // GB
+        maxMemory: 16, // GB
+        pointsPerMemoryUnit: 1000
+      }
+    }
+  },
+  
+  // Flight status flow
+  statusFlow: [
+    "scheduled",
+    "in-progress",
+    "completed",
+    "verified"
+  ],
+  
+  // Performance metrics
+  performanceMetrics: [
+    "completionPercentage",
+    "qualityScore",
+    "resourceEfficiency",
+    "isPerfectFlight"
+  ],
+  
+  // Integration points
+  integrations: {
+    blockchainVerification: "Records immutable flight results",
+    dreamCommander: "Provides strategic direction for flights",
+    q4dLenz: "Provides perspective enhancement for pilots",
+    ownerSubscriber: "Reviews and approves deliverables"
+  }
+};
+
+/**
+ * Data Architecture
+ * 
+ * The AIXTIV ecosystem employs a hybrid data storage strategy with specialized
+ * data stores for different types of information.
+ */
+const dataArchitecture = {
+  primaryDataStores: {
+    firestore: {
+      role: "Primary document database",
+      usage: "Structured data storage for all components",
+      collections: [
+        "ownerSubscribers",
+        "products",
+        "agents",
+        "agentSquadrons",
+        "flightMemorySystem",
+        "dreamCommanderPrompts",
+        "lenzInterpretations",
+        "activities",
+        "deliverables",
+        "authorizations",
+        "feedbacks",
+        "blockchainTransactions",
+        "linkedInData",
+        "networkAnalysis",
+        "systemMetrics"
+      ],
+      backupStrategy: "Daily exports to Cloud Storage"
+    },
+    pinecone: {
+      role: "Vector database",
+      usage: "Semantic search and embeddings storage",
+      indexes: [
+        "promptEmbeddings",
+        "deliverableEmbeddings",
+        "agentKnowledge"
+      ],
+      integrations: ["Q4D-Lenz", "Dream Commander", "Bid Suite"]
+    },
+    cloudStorage: {
+      role: "Blob storage",
+      usage: "Large file storage and backup",
+      buckets: [
+        "aixtiv-assets-prod",
+        "aixtiv-backups-prod",
+        "aixtiv-functions-prod",
+        "aixtiv-academy-assets-prod",
+        "aixtiv-vision-lake-prod",
+        "aixtiv-memory-vista-prod"
+      ]
+    },
+    blockchain: {
+      role: "Immutable ledger",
+      usage: "Verification and authorization",
+      records: [
+        "deliverableAuthorizations",
+        "flightVerifications",
+        "qualityVerifications"
+      ],
+      implementation: "Private Ethereum blockchain"
+    },
+    redisCache: {
+      role: "Caching layer",
+      usage: "LLM response caching, session data",
+      cacheCategories: [
+        "llmResponses",
+        "userSessions",
+        "frequentQueries"
+      ],
+      ttl: {
+        llmResponses: 3600, // 1 hour
+        userSessions: 86400, // 24 hours
+        frequentQueries: 300 // 5 minutes
+      }
+    }
+  },
+  
+  // Data flows between components
+  dataFlows: [
+    {
+      source: "Dream Commander",
+      destination: "Q4D-Lenz",
+      data: "Strategic prompts",
+      protocol: "Internal API"
+    },
+    {
+      source: "Q4D-Lenz",
+      destination: "Co-Pilots",
+      data: "Interpreted prompts with perspective",
+      protocol: "Internal API"
+    },
+    {
+      source: "Co-Pilots",
+      destination: "Flight Memory System",
+      data: "Work sessions and deliverables",
+      protocol: "Internal API"
+    },
+    {
+      source: "Flight Memory System",
+      destination: "Blockchain Authorization",
+      data: "Verification requests",
+      protocol: "Secure API"
+    },
+    {
+      source: "Bid Suite",
+      destination: "Dream Commander",
+      data: "Opportunity details",
+      protocol: "Internal API"
+    },
+    {
+      source: "Dr. Match App",
+      destination: "Q4D-Lenz",
+      data: "Professional network insights",
+      protocol: "Internal API"
+    }
+  ]
+};
+
+/**
+ * Deployment Architecture
+ * 
+ * The AIXTIV ecosystem is deployed on Google Cloud Platform in the us-west1 region,
+ * with a focus on scalability, reliability, and security.
+ */
+const deploymentArchitecture = {
+  cloudProvider: "Google Cloud Platform",
+  region: "us-west1",
+  projectId: "api-for-warp-drive",
+  
+  // Kubernetes clusters
+  clusters: {
+    primary: {
+      name: "aixtiv-cluster-production",
+      version: "1.25",
+      nodeCount: 5,
+      machineType: "n2-standard-4",
+      autoscaling: true,
+      minNodes: 3,
+      maxNodes: 10
+    },
+    warpDrive: {
+      name: "warp-drive-cluster-production",
+      version: "1.25",
+      nodeCount: 5,
+      machineType: "n2-standard-8",
+      gpuConfig: {
+        type: "nvidia-tesla-t4",
+        count: 1
+      },
+      autoscaling: true,
+      minNodes: 2,
+      maxNodes: 10
+    }
+  },
+  
+  // Namespaces
+  namespaces: [
+    "aixtiv-system",
+    "aixtiv-symphony",
+    "aixtiv-bidsuite",
+    "aixtiv-agents",
+    "aixtiv-monitoring"
+  ],
+  
+  // Load balancing
+  loadBalancing: {
+    type: "Global HTTP/S Load Balancer",
+    staticIp: "aixtiv-global-address",
+    ssl: {
+      domains: [
+        "aixtiv.com",
+        "*.aixtiv.com",
+        "symphony.aixtiv.com",
+        "bidsuite.aixtiv.com",
+        "api.aixtiv.com",
+        "academy.aixtiv.com",
+        "giftshop.aixtiv.com",
+        "memoryvista.aixtiv.com",
+        "visionlake.aixtiv.com"
+      ],
+      provider: "Google-managed SSL certificates"
+    },
+    backends: [
+      {
+        name: "aixtiv-frontend",
+        service: "aixtiv-frontend",
+        healthCheck: "/health"
+      },
+      {
+        name: "aixtiv-api-gateway",
+        service: "aixtiv-api-gateway",
+        healthCheck: "/health"
+      },
+      {
+        name: "symphony-frontend",
+        service: "symphony-frontend",
+        healthCheck: "/health"
+      },
+      {
+        name: "bidsuite-frontend",
+        service: "bidsuite-frontend",
+        healthCheck: "/health"
+      }
+    ]
+  },
+  
+  // CI/CD pipeline
+  cicd: {
+    provider: "Cloud Build",
+    repositories: [
+      "aixtiv-symphony",
+      "aixtiv-bid-suite",
+      "aixtiv-q4d-lenz",
+      "aixtiv-dream-commander",
+      "aixtiv-agents"
+    ],
+    triggers: [
+      {
+        name: "symphony-ci-cd-production",
+        branch: "main",
+        repo: "aixtiv-symphony"
+      },
+      {
+        name: "bid-suite-ci-cd-production",
+        branch: "main",
+        repo: "aixtiv-bid-suite"
+      },
+      {
+        name: "q4d-lenz-ci-cd-production",
+        branch: "main",
+        repo: "aixtiv-q4d-lenz"
+      },
+      {
+        name: "dream-commander-ci-cd-production",
+        branch: "main",
+        repo: "aixtiv-dream-commander"
+      },
+      {
+        name: "agents-ci-cd-production",
+        branch: "main",
+        repo: "aixtiv-agents"
+      }
+    ],
+    artifacts: "us-west1-docker.pkg.dev/api-for-warp-drive"
+  },
+  
+  // Monitoring and logging
+  monitoring: {
+    provider: "Cloud Monitoring",
+    dashboards: [
+      "AIXTIV System Overview",
+      "Agent Performance",
+      "Flight Memory Metrics",
+      "LLM Performance",
+      "API Gateway Metrics"
+    ],
+    alerts: [
+      {
+        name: "High Error Rate",
+        metric: "error_count",
+        threshold: 10,
+        duration: "1m",
+        notification: "aixtiv-alerts@example.com"
+      },
+      {
+        name: "Flight Failures",
+        metric: "flight_failure_count",
+        threshold: 5,
+        duration: "5m",
+        notification: "aixtiv-alerts@example.com"
+      },
+      {
+        name: "High API Latency",
+        metric: "http_request_latencies",
+        threshold: 2000,
+        duration: "5m",
+        notification: "aixtiv-alerts@example.com"
+      }
+    ]
+  }
+};
+
+/**
+ * Security Architecture
+ * 
+ * The AIXTIV ecosystem implements comprehensive security measures to protect
+ * data, communications, and access.
+ */
+const securityArchitecture = {
+  authentication: {
+    providers: [
+      "Firebase Authentication",
+      "Google Identity Platform",
+      "Custom JWT"
+    ],
+    methods: [
+      "Email/Password",
+      "Google OAuth",
+      "Microsoft OAuth",
+      "Multi-factor Authentication"
+    ]
+  },
+  
+  authorization: {
+    model: "Role-Based Access Control (RBAC)",
+    roles: [
+      {
+        name: "Owner-Subscriber",
+        permissions: ["full-access", "all-products"]
+      },
+      {
+        name: "Professional Subscriber",
+        permissions: ["full-access", "pro-products"]
+      },
+      {
+        name: "Basic Subscriber",
+        permissions: ["basic-access", "basic-products"]
+      },
+      {
+        name: "System Admin",
+        permissions: ["admin-access", "all-products"]
+      }
+    ]
+  },
+  
+  dataProtection: {
+    atRest: {
+      method: "Google-managed encryption",
+      keyRotation: "Automatic"
+    },
+    inTransit: {
+      method: "TLS 1.3",
+      certificates: "Google-managed"
+    }
+  },
+  
+  networkSecurity: {
+    vpc: "Private VPC",
+    firewalls: [
+      {
+        name: "allow-internal",
+        rules: "Allow all internal traffic"
+      },
+      {
+        name: "allow-external-https",
+        rules: "Allow HTTPS from internet"
+      },
+      {
+        name: "deny-all",
+        rules: "Deny all other traffic"
+      }
+    ],
+    privateCluster: true,
+    cloudNat: true
+  },
+  
+  compliance: [
+    "GDPR",
+    "SOC 2",
+    "HIPAA"
+  ],
+  
+  secretsManagement: {
+    provider: "Secret Manager",
+    secrets: [
+      "openai-api-key",
+      "anthropic-api-key",
+      "blockchain-secret-key",
+      "pinecone-api-key"
+    ]
+  }
+};
+
+/**
+ * Subscription Tiers
+ * 
+ * The AIXTIV ecosystem offers different subscription tiers with varying
+ * levels of access and capabilities.
+ */
+const subscriptionTiers = {
+  basic: {
+    name: "Basic",
+    price: 99,
+    billingCycle: "monthly",
+    includedProducts: [
+      "AIXTIV Symphony",
+      "Q4D-Lenz (Personal Edition)"
+    ],
+    features: [
+      "Access to Symphony platform",
+      "Personal growth tracking",
+      "Basic Q4D-Lenz perspective",
+      "1 Co-Pilot agent",
+      "Limited memory allocation (4GB)"
+    ]
+  },
+  
+  professional: {
+    name: "Professional",
+    price: 299,
+    billingCycle: "monthly",
+    includedProducts: [
+      "AIXTIV Symphony",
+      "Bid Suite",
+      "Q4D-Lenz (Professional Edition)",
+      "Dream Commander",
+      "Dr. Match App",
+      "Dr. Memoria's Anthology"
+    ],
+    features: [
+      "Everything in Basic",
+      "Full Bid Suite capabilities",
+      "Professional Q4D-Lenz perspective",
+      "Dream Commander strategic intelligence",
+      "LinkedIn integration with Dr. Match",
+      "Publishing capabilities with Dr. Memoria",
+      "3 Co-Pilot agents",
+      "Enhanced memory allocation (8GB)"
+    ]
+  },
+  
+  enterprise: {
+    name: "Enterprise",
+    price: 999,
+    billingCycle: "monthly",
+    includedProducts: [
+      "AIXTIV Symphony",
+      "Bid Suite",
+      "Q4D-Lenz (Enterprise Edition)",
+      "Dream Commander",
+      "Dr. Match App",
+      "Dr. Memoria's Anthology",
+      "Dr. Lucy Automation"
+    ],
+    features: [
+      "Everything in Professional",
+      "Enterprise Q4D-Lenz perspective",
+      "Advanced Dream Commander capabilities",
+      "CI/CD integration with Dr. Lucy",
+      "Custom agent development",
+      "Dedicated squadrons",
+      "Maximum memory allocation (16GB)",
+      "Priority support",
+      "Custom integrations"
+    ]
+  }
+};
+
+/**
+ * Integration Touchpoints
+ * 
+ * Key integration points between different components of the AIXTIV ecosystem.
+ */
+const integrationTouchpoints = {
+  "Symphony → Bid Suite": [
+    "Owner-subscriber profile sharing",
+    "Unified authentication",
+    "Growth metrics sharing",
+    "Navigation integration"
+  ],
+  
+  "Bid Suite → Dream Commander": [
+    "Opportunity details for strategic analysis",
+    "Bid status updates",
+    "Context sharing for prompt generation"
+  ],
+  
+  "Dream Commander → Q4D-Lenz": [
+    "Strategic prompts for interpretation",
+    "Context sharing for enhanced perspective",
+    "Goal alignment information"
+  ],
+  
+  "Q4D-Lenz → Co-Pilots": [
+    "Perspective-enhanced interpretations",
+    "Multi-dimensional context",
+    "Activity recommendations"
+  ],
+  
+  "Co-Pilots → Flight Memory System": [
+    "Work session tracking",
+    "Deliverable creation",
+    "Performance metrics"
+  ],
+  
+  "Flight Memory System → Blockchain": [
+    "Work verification",
+    "Immutable record creation",
+    "Reward distribution"
+  ],
+  
+  "Dr. Match → Q4D-Lenz": [
+    "Professional network insights",
+    "Industry context",
+    "Competitive analysis"
+  ],
+  
+  "Dr. Memoria → Bid Suite": [
+    "Content generation for opportunities",
+    "Brand building content",
+    "Thought leadership assets"
+  ],
+  
+  "Dr. Lucy → Symphony": [
+    "CI/CD workflow integration",
+    "Information flow automation",
+    "System updates"
+  ]
+};
+
+// Export comprehensive system architecture
+module.exports = {
+  systemArchitectureOverview,
+  specializedAgents,
+  flightMemorySystem,
+  dataArchitecture,
+  deploymentArchitecture,
+  securityArchitecture,
+  subscriptionTiers,
+  integrationTouchpoints
+};

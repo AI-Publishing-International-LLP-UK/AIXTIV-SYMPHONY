@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.36.3",
+    "@genkit-ai/googleai": "^1.0.4",
+    "@google-cloud/container": "^5.19.0",
+    "@google-cloud/run": "^1.5.0",
+    "chalk": "^5.4.1",
+    "express": "^4.21.2",
+    "firebase": "^11.3.1",
+    "firebase-admin": "^13.1.0",
+    "firebase-functions": "^6.3.2",
+    "genkit": "^1.0.4"
+  },
+  "name": "downloads",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "engines": {
+    "node": "20"
+  }
+}

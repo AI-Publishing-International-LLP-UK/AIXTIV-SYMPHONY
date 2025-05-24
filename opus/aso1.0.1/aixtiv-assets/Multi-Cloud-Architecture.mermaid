@@ -1,0 +1,93 @@
+graph TD
+    subgraph GlobalInfra[Global Infrastructure Layer]
+        VPC[Global VPC Network]
+        DNS[Cloud DNS]
+        LB[Global Load Balancer]
+        NAT[Cloud NAT]
+        SSL[SSL Certificates]
+        
+        subgraph NetworkingSecurity[Networking & Security]
+            Subnets[Global Subnets]
+            Router[Cloud Router]
+            FW[Firewall Rules]
+            IAM[IAM & Security]
+        end
+    end
+    
+    subgraph Compute[Compute Resources]
+        subgraph Servers[Dedicated Servers]
+            MCP[MCP Server]
+            C2100[Coaching2100 Server]
+            WarpDrive[WarpDriveProd-01]
+            Staging[Staging Server]
+        end
+        
+        subgraph Container[Container Infrastructure]
+            GKE[Google Kubernetes Engine]
+            CloudRun[Cloud Run]
+            VertexAI[Vertex AI]
+        end
+    end
+    
+    subgraph AI[AI & ML Layer]
+        subgraph Models[AI Models]
+            Gemini[Gemini Pro]
+            Claude[Anthropic Claude]
+            OpenAI[OpenAI GPT]
+            HF[HuggingFace Models]
+        end
+        
+        subgraph Orchestration[Agent Orchestration]
+            Ray[Ray Clusters]
+            Pinecone[Pinecone Vector DB]
+            AgentMgr[Agent Manager]
+        end
+    end
+    
+    subgraph Data[Data Layer]
+        subgraph Storage[Storage Solutions]
+            FireStore[Firestore]
+            CloudStorage[Cloud Storage]
+            Redis[Redis Cache]
+        end
+        
+        subgraph Processing[Data Processing]
+            BigQuery[BigQuery]
+            DataFlow[Dataflow]
+            PubSub[Pub/Sub]
+        end
+    end
+    
+    subgraph DevOps[DevOps Integration]
+        subgraph Version[Version Control]
+            GitHub[GitHub]
+            GitLab[GitLab]
+            BitBucket[BitBucket]
+        end
+        
+        subgraph ProjectMgmt[Project Management]
+            Jira[Jira]
+            Trello[Trello]
+        end
+        
+        subgraph CI[CI/CD Pipeline]
+            Jenkins[Jenkins]
+            CloudBuild[Cloud Build]
+            ArgoCD[Argo CD]
+        end
+    end
+    
+    GlobalInfra --> Compute
+    Compute --> AI
+    AI --> Data
+    DevOps --> Compute
+    
+    classDef infra fill:#f9f,stroke:#333,stroke-width:4px
+    classDef compute fill:#bbf,stroke:#333,stroke-width:2px
+    classDef ai fill:#bfb,stroke:#333,stroke-width:2px
+    classDef data fill:#fbf,stroke:#333,stroke-width:2px
+    
+    class GlobalInfra,NetworkingSecurity infra
+    class Servers,Container compute
+    class Models,Orchestration ai
+    class Storage,Processing data

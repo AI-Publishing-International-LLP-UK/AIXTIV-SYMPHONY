@@ -1,74 +1,73 @@
 {
-    "orchestration_version": "1.0.0",
-    "coordination_settings": {
-        "deployment_strategy": {
-            "method": "rolling_update",
-            "max_surge": "25%",
-            "max_unavailable": "10%"
-        },
-        "scaling_rules": {
-            "min_instances": 1,
-            "max_instances": 10,
-            "scale_triggers": {
-                "cpu_threshold": 80,
-                "memory_threshold": 85,
-                "request_count": 1000
-            }
-        },
-        "health_checks": {
-            "interval": "30s",
-            "timeout": "5s",
-            "success_threshold": 1,
-            "failure_threshold": 3
-        }
+  "orchestration_version": "1.0.0",
+  "coordination_settings": {
+    "deployment_strategy": {
+      "method": "rolling_update",
+      "max_surge": "25%",
+      "max_unavailable": "10%"
     },
-    "agent_communication": {
-        "protocols": {
-            "primary": "grpc",
-            "fallback": "rest"
-        },
-        "message_patterns": {
-            "synchronous": ["direct_command", "status_query"],
-            "asynchronous": ["event_notification", "task_update"]
-        },
-        "security": {
-            "encryption": "aes-256-gcm",
-            "authentication": "mtls"
-        }
+    "scaling_rules": {
+      "min_instances": 1,
+      "max_instances": 10,
+      "scale_triggers": {
+        "cpu_threshold": 80,
+        "memory_threshold": 85,
+        "request_count": 1000
+      }
     },
-    "resource_allocation": {
-        "cpu_allocation": {
-            "minimum": "500m",
-            "maximum": "2000m",
-            "target_utilization": 75
-        },
-        "memory_allocation": {
-            "minimum": "512Mi",
-            "maximum": "4Gi",
-            "target_utilization": 80
-        }
-    },
-    "monitoring_configuration": {
-        "metrics_collection": {
-            "interval": "15s",
-            "retention_period": "7d"
-        },
-        "alert_thresholds": {
-            "error_rate": 1,
-            "latency_p95": "500ms",
-            "cpu_usage": 90,
-            "memory_usage": 85
-        },
-        "logging": {
-            "level": "info",
-            "retention": "30d",
-            "structured": true
-        }
-    },
-    "deployment_zones": {
-        "primary": "us-west1",
-        "secondary": "us-east1",
-        "failover_trigger": "region_failure"
+    "health_checks": {
+      "interval": "30s",
+      "timeout": "5s",
+      "success_threshold": 1,
+      "failure_threshold": 3
     }
+  },
+  "agent_communication": {
+    "protocols": {
+      "primary": "grpc",
+      "fallback": "rest"
+    },
+    "message_patterns": {
+      "synchronous": ["direct_command", "status_query"],
+      "asynchronous": ["event_notification", "task_update"]
+    },
+    "security": {
+      "encryption": "aes-256-gcm",
+      "authentication": "mtls"
+    }
+  },
+  "resource_allocation": {
+    "cpu_allocation": {
+      "minimum": "500m",
+      "maximum": "2000m",
+      "target_utilization": 75
+    },
+    "memory_allocation": {
+      "minimum": "512Mi",
+      "maximum": "4Gi",
+      "target_utilization": 80
+    }
+  },
+  "monitoring_configuration": {
+    "metrics_collection": {
+      "interval": "15s",
+      "retention_period": "7d"
+    },
+    "alert_thresholds": {
+      "error_rate": 1,
+      "latency_p95": "500ms",
+      "cpu_usage": 90,
+      "memory_usage": 85
+    },
+    "logging": {
+      "level": "info",
+      "retention": "30d",
+      "structured": true
+    }
+  },
+  "deployment_zones": {
+    "primary": "us-west1",
+    "secondary": "us-east1",
+    "failover_trigger": "region_failure"
+  }
 }
-

@@ -1,0 +1,20 @@
+{
+  "projects": {
+    "default": "api-for-warp-drive"
+  },
+  "targets": {
+    "api-for-warp-drive": {
+      "hosting": {
+        "asoos": [
+          "asoos-2100-cool"
+        ],
+        "symphony": [
+          "symphony-asoos-2100"
+        ],
+        "anthology": [
+          "anthology-asoos-2100"
+        ]
+      }
+    }
+  }
+}

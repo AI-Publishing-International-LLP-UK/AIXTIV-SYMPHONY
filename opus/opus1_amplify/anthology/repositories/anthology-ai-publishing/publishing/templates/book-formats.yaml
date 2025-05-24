@@ -1,0 +1,24 @@
+# Book Format Templates
+
+version: '1.0'
+type: format-templates
+
+formats:
+  ebook:
+    kindle:
+      - format: MOBI/KF8
+      - cover: 2560x1600px
+      - quality: 300dpi
+    epub:
+      - format: EPUB3
+      - compatibility: universal
+
+  print:
+    hardcover:
+      - sizes: [6x9, 7x10]
+      - bleed: 0.125in
+      - spine: automatic
+    paperback:
+      - sizes: [5.5x8.5, 6x9]
+      - bleed: 0.125in
+      - spine: automatic

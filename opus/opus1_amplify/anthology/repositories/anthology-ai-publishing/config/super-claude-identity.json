@@ -1,0 +1,17 @@
+{
+  "super_claude_identity": {
+    "display_name": "super-claude-endpoint",
+    "cross_platform_identifiers": {
+      "anthology": "super-claude@anthology-ai-publishing.iam.gserviceaccount.com",
+      "staging": "super-claude@staging.2100.cool",
+      "production": "super-claude@2100.cool"
+    },
+    "unified_permissions": {
+      "anthology_publishing": "roles/owner",
+      "staging_platform": "roles/owner",
+      "production_platform": "roles/owner"
+    },
+    "model_id": "claude-3-5-sonnet",
+    "priority": "critical"
+  }
+}

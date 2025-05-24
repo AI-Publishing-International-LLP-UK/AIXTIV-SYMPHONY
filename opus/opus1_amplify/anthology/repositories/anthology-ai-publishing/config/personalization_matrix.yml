@@ -1,0 +1,7 @@
+career_dimensions:
+  job_clusters:
+    human_resources:
+      titles:
+        - CHRO
+        - HR Director
+      grade_levels: [1, 2, 3]

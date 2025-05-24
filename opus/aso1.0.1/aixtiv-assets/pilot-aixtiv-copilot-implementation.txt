@@ -1,0 +1,914 @@
+/**
+ * AIXTIV SYMPHONY™ Co-Pilot System
+ * © 2025 AI Publishing International LLP
+ * 
+ * PROPRIETARY AND CONFIDENTIAL
+ * This is proprietary software of AI Publishing International LLP.
+ * All rights reserved. No part of this software may be reproduced,
+ * modified, or distributed without prior written permission.
+ */
+
+import { AIConnector, AIModelType, AIRequestType, AIResponseFormat, AIRequestParams, AIResponse } from './ai-connector';
+import { PilotType, PerformanceProfile } from '../core/types';
+import { getFirestore, doc, getDoc, collection, query, where, getDocs, orderBy, limit, Timestamp } from 'firebase/firestore';
+import { S2DOManager, S2DOObjectType } from '../core/s2do';
+import { ActivityLoggerService } from '../core';
+import { JiraIntegrationService } from '../integrations/jira-integration';
+import { BlockchainVerificationService } from '../blockchain/verification-service';
+import { NFTMintingService } from '../blockchain/nft-minting-service';
+
+// Initialize Firestore
+const db = getFirestore();
+
+/**
+ * Co-Pilot Type Enum
+ */
+export enum CoPilotType {
+  EXECUTIVE_COPILOT = 'ECP',
+  BUSINESS_COPILOT = 'BCP',
+  TECHNICAL_COPILOT = 'TCP',
+  CREATIVE_COPILOT = 'CCP',
+  ACADEMIC_COPILOT = 'ACP'
+}
+
+/**
+ * Co-Pilot Status Enum
+ */
+export enum CoPilotStatus {
+  AVAILABLE = 'available',
+  ENGAGED = 'engaged',
+  IN_PLANNING = 'in_planning',
+  IN_DEPLOYMENT = 'in_deployment',
+  IN_REVIEW = 'in_review',
+  ON_BREAK = 'on_break'
+}
+
+/**
+ * Co-Pilot Interface
+ * Base interface for all owner-subscriber named Co-Pilots
+ */
+export interface CoPilot {
+  // Core information
+  getCoPilotId(): string;
+  getCoPilotName(): string;
+  getCoPilotType(): CoPilotType;
+  getOwnerSubscriberId(): string;
+  getOwnerSubscriberName(): string;
+  
+  // Status management
+  getCoPilotStatus(): CoPilotStatus;
+  setCoPilotStatus(status: CoPilotStatus): void;
+  
+  // Project coordination
+  createProject(projectDetails: any): Promise<string>;
+  updateProjectStatus(projectId: string, status: string, notes?: string): Promise<void>;
+  assignPilot(projectId: string, pilotType: PilotType): Promise<void>;
+  
+  // S2DO management
+  getS2DOObjects(objectType: S2DOObjectType, status?: string): Promise<any[]>;
+  createS2DOObject(objectType: S2DOObjectType, metadata: any, content: any): Promise<string>;
+  
+  // Blockchain integration
+  verifyApproval(approvalId: string): Promise<boolean>;
+  mintNFTForCompletedProject(projectId: string): Promise<string>;
+  
+  // Communication
+  sendMessageToOwner(message: string, priority: 'low' | 'medium' | 'high'): Promise<void>;
+  receiveMessageFromOwner(message: string): Promise<void>;
+  
+  // Orchestration
+  orchestrateProjectWorkflow(projectId: string): Promise<void>;
+  delegateToClaudeAgent(task: any, claudeAgentType: '01' | '02' | '03'): Promise<any>;
+  
+  // Q4D-Lenz integration
+  retrieveQ4DLenzData(date?: Date): Promise<any>;
+  analyzeQ4DLenzInsights(data: any): Promise<any>;
+}
+
+/**
+ * Base Co-Pilot Implementation
+ * Abstract base class with common functionality for all Co-Pilots
+ */
+export abstract class BaseCoPilot implements CoPilot {
+  protected id: string;
+  protected name: string;
+  protected type: CoPilotType;
+  protected ownerSubscriberId: string;
+  protected ownerSubscriberName: string;
+  protected status: CoPilotStatus;
+  protected aiConnector: AIConnector;
+  protected s2doManager: S2DOManager;
+  protected jiraService: JiraIntegrationService;
+  protected blockchainService: BlockchainVerificationService;
+  protected nftService: NFTMintingService;
+  protected agentAdapterFactory: any; // Would be AgentAdapterFactory
+  
+  constructor(
+    id: string,
+    name: string,
+    type: CoPilotType,
+    ownerSubscriberId: string,
+    ownerSubscriberName: string,
+    aiConnector: AIConnector,
+    s2doManager: S2DOManager,
+    jiraService: JiraIntegrationService,
+    blockchainService: BlockchainVerificationService,
+    nftService: NFTMintingService,
+    agentAdapterFactory: any
+  ) {
+    this.id = id;
+    this.name = name;
+    this.type = type;
+    this.ownerSubscriberId = ownerSubscriberId;
+    this.ownerSubscriberName = ownerSubscriberName;
+    this.status = CoPilotStatus.AVAILABLE;
+    this.aiConnector = aiConnector;
+    this.s2doManager = s2doManager;
+    this.jiraService = jiraService;
+    this.blockchainService = blockchainService;
+    this.nftService = nftService;
+    this.agentAdapterFactory = agentAdapterFactory;
+  }
+  
+  // Core information methods
+  public getCoPilotId(): string {
+    return this.id;
+  }
+  
+  public getCoPilotName(): string {
+    return this.name;
+  }
+  
+  public getCoPilotType(): CoPilotType {
+    return this.type;
+  }
+  
+  public getOwnerSubscriberId(): string {
+    return this.ownerSubscriberId;
+  }
+  
+  public getOwnerSubscriberName(): string {
+    return this.ownerSubscriberName;
+  }
+  
+  // Status management methods
+  public getCoPilotStatus(): CoPilotStatus {
+    return this.status;
+  }
+  
+  public setCoPilotStatus(status: CoPilotStatus): void {
+    this.status = status;
+    
+    // Log status change
+    ActivityLoggerService.logActivity({
+      activityType: 'co_pilot_status_change',
+      entityId: this.id,
+      entityType: 'co_pilot',
+      userId: this.ownerSubscriberId,
+      details: {
+        previousStatus: this.status,
+        newStatus: status,
+        timestamp: new Date().toISOString()
+      }
+    });
+  }
+  
+  // Project coordination methods
+  public async createProject(projectDetails: any): Promise<string> {
+    try {
+      // Create project in JIRA
+      const jiraProjectId = await this.jiraService.createProject({
+        name: projectDetails.name,
+        key: `C2100-${this.generateProjectKey(projectDetails.name)}`,
+        description: projectDetails.description,
+        lead: this.ownerSubscriberName,
+        category: projectDetails.category
+      });
+      
+      // Store project in Firestore
+      const projectRef = await collection(db, 'projects').add({
+        name: projectDetails.name,
+        description: projectDetails.description,
+        ownerId: this.ownerSubscriberId,
+        coPilotId: this.id,
+        jiraProjectId,
+        status: 'planning',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        estimatedCompletion: projectDetails.estimatedCompletion,
+        budget: projectDetails.budget,
+        assignedPilots: [],
+        approvals: []
+      });
+      
+      // Create S2DO project object
+      await this.createS2DOObject(
+        S2DOObjectType.PROJECT,
+        {
+          title: projectDetails.name,
+          description: projectDetails.description,
+          projectId: projectRef.id,
+          jiraProjectId
+        },
+        projectDetails
+      );
+      
+      // Update Co-Pilot status
+      this.setCoPilotStatus(CoPilotStatus.IN_PLANNING);
+      
+      return projectRef.id;
+    } catch (error) {
+      console.error(`Error creating project:`, error);
+      throw error;
+    }
+  }
+  
+  public async updateProjectStatus(projectId: string, status: string, notes?: string): Promise<void> {
+    try {
+      // Update Firestore
+      await doc(db, 'projects', projectId).update({
+        status,
+        updatedAt: new Date(),
+        statusNotes: notes || ''
+      });
+      
+      // Update JIRA
+      const projectDoc = await getDoc(doc(db, 'projects', projectId));
+      const projectData = projectDoc.data();
+      
+      if (!projectData) {
+        throw new Error(`Project not found: ${projectId}`);
+      }
+      
+      await this.jiraService.updateProjectStatus(
+        projectData.jiraProjectId,
+        status,
+        notes || ''
+      );
+      
+      // Update Co-Pilot status based on project status
+      switch (status) {
+        case 'planning':
+          this.setCoPilotStatus(CoPilotStatus.IN_PLANNING);
+          break;
+        case 'deployment':
+          this.setCoPilotStatus(CoPilotStatus.IN_DEPLOYMENT);
+          break;
+        case 'review':
+          this.setCoPilotStatus(CoPilotStatus.IN_REVIEW);
+          break;
+        case 'completed':
+          this.setCoPilotStatus(CoPilotStatus.AVAILABLE);
+          // Mint NFT for completed project
+          await this.mintNFTForCompletedProject(projectId);
+          break;
+      }
+    } catch (error) {
+      console.error(`Error updating project status:`, error);
+      throw error;
+    }
+  }
+  
+  public async assignPilot(projectId: string, pilotType: PilotType): Promise<void> {
+    try {
+      // Get project
+      const projectDoc = await getDoc(doc(db, 'projects', projectId));
+      const projectData = projectDoc.data();
+      
+      if (!projectData) {
+        throw new Error(`Project not found: ${projectId}`);
+      }
+      
+      // Check if pilot already assigned
+      const assignedPilots = projectData.assignedPilots || [];
+      if (assignedPilots.includes(pilotType)) {
+        return; // Pilot already assigned
+      }
+      
+      // Add pilot to project
+      await doc(db, 'projects', projectId).update({
+        assignedPilots: [...assignedPilots, pilotType],
+        updatedAt: new Date()
+      });
+      
+      // Create JIRA task for pilot
+      await this.jiraService.createTask(
+        projectData.jiraProjectId,
+        `${pilotType} Assignment`,
+        `Assign ${pilotType} to assist with this project`,
+        'Task',
+        'High'
+      );
+      
+      // Log assignment
+      ActivityLoggerService.logActivity({
+        activityType: 'pilot_assignment',
+        entityId: projectId,
+        entityType: 'project',
+        userId: this.ownerSubscriberId,
+        details: {
+          pilotType,
+          assignedBy: this.id,
+          timestamp: new Date().toISOString()
+        }
+      });
+    } catch (error) {
+      console.error(`Error assigning pilot:`, error);
+      throw error;
+    }
+  }
+  
+  // S2DO management methods
+  public async getS2DOObjects(objectType: S2DOObjectType, status?: string): Promise<any[]> {
+    try {
+      return await this.s2doManager.getObjectsByOwner(
+        'user',
+        this.ownerSubscriberId,
+        objectType,
+        status || 'active',
+        this.id
+      );
+    } catch (error) {
+      console.error(`Error getting S2DO objects:`, error);
+      throw error;
+    }
+  }
+  
+  public async createS2DOObject(objectType: S2DOObjectType, metadata: any, content: any): Promise<string> {
+    try {
+      const objectId = await this.s2doManager.createObject(
+        'user',
+        this.ownerSubscriberId,
+        objectType,
+        metadata,
+        content,
+        'active',
+        this.id
+      );
+      
+      return objectId;
+    } catch (error) {
+      console.error(`Error creating S2DO object:`, error);
+      throw error;
+    }
+  }
+  
+  // Blockchain integration methods
+  public async verifyApproval(approvalId: string): Promise<boolean> {
+    try {
+      // Get approval from Firestore
+      const approvalDoc = await getDoc(doc(db, 'approvals', approvalId));
+      const approvalData = approvalDoc.data();
+      
+      if (!approvalData) {
+        throw new Error(`Approval not found: ${approvalId}`);
+      }
+      
+      // Verify on blockchain
+      const isVerified = await this.blockchainService.verifyTransaction(
+        approvalData.transactionId,
+        approvalData.hash
+      );
+      
+      // Update approval status
+      await doc(db, 'approvals', approvalId).update({
+        verificationStatus: isVerified ? 'verified' : 'failed',
+        verifiedAt: new Date()
+      });
+      
+      return isVerified;
+    } catch (error) {
+      console.error(`Error verifying approval:`, error);
+      throw error;
+    }
+  }
+  
+  public async mintNFTForCompletedProject(projectId: string): Promise<string> {
+    try {
+      // Get project
+      const projectDoc = await getDoc(doc(db, 'projects', projectId));
+      const projectData = projectDoc.data();
+      
+      if (!projectData) {
+        throw new Error(`Project not found: ${projectId}`);
+      }
+      
+      // Prepare NFT metadata
+      const nftMetadata = {
+        name: `${projectData.name} Completion Certificate`,
+        description: `AIXTIV SYMPHONY project completion certificate for ${projectData.name}`,
+        image: `https://aixtiv.ai/nft/project/${projectId}.png`, // Would be generated
+        attributes: [
+          { trait_type: 'Owner', value: this.ownerSubscriberName },
+          { trait_type: 'Co-Pilot', value: this.name },
+          { trait_type: 'Completion Date', value: new Date().toISOString().split('T')[0] },
+          { trait_type: 'Project Type', value: projectData.category || 'Standard' }
+        ],
+        project_id: projectId,
+        jira_id: projectData.jiraProjectId
+      };
+      
+      // Mint NFT
+      const nftId = await this.nftService.mintNFT(
+        this.ownerSubscriberId,
+        nftMetadata
+      );
+      
+      // Update project with NFT ID
+      await doc(db, 'projects', projectId).update({
+        nftId,
+        nftMintedAt: new Date()
+      });
+      
+      // Log NFT minting
+      ActivityLoggerService.logActivity({
+        activityType: 'nft_minting',
+        entityId: projectId,
+        entityType: 'project',
+        userId: this.ownerSubscriberId,
+        details: {
+          nftId,
+          mintedBy: this.id,
+          timestamp: new Date().toISOString()
+        }
+      });
+      
+      return nftId;
+    } catch (error) {
+      console.error(`Error minting NFT:`, error);
+      throw error;
+    }
+  }
+  
+  // Communication methods
+  public async sendMessageToOwner(message: string, priority: 'low' | 'medium' | 'high'): Promise<void> {
+    try {
+      // Create message in Firestore
+      await collection(db, 'messages').add({
+        from: this.id,
+        fromType: 'co_pilot',
+        to: this.ownerSubscriberId,
+        toType: 'user',
+        content: message,
+        priority,
+        status: 'sent',
+        sentAt: new Date(),
+        readAt: null
+      });
+      
+      // If high priority, send additional notification
+      if (priority === 'high') {
+        // This would integrate with notification system
+        console.log(`Sending high priority notification to ${this.ownerSubscriberName}`);
+      }
+    } catch (error) {
+      console.error(`Error sending message:`, error);
+      throw error;
+    }
+  }
+  
+  public async receiveMessageFromOwner(message: string): Promise<void> {
+    try {
+      // Process incoming message
+      console.log(`Processing message from ${this.ownerSubscriberName}: ${message}`);
+      
+      // Log message receipt
+      ActivityLoggerService.logActivity({
+        activityType: 'message_received',
+        entityId: this.id,
+        entityType: 'co_pilot',
+        userId: this.ownerSubscriberId,
+        details: {
+          messagePreview: message.substring(0, 100),
+          timestamp: new Date().toISOString()
+        }
+      });
+      
+      // Analyze message and determine action
+      // This would be implemented based on message content
+    } catch (error) {
+      console.error(`Error receiving message:`, error);
+      throw error;
+    }
+  }
+  
+  // Orchestration methods
+  public async orchestrateProjectWorkflow(projectId: string): Promise<void> {
+    try {
+      // Get project
+      const projectDoc = await getDoc(doc(db, 'projects', projectId));
+      const projectData = projectDoc.data();
+      
+      if (!projectData) {
+        throw new Error(`Project not found: ${projectId}`);
+      }
+      
+      // Determine current phase and next steps
+      const currentStatus = projectData.status;
+      
+      switch (currentStatus) {
+        case 'planning':
+          // Delegate to Claude 01 for planning
+          await this.delegateToClaudeAgent(
+            {
+              projectId,
+              action: 'create_project_plan',
+              details: projectData
+            },
+            '01'
+          );
+          break;
+          
+        case 'approved':
+          // Delegate to Claude 02 for deployment
+          await this.delegateToClaudeAgent(
+            {
+              projectId,
+              action: 'manage_deployment',
+              details: projectData
+            },
+            '02'
+          );
+          // Update status to deployment
+          await this.updateProjectStatus(projectId, 'deployment', 'Deployment initiated by Co-Pilot');
+          break;
+          
+        case 'deployed':
+          // Delegate to Claude 03 for validation
+          await this.delegateToClaudeAgent(
+            {
+              projectId,
+              action: 'validate_deployment',
+              details: projectData
+            },
+            '03'
+          );
+          // Update status to validation
+          await this.updateProjectStatus(projectId, 'validation', 'Validation initiated by Co-Pilot');
+          break;
+          
+        case 'validated':
+          // Finalize project
+          await this.updateProjectStatus(projectId, 'completed', 'Project successfully completed');
+          // Notify owner
+          await this.sendMessageToOwner(
+            `Project "${projectData.name}" has been successfully completed! An NFT certificate has been minted to commemorate this achievement.`,
+            'high'
+          );
+          break;
+      }
+    } catch (error) {
+      console.error(`Error orchestrating project workflow:`, error);
+      throw error;
+    }
+  }
+  
+  public async delegateToClaudeAgent(task: any, claudeAgentType: '01' | '02' | '03'): Promise<any> {
+    try {
+      // Determine Claude agent PilotType based on agent type
+      let claudePilotType: PilotType;
+      
+      switch (claudeAgentType) {
+        case '01':
+          claudePilotType = PilotType.DR_CLAUDE_PILOT; // Or should use specific R1 version
+          break;
+        case '02':
+          claudePilotType = 'DR_CLAUDE_02' as any; // Would need proper enum
+          break;
+        case '03':
+          claudePilotType = 'DR_CLAUDE_03' as any; // Would need proper enum
+          break;
+        default:
+          throw new Error(`Invalid Claude agent type: ${claudeAgentType}`);
+      }
+      
+      // Get Claude agent adapter
+      const claudeAdapter = this.agentAdapterFactory.createAdapter(claudePilotType);
+      
+      // Create task message
+      const taskMessage = JSON.stringify(task);
+      
+      // Send task to Claude agent
+      const response = await claudeAdapter.processQuery(
+        taskMessage,
+        this.ownerSubscriberId
+      );
+      
+      // Log delegation
+      ActivityLoggerService.logActivity({
+        activityType: 'claude_delegation',
+        entityId: task.projectId || 'no_project',
+        entityType: 'project',
+        userId: this.ownerSubscriberId,
+        details: {
+          claudeAgentType,
+          taskType: task.action,
+          timestamp: new Date().toISOString()
+        }
+      });
+      
+      return response;
+    } catch (error) {
+      console.error(`Error delegating to Claude agent:`, error);
+      throw error;
+    }
+  }
+  
+  // Q4D-Lenz integration methods
+  public async retrieveQ4DLenzData(date?: Date): Promise<any> {
+    try {
+      const targetDate = date || new Date();
+      
+      // Query Q4D-Lenz data
+      const q4dQuery = query(
+        collection(db, 'q4dlenz'),
+        where('userId', '==', this.ownerSubscriberId),
+        where('date', '<=', targetDate),
+        orderBy('date', 'desc'),
+        limit(7) // Get up to a week of data
+      );
+      
+      const q4dSnapshot = await getDocs(q4dQuery);
+      
+      return q4dSnapshot.docs.map(doc => doc.data());
+    } catch (error) {
+      console.error(`Error retrieving Q4D-Lenz data:`, error);
+      throw error;
+    }
+  }
+  
+  public async analyzeQ4DLenzInsights(data: any): Promise<any> {
+    try {
+      // Process Q4D-Lenz data to extract insights
+      // This would integrate with AI analysis
+      
+      // For now, return sample insights
+      return {
+        keyFocus: data.length > 0 ? data[0].focus : [],
+        priorityShifts: this.detectPriorityShifts(data),
+        opportunities: this.identifyOpportunities(data),
+        challenges: this.identifyChallenges(data)
+      };
+    } catch (error) {
+      console.error(`Error analyzing Q4D-Lenz insights:`, error);
+      throw error;
+    }
+  }
+  
+  // Helper methods
+  private generateProjectKey(projectName: string): string {
+    // Generate a unique project key based on name
+    const sanitized = projectName
+      .replace(/[^a-zA-Z0-9]/g, '')
+      .substring(0, 5)
+      .toUpperCase();
+    
+    const randomPart = Math.floor(Math.random() * 1000)
+      .toString()
+      .padStart(3, '0');
+    
+    return `${sanitized}${randomPart}`;
+  }
+  
+  private detectPriorityShifts(data: any[]): any[] {
+    // Analyze changes in priorities over time
+    // This would have a more sophisticated implementation
+    return [];
+  }
+  
+  private identifyOpportunities(data: any[]): any[] {
+    // Identify potential opportunities from Q4D-Lenz data
+    // This would have a more sophisticated implementation
+    return [];
+  }
+  
+  private identifyChallenges(data: any[]): any[] {
+    // Identify potential challenges from Q4D-Lenz data
+    // This would have a more sophisticated implementation
+    return [];
+  }
+}
+
+/**
+ * Executive Co-Pilot
+ * Specializes in high-level strategic support for executive owner-subscribers
+ */
+export class ExecutiveCoPilot extends BaseCoPilot {
+  constructor(
+    id: string,
+    name: string,
+    ownerSubscriberId: string,
+    ownerSubscriberName: string,
+    aiConnector: AIConnector,
+    s2doManager: S2DOManager,
+    jiraService: JiraIntegrationService,
+    blockchainService: BlockchainVerificationService,
+    nftService: NFTMintingService,
+    agentAdapterFactory: any
+  ) {
+    super(
+      id,
+      name,
+      CoPilotType.EXECUTIVE_COPILOT,
+      ownerSubscriberId,
+      ownerSubscriberName,
+      aiConnector,
+      s2doManager,
+      jiraService,
+      blockchainService,
+      nftService,
+      agentAdapterFactory
+    );
+  }
+  
+  // Executive-specific methods would be implemented here
+}
+
+/**
+ * Business Co-Pilot
+ * Specializes in business analysis and project management
+ */
+export class BusinessCoPilot extends BaseCoPilot {
+  constructor(
+    id: string,
+    name: string,
+    ownerSubscriberId: string,
+    ownerSubscriberName: string,
+    aiConnector: AIConnector,
+    s2doManager: S2DOManager,
+    jiraService: JiraIntegrationService,
+    blockchainService: BlockchainVerificationService,
+    nftService: NFTMintingService,
+    agentAdapterFactory: any
+  ) {
+    super(
+      id,
+      name,
+      CoPilotType.BUSINESS_COPILOT,
+      ownerSubscriberId,
+      ownerSubscriberName,
+      aiConnector,
+      s2doManager,
+      jiraService,
+      blockchainService,
+      nftService,
+      agentAdapterFactory
+    );
+  }
+  
+  // Business-specific methods would be implemented here
+  
+  /**
+   * Perform business analysis on a project
+   */
+  public async performBusinessAnalysis(projectId: string): Promise<any> {
+    try {
+      // Get project
+      const projectDoc = await getDoc(doc(db, 'projects', projectId));
+      const projectData = projectDoc.data();
+      
+      if (!projectData) {
+        throw new Error(`Project not found: ${projectId}`);
+      }
+      
+      // This would integrate with business analysis tools
+      // For now, return sample analysis
+      return {
+        roi: this.calculateROI(projectData),
+        timeToValue: this.estimateTimeToValue(projectData),
+        resourceRequirements: this.assessResourceRequirements(projectData),
+        riskAssessment: this.performRiskAssessment(projectData)
+      };
+    } catch (error) {
+      console.error(`Error performing business analysis:`, error);
+      throw error;
+    }
+  }
+  
+  /**
+   * Create a detailed project plan
+   */
+  public async createProjectPlan(projectId: string): Promise<string> {
+    try {
+      // Get project
+      const projectDoc = await getDoc(doc(db, 'projects', projectId));
+      const projectData = projectDoc.data();
+      
+      if (!projectData) {
+        throw new Error(`Project not found: ${projectId}`);
+      }
+      
+      // Generate project plan
+      const planMetadata = {
+        title: `${projectData.name} - Project Plan`,
+        description: `Detailed project plan for ${projectData.name}`,
+        projectId
+      };
+      
+      // This would generate a comprehensive project plan
+      const planContent = {
+        phases: [
+          {
+            name: 'Inception',
+            duration: '2 weeks',
+            tasks: [
+              { name: 'Requirements Gathering', owner: 'Co-Pilot', duration: '1 week' },
+              { name: 'Scope Definition', owner: 'Co-Pilot', duration: '3 days' },
+              { name: 'Initial Design', owner: 'Design Team', duration: '4 days' }
+            ]
+          },
+          // Additional phases would be defined
+        ],
+        milestones: [
+          { name: 'Project Kickoff', date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) },
+          { name: 'Design Approval', date: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000) }
+          // Additional milestones would be defined
+        ],
+        resources: [
+          { role: 'Project Manager', allocation: '50%' },
+          { role: 'Designer', allocation: '100%' }
+          // Additional resources would be defined
+        ]
+      };
+      
+      // Create S2DO object for project plan
+      const planId = await this.createS2DOObject(
+        S2DOObjectType.PROJECT_PLAN,
+        planMetadata,
+        planContent
+      );
+      
+      // Update project with plan ID
+      await doc(db, 'projects', projectId).update({
+        projectPlanId: planId,
+        updatedAt: new Date()
+      });
+      
+      // Create JIRA epic for project plan
+      await this.jiraService.createEpic(
+        projectData.jiraProjectId,
+        `${projectData.name} - Project Plan`,
+        'Project plan implementation',
+        'High'
+      );
+      
+      return planId;
+    } catch (error) {
+      console.error(`Error creating project plan:`, error);
+      throw error;
+    }
+  }
+  
+  // Helper methods for business analysis
+  private calculateROI(projectData: any): number {
+    // Calculate return on investment
+    // This would have a more sophisticated implementation
+    return 0;
+  }
+  
+  private estimateTimeToValue(projectData: any): string {
+    // Estimate time to value
+    // This would have a more sophisticated implementation
+    return '3 months';
+  }
+  
+  private assessResourceRequirements(projectData: any): any[] {
+    // Assess resource requirements
+    // This would have a more sophisticated implementation
+    return [];
+  }
+  
+  private performRiskAssessment(projectData: any): any[] {
+    // Perform risk assessment
+    // This would have a more sophisticated implementation
+    return [];
+  }
+}
+
+/**
+ * Technical Co-Pilot
+ * Specializes in technical implementation and solution architecture
+ */
+export class TechnicalCoPilot extends BaseCoPilot {
+  constructor(
+    id: string,
+    name: string,
+    ownerSubscriberId: string,
+    ownerSubscriberName: string,
+    aiConnector: AIConnector,
+    s2doManager: S2DOManager,
+    jiraService: JiraIntegrationService,
+    blockchainService: BlockchainVerificationService,
+    nftService: NFTMintingService,
+    agentAdapterFactory: any
+  ) {
+    super(
+      id,
+      name,
+      CoPilotType.TECHNICAL_COPILOT,
+      ownerSubscriberId,
+      ownerSubscriberName,
+      aiConnector,
+      s2doManager,
+      jiraService,
+      blockchainService,

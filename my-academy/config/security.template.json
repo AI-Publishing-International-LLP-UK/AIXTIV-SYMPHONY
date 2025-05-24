@@ -1,0 +1,14 @@
+{
+  "authentication": {
+    "providers": ["sallyport", "oauth2"],
+    "sallyport": {
+      "endpoint": "https://sallyport.example.com/auth",
+      "apiKey": "{{SALLYPORT_API_KEY}}"
+    },
+    "sessionTimeout": 3600
+  },
+  "authorization": {
+    "roleBasedAccess": true,
+    "roles": ["admin", "instructor", "student", "pilot"]
+  }
+}

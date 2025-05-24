@@ -1,0 +1,84 @@
+# Anthology AI Publishing Automation Pipeline
+name: anthology-ai-publishing
+project_id: api-for-warp-drive
+
+pipelines:
+  content_generation:
+    schedule: "0 */4 * * *"  # Run every 4 hours
+    agents:
+      - name: gpt4-creative
+        role: content_creator
+      - name: claude-opus
+        role: editor
+      - name: gpt4-main
+        role: fact_checker
+    
+    stages:
+      - name: topic_generation
+        agent: gpt4-creative
+        output: vision_lake/topics
+      
+      - name: content_creation
+        agent: gpt4-creative
+        dependencies: [topic_generation]
+        output: vision_lake/drafts
+      
+      - name: editing
+        agent: claude-opus
+        dependencies: [content_creation]
+        output: vision_lake/edited
+      
+      - name: fact_checking
+        agent: gpt4-main
+        dependencies: [editing]
+        output: vision_lake/verified
+      
+      - name: final_review
+        agent: claude-opus
+        dependencies: [fact_checking]
+        output: vision_lake/final
+
+  thought_leadership:
+    schedule: "0 0 * * *"  # Daily at midnight
+    agents:
+      - name: claude-opus
+        role: strategist
+      - name: gpt4-main
+        role: researcher
+    
+    stages:
+      - name: trend_analysis
+        agent: claude-opus
+        output: vision_lake/trends
+      
+      - name: research_synthesis
+        agent: gpt4-main
+        dependencies: [trend_analysis]
+        output: vision_lake/research
+      
+      - name: content_creation
+        agent: claude-opus
+        dependencies: [research_synthesis]
+        output: vision_lake/thought_leadership
+
+monitoring:
+  metrics_prefix: anthology_publishing
+  alert_email: pr@coaching2100.com
+  error_notification: true
+  success_notification: true
+
+storage:
+  vision_lake_bucket: vision-lake-main
+  backup_enabled: true
+  version_control: true
+
+integrations:
+  wordpress:
+    enabled: true
+    api_secret: wordpress-api-key
+  medium:
+    enabled: true
+    api_secret: medium-api-key
+  linkedin:
+    enabled: true
+    api_secret: linkedin-api-key

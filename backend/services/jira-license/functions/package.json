@@ -1,0 +1,16 @@
+{
+  "name": "jira-license-functions",
+  "version": "1.0.0",
+  "description": "Cloud Functions for Jira license management",
+  "main": "index.js",
+  "engines": {
+    "node": "18"
+  },
+  "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
+    "axios": "^1.4.0",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.4.0"
+  },
+  "private": true
+}

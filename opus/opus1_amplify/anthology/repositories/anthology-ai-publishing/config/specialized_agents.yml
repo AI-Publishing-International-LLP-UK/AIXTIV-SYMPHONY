@@ -1,0 +1,57 @@
+# Specialized Agent Configuration
+
+content_runners:
+  google_drive:
+    sync_frequency: real-time
+    processing_priority: high
+    content_types:
+      - documents
+      - spreadsheets
+      - presentations
+    automation:
+      auto_sync: true
+      auto_process: true
+
+media_production:
+  video_creation:
+    quality: professional
+    styles:
+      - educational
+      - promotional
+      - training
+    automation:
+      script_generation: true
+      auto_editing: true
+
+artistic_enhancement:
+  book_production:
+    quality: publishing-grade
+    elements:
+      - illustrations
+      - layout
+      - styling
+    automation:
+      auto_generate: true
+      style_matching: true
+
+learning_development:
+  training_programs:
+    standards: professional
+    components:
+      - curriculum
+      - modules
+      - assessments
+    automation:
+      adaptive_learning: true
+      progress_tracking: true
+
+ecommerce:
+  sales_automation:
+    platforms:
+      - amazon
+      - udemy
+      - own_platform
+    features:
+      - auto_packaging
+      - campaign_management
+      - analytics

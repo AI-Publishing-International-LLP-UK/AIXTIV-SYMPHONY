@@ -1,0 +1,128 @@
+#!/bin/bash
+
+# AIXTIV Symphony Deployment Script
+# Comprehensive Deployment for Agent Orchestration System
+
+# Fail on any error
+set -e
+
+# Load environment variables
+source .env
+
+# Color codes for output
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+# Deployment Configuration
+PROJECT_ID="api-for-warp-drive"
+CLUSTER_NAME="aixtiv-symphony-primary"
+REGION="us-west1"
+NAMESPACE="production"
+
+# Pre-deployment Checks
+pre_deployment_checks() {
+    echo -e "${GREEN}Running Pre-Deployment Checks...${NC}"
+    
+    # Check gcloud authentication
+    if ! gcloud auth list | grep -q "ACTIVE"; then
+        echo -e "${RED}Error: Not authenticated with Google Cloud${NC}"
+        gcloud auth login
+    fi
+
+    # Verify project configuration
+    if [[ "$(gcloud config get-value project)" != "$PROJECT_ID" ]]; then
+        gcloud config set project "$PROJECT_ID"
+    fi
+
+    # Check kubectl context
+    if ! kubectl config current-context | grep -q "$CLUSTER_NAME"; then
+        gcloud container clusters get-credentials "$CLUSTER_NAME" --region "$REGION"
+    fi
+}
+
+# Build Docker Image
+build_docker_image() {
+    echo -e "${GREEN}Building Docker Image...${NC}"
+    
+    # Build and tag image
+    docker build -t gcr.io/"$PROJECT_ID"/aixtiv-symphony:latest .
+    
+    # Push to Google Container Registry
+    docker push gcr.io/"$PROJECT_ID"/aixtiv-symphony:latest
+}
+
+# Deploy to Kubernetes
+deploy_to_kubernetes() {
+    echo -e "${GREEN}Deploying to Kubernetes Cluster...${NC}"
+    
+    # Create namespace if not exists
+    kubectl create namespace "$NAMESPACE" || true
+    
+    # Apply Kubernetes deployment configuration
+    kubectl apply -f k8s/deployment.yaml -n "$NAMESPACE"
+    
+    # Apply service configuration
+    kubectl apply -f k8s/service.yaml -n "$NAMESPACE"
+    
+    # Configure horizontal pod autoscaler
+    kubectl apply -f k8s/hpa.yaml -n "$NAMESPACE"
+}
+
+# Run Database Migrations
+run_migrations() {
+    echo -e "${GREEN}Running Database Migrations...${NC}"
+    
+    # Use Prisma or your preferred migration tool
+    npx prisma migrate deploy
+}
+
+# Configure Secret Management
+configure_secrets() {
+    echo -e "${GREEN}Configuring Secrets...${NC}"
+    
+    # Example secret management (replace with your actual secrets)
+    kubectl create secret generic aixtiv-secrets \
+        --from-literal=DATABASE_URL="$DATABASE_URL" \
+        --from-literal=JWT_SECRET="$JWT_SECRET" \
+        -n "$NAMESPACE"
+}
+
+# Health and Readiness Checks
+post_deployment_checks() {
+    echo -e "${GREEN}Running Post-Deployment Checks...${NC}"
+    
+    # Wait for deployment to stabilize
+    kubectl rollout status deployment/aixtiv-symphony -n "$NAMESPACE"
+    
+    # Run basic health checks
+    kubectl get pods -n "$NAMESPACE"
+    
+    # Optional: Run integration tests
+    npm run test:integration
+}
+
+# Rollback Mechanism
+rollback() {
+    echo -e "${RED}Initiating Rollback...${NC}"
+    
+    # Rollback to previous deployment
+    kubectl rollout undo deployment/aixtiv-symphony -n "$NAMESPACE"
+}
+
+# Main Deployment Function
+main() {
+    trap rollback ERR
+    
+    pre_deployment_checks
+    build_docker_image
+    configure_secrets
+    run_migrations
+    deploy_to_kubernetes
+    post_deployment_checks
+    
+    echo -e "${GREEN}✓ Deployment Successful!${NC}"
+}
+
+# Execute Main Deployment
+main

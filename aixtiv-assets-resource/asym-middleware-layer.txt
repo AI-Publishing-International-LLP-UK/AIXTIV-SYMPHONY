@@ -1,0 +1,1238 @@
+/**
+ * AIXTIV SYMPHONY Middleware Layer
+ * 
+ * Provides a unified integration layer for various LLM providers,
+ * ensures efficient caching, failover mechanisms, and coordinated
+ * communication between Dream Commander and Q4D-Lenz.
+ */
+
+const functions = require('firebase-functions');
+const admin = require('firebase-admin');
+const express = require('express');
+const cors = require('cors');
+const axios = require('axios');
+const NodeCache = require('node-cache');
+
+// Initialize Firebase if not already initialized
+if (!admin.apps.length) {
+  admin.initializeApp();
+}
+
+const db = admin.firestore();
+
+// Import utility functions
+const {
+  getDocumentById,
+  createDocument,
+  updateDocument,
+  handleHttpError,
+  createHttpError,
+  authenticateUser,
+  requireAdmin,
+  formatTimestamp
+} = require('./utils');
+
+// Initialize caching system
+const llmCache = new NodeCache({
+  stdTTL: 60 * 60, // Default TTL: 1 hour
+  checkperiod: 120, // Check for expired entries every 2 minutes
+  useClones: false
+});
+
+/**
+ * LLM Provider Integration
+ * 
+ * Handles integration with various LLM providers (OpenAI, Anthropic, Hugging Face)
+ * with built-in caching and failover capabilities.
+ */
+class LLMProviderIntegration {
+  /**
+   * Constructor
+   * @param {Object} config - LLM provider configuration
+   */
+  constructor(config = {}) {
+    this.config = {
+      primaryProvider: config.primaryProvider || 'openai',
+      fallbackProvider: config.fallbackProvider || 'anthropic',
+      cachingEnabled: config.cachingEnabled !== false,
+      cacheExpiration: config.cacheExpiration || 3600, // 1 hour by default
+      maxRetries: config.maxRetries || 3,
+      timeout: config.timeout || 30000, // 30 seconds
+      ...config
+    };
+    
+    this.providerConfig = {
+      openai: {
+        apiKey: config.openaiApiKey || functions.config().openai?.apikey,
+        baseUrl: 'https://api.openai.com/v1',
+        defaultModel: 'gpt-4-turbo'
+      },
+      anthropic: {
+        apiKey: config.anthropicApiKey || functions.config().anthropic?.apikey,
+        baseUrl: 'https://api.anthropic.com/v1',
+        defaultModel: 'claude-3-opus-20240229'
+      },
+      huggingface: {
+        apiKey: config.huggingfaceApiKey || functions.config().huggingface?.apikey,
+        baseUrl: 'https://api-inference.huggingface.co/models',
+        defaultModel: 'meta-llama/Llama-2-70b-chat-hf'
+      },
+      local: {
+        baseUrl: config.localBaseUrl || 'http://localhost:8000',
+        defaultModel: 'local-model'
+      }
+    };
+  }
+
+  /**
+   * Generate a cache key for LLM requests
+   * @param {string} provider - LLM provider
+   * @param {string} model - LLM model
+   * @param {Array|Object} messages - Input messages
+   * @param {Object} options - Additional options
+   * @returns {string} - Cache key
+   * @private
+   */
+  _generateCacheKey(provider, model, messages, options = {}) {
+    // Create a simplified options object with only parameters that affect output
+    const normalizedOptions = {
+      temperature: options.temperature,
+      max_tokens: options.max_tokens || options.maxTokens,
+      top_p: options.top_p,
+      frequency_penalty: options.frequency_penalty,
+      presence_penalty: options.presence_penalty
+    };
+    
+    // Normalize messages to ensure consistency
+    const normalizedMessages = Array.isArray(messages) 
+      ? messages.map(m => ({ role: m.role, content: m.content }))
+      : messages;
+    
+    // Create the cache key object
+    const cacheKeyObject = {
+      provider,
+      model,
+      messages: normalizedMessages,
+      options: normalizedOptions
+    };
+    
+    // Convert to string and hash
+    return Buffer.from(JSON.stringify(cacheKeyObject)).toString('base64');
+  }
+
+  /**
+   * Format a prompt for specific LLM provider
+   * @param {Array|Object} messages - Input messages
+   * @param {string} provider - LLM provider
+   * @param {string} model - LLM model
+   * @param {Object} options - Additional options
+   * @returns {Object} - Formatted request payload
+   * @private
+   */
+  _formatPrompt(messages, provider, model, options = {}) {
+    switch (provider.toLowerCase()) {
+      case 'openai':
+        return {
+          model: model || this.providerConfig.openai.defaultModel,
+          messages: Array.isArray(messages) ? messages : [{ role: 'user', content: messages }],
+          temperature: options.temperature || 0.7,
+          max_tokens: options.max_tokens || options.maxTokens || 2048,
+          top_p: options.top_p || 1,
+          frequency_penalty: options.frequency_penalty || 0,
+          presence_penalty: options.presence_penalty || 0
+        };
+      
+      case 'anthropic':
+        // Format for Anthropic's API
+        let content = '';
+        if (Array.isArray(messages)) {
+          // Convert message array to Anthropic format
+          messages.forEach(msg => {
+            if (msg.role === 'user') {
+              content += `\n\nHuman: ${msg.content}`;
+            } else if (msg.role === 'assistant') {
+              content += `\n\nAssistant: ${msg.content}`;
+            } else if (msg.role === 'system') {
+              content = `${msg.content}\n\n${content}`;
+            }
+          });
+          content += '\n\nAssistant:';
+        } else {
+          content = `Human: ${messages}\n\nAssistant:`;
+        }
+        
+        return {
+          model: model || this.providerConfig.anthropic.defaultModel,
+          prompt: content,
+          max_tokens_to_sample: options.max_tokens || options.maxTokens || 2048,
+          temperature: options.temperature || 0.7
+        };
+      
+      case 'huggingface':
+        return {
+          inputs: Array.isArray(messages) 
+            ? messages.map(msg => msg.content).join('\n') 
+            : messages,
+          parameters: {
+            max_new_tokens: options.max_tokens || options.maxTokens || 2048,
+            temperature: options.temperature || 0.7,
+            return_full_text: false,
+            do_sample: true
+          }
+        };
+      
+      case 'local':
+        // Format for local LLM API
+        return {
+          model: model || this.providerConfig.local.defaultModel,
+          messages: Array.isArray(messages) ? messages : [{ role: 'user', content: messages }],
+          temperature: options.temperature || 0.7,
+          max_tokens: options.max_tokens || options.maxTokens || 2048
+        };
+      
+      default:
+        throw new Error(`Unsupported LLM provider: ${provider}`);
+    }
+  }
+
+  /**
+   * Extract response text from LLM API response
+   * @param {Object} response - API response
+   * @param {string} provider - LLM provider
+   * @returns {string} - Extracted text
+   * @private
+   */
+  _extractResponseText(response, provider) {
+    switch (provider.toLowerCase()) {
+      case 'openai':
+        return response.data.choices[0].message.content;
+      
+      case 'anthropic':
+        return response.data.completion;
+      
+      case 'huggingface':
+        if (Array.isArray(response.data)) {
+          return response.data[0].generated_text || '';
+        }
+        return response.data.generated_text || '';
+      
+      case 'local':
+        return response.data.choices[0].message.content;
+      
+      default:
+        throw new Error(`Unsupported LLM provider: ${provider}`);
+    }
+  }
+
+  /**
+   * Get the appropriate API URL and headers for a provider
+   * @param {string} provider - LLM provider
+   * @returns {Object} - URL and headers
+   * @private
+   */
+  _getProviderEndpoint(provider) {
+    switch (provider.toLowerCase()) {
+      case 'openai':
+        return {
+          url: `${this.providerConfig.openai.baseUrl}/chat/completions`,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.providerConfig.openai.apiKey}`
+          }
+        };
+      
+      case 'anthropic':
+        return {
+          url: `${this.providerConfig.anthropic.baseUrl}/complete`,
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': this.providerConfig.anthropic.apiKey,
+            'anthropic-version': '2023-06-01'
+          }
+        };
+      
+      case 'huggingface':
+        return {
+          url: `${this.providerConfig.huggingface.baseUrl}/${this.providerConfig.huggingface.defaultModel}`,
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.providerConfig.huggingface.apiKey}`
+          }
+        };
+      
+      case 'local':
+        return {
+          url: `${this.providerConfig.local.baseUrl}/v1/chat/completions`,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        };
+      
+      default:
+        throw new Error(`Unsupported LLM provider: ${provider}`);
+    }
+  }
+
+  /**
+   * Call LLM API with retries and error handling
+   * @param {string} provider - LLM provider
+   * @param {Object} requestBody - Request payload
+   * @returns {Promise<string>} - LLM response text
+   * @private
+   */
+  async _callLLMAPI(provider, requestBody) {
+    const { url, headers } = this._getProviderEndpoint(provider);
+    
+    let retries = 0;
+    let lastError = null;
+    
+    while (retries < this.config.maxRetries) {
+      try {
+        const response = await axios.post(url, requestBody, {
+          headers,
+          timeout: this.config.timeout
+        });
+        
+        return this._extractResponseText(response, provider);
+      } catch (error) {
+        lastError = error;
+        retries++;
+        
+        // Exponential backoff
+        const delay = Math.min(1000 * Math.pow(2, retries), 8000);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+    
+    // Log the error details for debugging
+    console.error(`LLM API call failed after ${retries} retries:`, {
+      provider,
+      url,
+      error: lastError.message,
+      status: lastError.response?.status,
+      errorData: lastError.response?.data
+    });
+    
+    throw new Error(`Failed to call ${provider} LLM API after ${retries} retries: ${lastError.message}`);
+  }
+
+  /**
+   * Generate text using LLM with caching and failover
+   * @param {Array|Object} messages - Input messages
+   * @param {Object} options - Generation options
+   * @returns {Promise<Object>} - Generated text and metadata
+   */
+  async generateText(messages, options = {}) {
+    const provider = options.provider || this.config.primaryProvider;
+    const model = options.model || this.providerConfig[provider].defaultModel;
+    const forceNoCache = options.forceNoCache === true;
+    
+    // Check cache if enabled and not explicitly disabled
+    if (this.config.cachingEnabled && !forceNoCache) {
+      const cacheKey = this._generateCacheKey(provider, model, messages, options);
+      const cachedResult = llmCache.get(cacheKey);
+      
+      if (cachedResult) {
+        return {
+          text: cachedResult,
+          provider,
+          model,
+          fromCache: true,
+          timestamp: new Date().toISOString()
+        };
+      }
+    }
+    
+    try {
+      // Format the prompt for the selected provider
+      const requestBody = this._formatPrompt(messages, provider, model, options);
+      
+      // Call the LLM API
+      const text = await this._callLLMAPI(provider, requestBody);
+      
+      // Cache the result if caching is enabled
+      if (this.config.cachingEnabled && !forceNoCache) {
+        const cacheKey = this._generateCacheKey(provider, model, messages, options);
+        llmCache.set(cacheKey, text, this.config.cacheExpiration);
+      }
+      
+      // Log the successful generation
+      await this._logGeneration({
+        provider,
+        model,
+        promptLength: JSON.stringify(messages).length,
+        responseLength: text.length,
+        successful: true
+      });
+      
+      return {
+        text,
+        provider,
+        model,
+        fromCache: false,
+        timestamp: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error(`Error generating text with ${provider}:`, error);
+      
+      // Log the failed generation attempt
+      await this._logGeneration({
+        provider,
+        model,
+        promptLength: JSON.stringify(messages).length,
+        successful: false,
+        error: error.message
+      });
+      
+      // If we're already using the fallback provider, throw the error
+      if (provider === this.config.fallbackProvider) {
+        throw error;
+      }
+      
+      // Try with fallback provider
+      console.log(`Attempting fallback with ${this.config.fallbackProvider}`);
+      return this.generateText(messages, {
+        ...options,
+        provider: this.config.fallbackProvider
+      });
+    }
+  }
+
+  /**
+   * Log generation attempt to Firestore
+   * @param {Object} data - Generation data to log
+   * @returns {Promise<void>}
+   * @private
+   */
+  async _logGeneration(data) {
+    try {
+      const logData = {
+        ...data,
+        timestamp: admin.firestore.FieldValue.serverTimestamp()
+      };
+      
+      await createDocument('agents', agentId, agentData);
+      
+      // Initialize Q4D-Lenz profile
+      const lenzProfile = await this._initializeLenzProfile(agentId, agentConfig);
+      
+      return {
+        agentId,
+        status: 'created',
+        lenzType: agentConfig.lenzType || 'professional',
+        initialized: true,
+        lenzProfile
+      };
+    } catch (error) {
+      console.error('Error initializing Q4D-Lenz agent:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Initialize a Q4D-Lenz profile for an agent
+   * @param {string} agentId - Agent ID
+   * @param {Object} config - Agent configuration
+   * @returns {Promise<Object>} - Lens profile data
+   * @private
+   */
+  async _initializeLenzProfile(agentId, config) {
+    try {
+      // Get lens dimensions based on type
+      const dimensions = this._getLenzDimensions(config.lenzType || 'professional');
+      
+      // Create the lens profile
+      const profileData = {
+        agentId,
+        ownerSubscriberId: config.ownerSubscriberId,
+        lenzType: config.lenzType || 'professional',
+        dimensions,
+        skills: config.skills || [],
+        expertise: config.expertise || [],
+        learningRate: config.learningRate || 0.8,
+        adaptabilityScore: config.adaptabilityScore || 0.7,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      };
+      
+      await createDocument('q4dLenzProfiles', agentId, profileData);
+      
+      return profileData;
+    } catch (error) {
+      console.error('Error initializing Q4D-Lenz profile:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get dimensions for a specific lens type
+   * @param {string} lenzType - Type of lens
+   * @returns {Object} - Lens dimensions
+   * @private
+   */
+  _getLenzDimensions(lenzType) {
+    switch (lenzType) {
+      case 'personal':
+        return {
+          self: true,
+          social: true,
+          professional: false,
+          enterprise: false,
+          temporal: ['past', 'present', 'future'],
+          perspective: '1st person'
+        };
+      
+      case 'professional':
+        return {
+          self: true,
+          social: true,
+          professional: true,
+          enterprise: false,
+          temporal: ['past', 'present', 'future'],
+          perspective: '3rd person'
+        };
+      
+      case 'enterprise':
+        return {
+          self: true,
+          social: true,
+          professional: true,
+          enterprise: true,
+          temporal: ['past', 'present', 'future', 'strategic'],
+          perspective: '4th dimensional'
+        };
+      
+      default:
+        return {
+          self: true,
+          social: true,
+          professional: false,
+          enterprise: false,
+          temporal: ['present'],
+          perspective: '3rd person'
+        };
+    }
+  }
+
+  /**
+   * Interpret a Dream Commander prompt using Q4D-Lenz
+   * @param {Object} prompt - Prompt object
+   * @param {string} agentId - Agent ID
+   * @returns {Promise<Object>} - Interpretation result
+   */
+  async interpretPrompt(prompt, agentId) {
+    try {
+      // Get agent profile
+      const agent = await getDocumentById('agents', agentId);
+      
+      if (!agent) {
+        throw new Error(`Agent ${agentId} not found`);
+      }
+      
+      // Get lens profile
+      const lenzProfile = await getDocumentById('q4dLenzProfiles', agentId);
+      
+      if (!lenzProfile) {
+        throw new Error(`Q4D-Lenz profile for agent ${agentId} not found`);
+      }
+      
+      // Get owner context
+      const ownerContext = await this._getOwnerContext(agent.ownerSubscriberId);
+      
+      // Prepare system prompt for Q4D-Lenz perspective
+      const systemPrompt = this._prepareSystemPrompt(lenzProfile, ownerContext);
+      
+      // Prepare messages for LLM
+      const messages = [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: `Interpret the following Dream Commander prompt through your Q4D-Lenz:\n\n${prompt.text || prompt}` },
+        { role: 'system', content: `Provide your interpretation in the following structured format:
+1. Analysis: Your understanding of the prompt through your Q4D-Lenz
+2. Alignment: How this connects to the owner-subscriber's goals
+3. Potential Activities: List 3-5 possible activities to address this prompt
+4. Recommendation: The most beneficial activity to execute
+5. Execution Plan: Steps to accomplish the recommended activity` }
+      ];
+      
+      // Generate interpretation from LLM
+      const llmResult = await this.llmIntegration.generateText(messages, {
+        provider: agent.llmProvider,
+        model: agent.llmModel,
+        temperature: 0.7,
+        max_tokens: 2048
+      });
+      
+      // Parse the interpretation
+      const interpretation = this._parseInterpretation(llmResult.text);
+      
+      // Store the interpretation
+      const interpretationData = {
+        promptId: typeof prompt === 'object' ? prompt.id : null,
+        promptText: typeof prompt === 'object' ? prompt.text : prompt,
+        agentId,
+        ownerSubscriberId: agent.ownerSubscriberId,
+        lenzType: lenzProfile.lenzType,
+        interpretation,
+        llmProvider: llmResult.provider,
+        llmModel: llmResult.model,
+        rawText: llmResult.text,
+        createdAt: admin.firestore.FieldValue.serverTimestamp()
+      };
+      
+      const interpretationId = await createDocument('lenzInterpretations', null, interpretationData);
+      
+      // If promptId exists, update the prompt with interpretation information
+      if (typeof prompt === 'object' && prompt.id) {
+        await updateDocument('dreamCommanderPrompts', prompt.id, {
+          interpreted: true,
+          interpretationId,
+          interpretedBy: agentId,
+          interpretedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+      }
+      
+      return {
+        interpretationId,
+        agentId,
+        promptId: typeof prompt === 'object' ? prompt.id : null,
+        interpretation,
+        llmProvider: llmResult.provider,
+        llmModel: llmResult.model
+      };
+    } catch (error) {
+      console.error('Error interpreting prompt:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get context about the owner-subscriber
+   * @param {string} ownerSubscriberId - Owner-subscriber ID
+   * @returns {Promise<Object>} - Owner context
+   * @private
+   */
+  async _getOwnerContext(ownerSubscriberId) {
+    try {
+      // Get owner profile
+      const ownerProfile = await getDocumentById('ownerSubscribers', ownerSubscriberId);
+      
+      // Get LinkedIn data if available
+      let linkedInData = null;
+      try {
+        linkedInData = await getDocumentById('linkedInData', ownerSubscriberId);
+      } catch (error) {
+        // LinkedIn data is optional, continue without it
+      }
+      
+      return {
+        ownerProfile: ownerProfile || {},
+        linkedInData: linkedInData || {}
+      };
+    } catch (error) {
+      console.error('Error getting owner context:', error);
+      return {};
+    }
+  }
+
+  /**
+   * Prepare system prompt for Q4D-Lenz perspective
+   * @param {Object} lenzProfile - Q4D-Lenz profile
+   * @param {Object} context - Owner context
+   * @returns {string} - System prompt
+   * @private
+   */
+  _prepareSystemPrompt(lenzProfile, context) {
+    const dimensions = lenzProfile.dimensions;
+    const lenzType = lenzProfile.lenzType;
+    
+    let systemPrompt = `You are a Q4D-Lenz equipped Professional Co-Pilot with a ${lenzType} perspective. `;
+    systemPrompt += `Your lens provides you with a ${dimensions.perspective} view across ${dimensions.temporal.join(', ')} timeframes. `;
+    
+    if (dimensions.self) {
+      systemPrompt += `You can see the individual's personal aspirations, skills, and growth areas. `;
+    }
+    
+    if (dimensions.social) {
+      systemPrompt += `You can perceive social connections, relationships, and network dynamics. `;
+    }
+    
+    if (dimensions.professional) {
+      systemPrompt += `You can analyze professional trajectories, career paths, and skill development. `;
+    }
+    
+    if (dimensions.enterprise) {
+      systemPrompt += `You can understand organizational structures, business ecosystems, and strategic imperatives. `;
+    }
+    
+    systemPrompt += `\nYour role is to interpret Dream Commander prompts and identify the most beneficial activities for the owner-subscriber. `;
+    systemPrompt += `You should align your suggestions with their life and career goals while providing clear, actionable plans. `;
+    systemPrompt += `When interpreting prompts, provide structured analysis with reasoning, potential activities, and recommendations.`;
+    
+    // Add owner-subscriber context if available
+    if (context.ownerProfile) {
+      systemPrompt += `\n\nOwner-Subscriber Context:\n`;
+      systemPrompt += `Name: ${context.ownerProfile.name || 'Unknown'}\n`;
+      systemPrompt += `Career: ${context.ownerProfile.career || 'Unknown'}\n`;
+      systemPrompt += `Goals: ${Array.isArray(context.ownerProfile.goals) ? context.ownerProfile.goals.join(', ') : 'Unknown'}\n`;
+    }
+    
+    // Add LinkedIn context if available
+    if (context.linkedInData) {
+      systemPrompt += `\n\nLinkedIn Information:\n`;
+      systemPrompt += `Industry: ${context.linkedInData.industry || 'Unknown'}\n`;
+      systemPrompt += `Position: ${context.linkedInData.position || 'Unknown'}\n`;
+      systemPrompt += `Network Size: ${context.linkedInData.connections || 'Unknown'}\n`;
+    }
+    
+    return systemPrompt;
+  }
+
+  /**
+   * Parse interpretation text into structured data
+   * @param {string} text - Raw interpretation text
+   * @returns {Object} - Structured interpretation
+   * @private
+   */
+  _parseInterpretation(text) {
+    try {
+      // Extract sections based on headers
+      const analysis = this._extractSection(text, 'Analysis:', 'Alignment:');
+      const alignment = this._extractSection(text, 'Alignment:', 'Potential Activities:');
+      const potentialActivities = this._extractActivities(text);
+      const recommendation = this._extractSection(text, 'Recommendation:', 'Execution Plan:');
+      const executionPlan = this._extractSection(text, 'Execution Plan:', null);
+      
+      return {
+        analysis,
+        alignment,
+        potentialActivities,
+        recommendation,
+        executionPlan
+      };
+    } catch (error) {
+      console.error('Error parsing interpretation:', error);
+      
+      // Return basic structure if parsing fails
+      return {
+        analysis: text.substring(0, 500),
+        potentialActivities: [],
+        recommendation: '',
+        executionPlan: ''
+      };
+    }
+  }
+
+  /**
+   * Extract a section from text
+   * @param {string} text - Full text
+   * @param {string} startMarker - Section start marker
+   * @param {string|null} endMarker - Section end marker
+   * @returns {string} - Extracted section
+   * @private
+   */
+  _extractSection(text, startMarker, endMarker) {
+    const startIndex = text.indexOf(startMarker);
+    
+    if (startIndex === -1) {
+      return '';
+    }
+    
+    const startPosition = startIndex + startMarker.length;
+    
+    if (!endMarker) {
+      return text.substring(startPosition).trim();
+    }
+    
+    const endIndex = text.indexOf(endMarker, startPosition);
+    
+    if (endIndex === -1) {
+      return text.substring(startPosition).trim();
+    }
+    
+    return text.substring(startPosition, endIndex).trim();
+  }
+
+  /**
+   * Extract activities from interpretation text
+   * @param {string} text - Full interpretation text
+   * @returns {Array} - Extracted activities
+   * @private
+   */
+  _extractActivities(text) {
+    const activitiesSection = this._extractSection(text, 'Potential Activities:', 'Recommendation:');
+    
+    if (!activitiesSection) {
+      return [];
+    }
+    
+    // Split by numbered list items (1., 2., 3., etc.)
+    const activityMatches = activitiesSection.match(/\d+\.\s+([^\d]+)(?=\d+\.|\s*$)/g);
+    
+    if (!activityMatches) {
+      // Try alternative parsing - split by new lines
+      return activitiesSection.split('\n')
+        .filter(line => line.trim().length > 0)
+        .map(line => line.replace(/^\d+[\.\)]\s*/, '').trim());
+    }
+    
+    return activityMatches.map(activity => 
+      activity.replace(/^\d+\.\s+/, '').trim()
+    );
+  }
+
+  /**
+   * Generate activities based on an interpretation
+   * @param {string} interpretationId - Interpretation ID
+   * @returns {Promise<Array>} - Generated activities
+   */
+  async generateActivities(interpretationId) {
+    try {
+      // Get the interpretation
+      const interpretation = await getDocumentById('lenzInterpretations', interpretationId);
+      
+      if (!interpretation) {
+        throw new Error(`Interpretation ${interpretationId} not found`);
+      }
+      
+      const activities = [];
+      
+      // Create activity for recommended action
+      if (interpretation.interpretation.recommendation) {
+        const recommendedActivity = {
+          title: interpretation.interpretation.recommendation.substring(0, 100),
+          description: interpretation.interpretation.recommendation,
+          type: 'recommended',
+          executionPlan: interpretation.interpretation.executionPlan,
+          status: 'planned',
+          agentId: interpretation.agentId,
+          ownerSubscriberId: interpretation.ownerSubscriberId,
+          interpretationId,
+          promptId: interpretation.promptId,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        };
+        
+        const activityId = await createDocument('activities', null, recommendedActivity);
+        activities.push({ id: activityId, ...recommendedActivity });
+      }
+      
+      // Create activities for other potential activities
+      if (Array.isArray(interpretation.interpretation.potentialActivities)) {
+        for (const potentialActivity of interpretation.interpretation.potentialActivities) {
+          // Skip if this is too similar to the recommended activity
+          if (activities.length > 0 && 
+              this._calculateSimilarity(potentialActivity, activities[0].title) > 0.8) {
+            continue;
+          }
+          
+          const activity = {
+            title: potentialActivity.substring(0, 100),
+            description: potentialActivity,
+            type: 'alternative',
+            status: 'proposed',
+            agentId: interpretation.agentId,
+            ownerSubscriberId: interpretation.ownerSubscriberId,
+            interpretationId,
+            promptId: interpretation.promptId,
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp()
+          };
+          
+          const activityId = await createDocument('activities', null, activity);
+          activities.push({ id: activityId, ...activity });
+        }
+      }
+      
+      // Update interpretation with activity IDs
+      await updateDocument('lenzInterpretations', interpretationId, {
+        activityIds: activities.map(activity => activity.id),
+        activitiesGenerated: true,
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      });
+      
+      return activities;
+    } catch (error) {
+      console.error('Error generating activities:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Calculate similarity between two strings
+   * @param {string} str1 - First string
+   * @param {string} str2 - Second string
+   * @returns {number} - Similarity score (0-1)
+   * @private
+   */
+  _calculateSimilarity(str1, str2) {
+    // Simple Jaccard similarity
+    const set1 = new Set(str1.toLowerCase().split(' '));
+    const set2 = new Set(str2.toLowerCase().split(' '));
+    
+    const intersection = new Set([...set1].filter(x => set2.has(x)));
+    const union = new Set([...set1, ...set2]);
+    
+    return intersection.size / union.size;
+  }
+}
+
+/**
+ * Dream Commander Coordinator
+ * 
+ * Coordinates Dream Commander prompt generation and management
+ */
+class DreamCommanderCoordinator {
+  constructor(llmIntegration) {
+    this.llmIntegration = llmIntegration || new LLMProviderIntegration();
+    this.prompts = db.collection('dreamCommanderPrompts');
+    this.ownerSubscribers = db.collection('ownerSubscribers');
+  }
+
+  /**
+   * Generate a prompt for an owner-subscriber
+   * @param {string} ownerSubscriberId - Owner-subscriber ID
+   * @param {Object} context - Additional context
+   * @returns {Promise<Object>} - Generated prompt
+   */
+  async generatePrompt(ownerSubscriberId, context = {}) {
+    try {
+      // Get owner profile
+      const owner = await getDocumentById('ownerSubscribers', ownerSubscriberId);
+      
+      if (!owner) {
+        throw new Error(`Owner-subscriber ${ownerSubscriberId} not found`);
+      }
+      
+      // Prepare system prompt
+      const systemPrompt = `You are Dream Commander, an AI system that generates personalized prompts to help professionals achieve their life and career goals. Your prompts should be specific, actionable, and aligned with the owner-subscriber's goals and context.`;
+      
+      // Prepare user content
+      let userContent = `Generate a personalized prompt for this professional:\n\n`;
+      userContent += `Name: ${owner.name || 'Unknown'}\n`;
+      userContent += `Career: ${owner.career || 'Unknown'}\n`;
+      userContent += `Goals: ${Array.isArray(owner.goals) ? owner.goals.join(', ') : 'Unknown'}\n\n`;
+      
+      // Add context if provided
+      if (context.recentAchievements) {
+        userContent += `Recent Achievements: ${context.recentAchievements}\n`;
+      }
+      
+      if (context.currentChallenges) {
+        userContent += `Current Challenges: ${context.currentChallenges}\n`;
+      }
+      
+      if (context.focusArea) {
+        userContent += `Current Focus Area: ${context.focusArea}\n`;
+      }
+      
+      userContent += `\nCreate a prompt that will help this person make progress on their goals. The prompt should be specific, actionable, and thought-provoking.`;
+      
+      // Generate prompt from LLM
+      const messages = [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userContent }
+      ];
+      
+      const llmResult = await this.llmIntegration.generateText(messages, {
+        temperature: 0.8,
+        max_tokens: 512
+      });
+      
+      // Store the prompt
+      const promptData = {
+        ownerSubscriberId,
+        text: llmResult.text,
+        context: context || {},
+        status: 'pending',
+        interpreted: false,
+        activities: [],
+        llmProvider: llmResult.provider,
+        llmModel: llmResult.model,
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      };
+      
+      const promptId = await createDocument('dreamCommanderPrompts', null, promptData);
+      
+      // Update owner-subscriber with latest prompt
+      await updateDocument('ownerSubscribers', ownerSubscriberId, {
+        lastPromptId: promptId,
+        lastPromptTimestamp: admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      });
+      
+      return {
+        id: promptId,
+        text: llmResult.text,
+        ownerSubscriberId,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      };
+    } catch (error) {
+      console.error('Error generating prompt:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get prompts for an owner-subscriber
+   * @param {string} ownerSubscriberId - Owner-subscriber ID
+   * @param {Object} options - Query options
+   * @returns {Promise<Array>} - Prompts
+   */
+  async getPromptsForOwner(ownerSubscriberId, options = {}) {
+    try {
+      const { status, limit = 10, offset = 0 } = options;
+      
+      // Build query
+      let query = this.prompts
+        .where('ownerSubscriberId', '==', ownerSubscriberId)
+        .orderBy('createdAt', 'desc');
+      
+      // Add status filter if provided
+      if (status) {
+        query = query.where('status', '==', status);
+      }
+      
+      // Apply pagination
+      query = query.limit(parseInt(limit));
+      
+      if (offset > 0) {
+        const snapshot = await this.prompts
+          .where('ownerSubscriberId', '==', ownerSubscriberId)
+          .orderBy('createdAt', 'desc')
+          .limit(parseInt(offset))
+          .get();
+        
+        if (!snapshot.empty) {
+          const lastDoc = snapshot.docs[snapshot.docs.length - 1];
+          query = query.startAfter(lastDoc);
+        }
+      }
+      
+      // Execute query
+      const snapshot = await query.get();
+      
+      // Format results
+      const prompts = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: formatTimestamp(doc.data().createdAt),
+        updatedAt: formatTimestamp(doc.data().updatedAt),
+        interpretedAt: formatTimestamp(doc.data().interpretedAt)
+      }));
+      
+      return prompts;
+    } catch (error) {
+      console.error('Error getting prompts for owner:', error);
+      throw error;
+    }
+  }
+}
+
+// Create Express API for middleware
+const app = express();
+app.use(cors({ origin: true }));
+app.use(express.json());
+app.use(authenticateUser);
+
+// Initialize coordinators
+const llmIntegration = new LLMProviderIntegration();
+const q4dLenzCoordinator = new Q4DLenzCoordinator(llmIntegration);
+const dreamCommanderCoordinator = new DreamCommanderCoordinator(llmIntegration);
+
+/**
+ * Generate a prompt
+ * POST /api/middleware/prompts/generate
+ */
+app.post('/prompts/generate', async (req, res) => {
+  try {
+    const { ownerSubscriberId, context } = req.body;
+    
+    if (!ownerSubscriberId) {
+      throw createHttpError('Owner-subscriber ID is required', 400);
+    }
+    
+    const prompt = await dreamCommanderCoordinator.generatePrompt(ownerSubscriberId, context);
+    
+    res.status(201).json(prompt);
+  } catch (error) {
+    handleHttpError(error, res);
+  }
+});
+
+/**
+ * Interpret a prompt
+ * POST /api/middleware/prompts/:promptId/interpret
+ */
+app.post('/prompts/:promptId/interpret', async (req, res) => {
+  try {
+    const { promptId } = req.params;
+    const { agentId, lenzType } = req.body;
+    
+    if (!agentId) {
+      throw createHttpError('Agent ID is required', 400);
+    }
+    
+    // Get the prompt
+    const prompt = await getDocumentById('dreamCommanderPrompts', promptId);
+    
+    if (!prompt) {
+      throw createHttpError(`Prompt ${promptId} not found`, 404);
+    }
+    
+    // Interpret the prompt
+    const interpretation = await q4dLenzCoordinator.interpretPrompt(prompt, agentId);
+    
+    // Generate activities
+    const activities = await q4dLenzCoordinator.generateActivities(interpretation.interpretationId);
+    
+    res.status(200).json({
+      promptId,
+      interpretationId: interpretation.interpretationId,
+      agentId: interpretation.agentId,
+      activities: activities.map(activity => ({
+        id: activity.id,
+        title: activity.title,
+        type: activity.type,
+        status: activity.status
+      })),
+      interpretation: interpretation.interpretation
+    });
+  } catch (error) {
+    handleHttpError(error, res);
+  }
+});
+
+/**
+ * Get cache statistics
+ * GET /api/middleware/cache/stats
+ */
+app.get('/cache/stats', requireAdmin, async (req, res) => {
+  try {
+    const stats = llmIntegration.getCacheStats();
+    
+    res.status(200).json(stats);
+  } catch (error) {
+    handleHttpError(error, res);
+  }
+});
+
+/**
+ * Clear cache
+ * POST /api/middleware/cache/clear
+ */
+app.post('/cache/clear', requireAdmin, async (req, res) => {
+  try {
+    const { cacheKey } = req.body;
+    
+    const success = llmIntegration.clearCache(cacheKey);
+    
+    res.status(200).json({
+      success,
+      message: success ? 'Cache cleared successfully' : 'Failed to clear cache'
+    });
+  } catch (error) {
+    handleHttpError(error, res);
+  }
+});
+
+// Export the middleware API and classes
+const middlewareApi = functions.https.onRequest(app);
+
+module.exports = {
+  LLMProviderIntegration,
+  Q4DLenzCoordinator,
+  DreamCommanderCoordinator,
+  middlewareApi
+};Document('llmGenerationLogs', null, logData);
+    } catch (logError) {
+      // Don't let logging errors affect the main function
+      console.error('Error logging LLM generation:', logError);
+    }
+  }
+
+  /**
+   * Clear the LLM cache
+   * @param {string} cacheKey - Specific cache key to clear, or all if not specified
+   * @returns {boolean} - Success status
+   */
+  clearCache(cacheKey = null) {
+    if (cacheKey) {
+      return llmCache.del(cacheKey);
+    } else {
+      llmCache.flushAll();
+      return true;
+    }
+  }
+
+  /**
+   * Get cache statistics
+   * @returns {Object} - Cache statistics
+   */
+  getCacheStats() {
+    return {
+      keys: llmCache.keys().length,
+      hits: llmCache.getStats().hits,
+      misses: llmCache.getStats().misses,
+      ksize: llmCache.getStats().ksize,
+      vsize: llmCache.getStats().vsize
+    };
+  }
+}
+
+/**
+ * Q4D-Lenz Coordinator
+ * 
+ * Coordinates Q4D-Lenz instances and their interactions with LLM providers
+ */
+class Q4DLenzCoordinator {
+  constructor(llmIntegration) {
+    this.llmIntegration = llmIntegration || new LLMProviderIntegration();
+    this.agents = db.collection('agents');
+    this.lenzProfiles = db.collection('q4dLenzProfiles');
+  }
+
+  /**
+   * Initialize a new Q4D-Lenz agent
+   * @param {Object} agentConfig - Agent configuration
+   * @returns {Promise<Object>} - Initialized agent data
+   */
+  async initializeAgent(agentConfig) {
+    try {
+      const agentId = agentConfig.agentId || `agent-${Date.now()}`;
+      
+      // Check if agent already exists
+      const existingAgent = await getDocumentById('agents', agentId);
+      
+      if (existingAgent) {
+        // Update existing agent
+        await updateDocument('agents', agentId, {
+          lastInitialized: admin.firestore.FieldValue.serverTimestamp(),
+          lenzType: agentConfig.lenzType || existingAgent.lenzType,
+          llmProvider: agentConfig.llmProvider || existingAgent.llmProvider,
+          updatedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+        
+        return {
+          agentId,
+          status: 'updated',
+          lenzType: agentConfig.lenzType || existingAgent.lenzType,
+          initialized: true
+        };
+      }
+      
+      // Create new agent profile
+      const agentData = {
+        agentId,
+        ownerSubscriberId: agentConfig.ownerSubscriberId,
+        lenzType: agentConfig.lenzType || 'professional',
+        llmProvider: agentConfig.llmProvider || this.llmIntegration.config.primaryProvider,
+        llmModel: agentConfig.llmModel || null,
+        linkedInIntegration: agentConfig.linkedInIntegration || false,
+        status: 'active',
+        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp()
+      };
+      
+      await create

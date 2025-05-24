@@ -1,0 +1,31 @@
+{
+  "gateway": {
+    "endpoint": "https://gateway.aixtiv-symphony.com/api",
+    "version": "1.0",
+    "timeout": 30000
+  },
+  "services": {
+    "drMemoria": {
+      "endpoint": "https://drmemoria.aixtiv-symphony.com/api",
+      "apiKey": "{{DRMEMORIA_API_KEY}}"
+    },
+    "giftShop": {
+      "endpoint": "https://giftshop.aixtiv-symphony.com/api",
+      "apiKey": "{{GIFTSHOP_API_KEY}}"
+    },
+    "openAI": {
+      "endpoint": "https://api.openai.com/v1",
+      "authentication": {
+        "type": "googleServiceAccount",
+        "serviceAccountEmail": "drlucyautomation@apiforwarpdrive.iam.gservicecloud.com",
+        "keyPath": "{{OPENAI_GOOGLE_SERVICE_ACCOUNT_KEY_PATH}}",
+        "scopes": ["https://www.googleapis.com/auth/cloud-platform"]
+      },
+      "modelDefaults": {
+        "completionModel": "gpt-4",
+        "embeddingModel": "text-embedding-ada-002"
+      },
+      "timeout": 60000
+    }
+  }
+}

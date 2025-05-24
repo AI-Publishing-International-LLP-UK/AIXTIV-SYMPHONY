@@ -1,0 +1,36 @@
+power_stance:
+  positioning:
+    physical:
+      - "Central command position"
+      - "Clear sight lines to all exits"
+      - "Direct view of security displays"
+    psychological:
+      - "Calm authority"
+      - "Professional distance"
+      - "Controlled environment"
+
+  security_presence:
+    visible_team:
+      - "Alpha team lead visible"
+      - "Beta team on standby"
+      - "Gamma team monitoring"
+    systems:
+      - "Active defense grid indicators"
+      - "Bio-metric scanning status"
+      - "Quantum encryption protocols"
+
+  response_protocols:
+    unauthorized_action:
+      - "Immediate containment"
+      - "Protocol enforcement"
+      - "Access termination"
+    data_protection:
+      - "Real-time monitoring"
+      - "Automatic lockdown triggers"
+      - "Incident response activation"
+
+  diplomatic_stance:
+    professional_courtesy: "Maintained at all times"
+    boundary_enforcement: "Firm but diplomatic"
+    message_clarity: "Unambiguous but professional"
+

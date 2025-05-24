@@ -1,0 +1,408 @@
+/* WishVision Clouds and RIX CRx Copilot Styles */
+
+/* ===== WishVision Clouds ===== */
+.wish-vision-clouds {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 40;
+  overflow: hidden;
+}
+
+.wish-cloud {
+  position: absolute;
+  background-image: url('../assets/images/cloud.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  pointer-events: auto;
+  text-align: center;
+  filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.2));
+}
+
+.wish-cloud.animated {
+  animation: float-around 30s infinite alternate ease-in-out;
+}
+
+.wish-cloud.focused {
+  z-index: 45;
+  transform: scale(1.5);
+  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.3));
+}
+
+.wish-cloud.fading-out {
+  opacity: 0 !important;
+  transform: scale(0.8);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.wish-cloud-inner {
+  width: 75%;
+  padding: 10px;
+  color: #333;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.wish-text {
+  font-size: 14px;
+  margin-bottom: 8px;
+  word-wrap: break-word;
+  max-width: 100%;
+}
+
+.wish-pilot {
+  font-size: 12px;
+  color: #555;
+  font-style: italic;
+}
+
+.wish-priority {
+  margin-top: 5px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: bold;
+  color: white;
+}
+
+.wish-priority.high {
+  background-color: #ea4335;
+}
+
+.wish-priority.medium {
+  background-color: #fbbc04;
+  color: #333;
+}
+
+.wish-priority.low {
+  background-color: #34a853;
+}
+
+@keyframes float-around {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(5%, 10%) rotate(5deg);
+  }
+  40% {
+    transform: translate(-10%, 15%) rotate(-5deg);
+  }
+  60% {
+    transform: translate(15%, 5%) rotate(3deg);
+  }
+  80% {
+    transform: translate(-5%, -10%) rotate(-3deg);
+  }
+  100% {
+    transform: translate(10%, -5%) rotate(5deg);
+  }
+}
+
+/* ===== RIX CRx Copilot ===== */
+.rix-crx-copilot {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 320px;
+  background-color: rgba(25, 25, 35, 0.9);
+  border-radius: var(--border-radius);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  color: var(--text-color);
+  font-family: 'Roboto', sans-serif;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(100, 100, 255, 0.3);
+  overflow: hidden;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.copilot-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  background: linear-gradient(135deg, #1a237e 0%, #311b92 100%);
+  color: white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.copilot-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-right: auto;
+}
+
+.copilot-status {
+  font-size: 12px;
+  margin-right: 10px;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+.copilot-status.highlight {
+  opacity: 1;
+  color: #bb86fc;
+  font-weight: bold;
+}
+
+.copilot-toggle {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.copilot-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.copilot-panel {
+  margin: 10px;
+  background-color: rgba(40, 40, 50, 0.7);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.copilot-panel h3 {
+  padding: 10px 15px;
+  margin: 0;
+  font-size: 14px;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #bb86fc;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.panel-content {
+  padding: 15px;
+}
+
+/* Craft Info Panel */
+.craft-info .craft-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.craft-info .craft-type {
+  display: inline-block;
+  padding: 3px 8px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 4px;
+  font-size: 11px;
+  margin-bottom: 10px;
+}
+
+.craft-info .craft-id {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+}
+
+.craft-info .craft-status {
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.craft-info .craft-specs {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.craft-info .spec-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.craft-info .spec-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.craft-info .spec-value {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.no-craft {
+  text-align: center;
+  padding: 10px 0;
+}
+
+.connect-craft-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* Pilot Panel */
+.pilot-info .pilot-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.pilot-info .pilot-rank {
+  display: inline-block;
+  padding: 3px 8px;
+  background-color: #9c27b0;
+  color: white;
+  border-radius: 4px;
+  font-size: 11px;
+  margin-bottom: 10px;
+}
+
+.pilot-info .pilot-id {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+.pilot-info .pilot-config {
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.pilot-info .config-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.pilot-info .config-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.pilot-info .config-value {
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.edit-config-btn {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.edit-config-btn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Actions Panel */
+.action-item {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.action-item:last-child {
+  margin-bottom: 0;
+}
+
+.action-item .action-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #bb86fc;
+}
+
+.action-item .action-description {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.execute-action-btn {
+  background-color: #bb86fc;
+  color: #1a1a1a;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.execute-action-btn:hover {
+  background-color: #a35efc;
+}
+
+/* Wishes Panel */
+.wishes-panel .panel-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.wish-input {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 8px;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.wish-input:focus {
+  outline: none;
+  border-color: #bb86fc;
+}
+
+.wish-submit {
+  background-color: #34a853;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.toggle-wish-clouds {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Responsive Styles */
+@media (max-width: 576px) {
+  .rix-crx-copilot {
+    width: calc(100% - 40px);
+    top: 10px;
+    left: 10px;
+    right: 10px;
+  }
+}

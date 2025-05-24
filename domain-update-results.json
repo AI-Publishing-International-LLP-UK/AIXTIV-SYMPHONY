@@ -1,0 +1,66 @@
+{
+  "timestamp": "2025-05-12T12:19:43.912Z",
+  "stats": {
+    "total": 46,
+    "excluded": 3,
+    "updated": 37,
+    "failed": 4,
+    "skipped": 2
+  },
+  "results": {
+    "excluded": [
+      "asoos",
+      "vision",
+      "zena"
+    ],
+    "updated": [
+      "2100",
+      "angel-jg",
+      "architecture",
+      "automation",
+      "caio",
+      "ceo",
+      "cfo",
+      "chro",
+      "cmo",
+      "coach",
+      "coo",
+      "cro",
+      "cto",
+      "drburby",
+      "drclaude",
+      "drcypriot",
+      "drgrant",
+      "drlucy",
+      "drmaria",
+      "drmatch",
+      "drmemoria",
+      "drsabina",
+      "founder",
+      "gitlucy",
+      "google._domainkey",
+      "growth",
+      "innovation",
+      "legal",
+      "mrroark",
+      "proactivity",
+      "proflee",
+      "real-estate",
+      "thepoet",
+      "venture",
+      "_dmarc",
+      "_gh-visiualization-center-e",
+      "_google-site-verification"
+    ],
+    "failed": [
+      "*",
+      "inst",
+      "_acme-challenge_ug4slayg43ua4yap.2100.cool",
+      "_domainconnect"
+    ],
+    "skipped": [
+      "@",
+      "www"
+    ]
+  }
+}

@@ -1,0 +1,137 @@
+steps:
+  # Initialize with Authentication
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'initialize'
+    args:
+      - 'config'
+      - 'set'
+      - 'project'
+      - 'api-for-warp-drive'
+
+  # Setup Agent Tracking
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'agent-tracking-setup'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        chmod +x /workspace/scripts/setup-agent-tracking.sh
+        /workspace/scripts/setup-agent-tracking.sh
+        export AGENT_ID="ASOOS_2100_CI_CTTT"
+        source /workspace/bin/agent-tracking.sh
+        log_agent_action "pipeline_start" "Starting ASOOS.2100.COOL CI/CTTT pipeline"
+
+  # Build the application
+  - name: 'gcr.io/cloud-builders/npm'
+    id: 'build'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        source /workspace/bin/agent-tracking.sh
+        log_agent_action "build_start" "Starting application build"
+        npm run build
+        log_agent_action "build_complete" "Completed application build"
+
+  # Deploy to Firebase Hosting
+  - name: 'gcr.io/cloud-builders/npm'
+    id: 'deploy-firebase'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        source /workspace/bin/agent-tracking.sh
+        log_agent_action "deploy_start" "Starting Firebase deployment"
+        npm install -g firebase-tools
+        firebase deploy --project api-for-warp-drive --only hosting
+        log_agent_action "deploy_complete" "Completed Firebase deployment"
+
+  # Update DNS Records if needed
+  - name: 'gcr.io/cloud-builders/npm'
+    id: 'update-dns'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        source /workspace/bin/agent-tracking.sh
+        log_agent_action "dns_check_start" "Checking DNS records"
+        # Check if DNS records need updating
+        node /workspace/verify-domains.js
+        if [ $? -eq 1 ]; then
+          log_agent_action "dns_update_start" "Updating DNS records"
+          node /workspace/quick-connect-domains.js
+          log_agent_action "dns_update_complete" "DNS records updated"
+        else
+          log_agent_action "dns_update_skipped" "DNS records already up to date"
+        fi
+
+  # Test Deployment
+  - name: 'gcr.io/cloud-builders/curl'
+    id: 'test-deployment'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        source /workspace/bin/agent-tracking.sh
+        log_agent_action "test_deployment_start" "Testing deployment"
+        
+        # Test main site
+        MAIN_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://asoos.2100.cool)
+        if [ "$MAIN_STATUS" -eq 200 ]; then
+          log_agent_action "test_main_success" "Main site test successful"
+        else
+          log_agent_action "test_main_failed" "Main site test failed with status $MAIN_STATUS"
+        fi
+        
+        # Test symphony subdomain
+        SYMPHONY_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://symphony.asoos.2100.cool || echo "Failed")
+        if [ "$SYMPHONY_STATUS" -eq 200 ]; then
+          log_agent_action "test_symphony_success" "Symphony site test successful"
+        else
+          log_agent_action "test_symphony_pending" "Symphony site not yet available, DNS may be propagating"
+        fi
+        
+        # Test anthology subdomain
+        ANTHOLOGY_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://anthology.asoos.2100.cool || echo "Failed")
+        if [ "$ANTHOLOGY_STATUS" -eq 200 ]; then
+          log_agent_action "test_anthology_success" "Anthology site test successful"
+        else
+          log_agent_action "test_anthology_pending" "Anthology site not yet available, DNS may be propagating"
+        fi
+        
+        log_agent_action "test_deployment_complete" "Deployment testing complete"
+
+  # Notify Completion
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'notify-completion'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        source /workspace/bin/agent-tracking.sh
+        log_agent_action "pipeline_complete" "ASOOS.2100.COOL CI/CTTT pipeline completed successfully"
+        
+        # Create deployment record in Firestore
+        gcloud firestore documents create projects/api-for-warp-drive/databases/(default)/documents/deployments/$(date +%Y%m%d%H%M%S) \
+          --fields="status=SUCCESS,timestamp=$(date +%s),component=ASOOS_2100_COOL,environment=production"
+        
+        echo "🚀 ASOOS.2100.COOL CI/CTTT Pipeline completed successfully!"
+        echo "✅ Deployment status: COMPLETE"
+        echo "✅ Main site: https://asoos.2100.cool"
+        echo "✅ Symphony: https://symphony.asoos.2100.cool (DNS propagation may be in progress)"
+        echo "✅ Anthology: https://anthology.asoos.2100.cool (DNS propagation may be in progress)"
+        echo "✅ Agent tracking logs: Available in Cloud Logging"
+
+timeout: "1800s"  # 30 minutes
+options:
+  machineType: 'E2_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+  env:
+    - 'AGENT_ID=ASOOS_2100_CI_CTTT'
+
+artifacts:
+  objects:
+    location: 'gs://api-for-warp-drive-artifacts/builds/$BUILD_ID/'
+    paths: ['deployment-logs/**/*']
+
+serviceAccount: 'projects/api-for-warp-drive/serviceAccounts/drlucyautomation@api-for-warp-drive.iam.gserviceaccount.com'

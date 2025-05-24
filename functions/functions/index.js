@@ -2,9 +2,105 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const ttsService = require('./services/tts-service');
 const sentimentService = require('./services/sentiment-service');
+const driveService = require('./services/drive-service');
 
 // Initialize Firebase Admin SDK
 admin.initializeApp();
+
+// Google Drive Integration Functions
+/**
+ * Google Drive Integration Trigger
+ *
+ * This function serves as a simple HTTP trigger for Google Drive integration.
+ * It can be called directly to simulate processing a Drive file.
+ *
+ * In a production environment, this would be triggered by a PubSub message from Google Drive's webhook.
+ */
+exports.driveIntegrationTrigger = functions.https.onRequest(
+  {
+    region: 'us-west1',
+  },
+  async (req, res) => {
+    try {
+      // Enable CORS
+      res.set('Access-Control-Allow-Origin', '*');
+      res.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+      res.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+      // Handle preflight OPTIONS request
+      if (req.method === 'OPTIONS') {
+        res.status(204).send('');
+        return;
+      }
+
+      // Only allow POST requests
+      if (req.method !== 'POST') {
+        res.status(405).send({ error: 'Method Not Allowed' });
+        return;
+      }
+
+      // Check if file information is provided
+      const { fileId, name, mimeType } = req.body;
+
+      if (!fileId || !name || !mimeType) {
+        res.status(400).send({
+          error: 'Missing required parameters',
+          required: ['fileId', 'name', 'mimeType']
+        });
+        return;
+      }
+
+      // Add file to processing queue
+      const docId = await driveService.addFileToQueue({
+        fileId,
+        name,
+        mimeType
+      });
+
+      // Process file immediately instead of using a Firestore trigger
+      await driveService.processFile({
+        fileId,
+        name,
+        mimeType
+      });
+
+      // Update document to mark as processed
+      const db = admin.firestore();
+      const docRef = db.collection('drive_files').doc(docId);
+      await docRef.update({
+        processed: true,
+        processedTime: admin.firestore.FieldValue.serverTimestamp()
+      });
+
+      // Return success
+      res.status(200).send({
+        success: true,
+        message: 'File processed successfully',
+        docId,
+        fileId
+      });
+    } catch (error) {
+      console.error('Error processing Drive integration trigger:', error);
+      res.status(500).send({ error: 'Internal Server Error' });
+    }
+  }
+);
+
+/**
+ * Google Drive Utilities
+ *
+ * The following functions are exposed through the HTTP trigger above:
+ * - driveIntegrationTrigger: Processes Google Drive files directly
+ *
+ * Example usage:
+ *
+ * ```bash
+ * curl -X POST \
+ *   -H "Content-Type: application/json" \
+ *   -d '{"fileId": "123456", "name": "sample.docx", "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"}' \
+ *   https://us-west1-api-for-warp-drive.cloudfunctions.net/driveIntegrationTrigger
+ * ```
+ */
 
 /**
  * This function is protected by Firebase Authentication

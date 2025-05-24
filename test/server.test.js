@@ -9,19 +9,19 @@ jest.mock('../src/services/search', () => ({
   searchWeb: jest.fn().mockResolvedValue({
     results: [
       { title: 'Test Result 1', url: 'https://example.com/1' },
-      { title: 'Test Result 2', url: 'https://example.com/2' }
+      { title: 'Test Result 2', url: 'https://example.com/2' },
     ],
-    totalResults: 2
+    totalResults: 2,
   }),
   multiSearch: jest.fn().mockResolvedValue({
     web: [{ title: 'Web Result', url: 'https://example.com/web' }],
-    images: [{ title: 'Image Result', url: 'https://example.com/image.jpg' }]
-  })
+    images: [{ title: 'Image Result', url: 'https://example.com/image.jpg' }],
+  }),
 }));
 
 // Import UUID after mocking
 jest.mock('uuid', () => ({
-  v4: jest.fn().mockReturnValue('test-uuid-1234')
+  v4: jest.fn().mockReturnValue('test-uuid-1234'),
 }));
 
 describe('ASOOS Server', () => {
@@ -37,7 +37,7 @@ describe('ASOOS Server', () => {
     it('should return health status', async () => {
       const response = await fastify.inject({
         method: 'GET',
-        url: '/api/health'
+        url: '/api/health',
       });
 
       expect(response.statusCode).toBe(200);
@@ -52,12 +52,14 @@ describe('ASOOS Server', () => {
     it('should return operational status', async () => {
       const response = await fastify.inject({
         method: 'GET',
-        url: '/api/status'
+        url: '/api/status',
       });
 
       expect(response.statusCode).toBe(200);
       const payload = JSON.parse(response.payload);
-      expect(payload.message).toBe('Aixtiv Symphony Opus Operating System is operational');
+      expect(payload.message).toBe(
+        'Aixtiv Symphony Opus Operating System is operational'
+      );
       expect(payload).toHaveProperty('timestamp');
       expect(payload).toHaveProperty('environment');
     });
@@ -67,7 +69,7 @@ describe('ASOOS Server', () => {
     it('should return a list of secrets', async () => {
       const response = await fastify.inject({
         method: 'GET',
-        url: '/api/secrets/list'
+        url: '/api/secrets/list',
       });
 
       expect(response.statusCode).toBe(200);
@@ -86,8 +88,8 @@ describe('ASOOS Server', () => {
         url: '/api/search/web',
         payload: {
           query: 'test query',
-          options: { limit: 10 }
-        }
+          options: { limit: 10 },
+        },
       });
 
       expect(response.statusCode).toBe(200);
@@ -102,8 +104,8 @@ describe('ASOOS Server', () => {
         url: '/api/search/multi',
         payload: {
           query: 'test query',
-          searchTypes: ['web', 'images']
-        }
+          searchTypes: ['web', 'images'],
+        },
       });
 
       expect(response.statusCode).toBe(200);
@@ -120,8 +122,8 @@ describe('ASOOS Server', () => {
         url: '/api/video/create-room',
         payload: {
           userId: 'user-123',
-          sessionType: 'training'
-        }
+          sessionType: 'training',
+        },
       });
 
       expect(response.statusCode).toBe(200);
@@ -136,9 +138,9 @@ describe('ASOOS Server', () => {
         method: 'POST',
         url: '/api/video/create-room',
         payload: {
-          userId: 'user-123'
+          userId: 'user-123',
           // Missing sessionType
-        }
+        },
       });
 
       expect(response.statusCode).toBe(400);
@@ -152,7 +154,7 @@ describe('ASOOS Server', () => {
     it('should return products', async () => {
       const response = await fastify.inject({
         method: 'GET',
-        url: '/api/products'
+        url: '/api/products',
       });
 
       expect(response.statusCode).toBe(200);
@@ -165,7 +167,7 @@ describe('ASOOS Server', () => {
     it('should filter products by category', async () => {
       const response = await fastify.inject({
         method: 'GET',
-        url: '/api/products?category=training'
+        url: '/api/products?category=training',
       });
 
       expect(response.statusCode).toBe(200);
@@ -182,8 +184,8 @@ describe('ASOOS Server', () => {
         method: 'POST',
         url: '/api/validate-uuid',
         payload: {
-          uuid: 'valid-uuid-123'
-        }
+          uuid: 'valid-uuid-123',
+        },
       });
 
       expect(response.statusCode).toBe(200);
@@ -197,8 +199,8 @@ describe('ASOOS Server', () => {
         method: 'POST',
         url: '/api/validate-uuid',
         payload: {
-          uuid: 'invalid'
-        }
+          uuid: 'invalid',
+        },
       });
 
       expect(response.statusCode).toBe(200);
@@ -211,7 +213,7 @@ describe('ASOOS Server', () => {
       const response = await fastify.inject({
         method: 'POST',
         url: '/api/validate-uuid',
-        payload: {}
+        payload: {},
       });
 
       expect(response.statusCode).toBe(400);
@@ -224,7 +226,7 @@ describe('ASOOS Server', () => {
     it('should return 404 for non-existent API routes', async () => {
       const response = await fastify.inject({
         method: 'GET',
-        url: '/api/non-existent'
+        url: '/api/non-existent',
       });
 
       expect(response.statusCode).toBe(404);

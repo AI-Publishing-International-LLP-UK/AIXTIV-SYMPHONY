@@ -1,0 +1,610 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.17;
+
+import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+
+/**
+ * @title SD20Registry
+ * @dev Central registry for SD20 system that manages roles and access
+ */
+contract SD20Registry is AccessControl {
+    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    bytes32 public constant VERIFIER_ROLE = keccak256("VERIFIER_ROLE");
+    bytes32 public constant AGENT_ROLE = keccak256("AGENT_ROLE");
+    
+    // Participant structure
+    struct Participant {
+        string id;         // External ID (e.g., UUID)
+        string name;       // Human-readable name
+        address wallet;    // Ethereum wallet address
+        bool isAgent;      // Whether this participant is an AI agent
+        bool isActive;     // Whether this participant is active
+        string[] roles;    // External roles (beyond blockchain roles)
+    }
+    
+    // Mapping from participant ID to participant data
+    mapping(string => Participant) private participants;
+    
+    // Mapping from address to participant ID
+    mapping(address => string) private addressToParticipant;
+    
+    // Registered participant IDs
+    string[] private participantIds;
+    
+    // Events
+    event ParticipantRegistered(string id, string name, address wallet, bool isAgent);
+    event ParticipantDeactivated(string id);
+    event ParticipantRolesUpdated(string id, string[] roles);
+    
+    constructor() {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(ADMIN_ROLE, msg.sender);
+    }
+    
+    /**
+     * @dev Register a new participant
+     * @param id External participant ID
+     * @param name Human-readable name
+     * @param wallet Ethereum address
+     * @param isAgent Whether this is an AI agent
+     * @param roles External roles
+     */
+    function registerParticipant(
+        string memory id,
+        string memory name,
+        address wallet,
+        bool isAgent,
+        string[] memory roles
+    ) public onlyRole(ADMIN_ROLE) {
+        require(bytes(participants[id].id).length == 0, "Participant ID already registered");
+        require(bytes(addressToParticipant[wallet]).length == 0, "Wallet already registered");
+        
+        participants[id] = Participant({
+            id: id,
+            name: name,
+            wallet: wallet,
+            isAgent: isAgent,
+            isActive: true,
+            roles: roles
+        });
+        
+        addressToParticipant[wallet] = id;
+        participantIds.push(id);
+        
+        // Grant blockchain roles
+        if (isAgent) {
+            _grantRole(AGENT_ROLE, wallet);
+        } else {
+            _grantRole(VERIFIER_ROLE, wallet);
+        }
+        
+        emit ParticipantRegistered(id, name, wallet, isAgent);
+    }
+    
+    /**
+     * @dev Deactivate a participant
+     * @param id Participant ID to deactivate
+     */
+    function deactivateParticipant(string memory id) public onlyRole(ADMIN_ROLE) {
+        require(bytes(participants[id].id).length > 0, "Participant not found");
+        require(participants[id].isActive, "Participant already deactivated");
+        
+        participants[id].isActive = false;
+        
+        // Revoke blockchain roles
+        _revokeRole(VERIFIER_ROLE, participants[id].wallet);
+        _revokeRole(AGENT_ROLE, participants[id].wallet);
+        
+        emit ParticipantDeactivated(id);
+    }
+    
+    /**
+     * @dev Update participant roles
+     * @param id Participant ID
+     * @param roles New roles
+     */
+    function updateParticipantRoles(
+        string memory id,
+        string[] memory roles
+    ) public onlyRole(ADMIN_ROLE) {
+        require(bytes(participants[id].id).length > 0, "Participant not found");
+        require(participants[id].isActive, "Participant is deactivated");
+        
+        participants[id].roles = roles;
+        
+        emit ParticipantRolesUpdated(id, roles);
+    }
+    
+    /**
+     * @dev Check if a participant has a specific role
+     * @param id Participant ID
+     * @param role Role to check
+     * @return Whether participant has the role
+     */
+    function hasRole(string memory id, string memory role) public view returns (bool) {
+        require(bytes(participants[id].id).length > 0, "Participant not found");
+        
+        for (uint i = 0; i < participants[id].roles.length; i++) {
+            if (keccak256(abi.encodePacked(participants[id].roles[i])) == 
+                keccak256(abi.encodePacked(role))) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * @dev Get participant by ID
+     * @param id Participant ID
+     * @return Participant data
+     */
+    function getParticipant(string memory id) public view returns (
+        string memory name,
+        address wallet,
+        bool isAgent,
+        bool isActive,
+        string[] memory roles
+    ) {
+        require(bytes(participants[id].id).length > 0, "Participant not found");
+        
+        Participant memory p = participants[id];
+        return (p.name, p.wallet, p.isAgent, p.isActive, p.roles);
+    }
+    
+    /**
+     * @dev Get participant by wallet address
+     * @param wallet Wallet address
+     * @return Participant ID
+     */
+    function getParticipantIdByWallet(address wallet) public view returns (string memory) {
+        string memory id = addressToParticipant[wallet];
+        require(bytes(id).length > 0, "Wallet not registered");
+        
+        return id;
+    }
+    
+    /**
+     * @dev Get all participant IDs
+     * @return Array of participant IDs
+     */
+    function getAllParticipantIds() public view returns (string[] memory) {
+        return participantIds;
+    }
+}
+
+/**
+ * @title SD20ActionVerification
+ * @dev Contract for verifying S2DO actions
+ */
+contract SD20ActionVerification is AccessControl {
+    using ECDSA for bytes32;
+    
+    bytes32 public constant VERIFIER_ROLE = keccak256("VERIFIER_ROLE");
+    
+    // Reference to the registry contract
+    SD20Registry public registry;
+    
+    // Action verification structure
+    struct ActionVerification {
+        string actionId;           // External action ID
+        string actionType;         // Action type (S2DO:Stem:Action)
+        string actionHash;         // Hash of action data
+        string initiatorId;        // ID of the initiator
+        string[] verifierIds;      // IDs of verifiers
+        uint256[] timestamps;      // Timestamps of verifications
+        string[] signatures;       // Signatures of verifications
+        bool isCompleted;          // Whether action is completed
+        uint256 completedAt;       // When action was completed
+    }
+    
+    // Mapping from action ID to verification data
+    mapping(string => ActionVerification) private actionVerifications;
+    
+    // Registered action IDs
+    string[] private actionIds;
+    
+    // Events
+    event ActionRecorded(string actionId, string actionType, string actionHash, string initiatorId);
+    event ActionVerified(string actionId, string verifierId, uint256 timestamp);
+    event ActionCompleted(string actionId, uint256 timestamp);
+    
+    constructor(address registryAddress) {
+        registry = SD20Registry(registryAddress);
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
+    
+    /**
+     * @dev Record a new action
+     * @param actionId External action ID
+     * @param actionType Action type (S2DO:Stem:Action)
+     * @param actionHash Hash of action data
+     * @param initiatorId ID of initiator
+     */
+    function recordAction(
+        string memory actionId,
+        string memory actionType,
+        string memory actionHash,
+        string memory initiatorId
+    ) public {
+        // Verify sender is an active participant
+        address senderWallet = msg.sender;
+        string memory senderId = registry.getParticipantIdByWallet(senderWallet);
+        
+        // Only the initiator or an admin can record the action
+        require(
+            keccak256(abi.encodePacked(senderId)) == keccak256(abi.encodePacked(initiatorId)) ||
+            hasRole(DEFAULT_ADMIN_ROLE, senderWallet),
+            "Sender must be initiator or admin"
+        );
+        
+        // Check action doesn't already exist
+        require(bytes(actionVerifications[actionId].actionId).length == 0, "Action already exists");
+        
+        // Create action verification record
+        actionVerifications[actionId] = ActionVerification({
+            actionId: actionId,
+            actionType: actionType,
+            actionHash: actionHash,
+            initiatorId: initiatorId,
+            verifierIds: new string[](0),
+            timestamps: new uint256[](0),
+            signatures: new string[](0),
+            isCompleted: false,
+            completedAt: 0
+        });
+        
+        actionIds.push(actionId);
+        
+        emit ActionRecorded(actionId, actionType, actionHash, initiatorId);
+    }
+    
+    /**
+     * @dev Verify an action
+     * @param actionId Action ID to verify
+     * @param signature Cryptographic signature of verification
+     */
+    function verifyAction(
+        string memory actionId,
+        string memory signature
+    ) public onlyRole(VERIFIER_ROLE) {
+        // Get action verification record
+        ActionVerification storage action = actionVerifications[actionId];
+        
+        // Check action exists and is not completed
+        require(bytes(action.actionId).length > 0, "Action not found");
+        require(!action.isCompleted, "Action already completed");
+        
+        // Get verifier ID
+        string memory verifierId = registry.getParticipantIdByWallet(msg.sender);
+        
+        // Check verifier hasn't already verified
+        for (uint i = 0; i < action.verifierIds.length; i++) {
+            require(
+                keccak256(abi.encodePacked(action.verifierIds[i])) != keccak256(abi.encodePacked(verifierId)),
+                "Verifier has already verified this action"
+            );
+        }
+        
+        // Add verification
+        action.verifierIds.push(verifierId);
+        action.timestamps.push(block.timestamp);
+        action.signatures.push(signature);
+        
+        emit ActionVerified(actionId, verifierId, block.timestamp);
+    }
+    
+    /**
+     * @dev Complete an action
+     * @param actionId Action ID to complete
+     */
+    function completeAction(string memory actionId) public {
+        // Get action verification record
+        ActionVerification storage action = actionVerifications[actionId];
+        
+        // Check action exists and is not completed
+        require(bytes(action.actionId).length > 0, "Action not found");
+        require(!action.isCompleted, "Action already completed");
+        
+        // Get sender ID
+        string memory senderId = registry.getParticipantIdByWallet(msg.sender);
+        
+        // Only the initiator or an admin can complete the action
+        require(
+            keccak256(abi.encodePacked(senderId)) == keccak256(abi.encodePacked(action.initiatorId)) ||
+            hasRole(DEFAULT_ADMIN_ROLE, msg.sender),
+            "Sender must be initiator or admin"
+        );
+        
+        // Mark action as completed
+        action.isCompleted = true;
+        action.completedAt = block.timestamp;
+        
+        emit ActionCompleted(actionId, block.timestamp);
+    }
+    
+    /**
+     * @dev Get action verification data
+     * @param actionId Action ID
+     * @return Action verification data
+     */
+    function getAction(string memory actionId) public view returns (
+        string memory actionType,
+        string memory actionHash,
+        string memory initiatorId,
+        string[] memory verifierIds,
+        uint256[] memory timestamps,
+        bool isCompleted,
+        uint256 completedAt
+    ) {
+        ActionVerification memory action = actionVerifications[actionId];
+        require(bytes(action.actionId).length > 0, "Action not found");
+        
+        return (
+            action.actionType,
+            action.actionHash,
+            action.initiatorId,
+            action.verifierIds,
+            action.timestamps,
+            action.isCompleted,
+            action.completedAt
+        );
+    }
+    
+    /**
+     * @dev Get all action IDs
+     * @return Array of action IDs
+     */
+    function getAllActionIds() public view returns (string[] memory) {
+        return actionIds;
+    }
+    
+    /**
+     * @dev Verify action hash
+     * @param actionId Action ID
+     * @param hash Hash to verify
+     * @return Whether hash matches
+     */
+    function verifyActionHash(string memory actionId, string memory hash) public view returns (bool) {
+        ActionVerification memory action = actionVerifications[actionId];
+        require(bytes(action.actionId).length > 0, "Action not found");
+        
+        return keccak256(abi.encodePacked(action.actionHash)) == keccak256(abi.encodePacked(hash));
+    }
+}
+
+/**
+ * @title SD20AchievementNFT
+ * @dev NFT contract for SD20 achievements
+ */
+contract SD20AchievementNFT is ERC721URIStorage, AccessControl {
+    using Counters for Counters.Counter;
+    
+    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+    
+    // Counter for token IDs
+    Counters.Counter private _tokenIds;
+    
+    // Reference to registry contract
+    SD20Registry public registry;
+    
+    // Achievement data structure
+    struct Achievement {
+        string actionId;           // Related action ID
+        string actionType;         // Action type (S2DO:Stem:Action)
+        string initiatorId;        // ID of initiator
+        string[] contributorIds;   // IDs of contributors
+        uint256[] shares;          // Royalty shares for contributors (basis points)
+        uint256 createdAt;         // Timestamp of creation
+    }
+    
+    // Mapping from token ID to achievement data
+    mapping(uint256 => Achievement) private achievements;
+    
+    // Events
+    event AchievementMinted(uint256 tokenId, string actionId, string actionType, string initiatorId);
+    event RoyaltyPaid(uint256 tokenId, address recipient, uint256 amount);
+    
+    constructor(address registryAddress) ERC721("SD20 Achievement", "SD20") {
+        registry = SD20Registry(registryAddress);
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(MINTER_ROLE, msg.sender);
+    }
+    
+    /**
+     * @dev Mint a new achievement NFT
+     * @param to Address to mint to
+     * @param uri Token URI (IPFS)
+     * @param actionId Related action ID
+     * @param actionType Action type
+     * @param initiatorId Initiator ID
+     * @param contributorIds Contributor IDs
+     * @param shares Royalty shares (must add up to 10000 basis points = 100%)
+     * @return New token ID
+     */
+    function mintAchievement(
+        address to,
+        string memory uri,
+        string memory actionId,
+        string memory actionType,
+        string memory initiatorId,
+        string[] memory contributorIds,
+        uint256[] memory shares
+    ) public onlyRole(MINTER_ROLE) returns (uint256) {
+        require(contributorIds.length == shares.length, "Contributors and shares must have same length");
+        
+        // Validate shares add up to 10000 (100%)
+        uint256 totalShares = 0;
+        for (uint256 i = 0; i < shares.length; i++) {
+            totalShares += shares[i];
+        }
+        require(totalShares == 10000, "Shares must add up to 10000 (100%)");
+        
+        // Increment token ID
+        _tokenIds.increment();
+        uint256 newTokenId = _tokenIds.current();
+        
+        // Mint the NFT
+        _mint(to, newTokenId);
+        _setTokenURI(newTokenId, uri);
+        
+        // Store achievement data
+        achievements[newTokenId] = Achievement({
+            actionId: actionId,
+            actionType: actionType,
+            initiatorId: initiatorId,
+            contributorIds: contributorIds,
+            shares: shares,
+            createdAt: block.timestamp
+        });
+        
+        emit AchievementMinted(newTokenId, actionId, actionType, initiatorId);
+        
+        return newTokenId;
+    }
+    
+    /**
+     * @dev Pay royalties for an achievement
+     * @param tokenId Token ID
+     */
+    function payRoyalties(uint256 tokenId) public payable {
+        require(_exists(tokenId), "Token does not exist");
+        require(msg.value > 0, "No value sent");
+        
+        Achievement memory achievement = achievements[tokenId];
+        
+        // Distribute royalties according to shares
+        for (uint256 i = 0; i < achievement.contributorIds.length; i++) {
+            // Get contributor wallet
+            (,address wallet,,,) = registry.getParticipant(achievement.contributorIds[i]);
+            
+            // Calculate royalty amount
+            uint256 amount = (msg.value * achievement.shares[i]) / 10000;
+            
+            // Transfer royalty
+            payable(wallet).transfer(amount);
+            
+            emit RoyaltyPaid(tokenId, wallet, amount);
+        }
+    }
+    
+    /**
+     * @dev Get achievement data
+     * @param tokenId Token ID
+     * @return Achievement data
+     */
+    function getAchievement(uint256 tokenId) public view returns (
+        string memory actionId,
+        string memory actionType,
+        string memory initiatorId,
+        string[] memory contributorIds,
+        uint256[] memory shares,
+        uint256 createdAt
+    ) {
+        require(_exists(tokenId), "Token does not exist");
+        
+        Achievement memory achievement = achievements[tokenId];
+        
+        return (
+            achievement.actionId,
+            achievement.actionType,
+            achievement.initiatorId,
+            achievement.contributorIds,
+            achievement.shares,
+            achievement.createdAt
+        );
+    }
+    
+    /**
+     * @dev Get royalty information for token
+     * @param tokenId Token ID
+     * @return Contributor addresses and shares
+     */
+    function getRoyaltyInfo(uint256 tokenId) public view returns (
+        address[] memory contributors,
+        uint256[] memory shares
+    ) {
+        require(_exists(tokenId), "Token does not exist");
+        
+        Achievement memory achievement = achievements[tokenId];
+        
+        address[] memory contributorAddresses = new address[](achievement.contributorIds.length);
+        
+        for (uint256 i = 0; i < achievement.contributorIds.length; i++) {
+            (,address wallet,,,) = registry.getParticipant(achievement.contributorIds[i]);
+            contributorAddresses[i] = wallet;
+        }
+        
+        return (contributorAddresses, achievement.shares);
+    }
+    
+    // Required overrides for OpenZeppelin contracts
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721, AccessControl)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+}
+
+/**
+ * @title SD20Factory
+ * @dev Factory contract for deploying the SD20 system
+ */
+contract SD20Factory {
+    event SystemDeployed(
+        address registry,
+        address actionVerification,
+        address achievementNFT
+    );
+    
+    /**
+     * @dev Deploy the SD20 system
+     * @param admin Address to grant admin role
+     * @return Addresses of deployed contracts
+     */
+    function deploySD20System(address admin) public returns (
+        address registry,
+        address actionVerification,
+        address achievementNFT
+    ) {
+        // Deploy registry
+        SD20Registry registryContract = new SD20Registry();
+        
+        // Grant admin role
+        registryContract.grantRole(keccak256("ADMIN_ROLE"), admin);
+        
+        // Deploy action verification
+        SD20ActionVerification actionVerificationContract = new SD20ActionVerification(
+            address(registryContract)
+        );
+        
+        // Grant admin role
+        actionVerificationContract.grantRole(DEFAULT_ADMIN_ROLE, admin);
+        
+        // Deploy achievement NFT
+        SD20AchievementNFT achievementNFTContract = new SD20AchievementNFT(
+            address(registryContract)
+        );
+        
+        // Grant minter role
+        achievementNFTContract.grantRole(keccak256("MINTER_ROLE"), admin);
+        
+        emit SystemDeployed(
+            address(registryContract),
+            address(actionVerificationContract),
+            address(achievementNFTContract)
+        );
+        
+        return (
+            address(registryContract),
+            address(actionVerificationContract),
+            address(achievementNFTContract)
+        );
+    }
+}

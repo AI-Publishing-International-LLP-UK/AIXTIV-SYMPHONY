@@ -1,0 +1,31 @@
+# Authentication Protocol Configuration
+blockchain_auth:
+  enabled: true
+  verification:
+    type: merkle_proof
+    expiry:
+      admin_below: 24h
+      sao_ur: flexible
+  
+  renewal:
+    type: explicit
+    requires_new_auth: true
+  
+  tracking:
+    enabled: true
+    store:
+      type: immutable
+      location: blockchain
+  
+  authorization:
+    levels:
+      - sao_ur:
+          timeframe: flexible
+          restrictions: minimal
+      - admin:
+          timeframe: 24h
+          restrictions: standard
+      - standard:
+          timeframe: 24h
+          restrictions: strict
+

@@ -1,0 +1,139 @@
+graph TD
+    subgraph Infrastructure[Infrastructure Layer]
+        subgraph Network[Network Configuration]
+            VPC[Global VPC]
+            Subnets[Regional Subnets]
+            NAT[Cloud NAT]
+            LB[Load Balancers]
+            DNS[Cloud DNS]
+            SSL[SSL Certificates]
+        end
+        
+        subgraph Security[Security Layer]
+            IAM[Identity & Access]
+            FW[Firewalls]
+            KMS[Key Management]
+            SecOps[Security Operations]
+        end
+        
+        subgraph Compute[Compute Resources]
+            MCP[MCP Server]
+            C2100[Coaching2100 Server]
+            WarpDrive[WarpDrive Prod-01]
+            Staging[Staging Environment]
+            
+            subgraph Containers[Container Platform]
+                GKE[GKE Clusters]
+                CloudRun[Cloud Run Services]
+                VertexAI[Vertex AI Platform]
+            end
+        end
+    end
+    
+    subgraph AI[AI & Intelligence Layer]
+        subgraph Models[AI Models]
+            DeepMind[DeepMind Integration]
+            Gemini[Gemini Pro]
+            Claude[Anthropic Claude]
+            OpenAI[OpenAI Services]
+            HF[HuggingFace Models]
+        end
+        
+        subgraph Orchestration[Agent Orchestration]
+            Ray[Ray Clusters]
+            Pinecone[Vector Database]
+            AgentMgr[Agent Manager]
+        end
+        
+        subgraph AgentSystem[Agent System]
+            Root1[Root 1 - Core]
+            Root2[Root 2 - Deploy]
+            Root3[Root 3 - Engage]
+            FMS[Flight Memory System]
+            SERPEW[SERPEW Engine]
+        end
+    end
+    
+    subgraph Data[Data Management Layer]
+        subgraph Storage[Storage Solutions]
+            FireStore[Firestore]
+            CloudSQL[Cloud SQL]
+            Redis[Redis Cache]
+            GCS[Cloud Storage]
+        end
+        
+        subgraph Analytics[Analytics Platform]
+            BigQuery[BigQuery]
+            DataFlow[Cloud Dataflow]
+            PubSub[Pub/Sub]
+        end
+        
+        subgraph BackupDR[Backup & DR]
+            Backup[Backup Systems]
+            DR[Disaster Recovery]
+            HA[High Availability]
+        end
+    end
+    
+    subgraph Apps[Application Layer]
+        subgraph Frontend[Frontend Systems]
+            WebApps[Web Applications]
+            MobileApps[Mobile Apps]
+            PWA[Progressive Web Apps]
+        end
+        
+        subgraph Backend[Backend Services]
+            API[API Gateway]
+            Auth[Authentication]
+            Billing[Billing System]
+            Workflow[Workflow Engine]
+        end
+        
+        subgraph Integration[Integration Layer]
+            ESB[Enterprise Service Bus]
+            EventBus[Event Bus]
+            MessageQ[Message Queue]
+        end
+    end
+    
+    subgraph DevOps[DevOps Layer]
+        subgraph CI[CI/CD Pipeline]
+            GitHub[GitHub]
+            GitLab[GitLab]
+            Jenkins[Jenkins]
+            ArgoCD[Argo CD]
+        end
+        
+        subgraph Monitoring[Monitoring & Observability]
+            Metrics[Metrics Collection]
+            Logs[Log Management]
+            Trace[Distributed Tracing]
+            Alert[Alert Management]
+        end
+        
+        subgraph Management[Management Tools]
+            Jira[Jira]
+            Trello[Trello]
+            BitBucket[BitBucket]
+        end
+    end
+    
+    Infrastructure --> AI
+    AI --> Data
+    Data --> Apps
+    DevOps --> Infrastructure
+    DevOps --> AI
+    DevOps --> Data
+    DevOps --> Apps
+    
+    classDef infra fill:#f9f,stroke:#333,stroke-width:4px
+    classDef ai fill:#bbf,stroke:#333,stroke-width:2px
+    classDef data fill:#bfb,stroke:#333,stroke-width:2px
+    classDef apps fill:#fbf,stroke:#333,stroke-width:2px
+    classDef devops fill:#ff9,stroke:#333,stroke-width:2px
+    
+    class Network,Security,Compute infra
+    class Models,Orchestration,AgentSystem ai
+    class Storage,Analytics,BackupDR data
+    class Frontend,Backend,Integration apps
+    class CI,Monitoring,Management devops

@@ -1,0 +1,194 @@
+# Warp Drive Infrastructure Configuration
+# Region: us-west1
+
+# Provider Configuration
+provider "google" {
+  project = "api-for-warp-drive"
+  region  = "us-west1"
+}
+
+# VPC Network Configuration
+resource "google_compute_network" "warp_drive_vpc" {
+  name                    = "warp-drive-network"
+  auto_create_subnetworks = false
+}
+
+resource "google_compute_subnetwork" "warp_drive_subnet" {
+  name          = "warp-drive-subnet"
+  ip_cidr_range = "10.0.0.0/20"
+  region        = "us-west1"
+  network       = google_compute_network.warp_drive_vpc.id
+}
+
+# GKE Cluster Configuration
+resource "google_container_cluster" "primary" {
+  name     = "warp-drive-cluster"
+  location = "us-west1"
+  
+  # Remove default node pool after cluster creation
+  remove_default_node_pool = true
+  initial_node_count       = 1
+
+  network    = google_compute_network.warp_drive_vpc.name
+  subnetwork = google_compute_subnetwork.warp_drive_subnet.name
+
+  # Enable Workload Identity
+  workload_identity_config {
+    workload_pool = "${var.project_id}.svc.id.goog"
+  }
+}
+
+# Node Pool Configuration
+resource "google_container_node_pool" "primary_nodes" {
+  name       = "warp-drive-node-pool"
+  location   = "us-west1"
+  cluster    = google_container_cluster.primary.name
+  node_count = 3
+
+  node_config {
+    machine_type = "n2-standard-4"
+    
+    # OAuth scopes
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
+
+    # Enable Workload Identity
+    workload_identity_config {
+      workload_pool = "${var.project_id}.svc.id.goog"
+    }
+  }
+}
+
+# Cloud Storage Configuration
+resource "google_storage_bucket" "warp_drive_storage" {
+  name          = "warp-drive-storage"
+  location      = "US-WEST1"
+  force_destroy = false
+
+  uniform_bucket_level_access = true
+  
+  versioning {
+    enabled = true
+  }
+}
+
+# Cloud SQL Configuration
+resource "google_sql_database_instance" "warp_drive_db" {
+  name             = "warp-drive-db"
+  database_version = "POSTGRES_14"
+  region           = "us-west1"
+
+  settings {
+    tier = "db-f1-micro"
+    
+    backup_configuration {
+      enabled = true
+    }
+
+    ip_configuration {
+      ipv4_enabled = false
+      private_network = google_compute_network.warp_drive_vpc.id
+    }
+  }
+}
+
+# Service Account Configuration
+resource "google_service_account" "warp_drive_sa" {
+  account_id   = "warp-drive-service"
+  display_name = "Warp Drive Service Account"
+}
+
+# IAM Configuration
+resource "google_project_iam_member" "service_account_roles" {
+  for_each = toset([
+    "roles/cloudsql.client",
+    "roles/storage.objectViewer",
+    "roles/cloudtrace.agent"
+  ])
+  
+  role    = each.key
+  member  = "serviceAccount:${google_service_account.warp_drive_sa.email}"
+  project = var.project_id
+}
+
+# Cloud Run Configuration
+resource "google_cloud_run_service" "warp_drive_api" {
+  name     = "warp-drive-api"
+  location = "us-west1"
+
+  template {
+    spec {
+      containers {
+        image = "gcr.io/${var.project_id}/warp-drive-api:latest"
+        
+        resources {
+          limits = {
+            cpu    = "1000m"
+            memory = "1Gi"
+          }
+        }
+
+        env {
+          name  = "DB_CONNECTION"
+          value = google_sql_database_instance.warp_drive_db.connection_name
+        }
+      }
+
+      service_account_name = google_service_account.warp_drive_sa.email
+    }
+  }
+}
+
+# Load Balancer Configuration
+resource "google_compute_global_address" "warp_drive_lb_ip" {
+  name = "warp-drive-lb-ip"
+}
+
+resource "google_compute_global_forwarding_rule" "warp_drive_lb" {
+  name       = "warp-drive-lb"
+  target     = google_compute_target_http_proxy.warp_drive_proxy.id
+  port_range = "80"
+  ip_address = google_compute_global_address.warp_drive_lb_ip.address
+}
+
+# Monitoring Configuration
+resource "google_monitoring_dashboard" "warp_drive_dashboard" {
+  dashboard_json = jsonencode({
+    displayName = "Warp Drive Monitoring"
+    gridLayout = {
+      widgets = [
+        {
+          title = "API Latency"
+          xyChart = {
+            dataSets = [{
+              timeSeriesQuery = {
+                timeSeriesFilter = {
+                  filter = "metric.type=\"run.googleapis.com/request_latencies\""
+                }
+              }
+            }]
+          }
+        }
+      ]
+    }
+  })
+}
+
+# Secret Management
+resource "google_secret_manager_secret" "api_keys" {
+  secret_id = "warp-drive-api-keys"
+  
+  replication {
+    automatic = true
+  }
+}
+
+# Outputs
+output "cluster_endpoint" {
+  value = google_container_cluster.primary.endpoint
+}
+
+output "api_endpoint" {
+  value = google_cloud_run_service.warp_drive_api.status[0].url
+}

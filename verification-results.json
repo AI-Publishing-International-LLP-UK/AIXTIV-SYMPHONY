@@ -1,0 +1,234 @@
+{
+  "timestamp": "2025-05-11T16:54:58.784Z",
+  "stats": {
+    "total": 46,
+    "excluded": 3,
+    "verified": 0,
+    "incorrect": 4,
+    "unreachable": 37,
+    "skipped": 2
+  },
+  "results": {
+    "excluded": [
+      "asoos",
+      "vision",
+      "zena"
+    ],
+    "verified": [],
+    "incorrect": [
+      {
+        "subdomain": "*",
+        "ip": [
+          "34.169.95.205"
+        ]
+      },
+      {
+        "subdomain": "inst",
+        "ip": [
+          "76.76.21.241",
+          "66.33.60.34"
+        ]
+      },
+      {
+        "subdomain": "_acme-challenge_ug4slayg43ua4yap.2100.cool",
+        "ip": [],
+        "error": "queryA ENOTFOUND _acme-challenge_ug4slayg43ua4yap.2100.cool.2100.cool"
+      },
+      {
+        "subdomain": "_domainconnect",
+        "ip": []
+      }
+    ],
+    "unreachable": [
+      {
+        "subdomain": "2100",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: 2100.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "angel-jg",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: angel-jg.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "architecture",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: architecture.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "automation",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: automation.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "caio",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: caio.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "ceo",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: ceo.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "cfo",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: cfo.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "chro",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: chro.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "cmo",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: cmo.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "coach",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: coach.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "coo",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: coo.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "cro",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: cro.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "cto",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: cto.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "drburby",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: drburby.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "drclaude",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: drclaude.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "drcypriot",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: drcypriot.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "drgrant",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: drgrant.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "drlucy",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: drlucy.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "drmaria",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: drmaria.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "drmatch",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: drmatch.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "drmemoria",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: drmemoria.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "drsabina",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: drsabina.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "founder",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: founder.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "gitlucy",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: gitlucy.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "google._domainkey",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: google._domainkey.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "growth",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: growth.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "innovation",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: innovation.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "legal",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: legal.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "mrroark",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: mrroark.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "proactivity",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: proactivity.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "proflee",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: proflee.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "real-estate",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: real-estate.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "thepoet",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: thepoet.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "venture",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: venture.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "_dmarc",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: _dmarc.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "_gh-visiualization-center-e",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: _gh-visiualization-center-e.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      {
+        "subdomain": "_google-site-verification",
+        "ip": "199.36.158.100",
+        "error": "Hostname/IP does not match certificate's altnames: Host: _google-site-verification.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      }
+    ],
+    "skipped": [
+      "@",
+      "www"
+    ]
+  }
+}

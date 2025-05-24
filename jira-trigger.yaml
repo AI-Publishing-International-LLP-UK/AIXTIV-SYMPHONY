@@ -1,0 +1,17 @@
+name: jira-integration-deploy
+description: Deploy Jira integration on changes to integration code
+filename: integration-gateway/cloudbuild.yaml
+github:
+  owner: coaching2100
+  name: asoos
+  push:
+    branch: ^main$
+includedFiles:
+  - integration-gateway/integrations/jira/**
+  - integration-gateway/api/jira-webhooks.ts
+  - integration-gateway/cloudbuild.yaml
+substitutions:
+  _REGION: us-west1
+  _SERVICE_NAME: jira-integration
+  _MIN_INSTANCES: '1'
+  _MAX_INSTANCES: '10'

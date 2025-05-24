@@ -1,0 +1,69 @@
+graph TD
+    subgraph FE[Frontend Layer]
+        UI[User Interface]
+        State[State Management]
+        Auth[Authentication]
+        
+        subgraph Components[React Components]
+            VC[Visualization Components]
+            Forms[Smart Forms]
+            Dashboard[Dashboards]
+        end
+        
+        subgraph ClientCore[Client Core]
+            Cache[Client Cache]
+            Router[Client Router]
+            Analytics[Client Analytics]
+        end
+    end
+    
+    subgraph BE[Backend Layer]
+        subgraph API[API Gateway]
+            REST[REST Endpoints]
+            GraphQL[GraphQL Layer]
+            WS[WebSocket Server]
+        end
+        
+        subgraph Services[Microservices]
+            UserSvc[User Service]
+            AgentSvc[Agent Service]
+            AnalyticsSvc[Analytics Service]
+            DeepMindSvc[DeepMind Integration]
+        end
+        
+        subgraph Security[Security Layer]
+            OAuth[OAuth Service]
+            JWT[JWT Manager]
+            RBAC[Role Manager]
+        end
+        
+        subgraph Data[Data Layer]
+            FireStore[Firestore]
+            Redis[Redis Cache]
+            PubSub[Pub/Sub]
+        end
+    end
+    
+    subgraph Agents[Agent Layer]
+        Root1[Root 1 Agents]
+        Root2[Root 2 Agents]
+        Root3[Root 3 Agents]
+        FMS[Flight Memory]
+    end
+    
+    UI --> API
+    API --> Services
+    Services --> Security
+    Services --> Data
+    Services --> Agents
+    DeepMindSvc --> Root1
+    DeepMindSvc --> Root2
+    DeepMindSvc --> Root3
+    
+    classDef frontend fill:#f9f,stroke:#333,stroke-width:4px
+    classDef backend fill:#bbf,stroke:#333,stroke-width:2px
+    classDef agents fill:#bfb,stroke:#333,stroke-width:2px
+    
+    class UI,Components,ClientCore frontend
+    class API,Services,Security,Data backend
+    class Root1,Root2,Root3,FMS agents

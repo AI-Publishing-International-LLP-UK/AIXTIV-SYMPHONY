@@ -1,0 +1,10 @@
+name: Crawl4AI Content Pipeline
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: api-for-warp-drive
+  GCP_REGION: us-west1

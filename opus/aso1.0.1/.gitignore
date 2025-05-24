@@ -1,0 +1,11 @@
+# Binary files and platform artifacts
+*.node
+*.dmg
+*.log.plan
+
+# Node modules and backups
+node_modules/
+backups/
+my-academy/
+wing_backup_*/
+academy/node_modules/

@@ -1,0 +1,25 @@
+name: Claude Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy-cloud-function:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+      - run: npm install
+
+      - name: Deploy Claude Function
+        uses: google-github-actions/deploy-cloud-functions@v1
+        with:
+          name: delegateTask
+          runtime: nodejs20
+          entry_point: delegateTask
+          region: us-west1
+          source_dir: functions

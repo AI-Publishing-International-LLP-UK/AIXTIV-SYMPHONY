@@ -6,12 +6,20 @@
         {
           "role": "platform_engineer",
           "specialization": "infrastructure",
-          "capabilities": ["cloud_architecture", "deployment_automation", "security_implementation"]
+          "capabilities": [
+            "cloud_architecture",
+            "deployment_automation",
+            "security_implementation"
+          ]
         },
         {
           "role": "system_designer",
           "specialization": "system_architecture",
-          "capabilities": ["system_modeling", "integration_design", "performance_optimization"]
+          "capabilities": [
+            "system_modeling",
+            "integration_design",
+            "performance_optimization"
+          ]
         },
         {
           "role": "code_specialist",
@@ -32,17 +40,29 @@
         {
           "role": "deployment_specialist",
           "specialization": "continuous_deployment",
-          "capabilities": ["deployment_automation", "release_management", "monitoring"]
+          "capabilities": [
+            "deployment_automation",
+            "release_management",
+            "monitoring"
+          ]
         },
         {
           "role": "security_analyst",
           "specialization": "security_operations",
-          "capabilities": ["security_monitoring", "threat_analysis", "compliance_management"]
+          "capabilities": [
+            "security_monitoring",
+            "threat_analysis",
+            "compliance_management"
+          ]
         },
         {
           "role": "reliability_engineer",
           "specialization": "system_reliability",
-          "capabilities": ["performance_monitoring", "incident_response", "capacity_planning"]
+          "capabilities": [
+            "performance_monitoring",
+            "incident_response",
+            "capacity_planning"
+          ]
         }
       ],
       "responsibilities": [
@@ -71,4 +91,3 @@
     "schema_version": "1.0"
   }
 }
-

@@ -1,0 +1,17 @@
+{
+  "domain": "--domain=asoos.2100.cool",
+  "timestamp": "2025-05-11T04:50:01.249Z",
+  "dns": {
+    "success": false,
+    "error": "queryA EBADNAME --domain=asoos.2100.cool"
+  },
+  "txt": {
+    "success": false,
+    "error": "queryTxt EBADNAME --domain=asoos.2100.cool"
+  },
+  "http": {
+    "success": false,
+    "error": "Timeout"
+  },
+  "status": "failed"
+}

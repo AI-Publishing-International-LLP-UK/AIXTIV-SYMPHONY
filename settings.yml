@@ -357,3 +357,25 @@ cli:
           - cli: deployment_cli
             command: status health
         parallel: true
+  security_updates:
+    critical_updates:
+      - package: next
+        current_version: 15.1.8
+        required_version: '>=15.2.3'
+        affected_modules:
+          - academy/pilots-lounge-suite
+        fix_command: pnpm up next@latest -r
+    high_updates:
+      - package: nth-check
+        current_version: 1.0.2
+        required_version: '>=2.0.1'
+        affected_modules:
+          - wing/frontend
+        fix_command: pnpm up nth-check@latest -r
+    moderate_updates:
+      - package: postcss
+        current_version: 7.0.39
+        required_version: '>=8.4.31'
+        affected_modules:
+          - wing/frontend
+        fix_command: pnpm up postcss@latest -r

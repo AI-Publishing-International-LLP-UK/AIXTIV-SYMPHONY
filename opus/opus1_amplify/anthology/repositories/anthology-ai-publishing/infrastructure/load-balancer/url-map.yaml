@@ -1,0 +1,9 @@
+hostRules:
+  - hosts: 
+      - anthology-ai-publishing.c2100-pr.com
+      - 2100.cool
+    pathMatcher: main
+
+pathMatchers:
+  - name: main
+    defaultService: lb-ip-2100-cool-backend

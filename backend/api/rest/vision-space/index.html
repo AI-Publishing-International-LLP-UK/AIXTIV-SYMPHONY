@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vision Space Interface</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="vision-space">
+        <!-- Video source (hidden) -->
+        <video id="video-source" autoplay muted playsinline></video>
+        
+        <!-- Main canvas for chroma key output -->
+        <canvas id="output-canvas"></canvas>
+        
+        <!-- Scene overlay elements -->
+        <div id="scene-overlay">
+            <div id="scene-title"></div>
+            <div id="scene-controls">
+                <button id="toggle-fleet">Toggle Fleet View</button>
+                <div id="scene-selector">
+                    <span>Change Scene:</span>
+                    <select id="scene-select">
+                        <!-- Will be populated by JS -->
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Fleet visualization -->
+        <div id="fleet-view" class="hidden">
+            <div class="fleet-header">
+                <h2>Vision Lake Fleet</h2>
+                <div class="fleet-tabs">
+                    <button class="fleet-tab active" data-fleet="timeliners">Timeliners</button>
+                    <button class="fleet-tab" data-fleet="timepressers">Timepressers</button>
+                </div>
+                <button id="close-fleet">×</button>
+            </div>
+            
+            <div class="fleet-container">
+                <div id="timeliners-container" class="fleet-group active"></div>
+                <div id="timepressers-container" class="fleet-group"></div>
+            </div>
+        </div>
+        
+        <!-- Voice command indicator -->
+        <div id="voice-indicator" class="hidden">
+            <div class="pulse"></div>
+            <div class="text">Listening...</div>
+        </div>
+        
+        <!-- Welcome overlay -->
+        <div id="welcome-overlay">
+            <div class="welcome-content">
+                <h1>Welcome to Vision Space</h1>
+                <p>An interactive no-touch interface</p>
+                <button id="start-experience">Start Experience</button>
+            </div>
+        </div>
+        
+        <!-- Fleet detail modal -->
+        <div id="craft-detail-modal" class="hidden">
+            <div class="modal-content">
+                <button class="close-modal">×</button>
+                <div id="craft-detail-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/fleet-data.js"></script>
+    <script src="js/chroma-key.js"></script>
+    <script src="js/scene-manager.js"></script>
+    <script src="js/voice-commands.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

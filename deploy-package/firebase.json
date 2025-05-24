@@ -1,0 +1,35 @@
+{
+  "hosting": [
+    {
+      "target": "asoos",
+      "public": "public/asoos-2100-cool",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "symphony",
+      "public": "public/symphony",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "anthology",
+      "public": "public/anthology",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    }
+  ],
+  "functions": {
+    "source": "functions",
+    "region": "us-west1"
+  }
+}

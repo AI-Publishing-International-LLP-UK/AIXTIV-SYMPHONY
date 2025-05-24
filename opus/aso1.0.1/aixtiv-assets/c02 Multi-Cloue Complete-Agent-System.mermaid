@@ -1,0 +1,84 @@
+graph TD
+    subgraph CoreAgents[Core Agent System]
+        subgraph Leadership[Executive & Vision]
+            DG[Dr. Grant]
+            DR[Dr. Roark]
+            DG --> DG1[01: Core Leadership]
+            DG --> DG2[02: Leadership Implementation]
+            DG --> DG3[03: Leadership Engagement]
+            DR --> DR1[01: Vision Principles]
+            DR --> DR2[02: Vision Deployment]
+            DR --> DR3[03: Vision Engagement]
+        end
+
+        subgraph Technical[Technical Systems]
+            DL[Dr. Lucy]
+            DS[Dr. Sabina]
+            DC[Dr. Claude]
+            DL --> DL1[01: Automation Core]
+            DL --> DL2[02: Automation Deploy]
+            DL --> DL3[03: Automation Engage]
+            DS --> DS1[01: Security Core]
+            DS --> DS2[02: Security Deploy]
+            DS --> DS3[03: Security Engage]
+            DC --> DC1[01: Creative Core]
+            DC --> DC2[02: Creative Deploy]
+            DC --> DC3[03: Creative Engage]
+        end
+
+        subgraph Support[Learning & Support]
+            DM[Dr. Memoria]
+            DCY[Dr. Cypriot]
+            DMA[Dr. Maria]
+            DMT[Dr. Match]
+            DM --> DM1[01: Learning Core]
+            DM --> DM2[02: Learning Deploy]
+            DM --> DM3[03: Learning Engage]
+            DCY --> DCY1[01: Human Understanding]
+            DCY --> DCY2[02: Behavior Deploy]
+            DCY --> DCY3[03: Human Interaction]
+            DMA --> DMA1[01: Support Core]
+            DMA --> DMA2[02: Support Deploy]
+            DMA --> DMA3[03: Support Engage]
+            DMT --> DMT1[01: Assessment Core]
+            DMT --> DMT2[02: Assessment Deploy]
+            DMT --> DMT3[03: Assessment Engage]
+        end
+
+        subgraph Governance[Standards & Ethics]
+            DB[Dr. Burby]
+            PL[Prof. Lee]
+            DB --> DB1[01: Compliance Core]
+            DB --> DB2[02: Standards Deploy]
+            DB --> DB3[03: Compliance Engage]
+            PL --> PL1[01: Ethics Core]
+            PL --> PL2[02: Ethics Deploy]
+            PL --> PL3[03: Ethics Engage]
+        end
+    end
+
+    subgraph SpecializedAgents[Specialized Implementation]
+        GL[Git Lucy]
+        DLA[Dr. Lucy Auto]
+        SC1[Super Claude 1]
+        SC2[Super Claude 2]
+    end
+
+    subgraph FMS[Flight Memory System]
+        BC[Blockchain Layer]
+        FM[Flight Management]
+        LR[Learning Records]
+    end
+
+    CoreAgents --> FMS
+    SpecializedAgents --> FMS
+
+    classDef core fill:#f9f,stroke:#333,stroke-width:4px
+    classDef root1 fill:#bbf,stroke:#333,stroke-width:2px
+    classDef root2 fill:#bfb,stroke:#333,stroke-width:2px
+    classDef root3 fill:#fbf,stroke:#333,stroke-width:2px
+    
+    class DG,DL,DS,DC,DM,DCY,DMA,DMT,DB,PL,DR core
+    class DG1,DL1,DS1,DC1,DM1,DCY1,DMA1,DMT1,DB1,PL1,DR1 root1
+    class DG2,DL2,DS2,DC2,DM2,DCY2,DMA2,DMT2,DB2,PL2,DR2 root2
+    class DG3,DL3,DS3,DC3,DM3,DCY3,DMA3,DMT3,DB3,PL3,DR3 root3

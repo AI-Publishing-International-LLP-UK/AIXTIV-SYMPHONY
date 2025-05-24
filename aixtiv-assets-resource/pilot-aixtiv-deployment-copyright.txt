@@ -1,0 +1,195 @@
+/**
+ * AIXTIV Symphony Deployment Utilities
+ * 
+ * @copyright 2025 AI Publishing International LLP
+ * @license Proprietary and Confidential
+ * 
+ * All rights reserved. No part of this software may be reproduced, 
+ * distributed, or transmitted in any form or by any means without 
+ * the prior written permission of AI Publishing International LLP.
+ */
+
+import { execSync } from 'child_process';
+import * as fs from 'fs';
+import * as path from 'path';
+
+/**
+ * Comprehensive Deployment Utility Class
+ */
+export class DeploymentUtility {
+  /**
+   * Validate deployment environment
+   */
+  static validateEnvironment(): boolean {
+    try {
+      // Check required tools
+      const requiredTools = [
+        'gcloud',
+        'kubectl',
+        'docker',
+        'npm'
+      ];
+
+      requiredTools.forEach(tool => {
+        execSync(`which ${tool}`, { stdio: 'ignore' });
+      });
+
+      return true;
+    } catch (error) {
+      console.error('Missing required deployment tools:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Prepare deployment configuration
+   */
+  static prepareDeploymentConfig(environment: 'development' | 'staging' | 'production') {
+    const baseConfig = {
+      projectId: 'api-for-warp-drive',
+      region: 'us-west1',
+      clusterName: 'aixtiv-symphony-primary',
+      namespace: environment
+    };
+
+    // Environment-specific overrides
+    const envConfigs = {
+      development: {
+        ...baseConfig,
+        replicaCount: 1,
+        resourceLimits: {
+          cpu: '500m',
+          memory: '512Mi'
+        }
+      },
+      staging: {
+        ...baseConfig,
+        replicaCount: 2,
+        resourceLimits: {
+          cpu: '1',
+          memory: '1Gi'
+        }
+      },
+      production: {
+        ...baseConfig,
+        replicaCount: 3,
+        resourceLimits: {
+          cpu: '2',
+          memory: '4Gi'
+        }
+      }
+    };
+
+    return envConfigs[environment];
+  }
+
+  /**
+   * Generate deployment manifests
+   */
+  static generateDeploymentManifests(config: any) {
+    const manifestTemplate = `
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aixtiv-symphony-${config.namespace}
+  namespace: ${config.namespace}
+spec:
+  replicas: ${config.replicaCount}
+  selector:
+    matchLabels:
+      app: aixtiv-symphony
+  template:
+    metadata:
+      labels:
+        app: aixtiv-symphony
+    spec:
+      containers:
+      - name: aixtiv-symphony
+        image: gcr.io/${config.projectId}/aixtiv-symphony:latest
+        resources:
+          requests:
+            cpu: ${config.resourceLimits.cpu}
+            memory: ${config.resourceLimits.memory}
+          limits:
+            cpu: ${config.resourceLimits.cpu}
+            memory: ${config.resourceLimits.memory}
+`;
+    
+    // Write manifest to file
+    const manifestPath = path.join(
+      process.cwd(), 
+      `deployment-${config.namespace}.yaml`
+    );
+    
+    fs.writeFileSync(manifestPath, manifestTemplate);
+    
+    return manifestPath;
+  }
+
+  /**
+   * Perform pre-deployment checks
+   */
+  static preDeploymentChecks(config: any): boolean {
+    // Validate cluster access
+    try {
+      execSync(`gcloud container clusters get-credentials ${config.clusterName} --region ${config.region}`);
+      
+      // Check namespace existence
+      execSync(`kubectl get namespace ${config.namespace}`);
+      
+      return true;
+    } catch (error) {
+      console.error('Pre-deployment checks failed:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Execute deployment
+   */
+  static deploy(config: any) {
+    if (!this.validateEnvironment()) {
+      throw new Error('Environment validation failed');
+    }
+
+    if (!this.preDeploymentChecks(config)) {
+      throw new Error('Pre-deployment checks failed');
+    }
+
+    const manifestPath = this.generateDeploymentManifests(config);
+
+    try {
+      // Apply deployment manifest
+      execSync(`kubectl apply -f ${manifestPath}`);
+      
+      // Verify deployment
+      execSync(`kubectl rollout status deployment/aixtiv-symphony-${config.namespace} -n ${config.namespace}`);
+      
+      console.log(`Deployment to ${config.namespace} successful!`);
+      return true;
+    } catch (error) {
+      console.error('Deployment failed:', error);
+      return false;
+    }
+  }
+}
+
+/**
+ * Demonstration of Deployment Utility
+ */
+function demonstrateDeployment() {
+  const environments: Array<'development' | 'staging' | 'production'> = [
+    'development', 'staging', 'production'
+  ];
+
+  environments.forEach(env => {
+    console.log(`Deploying to ${env} environment`);
+    const config = DeploymentUtility.prepareDeploymentConfig(env);
+    DeploymentUtility.deploy(config);
+  });
+}
+
+export default {
+  DeploymentUtility,
+  demonstrateDeployment
+};

@@ -1,0 +1,6 @@
+agents:
+  leadership:
+    - name: "Dr. Lucy, AUTO"
+      specialization: "Executive Leadership Development"
+      model_type: "vertex_palm"
+      search_context: "C-Suite Development"

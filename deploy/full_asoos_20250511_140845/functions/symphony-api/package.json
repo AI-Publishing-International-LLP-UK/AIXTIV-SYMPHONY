@@ -1,0 +1,18 @@
+{
+  "name": "symphony-local-api",
+  "version": "1.0.0",
+  "description": "Local API for Symphony Environment",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}

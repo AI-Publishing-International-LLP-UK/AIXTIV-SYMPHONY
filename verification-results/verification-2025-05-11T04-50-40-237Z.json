@@ -1,0 +1,19 @@
+{
+  "domain": "asoos.2100.cool",
+  "timestamp": "2025-05-11T04:50:39.592Z",
+  "dns": {
+    "success": true,
+    "addresses": [
+      "199.36.158.100"
+    ]
+  },
+  "txt": {
+    "success": false,
+    "error": "queryTxt ENODATA asoos.2100.cool"
+  },
+  "http": {
+    "success": false,
+    "error": "Hostname/IP does not match certificate's altnames: Host: asoos.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+  },
+  "status": "failed"
+}

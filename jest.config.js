@@ -13,12 +13,12 @@ module.exports = {
       branches: 70,
       functions: 70,
       lines: 70,
-      statements: 70
-    }
+      statements: 70,
+    },
   },
   clearMocks: true,
   restoreMocks: true,
   resetMocks: false, // Keep mocks between tests
   testTimeout: 10000,
-  verbose: true
+  verbose: true,
 };

@@ -1,0 +1,43 @@
+# Synthesia Template Configuration
+
+# Variable Types Definition
+variable_types:
+  text:
+    script:
+      rules:
+        - must_start_with_letter: true
+        - allowed_chars: [a-z, A-Z, 0-9, _]
+    canvas:
+      format: "{{variable_name}}"
+      rules:
+        - double_curly_braces: true
+        - allowed_chars: [a-z, A-Z, 0-9, _]
+
+  media:
+    image:
+      rules:
+        - aspect_ratio_match: true
+        - formats: [jpg, png]
+    video:
+      rules:
+        - aspect_ratio_match: true
+        - formats: [mp4]
+    background:
+      dimensions:
+        landscape: [1920, 1080]
+        portrait: [1080, 1920]
+
+  avatar:
+    variables:
+      - name
+      - costume
+      - camera_angle
+
+# HTML Escape Characters
+html_entities:
+  special_chars:
+    "&": "&amp;"
+    "<": "&lt;"
+    ">": "&gt;"
+    '"': "&quot;"
+    "'": "&apos;"

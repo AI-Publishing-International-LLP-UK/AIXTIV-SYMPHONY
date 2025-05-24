@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+        ('admin' in request.auth.token && request.auth.token.admin == true);
+    }
+    
+    function isProjectOwner(projectId) {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/projects/$(projectId)) &&
+        get(/databases/$(database)/documents/projects/$(projectId)).data.ownerId == request.auth.uid;
+    }
+    
+    function isProjectMember(projectId) {
+      return isAuthenticated() && 
+        exists(/databases/$(database)/documents/projectMembers/$(projectId + '_' + request.auth.uid));
+    }
+    
+    // Project Licenses Collection
+    match /projectLicenses/{licenseId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || 
+        resource.data.userId == request.auth.uid ||
+        isProjectOwner(resource.data.projectId) ||
+        isProjectMember(resource.data.projectId)
+      );
+      
+      allow create: if isAuthenticated() && (
+        isAdmin() || 
+        request.resource.data.userId == request.auth.uid
+      );
+      
+      allow update: if isAuthenticated() && (
+        isAdmin() || 
+        resource.data.userId == request.auth.uid ||
+        isProjectOwner(resource.data.projectId)
+      );
+      
+      allow delete: if isAdmin();
+    }
+    
+    // Jira Workspaces Collection
+    match /jiraWorkspaces/{workspaceId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || 
+        isProjectOwner(resource.data.projectId) ||
+        isProjectMember(resource.data.projectId)
+      );
+      
+      allow create: if isAdmin();
+      
+      allow update: if isAuthenticated() && (
+        isAdmin() || 
+        isProjectOwner(resource.data.projectId)
+      );
+      
+      allow delete: if isAdmin();
+    }
+    
+    // License Billings Collection
+    match /licenseBillings/{billingId} {
+      allow read: if isAuthenticated() && (
+        isAdmin() || 
+        resource.data.userId == request.auth.uid
+      );
+      
+      allow create, update, delete: if isAdmin();
+    }
+  }
+}

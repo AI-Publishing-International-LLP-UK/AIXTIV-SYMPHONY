@@ -1,0 +1,1135 @@
+# AIXTIV SYMPHONY OPUS1
+## HYBRID DATABASE & HOSTING CONFIGURATION
+
+**Document Version:** 1.0  
+**Last Updated:** March 3, 2025  
+**Classification:** CONFIDENTIAL
+
+## 1. HYBRID DATABASE ARCHITECTURE
+
+### 1.1 Database Components Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                   AIXTIV Data Architecture                   │
+├───────────────────┬─────────────────────┬───────────────────┤
+│   Firebase/       │      Pinecone       │    Blockchain     │
+│   Firestore       │    Vector Store     │      Ledger       │
+├───────────────────┼─────────────────────┼───────────────────┤
+│ - User profiles   │ - Semantic search   │ - Authorizations  │
+│ - Application data│ - Q4D-Lenz vectors  │ - Flight records  │
+│ - Relational data │ - Embeddings        │ - Reward points   │
+│ - Real-time sync  │ - Similarity search │ - Transaction logs│
+└───────────────────┴─────────────────────┴───────────────────┘
+```
+
+### 1.2 Firebase/Firestore Configuration
+
+#### 1.2.1 Project Setup
+```yaml
+firebase:
+  project_id: api-for-warp-drive
+  region: us-west1
+  auth_providers:
+    - email_password
+    - google_oauth
+    - microsoft_oauth
+    - custom_token
+  app_ids:
+    web: 1:847295733323:web:a2c51b8e4a2c0a57c18f2b
+    ios: 1:847295733323:ios:7be5f54d9ae52a8dc18f2b
+    android: 1:847295733323:android:e03f2c6a7c4d0a6ec18f2b
+```
+
+#### 1.2.2 Firestore Data Model
+```yaml
+collections:
+  # User Data Collections
+  - name: owner-subscribers
+    indexes:
+      - fields: [role, status]
+      - fields: [subscription_tier, created_at]
+    subcollections:
+      - name: profiles
+      - name: preferences
+      - name: billing
+      - name: reward_points
+  
+  # Agent Data Collections
+  - name: agents
+    indexes:
+      - fields: [type, status]
+      - fields: [squadron, specialization]
+    subcollections:
+      - name: profiles
+      - name: capabilities
+      - name: performance_metrics
+  
+  # Operational Collections
+  - name: flights
+    ttl: 180d
+    indexes:
+      - fields: [status, start_time]
+      - fields: [pilot_id, status]
+      - fields: [owner_id, status]
+  
+  # Product Data Collections
+  - name: dream-commander
+    subcollections:
+      - name: prompts
+        ttl: 30d
+      - name: insights
+        ttl: 90d
+  
+  - name: bid-suite
+    subcollections:
+      - name: opportunities
+        ttl: 180d
+        indexes:
+          - fields: [status, discovery_date]
+          - fields: [value, win_probability]
+      - name: submissions
+        ttl: 2y
+      - name: rankings
+        ttl: 90d
+  
+  # Integration Collections
+  - name: integrations
+    subcollections:
+      - name: linkedin
+      - name: github
+      - name: synthesia
+```
+
+#### 1.2.3 Security Rules
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Owner-subscriber access rules
+    match /owner-subscribers/{ownerId} {
+      allow read: if request.auth.uid == ownerId || hasAdminRole();
+      allow write: if request.auth.uid == ownerId || hasAdminRole();
+      
+      match /{subcollection}/{docId} {
+        allow read: if request.auth.uid == ownerId || hasAdminRole();
+        allow write: if request.auth.uid == ownerId || hasAdminRole();
+      }
+    }
+    
+    // Agent access rules
+    match /agents/{agentId} {
+      allow read: if true;
+      allow write: if hasAdminRole() || isSquadronLead();
+      
+      match /performance_metrics/{metricId} {
+        allow read: if isOwnerOrAssignedAgent(agentId) || hasAdminRole();
+        allow write: if isSquadronLead() || hasAdminRole();
+      }
+    }
+    
+    // Flight records - strict access control
+    match /flights/{flightId} {
+      allow read: if isFlightParticipant(flightId) || hasAdminRole();
+      allow create: if isSquadronLead() || hasAdminRole();
+      allow update: if isFlightPilot(flightId) || hasAdminRole();
+      allow delete: if hasAdminRole();
+    }
+    
+    // Helper functions
+    function hasAdminRole() {
+      return request.auth.token.role == 'admin';
+    }
+    
+    function isSquadronLead() {
+      return request.auth.token.role == 'squadron_lead';
+    }
+    
+    function isOwnerOrAssignedAgent(agentId) {
+      return request.auth.token.agent_id == agentId || 
+             request.auth.token.assigned_agents.hasAny([agentId]);
+    }
+    
+    function isFlightParticipant(flightId) {
+      let flight = get(/databases/$(database)/documents/flights/$(flightId));
+      return request.auth.uid == flight.data.owner_id || 
+             request.auth.token.agent_id == flight.data.pilot_id ||
+             flight.data.ground_crew.hasAny([request.auth.token.agent_id]);
+    }
+    
+    function isFlightPilot(flightId) {
+      let flight = get(/databases/$(database)/documents/flights/$(flightId));
+      return request.auth.token.agent_id == flight.data.pilot_id;
+    }
+  }
+}
+```
+
+### 1.3 Pinecone Vector Database
+
+#### 1.3.1 Indexes Configuration
+```yaml
+pinecone:
+  environment: us-west1-gcp
+  project: api-for-warp-drive
+  indexes:
+    - name: q4d-lenz-knowledge
+      dimension: 1536
+      metric: cosine
+      pods: 2
+      pod_type: p1.x4
+      metadata_config:
+        indexed: ["category", "source", "domain", "importance"]
+    
+    - name: bid-opportunities
+      dimension: 1536
+      metric: cosine
+      pods: 1
+      pod_type: p1.x2
+      metadata_config:
+        indexed: ["industry", "value_range", "region", "type"]
+    
+    - name: brand-insights
+      dimension: 1536
+      metric: cosine
+      pods: 1
+      pod_type: p1.x2
+      metadata_config:
+        indexed: ["market_segment", "sentiment", "channel", "date"]
+```
+
+#### 1.3.2 Vector Embedding Strategy
+```yaml
+embeddings:
+  providers:
+    primary: "openai/text-embedding-3-large"
+    backup: "anthropic/claude-3-embedding"
+  batch_size: 100
+  caching:
+    enabled: true
+    ttl: 24h
+  refresh_strategy:
+    q4d_knowledge:
+      full_refresh: weekly
+      incremental: daily
+    bid_opportunities:
+      full_refresh: never
+      incremental: hourly
+    brand_insights:
+      full_refresh: monthly
+      incremental: daily
+```
+
+### 1.4 Blockchain Ledger
+
+#### 1.4.1 Architecture
+```yaml
+blockchain:
+  type: hyperledger_fabric
+  network_name: aixtiv-symphony-net
+  channels:
+    - name: flight-records-channel
+      organizations: ["aixtiv-org", "tower-org"]
+    - name: authorization-channel
+      organizations: ["aixtiv-org", "owner-org"]
+    - name: rewards-channel
+      organizations: ["aixtiv-org", "tower-org", "owner-org"]
+  chaincodes:
+    - name: flight-verification
+      version: 1.0
+      channel: flight-records-channel
+      endorsement_policy: "AND('aixtiv-org.peer', 'tower-org.peer')"
+    - name: qr-authorization
+      version: 1.0
+      channel: authorization-channel
+      endorsement_policy: "AND('aixtiv-org.peer', 'owner-org.peer')"
+    - name: reward-allocation
+      version: 1.0
+      channel: rewards-channel
+      endorsement_policy: "OR('aixtiv-org.peer', 'tower-org.peer')"
+```
+
+#### 1.4.2 Data Types
+```yaml
+blockchain_data:
+  flight_records:
+    structure:
+      - pilot_id: string
+      - flight_id: string
+      - start_time: timestamp
+      - end_time: timestamp
+      - deliverables: array
+      - quality_score: float
+      - verification_hash: string
+    immutable: true
+  
+  authorizations:
+    structure:
+      - authorization_id: string
+      - owner_id: string
+      - deliverable_id: string
+      - timestamp: timestamp
+      - qr_signature: string
+      - status: string
+    immutable: true
+  
+  reward_points:
+    structure:
+      - transaction_id: string
+      - flight_id: string
+      - recipient_id: string
+      - recipient_type: string
+      - points: integer
+      - reason: string
+      - timestamp: timestamp
+    immutable: true
+```
+
+#### 1.4.3 Firebase-Blockchain Integration
+```yaml
+integration:
+  type: dual_write
+  consistency: eventual
+  verification:
+    blockchain_to_firebase:
+      frequency: 15m
+      reconciliation: automatic
+    firebase_to_blockchain:
+      frequency: 5m
+      reconciliation: manual_approval
+  event_handlers:
+    - trigger: new_flight_record
+      action: write_to_blockchain
+      collection: flights
+    - trigger: new_authorization
+      action: write_to_blockchain
+      collection: owner-subscribers/{id}/authorizations
+    - trigger: reward_allocation
+      action: write_to_blockchain
+      collection: reward_points
+```
+
+## 2. HOSTING CONFIGURATION
+
+### 2.1 URL & Domain Strategy
+
+#### 2.1.1 Domain Architecture
+```yaml
+domains:
+  primary: aixtiv-symphony.coaching2100.com
+  api: api.aixtiv-symphony.coaching2100.com
+  app: app.aixtiv-symphony.coaching2100.com
+  auth: auth.aixtiv-symphony.coaching2100.com
+  docs: docs.aixtiv-symphony.coaching2100.com
+  cdn: cdn.aixtiv-symphony.coaching2100.com
+  
+  # White label domains (masked to customer domains)
+  white_label:
+    pattern: symphony.{customer-domain}.com
+    dns_configuration: cname_to_proxy
+    certificate_management: automated
+```
+
+#### 2.1.2 URL Structure
+```yaml
+url_patterns:
+  web_app:
+    dashboard: /dashboard
+    agents: /agents/{agent_id}
+    flights: /flights/{flight_id?}
+    bid_suite: /growth/opportunities/{opportunity_id?}
+    dream_commander: /growth/strategy/{strategy_id?}
+    q4d_lenz: /growth/perspective/{dimension?}
+    gift_shop: /gift-shop/{category?}
+    academy: /academy/{course_id?}
+    vision_lake: /vision-lake/{resource_id?}
+  
+  api:
+    base: https://api.aixtiv-symphony.coaching2100.com/v1
+    endpoints:
+      agents: /agents
+      flights: /flights
+      bids: /bids
+      dream_commander: /dream-commander
+      q4d_lenz: /q4d-lenz
+      blockchain: /blockchain
+      integrations: /integrations/{provider}
+```
+
+### 2.2 Firebase Hosting
+
+#### 2.2.1 Configuration
+```yaml
+firebase_hosting:
+  project: api-for-warp-drive
+  sites:
+    - site: aixtiv-symphony
+      target: production
+      public: dist
+      ignore:
+        - firebase.json
+        - '**/.*'
+        - '**/node_modules/**'
+      rewrites:
+        - source: '**'
+          destination: /index.html
+      headers:
+        - source: '**/*.@(js|css)'
+          headers:
+            - key: Cache-Control
+              value: max-age=31536000
+        - source: '**/*.@(jpg|jpeg|gif|png|svg|webp)'
+          headers:
+            - key: Cache-Control
+              value: max-age=604800
+      appAssociation: AUTO
+      cleanUrls: true
+      trailingSlash: false
+```
+
+#### 2.2.2 Custom Domain Setup
+```yaml
+custom_domains:
+  - domain: aixtiv-symphony.coaching2100.com
+    ssl: true
+  - domain: app.aixtiv-symphony.coaching2100.com
+    ssl: true
+  - domain: api.aixtiv-symphony.coaching2100.com
+    ssl: true
+  - domain: auth.aixtiv-symphony.coaching2100.com
+    ssl: true
+  - domain: docs.aixtiv-symphony.coaching2100.com
+    ssl: true
+  - domain: cdn.aixtiv-symphony.coaching2100.com
+    ssl: true
+```
+
+### 2.3 API Gateway & Cloud Functions
+
+#### 2.3.1 API Gateway Configuration
+```yaml
+api_gateway:
+  name: aixtiv-symphony-api
+  api_config_id: aixtiv-symphony-api-config
+  gateway_service_account: api-gateway@api-for-warp-drive.iam.gserviceaccount.com
+  security:
+    authentication:
+      providers:
+        - firebase_auth
+        - api_key
+        - service_account
+    rate_limiting:
+      default_limit: 60
+      owner_limit: 300
+      service_limit: 1000
+  managed_service:
+    producer_project_id: api-for-warp-drive
+    host: api.aixtiv-symphony.coaching2100.com
+```
+
+#### 2.3.2 Cloud Functions Endpoints
+```yaml
+cloud_functions:
+  dream_commander:
+    - name: generatePrompt
+      trigger: https
+      ingress: internal-only
+      timeout: 300s
+      memory: 2GB
+      min_instances: 1
+    - name: processInsight
+      trigger: firestore
+      timeout: 540s
+      memory: 4GB
+  
+  q4d_lenz:
+    - name: generatePerspective
+      trigger: https
+      ingress: internal-and-gclb
+      timeout: 300s
+      memory: 2GB
+    - name: updateKnowledgeBase
+      trigger: pubsub
+      timeout: 600s
+      memory: 8GB
+  
+  bid_suite:
+    - name: crawlOpportunities
+      trigger: pubsub
+      schedule: every 6 hours
+      timeout: 540s
+      memory: 4GB
+    - name: rankOpportunities
+      trigger: https
+      ingress: internal-and-gclb
+      timeout: 300s
+      memory: 2GB
+    - name: monitorSubmissions
+      trigger: pubsub
+      schedule: every 8 hours
+      timeout: 120s
+      memory: 1GB
+  
+  blockchain:
+    - name: verifyAuthorization
+      trigger: https
+      ingress: internal-and-gclb
+      timeout: 60s
+      memory: 512MB
+    - name: recordFlightCompletion
+      trigger: firestore
+      timeout: 120s
+      memory: 1GB
+    - name: allocateRewards
+      trigger: firestore
+      timeout: 120s
+      memory: 1GB
+```
+
+### 2.4 Desktop Application Hosting
+
+#### 2.4.1 Electron App Configuration
+```yaml
+desktop_app:
+  name: AIXTIV Symphony Desktop
+  id: com.coaching2100.aixtiv-symphony
+  version: 1.0.0
+  platforms:
+    - windows
+    - macos
+    - linux
+  update_server: https://updates.aixtiv-symphony.coaching2100.com
+  main_process:
+    memory_limit: 2GB
+    crash_reporting: true
+  renderer_process:
+    memory_limit: 4GB
+    cache:
+      max_size: 1GB
+      ttl: 7d
+  firebase:
+    persistence: enabled
+    offline_capabilities: true
+    sync_throttling: normal
+```
+
+#### 2.4.2 Desktop Distribution
+```yaml
+desktop_distribution:
+  windows:
+    installer: nsis
+    code_signing:
+      enabled: true
+      certificate: "Coaching 2100, LLC"
+    distribution:
+      - microsoft_store
+      - direct_download
+  
+  macos:
+    installer: dmg
+    code_signing:
+      enabled: true
+      certificate: "Coaching 2100, LLC"
+      notarization: true
+    distribution:
+      - mac_app_store
+      - direct_download
+  
+  linux:
+    formats:
+      - deb
+      - rpm
+      - AppImage
+    distribution:
+      - snapcraft
+      - flathub
+      - direct_download
+```
+
+## 3. APP-2100-COOL MOBILE RELEASE CONFIGURATION
+
+### 3.1 Mobile Application Overview
+
+```
+┌────────────────────────────────────────────────────────────┐
+│                     APP-2100-COOL                          │
+├────────────────────────────────────────────────────────────┤
+│                                                            │
+│  ┌──────────────────────┐        ┌──────────────────────┐  │
+│  │     iOS Release      │        │   Android Release    │  │
+│  │                      │        │                      │  │
+│  │ • App Store Connect  │        │ • Google Play        │  │
+│  │ • TestFlight         │        │ • Play Store Console │  │
+│  │ • Enterprise Dist.   │        │ • Firebase App Dist. │  │
+│  └──────────────────────┘        └──────────────────────┘  │
+│                                                            │
+├────────────────────────────────────────────────────────────┤
+│                   Common Components                         │
+│                                                            │
+│  • React Native Core                                       │
+│  • Firebase SDK Integration                                │
+│  • Offline Capabilities                                    │
+│  • Push Notifications                                      │
+│  • Deep Linking                                            │
+│  • Analytics                                               │
+└────────────────────────────────────────────────────────────┘
+```
+
+### 3.2 Firebase App Configuration
+
+#### 3.2.1 Project Setup
+```yaml
+app_2100_cool:
+  firebase_project: api-for-warp-drive
+  app_ids:
+    ios: 1:847295733323:ios:7be5f54d9ae52a8dc18f2b
+    android: 1:847295733323:android:e03f2c6a7c4d0a6ec18f2b
+  firebase_services:
+    - authentication
+    - firestore
+    - cloud_messaging
+    - remote_config
+    - app_check
+    - crashlytics
+    - performance
+    - analytics
+    - in_app_messaging
+    - dynamic_links
+```
+
+#### 3.2.2 Mobile Config
+```yaml
+mobile_config:
+  offline_capabilities:
+    enabled: true
+    cache_size_mb: 256
+    persistence: true
+    sync_strategy: incremental
+  
+  performance:
+    network_request_sampling_rate: 0.1
+    trace_sampling_rate: 0.01
+    automatic_screen_tracking: true
+  
+  security:
+    app_check: true
+    attestation:
+      ios: app_attest
+      android: play_integrity
+    data_encryption: true
+    biometric_authentication: optional
+  
+  push_notifications:
+    channels:
+      - id: high_priority
+        name: Critical Updates
+        importance: high
+      - id: medium_priority
+        name: Bid Updates
+        importance: default
+      - id: low_priority
+        name: General Updates
+        importance: low
+    topics:
+      - name: all_users
+      - name: premium_users
+      - name: bid_alerts
+      - name: system_updates
+```
+
+### 3.3 iOS Release Configuration
+
+#### 3.3.1 App Store Connect
+```yaml
+ios_release:
+  bundle_id: com.coaching2100.app2100cool
+  app_store_id: 1523456789
+  team_id: A1B2C3D4E5
+  certificates:
+    distribution: "iPhone Distribution: Coaching 2100, LLC"
+    push: "Apple Push Services: com.coaching2100.app2100cool"
+  capabilities:
+    - push_notifications
+    - associated_domains
+    - app_groups
+    - background_modes:
+      - remote_notifications
+      - background_fetch
+    - keychain_sharing
+  app_store:
+    categories:
+      primary: Business
+      secondary: Productivity
+    content_rating: 4+
+    app_review_information:
+      contact_email: app-review@coaching2100.com
+      contact_phone: "+14155551234"
+      demo_account:
+        username: "app-reviewer@coaching2100.com"
+        password: "ReviewAccess2025!"
+    pricing_schedule:
+      base_tier: 10.99
+```
+
+#### 3.3.2 TestFlight Configuration
+```yaml
+testflight:
+  internal_testers:
+    groups:
+      - name: Core Team
+        users: [pr@coaching2100.com, dk@coaching2100.com, jg@coaching2100.com]
+      - name: QA Team
+        users: [qa@coaching2100.com]
+  external_testers:
+    groups:
+      - name: Beta Testers
+        maximum: 1000
+      - name: Enterprise Customers
+        maximum: 200
+  build_distribution:
+    frequency: weekly
+    automatic_distribution: true
+    release_notes_format: markdown
+```
+
+### 3.4 Android Release Configuration
+
+#### 3.4.1 Google Play Store
+```yaml
+android_release:
+  application_id: com.coaching2100.app2100cool
+  version_scheme:
+    version_code: incremental
+    version_name: semantic
+  signing:
+    key_alias: app2100cool
+    key_password: encrypted:secret_manager:android_key_password
+    store_file: app2100cool.keystore
+    store_password: encrypted:secret_manager:android_keystore_password
+  play_store:
+    track:
+      production:
+        status: active
+      beta:
+        status: active
+        user_fraction: 0.2
+      alpha:
+        status: active
+    listing:
+      language: en-US
+      title: "AIXTIV Symphony"
+      short_description: "AI-powered professional growth and bid management"
+      full_description: |
+        AIXTIV Symphony is your comprehensive solution for professional growth, 
+        opportunity discovery, and bid management. Powered by AI agents that work on 
+        your behalf, Symphony helps you find and win the best opportunities for your 
+        business.
+      categories:
+        - Business
+        - Productivity
+    content_rating:
+      rating_type: Everyone
+```
+
+#### 3.4.2 Firebase App Distribution
+```yaml
+firebase_app_distribution:
+  groups:
+    - name: internal-testers
+      testers: [pr@coaching2100.com, dk@coaching2100.com, jg@coaching2100.com, qa@coaching2100.com]
+    - name: beta-testers
+      testers: [beta-testers@coaching2100.com]
+    - name: enterprise-customers
+      testers: [enterprise-customers@coaching2100.com]
+  releases:
+    notifications: true
+    distribution:
+      frequency: weekly
+      automatic: true
+    testing_notes_format: markdown
+```
+
+### 3.5 CI/CD Pipeline for Mobile
+
+#### 3.5.1 Mobile Build Pipeline
+```yaml
+name: APP-2100-COOL Mobile Build
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'mobile/**'
+      - '.github/workflows/mobile.yml'
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'mobile/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: cd mobile && npm ci
+      - name: Run tests
+        run: cd mobile && npm test
+
+  build_ios:
+    needs: test
+    runs-on: macos-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: cd mobile && npm ci
+      - name: Install CocoaPods
+        run: cd mobile/ios && pod install
+      - name: Build iOS
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        run: cd mobile && fastlane ios build
+
+  build_android:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: cd mobile && npm ci
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+      - name: Build Android
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: cd mobile && fastlane android build
+
+  deploy_develop:
+    needs: [build_ios, build_android]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Set up Firebase CLI
+        run: npm install -g firebase-tools
+      - name: Deploy to Firebase App Distribution
+        env:
+          FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
+        run: firebase appdistribution:distribute --app ${{ secrets.FIREBASE_IOS_APP_ID }} --groups "internal-testers" --release-notes "Develop branch build"
+
+  deploy_production:
+    needs: [build_ios, build_android]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Deploy to App Store and Play Store
+        env:
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          GOOGLE_PLAY_JSON_KEY: ${{ secrets.GOOGLE_PLAY_JSON_KEY }}
+        run: |
+          cd mobile
+          fastlane ios release
+          fastlane android release
+```
+
+#### 3.5.2 Fastlane Configuration
+```ruby
+# Fastfile
+default_platform(:ios)
+
+before_all do
+  # Set up environment
+end
+
+platform :ios do
+  desc "Build the iOS application"
+  lane :build do
+    match(type: "appstore", readonly: true)
+    increment_build_number
+    gym(
+      scheme: "App2100Cool",
+      export_method: "app-store",
+      clean: true,
+      output_directory: "build",
+      output_name: "app2100cool.ipa"
+    )
+  end
+
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    build
+    pilot(
+      skip_waiting_for_build_processing: true,
+      skip_submission: true,
+      distribute_external: false,
+      groups: ["Beta Testers"]
+    )
+  end
+
+  desc "Push a new release build to the App Store"
+  lane :release do
+    build
+    deliver(
+      submit_for_review: true,
+      automatic_release: true,
+      force: true,
+      skip_metadata: false,
+      skip_screenshots: false,
+      submission_information: {
+        add_id_info_uses_idfa: false
+      }
+    )
+  end
+end
+
+platform :android do
+  desc "Build the Android application"
+  lane :build do
+    increment_version_code
+    gradle(
+      task: "clean assembleRelease",
+      properties: {
+        "android.injected.signing.store.file" => ENV["KEYSTORE_FILE"],
+        "android.injected.signing.store.password" => ENV["KEYSTORE_PASSWORD"],
+        "android.injected.signing.key.alias" => ENV["KEY_ALIAS"],
+        "android.injected.signing.key.password" => ENV["KEY_PASSWORD"],
+      }
+    )
+  end
+
+  desc "Push a new beta build to Firebase App Distribution"
+  lane :beta do
+    build
+    firebase_app_distribution(
+      app: ENV["FIREBASE_ANDROID_APP_ID"],
+      groups: "beta-testers",
+      release_notes: "New beta build"
+    )
+  end
+
+  desc "Push a new release build to the Play Store"
+  lane :release do
+    build
+    upload_to_play_store(
+      track: "production",
+      release_status: "completed",
+      skip_upload_metadata: false,
+      skip_upload_images: false,
+      skip_upload_screenshots: false
+    )
+  end
+end
+```
+
+## 4. INTEGRATION WITH AIXTIV SYMPHONY OPUS1
+
+### 4.1 System Integration Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                  AIXTIV Integration Layer                    │
+├─────────────────┬─────────────────────┬─────────────────────┤
+│                 │                     │                     │
+│   Desktop App   │     Mobile Apps     │     Web Portal      │
+│                 │                     │                     │
+├─────────────────┴─────────────────────┴─────────────────────┤
+│                                                             │
+│                  Unified API Gateway                         │
+│                                                             │
+├─────────────┬─────────────┬─────────────┬─────────────┬─────┤
+│             │             │             │             │     │
+│  Firebase   │  Firestore  │  Pinecone   │ Blockchain  │ ... │
+│             │             │             │             │     │
+└─────────────┴─────────────┴─────────────┴─────────────┴─────┘
+```
+
+### 4.2 Shared Authentication and Identity
+
+```yaml
+authentication:
+  providers:
+    primary: firebase_auth
+    secondary: custom_token
+  sessions:
+    web:
+      duration: 12h
+      refresh: true
+      idle_timeout: 1h
+    desktop:
+      duration: 30d
+      refresh: true
+      idle_timeout: 4h
+    mobile:
+      duration: 90d
+      refresh: true
+      idle_timeout: 8h
+  mfa:
+    required_for:
+      - admin
+      - squadron_lead
+    methods:
+      - phone
+      - authenticator_app
+      - security_key
+  token_exchange:
+    firebase_to_custom: true
+    custom_to_firebase: true
+    verification: cryptographic
+```
+
+### 4.3 Data Synchronization Strategy
+
+```yaml
+data_sync:
+  real_time_collections:
+    - owner-subscribers
+    - flights
+    - dream-commander/prompts
+    - bid-suite/opportunities
+  offline_support:
+    desktop:
+      max_cache: 1GB
+      priority_collections:
+        - owner-subscribers
+        - flights
+    mobile:
+      max_cache: 256MB
+      priority_collections:
+        - owner-subscribers
+        - flights/recent
+  conflict_resolution:
+    strategy: server_wins
+    merge_fields:
+      - collection: owner-subscribers
+        fields: [preferences, metadata]
+  sync_frequency:
+    desktop: realtime
+    mobile:
+      on_foreground: realtime
+      on_background: 15m
+      on_low_battery: 60m
+```
+
+### 4.4 API Access Patterns
+
+```yaml
+api_access:
+  desktop:
+    direct_firestore: true
+    blockchain_access: via_api
+    vector_search: via_api
+  mobile:
+    direct_firestore: true
+    blockchain_access: via_api
+    vector_search: via_api
+  web:
+    direct_firestore: true
+    blockchain_access: via_api
+    vector_search: via_api
+  service_accounts:
+    dream_commander: direct_access_all
+    bid_suite: direct_access_all
+    q4d_lenz: direct_access_all
+  rate_limits:
+    per_user:
+      default: 60/min
+      premium: 300/min
+    per_service:
+      default: 600/min
+      high_priority: 1800/min
+```
+
+## 5. SECURITY AND COMPLIANCE
+
+### 5.1 Data Security
+
+```yaml
+data_security:
+  encryption:
+    at_rest:
+      firestore: default_gcp
+      blockchain: aes_256
+      local_storage:
+        desktop: aes_256
+        mobile: platform_best
+    in_transit: tls_1_3
+  data_classification:
+    pii:
+      storage: encrypted
+      masking: partial
+      retention: min_necessary
+    business_data:
+      storage: encrypted
+      access_control: role_based
+      retention: defined_policy
+    credentials:
+      storage: secure_enclave
+      access: temporary
+```
+
+### 5.2 Compliance Controls
+
+```yaml
+compliance:
+  standards:
+    - gdpr
+    - ccpa
+    - hipaa
+    - sox
+  data_governance:
+    data_inventory: comprehensive
+    access_controls: rbac_and_abac
+    audit_logging: all_access
+    data_deletion:
+      process: verified
+      proof: blockchain_record
+  privacy:
+    consent_management: granular
+    data_subject_requests: automated
+    anonymization: k_anonymity
+    privacy_impact_assessments: regular
+```
+
+---
+
+**Approved By:**
+- Project Owner: pr@coaching2100.com
+- Super Admin: admin@coaching2100.com
+- Billing Admin: jg@coaching2100.com
+
+**CONFIDENTIAL - INTERNAL USE ONLY**

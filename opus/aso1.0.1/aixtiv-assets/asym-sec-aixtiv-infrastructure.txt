@@ -1,0 +1,719 @@
+/**
+ * AIXTIV Infrastructure and Security Architecture
+ * 
+ * This file defines the comprehensive infrastructure and security architecture
+ * for the AIXTIV ecosystem, including Symphony and all integrated products.
+ */
+
+// Terraform configuration for AIXTIV infrastructure
+const terraformConfig = `
+# AIXTIV Infrastructure Terraform Configuration
+
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 4.0"
+    }
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = "~> 4.0"
+    }
+  }
+  backend "gcs" {
+    bucket = "aixtiv-terraform-state"
+    prefix = "terraform/state"
+  }
+}
+
+# Configure Google Cloud provider
+provider "google" {
+  project = var.project_id
+  region  = "us-west1"
+}
+
+provider "google-beta" {
+  project = var.project_id
+  region  = "us-west1"
+}
+
+# Variables
+variable "project_id" {
+  description = "The GCP project ID"
+  default     = "aixtiv-symphony-prod"
+}
+
+variable "environment" {
+  description = "Environment (prod, staging, dev)"
+  default     = "prod"
+}
+
+# VPC Network
+resource "google_compute_network" "aixtiv_vpc" {
+  name                    = "aixtiv-vpc-\${var.environment}"
+  auto_create_subnetworks = false
+  description             = "Virtual Private Cloud network for AIXTIV ecosystem"
+}
+
+# Subnet configuration
+resource "google_compute_subnetwork" "aixtiv_subnetwork" {
+  name          = "aixtiv-subnet-\${var.environment}"
+  ip_cidr_range = "10.10.0.0/20"
+  region        = "us-west1"
+  network       = google_compute_network.aixtiv_vpc.id
+  
+  secondary_ip_range {
+    range_name    = "aixtiv-services-range"
+    ip_cidr_range = "10.11.0.0/20"
+  }
+  
+  secondary_ip_range {
+    range_name    = "aixtiv-pods-range"
+    ip_cidr_range = "10.12.0.0/16"
+  }
+  
+  private_ip_google_access = true
+}
+
+# Firewall rules
+resource "google_compute_firewall" "allow_internal" {
+  name    = "allow-internal-\${var.environment}"
+  network = google_compute_network.aixtiv_vpc.name
+  
+  allow {
+    protocol = "icmp"
+  }
+  
+  allow {
+    protocol = "tcp"
+  }
+  
+  allow {
+    protocol = "udp"
+  }
+  
+  source_ranges = ["10.10.0.0/20", "10.11.0.0/20", "10.12.0.0/16"]
+}
+
+resource "google_compute_firewall" "allow_external_https" {
+  name    = "allow-external-https-\${var.environment}"
+  network = google_compute_network.aixtiv_vpc.name
+  
+  allow {
+    protocol = "tcp"
+    ports    = ["443"]
+  }
+  
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["https-server"]
+}
+
+# Cloud NAT for egress traffic
+resource "google_compute_router" "aixtiv_router" {
+  name    = "aixtiv-router-\${var.environment}"
+  region  = "us-west1"
+  network = google_compute_network.aixtiv_vpc.id
+}
+
+resource "google_compute_router_nat" "aixtiv_nat" {
+  name                               = "aixtiv-nat-\${var.environment}"
+  router                             = google_compute_router.aixtiv_router.name
+  region                             = "us-west1"
+  nat_ip_allocate_option             = "AUTO_ONLY"
+  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+}
+
+# GKE Cluster for microservices
+resource "google_container_cluster" "aixtiv_cluster" {
+  provider = google-beta
+  
+  name     = "aixtiv-cluster-\${var.environment}"
+  location = "us-west1"
+  
+  # We can't create a cluster with no node pool defined, but we want to only use
+  # separately managed node pools. So we create the smallest possible default
+  # node pool and immediately delete it.
+  remove_default_node_pool = true
+  initial_node_count       = 1
+  
+  network    = google_compute_network.aixtiv_vpc.self_link
+  subnetwork = google_compute_subnetwork.aixtiv_subnetwork.self_link
+  
+  ip_allocation_policy {
+    cluster_secondary_range_name  = "aixtiv-pods-range"
+    services_secondary_range_name = "aixtiv-services-range"
+  }
+  
+  private_cluster_config {
+    enable_private_nodes    = true
+    enable_private_endpoint = false
+    master_ipv4_cidr_block  = "172.16.0.0/28"
+  }
+  
+  master_authorized_networks_config {
+    cidr_blocks {
+      cidr_block   = "0.0.0.0/0"
+      display_name = "All"
+    }
+  }
+  
+  workload_identity_config {
+    workload_pool = "\${var.project_id}.svc.id.goog"
+  }
+}
+
+resource "google_container_node_pool" "aixtiv_node_pool" {
+  provider = google-beta
+  
+  name       = "aixtiv-node-pool-\${var.environment}"
+  location   = "us-west1"
+  cluster    = google_container_cluster.aixtiv_cluster.name
+  node_count = 3
+  
+  node_config {
+    machine_type = "n2-standard-4"
+    disk_size_gb = 100
+    disk_type    = "pd-standard"
+    
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/devstorage.read_only"
+    ]
+    
+    tags = ["aixtiv", "gke-node", var.environment]
+    
+    workload_metadata_config {
+      mode = "GKE_METADATA"
+    }
+  }
+  
+  management {
+    auto_repair  = true
+    auto_upgrade = true
+  }
+}
+
+# Cloud Load Balancer
+resource "google_compute_global_address" "aixtiv_global_address" {
+  name = "aixtiv-global-address-\${var.environment}"
+}
+
+resource "google_compute_global_forwarding_rule" "aixtiv_forwarding_rule" {
+  name       = "aixtiv-forwarding-rule-\${var.environment}"
+  target     = google_compute_target_https_proxy.aixtiv_https_proxy.id
+  port_range = "443"
+  ip_address = google_compute_global_address.aixtiv_global_address.address
+}
+
+resource "google_compute_target_https_proxy" "aixtiv_https_proxy" {
+  name             = "aixtiv-https-proxy-\${var.environment}"
+  url_map          = google_compute_url_map.aixtiv_url_map.id
+  ssl_certificates = [google_compute_managed_ssl_certificate.aixtiv_ssl_cert.id]
+}
+
+resource "google_compute_managed_ssl_certificate" "aixtiv_ssl_cert" {
+  provider = google-beta
+  
+  name = "aixtiv-ssl-cert-\${var.environment}"
+  
+  managed {
+    domains = [
+      "aixtiv.com",
+      "*.aixtiv.com",
+      "symphony.aixtiv.com",
+      "bidsuite.aixtiv.com",
+      "api.aixtiv.com"
+    ]
+  }
+}
+
+resource "google_compute_url_map" "aixtiv_url_map" {
+  name            = "aixtiv-url-map-\${var.environment}"
+  default_service = google_compute_backend_service.aixtiv_backend.id
+  
+  host_rule {
+    hosts        = ["api.aixtiv.com"]
+    path_matcher = "api-paths"
+  }
+  
+  host_rule {
+    hosts        = ["symphony.aixtiv.com"]
+    path_matcher = "symphony-paths"
+  }
+  
+  host_rule {
+    hosts        = ["bidsuite.aixtiv.com"]
+    path_matcher = "bidsuite-paths"
+  }
+  
+  path_matcher {
+    name            = "api-paths"
+    default_service = google_compute_backend_service.aixtiv_api_backend.id
+  }
+  
+  path_matcher {
+    name            = "symphony-paths"
+    default_service = google_compute_backend_service.aixtiv_symphony_backend.id
+  }
+  
+  path_matcher {
+    name            = "bidsuite-paths"
+    default_service = google_compute_backend_service.aixtiv_bidsuite_backend.id
+  }
+}
+
+resource "google_compute_backend_service" "aixtiv_backend" {
+  name        = "aixtiv-backend-\${var.environment}"
+  protocol    = "HTTP"
+  timeout_sec = 10
+  enable_cdn  = true
+  
+  backend {
+    group = google_compute_instance_group_manager.aixtiv_frontend_mig.instance_group
+  }
+  
+  health_checks = [google_compute_health_check.aixtiv_health_check.id]
+}
+
+resource "google_compute_backend_service" "aixtiv_api_backend" {
+  name        = "aixtiv-api-backend-\${var.environment}"
+  protocol    = "HTTP"
+  timeout_sec = 30
+  
+  backend {
+    group = google_compute_instance_group_manager.aixtiv_api_mig.instance_group
+  }
+  
+  health_checks = [google_compute_health_check.aixtiv_health_check.id]
+}
+
+resource "google_compute_backend_service" "aixtiv_symphony_backend" {
+  name        = "aixtiv-symphony-backend-\${var.environment}"
+  protocol    = "HTTP"
+  timeout_sec = 10
+  enable_cdn  = true
+  
+  backend {
+    group = google_compute_instance_group_manager.aixtiv_symphony_mig.instance_group
+  }
+  
+  health_checks = [google_compute_health_check.aixtiv_health_check.id]
+}
+
+resource "google_compute_backend_service" "aixtiv_bidsuite_backend" {
+  name        = "aixtiv-bidsuite-backend-\${var.environment}"
+  protocol    = "HTTP"
+  timeout_sec = 10
+  enable_cdn  = true
+  
+  backend {
+    group = google_compute_instance_group_manager.aixtiv_bidsuite_mig.instance_group
+  }
+  
+  health_checks = [google_compute_health_check.aixtiv_health_check.id]
+}
+
+resource "google_compute_health_check" "aixtiv_health_check" {
+  name = "aixtiv-health-check-\${var.environment}"
+  
+  http_health_check {
+    port = 80
+    request_path = "/health"
+  }
+}
+
+# Instance groups for each service
+resource "google_compute_instance_group_manager" "aixtiv_frontend_mig" {
+  name = "aixtiv-frontend-mig-\${var.environment}"
+  zone = "us-west1-a"
+  
+  base_instance_name = "aixtiv-frontend"
+  target_size        = 2
+  
+  version {
+    instance_template = google_compute_instance_template.aixtiv_frontend_template.id
+  }
+  
+  auto_healing_policies {
+    health_check      = google_compute_health_check.aixtiv_health_check.id
+    initial_delay_sec = 300
+  }
+}
+
+resource "google_compute_instance_group_manager" "aixtiv_api_mig" {
+  name = "aixtiv-api-mig-\${var.environment}"
+  zone = "us-west1-a"
+  
+  base_instance_name = "aixtiv-api"
+  target_size        = 3
+  
+  version {
+    instance_template = google_compute_instance_template.aixtiv_api_template.id
+  }
+  
+  auto_healing_policies {
+    health_check      = google_compute_health_check.aixtiv_health_check.id
+    initial_delay_sec = 300
+  }
+}
+
+resource "google_compute_instance_group_manager" "aixtiv_symphony_mig" {
+  name = "aixtiv-symphony-mig-\${var.environment}"
+  zone = "us-west1-a"
+  
+  base_instance_name = "aixtiv-symphony"
+  target_size        = 2
+  
+  version {
+    instance_template = google_compute_instance_template.aixtiv_symphony_template.id
+  }
+  
+  auto_healing_policies {
+    health_check      = google_compute_health_check.aixtiv_health_check.id
+    initial_delay_sec = 300
+  }
+}
+
+resource "google_compute_instance_group_manager" "aixtiv_bidsuite_mig" {
+  name = "aixtiv-bidsuite-mig-\${var.environment}"
+  zone = "us-west1-a"
+  
+  base_instance_name = "aixtiv-bidsuite"
+  target_size        = 2
+  
+  version {
+    instance_template = google_compute_instance_template.aixtiv_bidsuite_template.id
+  }
+  
+  auto_healing_policies {
+    health_check      = google_compute_health_check.aixtiv_health_check.id
+    initial_delay_sec = 300
+  }
+}
+
+# Instance templates
+resource "google_compute_instance_template" "aixtiv_frontend_template" {
+  name_prefix  = "aixtiv-frontend-template-"
+  machine_type = "n2-standard-2"
+  tags         = ["https-server", "aixtiv", "frontend", var.environment]
+  
+  disk {
+    source_image = "debian-cloud/debian-11"
+    auto_delete  = true
+    boot         = true
+    disk_size_gb = 20
+  }
+  
+  network_interface {
+    network    = google_compute_network.aixtiv_vpc.id
+    subnetwork = google_compute_subnetwork.aixtiv_subnetwork.id
+  }
+  
+  metadata_startup_script = "# Startup script for frontend servers"
+  
+  service_account {
+    email  = google_service_account.aixtiv_frontend_sa.email
+    scopes = ["cloud-platform"]
+  }
+  
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "google_compute_instance_template" "aixtiv_api_template" {
+  name_prefix  = "aixtiv-api-template-"
+  machine_type = "n2-standard-4"
+  tags         = ["https-server", "aixtiv", "api", var.environment]
+  
+  disk {
+    source_image = "debian-cloud/debian-11"
+    auto_delete  = true
+    boot         = true
+    disk_size_gb = 50
+  }
+  
+  network_interface {
+    network    = google_compute_network.aixtiv_vpc.id
+    subnetwork = google_compute_subnetwork.aixtiv_subnetwork.id
+  }
+  
+  metadata_startup_script = "# Startup script for API servers"
+  
+  service_account {
+    email  = google_service_account.aixtiv_api_sa.email
+    scopes = ["cloud-platform"]
+  }
+  
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "google_compute_instance_template" "aixtiv_symphony_template" {
+  name_prefix  = "aixtiv-symphony-template-"
+  machine_type = "n2-standard-2"
+  tags         = ["https-server", "aixtiv", "symphony", var.environment]
+  
+  disk {
+    source_image = "debian-cloud/debian-11"
+    auto_delete  = true
+    boot         = true
+    disk_size_gb = 20
+  }
+  
+  network_interface {
+    network    = google_compute_network.aixtiv_vpc.id
+    subnetwork = google_compute_subnetwork.aixtiv_subnetwork.id
+  }
+  
+  metadata_startup_script = "# Startup script for Symphony servers"
+  
+  service_account {
+    email  = google_service_account.aixtiv_symphony_sa.email
+    scopes = ["cloud-platform"]
+  }
+  
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "google_compute_instance_template" "aixtiv_bidsuite_template" {
+  name_prefix  = "aixtiv-bidsuite-template-"
+  machine_type = "n2-standard-2"
+  tags         = ["https-server", "aixtiv", "bidsuite", var.environment]
+  
+  disk {
+    source_image = "debian-cloud/debian-11"
+    auto_delete  = true
+    boot         = true
+    disk_size_gb = 20
+  }
+  
+  network_interface {
+    network    = google_compute_network.aixtiv_vpc.id
+    subnetwork = google_compute_subnetwork.aixtiv_subnetwork.id
+  }
+  
+  metadata_startup_script = "# Startup script for Bid Suite servers"
+  
+  service_account {
+    email  = google_service_account.aixtiv_bidsuite_sa.email
+    scopes = ["cloud-platform"]
+  }
+  
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# Service accounts
+resource "google_service_account" "aixtiv_frontend_sa" {
+  account_id   = "aixtiv-frontend-sa-\${var.environment}"
+  display_name = "AIXTIV Frontend Service Account"
+}
+
+resource "google_service_account" "aixtiv_api_sa" {
+  account_id   = "aixtiv-api-sa-\${var.environment}"
+  display_name = "AIXTIV API Service Account"
+}
+
+resource "google_service_account" "aixtiv_symphony_sa" {
+  account_id   = "aixtiv-symphony-sa-\${var.environment}"
+  display_name = "AIXTIV Symphony Service Account"
+}
+
+resource "google_service_account" "aixtiv_bidsuite_sa" {
+  account_id   = "aixtiv-bidsuite-sa-\${var.environment}"
+  display_name = "AIXTIV Bid Suite Service Account"
+}
+
+# IAM roles for service accounts
+resource "google_project_iam_member" "frontend_sa_roles" {
+  for_each = toset([
+    "roles/storage.objectViewer",
+    "roles/monitoring.metricWriter",
+    "roles/logging.logWriter"
+  ])
+  
+  project = var.project_id
+  role    = each.key
+  member  = "serviceAccount:\${google_service_account.aixtiv_frontend_sa.email}"
+}
+
+resource "google_project_iam_member" "api_sa_roles" {
+  for_each = toset([
+    "roles/datastore.user",
+    "roles/firestore.dataUser",
+    "roles/firebase.admin",
+    "roles/monitoring.metricWriter",
+    "roles/logging.logWriter"
+  ])
+  
+  project = var.project_id
+  role    = each.key
+  member  = "serviceAccount:\${google_service_account.aixtiv_api_sa.email}"
+}
+
+resource "google_project_iam_member" "symphony_sa_roles" {
+  for_each = toset([
+    "roles/datastore.user",
+    "roles/firestore.dataUser",
+    "roles/monitoring.metricWriter",
+    "roles/logging.logWriter"
+  ])
+  
+  project = var.project_id
+  role    = each.key
+  member  = "serviceAccount:\${google_service_account.aixtiv_symphony_sa.email}"
+}
+
+resource "google_project_iam_member" "bidsuite_sa_roles" {
+  for_each = toset([
+    "roles/datastore.user",
+    "roles/firestore.dataUser",
+    "roles/monitoring.metricWriter",
+    "roles/logging.logWriter"
+  ])
+  
+  project = var.project_id
+  role    = each.key
+  member  = "serviceAccount:\${google_service_account.aixtiv_bidsuite_sa.email}"
+}
+
+# Firebase resources
+resource "google_firebase_project" "default" {
+  provider = google-beta
+  project  = var.project_id
+}
+
+resource "google_firebase_web_app" "aixtiv_web_app" {
+  provider     = google-beta
+  display_name = "AIXTIV Symphony Platform"
+  project      = var.project_id
+  depends_on   = [google_firebase_project.default]
+}
+
+# Cloud Storage buckets
+resource "google_storage_bucket" "aixtiv_assets" {
+  name          = "aixtiv-assets-\${var.environment}"
+  location      = "US-WEST1"
+  storage_class = "STANDARD"
+  
+  cors {
+    origin          = ["https://*.aixtiv.com"]
+    method          = ["GET", "HEAD", "OPTIONS"]
+    response_header = ["Content-Type", "Access-Control-Allow-Origin"]
+    max_age_seconds = 3600
+  }
+  
+  uniform_bucket_level_access = true
+  
+  versioning {
+    enabled = true
+  }
+}
+
+# Firestore configuration
+resource "google_firestore_database" "aixtiv_firestore" {
+  provider = google-beta
+  
+  project     = var.project_id
+  name        = "(default)"
+  location_id = "us-west1"
+  
+  type = "FIRESTORE_NATIVE"
+}
+
+# Secret Manager for API keys and sensitive configurations
+resource "google_secret_manager_secret" "pinecone_api_key" {
+  secret_id = "pinecone-api-key"
+  
+  replication {
+    automatic = true
+  }
+}
+
+resource "google_secret_manager_secret" "blockchain_secret_key" {
+  secret_id = "blockchain-secret-key"
+  
+  replication {
+    automatic = true
+  }
+}
+
+resource "google_secret_manager_secret" "openai_api_key" {
+  secret_id = "openai-api-key"
+  
+  replication {
+    automatic = true
+  }
+}
+
+resource "google_secret_manager_secret" "anthropic_api_key" {
+  secret_id = "anthropic-api-key"
+  
+  replication {
+    automatic = true
+  }
+}
+
+# Access to secrets
+resource "google_secret_manager_secret_iam_member" "api_pinecone_key_access" {
+  secret_id = google_secret_manager_secret.pinecone_api_key.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:\${google_service_account.aixtiv_api_sa.email}"
+}
+
+resource "google_secret_manager_secret_iam_member" "api_blockchain_key_access" {
+  secret_id = google_secret_manager_secret.blockchain_secret_key.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:\${google_service_account.aixtiv_api_sa.email}"
+}
+
+resource "google_secret_manager_secret_iam_member" "api_openai_key_access" {
+  secret_id = google_secret_manager_secret.openai_api_key.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:\${google_service_account.aixtiv_api_sa.email}"
+}
+
+resource "google_secret_manager_secret_iam_member" "api_anthropic_key_access" {
+  secret_id = google_secret_manager_secret.anthropic_api_key.id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = "serviceAccount:\${google_service_account.aixtiv_api_sa.email}"
+}
+
+# Cloud Function for Pinecone integration
+resource "google_storage_bucket" "aixtiv_functions" {
+  name          = "aixtiv-functions-\${var.environment}"
+  location      = "US-WEST1"
+  storage_class = "STANDARD"
+  
+  uniform_bucket_level_access = true
+}
+
+resource "google_cloudfunctions_function" "pinecone_sync" {
+  name        = "pinecone-sync-\${var.environment}"
+  description = "Synchronizes Firestore data with Pinecone for vector search"
+  runtime     = "nodejs16"
+  
+  available_memory_mb   = 2048
+  source_archive_bucket = google_storage_bucket.aixtiv_functions.name
+  source_archive_object = google_storage_bucket_object.pinecone_sync_function.name
+  trigger_http          = true
+  entry_point           = "pineconeSync"
+  
+  environment_variables = {
+    PINECONE_INDEX_NAME = "aixtiv-vectors-\${var.environment}"
+  }
+  
+  secret_environment_variables {
+    key        = "PINECONE_API_KEY"
+    project_id = var.project_id
+    secret     = google_secret_manager_secret.pinecone_api_key.secret_id
+    version    = "latest"
+  }
+  
+  service

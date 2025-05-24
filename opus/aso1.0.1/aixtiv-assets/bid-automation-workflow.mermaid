@@ -1,0 +1,29 @@
+flowchart TD
+    A[Bid Seeker] -->|Discovers opportunity| B[Bid Rank]
+    B -->|Evaluates opportunity| C{Bid Rank Decision}
+    C -->|Yes| D[Brand Diagnostic]
+    C -->|No| E[Archive & Learn]
+    D -->|Evaluates brand readiness| F{Brand Builder Decision}
+    F -->|Yes| G[Dream Commander Activation]
+    F -->|No| H[Brand Builder]
+    H -->|Strengthens brand position| F
+    G -->|Strategic analysis| I{Dream Commander Decision}
+    I -->|Yes - Go| J[Co-Pilot Bid Preparation]
+    I -->|No - Go| K[Owner Review]
+    K -->|Owner feedback| I
+    K -->|Override with risk assessment| J
+    J -->|Completes bid| L[Bid Checker]
+    L -->|Quality review| M{CIG-QA Verification}
+    M -->|Needs improvement| J
+    M -->|99.99% Correct| N[QR Code Authentication]
+    N -->|Owner approves| O[Bid Submitted]
+    O -->|Confirmation received| P[Bid Win Monitoring]
+    P -->|3x daily checks| Q[Response Management]
+    Q -->|Queries/meetings| R[Dr. Memoria Communication Flow]
+    P -->|Decision received| S{Bid Outcome}
+    S -->|Positive| T[Win Protocol Activation]
+    S -->|Negative| U[Feedback Loop]
+    S -->|Negotiation needed| V[Bid Renegotiate]
+    T --> W[Project Implementation]
+    U --> X[System Learning & Improvement]
+    V --> Y[Co-Pilot Negotiation Support]

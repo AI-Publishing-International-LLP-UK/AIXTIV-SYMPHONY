@@ -1,0 +1,45 @@
+graph TD
+    subgraph VisionLake[Vision Lake Core]
+        Agents[Root 1-2-3 Agents]
+        FMS[Flight Memory System]
+        SERPEW[SERPEW Engine]
+    end
+
+    subgraph AIxTIV[AIxTIV Core Modules]
+        CA[Communication Automation]
+        RG[Revenue Growth]
+        CI[Customer Innovation]
+        PA[Process Automation]
+        ROI[ROI Tracking]
+        WS[Wish System]
+    end
+
+    subgraph VisualizationCenter[Visualization Center Implementation]
+        LocalPresence[Local Digital Presence]
+        CultureEngine[Cultural Adaptation Engine]
+        Engagement[Community Interface]
+        
+        subgraph Products[Product Access]
+            BF[aiBF - BidFinder]
+            BR[aiBR - BidResponder]
+            AB[AIBranding]
+            APBP[AIProBrandPublishing]
+        end
+        
+        subgraph Support[Support Systems]
+            JIT[JIT Learning]
+            PE[Prompt Engine]
+            SI[SERPEW Integration]
+        end
+    end
+
+    VisionLake --> VisualizationCenter
+    AIxTIV --> VisualizationCenter
+    
+    classDef core fill:#f9f,stroke:#333,stroke-width:4px
+    classDef system fill:#bbf,stroke:#333,stroke-width:2px
+    classDef local fill:#bfb,stroke:#333,stroke-width:2px
+
+    class VisionLake,AIxTIV core
+    class Products,Support system
+    class LocalPresence,CultureEngine,Engagement local

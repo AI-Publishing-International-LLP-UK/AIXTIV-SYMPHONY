@@ -1,0 +1,26 @@
+name: Deploy to Google Cloud
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Enables manual triggering
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for OIDC
+      contents: read   # Required to check out the repository
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          workload_identity_provider: 'projects/API-for-Warp-Drive/locations/us-west1/workloadIdentityPools/DrLucy-5-0-Framework/providers/github-oidc-provider'
+          service_account: 'dr-lucy-automation@API-for-Warp-Drive.iam.gserviceaccount.com'
+          token_format: 'id_token'
+          repository: 'DrLucy-5-0-Framework'  # Using the correct repository name
+

@@ -1,0 +1,79 @@
+name: Enhanced Video Content Generation
+
+on:
+  push:
+    paths:
+      - 'content/video-scripts/**'
+  workflow_dispatch:
+
+env:
+  SYNTHESIA_API_KEY: ${{ secrets.SYNTHESIA_API_KEY }}
+  VIDEO_SOURCE: "workspace"
+  TEMPLATE_SOURCE: "workspace"
+
+jobs:
+  generate-video-content:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Dependencies
+        run: |
+          pip install requests pyyaml google-cloud-storage
+
+      - name: Fetch Available Templates
+        run: |
+          python scripts/fetch_templates.py \
+            --source $TEMPLATE_SOURCE \
+            --include-stock true
+
+      - name: Process Video Scripts
+        run: |
+          python scripts/process_scripts.py \
+            --output-formats "srt,vtt" \
+            --generate-thumbnail true
+
+      - name: Submit to Synthesia
+        id: submission
+        run: |
+          python scripts/submit_videos.py \
+            --workspace $VIDEO_SOURCE \
+            --webhook-url ${{ secrets.WEBHOOK_URL }}
+
+      - name: Monitor Generation
+        run: |
+          python scripts/monitor_generation.py \
+            --video-ids ${{ steps.submission.outputs.video_ids }}
+
+      - name: Handle Completion
+        if: success()
+        run: |
+          python scripts/handle_completion.py \
+            --download-captions true \
+            --download-thumbnail true
+
+      - name: Handle Failures
+        if: failure()
+        run: |
+          python scripts/handle_failure.py \
+            --notify-team true
+            --retry-count 3
+
+      - name: Process Outputs
+        run: |
+          python scripts/process_outputs.py \
+            --process-captions true \
+            --optimize-thumbnails true
+
+      - name: Upload to Storage
+        run: |
+          python scripts/upload_content.py \
+            --destination gs://coaching2100-content/videos/
+            --include-captions true
+            --include-thumbnails true

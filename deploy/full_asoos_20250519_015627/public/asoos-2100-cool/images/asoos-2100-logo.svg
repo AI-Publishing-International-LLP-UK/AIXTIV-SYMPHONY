@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="240" height="80" viewBox="0 0 240 80" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .logo-text {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+    }
+    .text-asoos {
+      fill: #0B1BBB; /* Turquoise Blue */
+    }
+    .number-21 {
+      fill: #4169E1; /* Royal Blue */
+    }
+    .number-00 {
+      fill: #0B1BBB; /* Turquoise Blue */
+    }
+    .circle {
+      fill: none;
+      stroke: #4169E1;
+      stroke-width: 2;
+    }
+  </style>
+  
+  <!-- "ASOOS" text -->
+  <g transform="translate(10, 15)">
+    <text x="0" y="25" class="logo-text text-asoos" font-size="22">ASOOS</text>
+  </g>
+  
+  <!-- "21" with slight angle -->
+  <g transform="translate(100, 15) rotate(-3)">
+    <text x="0" y="40" class="logo-text number-21" font-size="45">21</text>
+  </g>
+  
+  <!-- "00" with circular element -->
+  <g transform="translate(150, 15)">
+    <text x="0" y="40" class="logo-text number-00" font-size="45">00</text>
+    <circle cx="30" cy="25" r="40" class="circle" />
+  </g>
+  
+  <!-- ".cool" descriptor -->
+  <text x="210" y="55" class="logo-text" font-size="18" fill="#006850">.cool</text>
+</svg>

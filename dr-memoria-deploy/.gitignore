@@ -1,0 +1,66 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Firebase
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+ui-debug.log
+.runtimeconfig.json
+firebase-export-*.json
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+*.env.*
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Testing and coverage
+coverage/
+.nyc_output/
+*.lcov
+
+# Build files
+dist/
+build/
+lib/
+out/
+
+# Firebase emulator files
+*-debug.log
+.emulator-data/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+.history/
+*.sublime-*
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+temp/
+
+# Service account files
+*-service-account.json
+*-firebase-adminsdk-*.json
+
+# Local configuration
+.firebaserc
+

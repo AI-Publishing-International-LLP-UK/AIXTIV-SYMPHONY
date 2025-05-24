@@ -1,0 +1,72 @@
+/* 
+ * ACME Corporation - Tenant-specific theme overrides
+ * This file contains theme overrides specific to ACME Corporation
+ */
+
+:root {
+  /* Color Palette - ACME Brand Colors */
+  --primary: #e11d48; /* ACME brand red */
+  --primary-dark: #be123c;
+  --secondary: #0284c7; /* ACME blue */
+  --accent: #f59e0b; /* ACME amber */
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+
+  /* Typography - ACME uses Roboto */
+  --font-family-main: 'Roboto', sans-serif;
+  --font-family-heading: 'Roboto Condensed', sans-serif;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* ACME-specific UI properties */
+  --radius-sm: 0.125rem; /* Sharper corners for ACME brand */
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+
+  /* ACME brand shadows - slightly more pronounced */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 12px 24px rgba(0, 0, 0, 0.15);
+
+  /* ACME-specific component properties */
+  --button-padding: 0.75rem 1.5rem;
+  --card-padding: 1.25rem;
+  --header-height: 4.5rem;
+  --sidebar-width: 280px;
+
+  /* ACME brand gradients */
+  --gradient-primary: linear-gradient(135deg, var(--primary) 0%, #f43f5e 100%);
+  --gradient-accent: linear-gradient(135deg, var(--accent) 0%, #fbbf24 100%);
+}
+
+/* ACME-specific component overrides */
+.acme-header {
+  background: var(--gradient-primary);
+  height: var(--header-height);
+}
+
+.acme-button {
+  background-color: var(--primary);
+  color: white;
+  border-radius: var(--radius-md);
+  padding: var(--button-padding);
+  font-family: var(--font-family-main);
+  font-weight: var(--font-weight-medium);
+  transition: all 0.2s ease;
+}
+
+.acme-button:hover {
+  background-color: var(--primary-dark);
+  box-shadow: var(--shadow-sm);
+}
+
+.acme-card {
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: var(--card-padding);
+  background-color: var(--surface);
+  border-top: 3px solid var(--primary);
+}

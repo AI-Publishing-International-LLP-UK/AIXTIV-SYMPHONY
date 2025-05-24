@@ -1,0 +1,25 @@
+apiVersion: cloudscheduler.googleapis.com/v1
+kind: Job
+metadata:
+  name: aixtiv-symphony-scheduled-deployment
+  description: "Scheduled job to trigger deployment every 10 minutes"
+spec:
+  schedule: "*/10 * * * *"  # Run every 10 minutes (cron format)
+  timeZone: "UTC"
+  target:
+    httpTarget:
+      uri: "https://cloudbuild.googleapis.com/v1/projects/api-for-warp-drive/triggers/aixtiv-symphony-frequent-deploy:run"
+      httpMethod: POST
+      body: eyJicmFuY2hOYW1lIjoibWFpbiJ9  # Base64 encoded {"branchName":"main"}
+      headers:
+        Content-Type: application/json
+      oauthToken:
+        serviceAccountEmail: "cloud-scheduler@api-for-warp-drive.iam.gserviceaccount.com"
+        scope: "https://www.googleapis.com/auth/cloud-platform"
+  retryConfig:
+    retryCount: 3
+    maxRetryDuration: "60s"
+    minBackoffDuration: "5s"
+    maxBackoffDuration: "30s"
+    maxDoublings: 2
+

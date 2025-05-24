@@ -1,0 +1,19 @@
+lwa:
+  auth_endpoint: "https://api.amazon.com/auth/o2/token"
+  profile_endpoint: "https://api.amazon.com/user/profile"
+  scope: "profile"
+  
+  client:
+    id: "amzn1.application-oa2-client.0305c22aee124d59a5ea0b18214b02f4"
+    secret: "amzn1.oa2-cs.v1.90b6673aee2e443372fb63a1995ea0565dafb0c761bf92b4b6b21d112ae70b33"
+    scopes:
+      - "profile"
+      - "kdp:publishing"
+      - "kdp:reports"
+      - "kdp:content"
+
+  security:
+    token_encryption: AES256
+    token_storage: SECURE_ENCLAVE
+    auto_refresh: true
+    refresh_window: 300  # 5 minutes before expiry

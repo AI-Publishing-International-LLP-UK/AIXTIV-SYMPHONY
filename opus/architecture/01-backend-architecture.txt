@@ -1,0 +1,254 @@
+# Backend System Architecture
+
+infrastructure:
+  network:
+    vpc:
+      name: global-vpc
+      region: us-west1
+      subnets:
+        - name: primary-subnet
+          cidr: 10.0.0.0/20
+          purpose: PRIVATE
+        - name: service-subnet
+          cidr: 10.0.16.0/20
+          purpose: PRIVATE_SERVICES
+    
+    security:
+      firewall:
+        - name: allow-internal
+          direction: INGRESS
+          priority: 1000
+          source_ranges: ["10.0.0.0/8"]
+        - name: allow-lb
+          direction: INGRESS
+          priority: 1000
+          source_ranges: ["130.211.0.0/22", "35.191.0.0/16"]
+      
+      ssl:
+        certificates:
+          - name: primary-cert
+            managed: true
+            domains: ["*.visualization.center", "*.2100.cool"]
+
+compute:
+  kubernetes:
+    clusters:
+      - name: primary-gke
+        location: us-west1
+        release_channel: REGULAR
+        networking:
+          network_policy: true
+          private_cluster: true
+        workload_identity: true
+        maintenance_window: "03:00"
+        node_pools:
+          - name: general
+            machine_type: n1-standard-4
+            min_count: 3
+            max_count: 10
+            autoscaling: true
+          - name: ai-workload
+            machine_type: n1-highmem-8
+            accelerator:
+              type: nvidia-tesla-t4
+              count: 1
+            min_count: 2
+            max_count: 8
+
+  servers:
+    mcp:
+      name: mcp-server
+      machine_type: n1-standard-8
+      boot_disk_size: 100
+      tags: ["mcp", "prod"]
+    
+    coaching2100:
+      name: coaching-server
+      machine_type: n1-standard-8
+      boot_disk_size: 100
+      tags: ["coaching", "prod"]
+    
+    warpdrive:
+      name: warpdrive-prod-01
+      machine_type: n1-standard-16
+      boot_disk_size: 200
+      tags: ["warpdrive", "prod"]
+    
+    staging:
+      name: staging-server
+      machine_type: n1-standard-4
+      boot_disk_size: 50
+      tags: ["staging"]
+
+ai_services:
+  orchestration:
+    ray:
+      cluster_name: agent-orchestration
+      head_node:
+        machine_type: n1-standard-8
+      worker_nodes:
+        machine_type: n1-standard-4
+        min_workers: 2
+        max_workers: 10
+    
+    pinecone:
+      environment: production
+      pod_type: p1x.standard
+      replicas: 3
+
+  model_endpoints:
+    anthropic:
+      model: claude-3-sonnet
+      deployment: vertex-ai
+      
+    gemini:
+      model: gemini-pro
+      deployment: vertex-ai
+      
+    openai:
+      model: gpt-4
+      deployment: vertex-ai
+      
+    huggingface:
+      deployment: cloud-run
+      autoscaling:
+        min_instances: 1
+        max_instances: 10
+
+data_layer:
+  databases:
+    primary:
+      type: cloud-sql
+      engine: postgresql
+      version: "14"
+      tier: db-custom-8-32768
+      availability: regional
+      backup:
+        enabled: true
+        retention_days: 7
+    
+    cache:
+      type: memorystore
+      engine: redis
+      version: "6.x"
+      tier: basic
+      size_gb: 16
+    
+    document:
+      type: firestore
+      mode: native
+      location: us-west1
+      
+  storage:
+    buckets:
+      - name: user-content
+        location: us-west1
+        versioning: true
+        lifecycle:
+          - action: Delete
+            age_days: 90
+            condition: "isArchived"
+      - name: model-artifacts
+        location: us-west1
+        versioning: true
+
+agent_system:
+  root_levels:
+    - level: 1
+      purpose: core_agency
+      deployment: gke
+      resources:
+        cpu: 4
+        memory: 16Gi
+    - level: 2
+      purpose: deploy_agency
+      deployment: gke
+      resources:
+        cpu: 4
+        memory: 16Gi
+    - level: 3
+      purpose: engage_agency
+      deployment: cloud-run
+      resources:
+        cpu: 2
+        memory: 8Gi
+
+monitoring:
+  logging:
+    retention_days: 30
+    export:
+      destination: bigquery
+      dataset: system_logs
+  
+  metrics:
+    custom_metrics:
+      - name: agent_response_time
+      - name: model_inference_latency
+      - name: user_session_duration
+    
+  alerts:
+    - name: high_latency
+      condition: "agent_response_time > 2000ms"
+      notification_channels: ["email", "slack"]
+    - name: error_rate
+      condition: "error_rate > 0.01"
+      notification_channels: ["email", "slack", "pagerduty"]
+
+security:
+  identity:
+    workload_identity: true
+    service_accounts:
+      - name: agent-system
+        roles:
+          - roles/ai.user
+          - roles/datastore.user
+      - name: monitoring
+        roles:
+          - roles/monitoring.viewer
+          - roles/logging.viewer
+  
+  encryption:
+    kms:
+      keyring: system-keyring
+      keys:
+        - name: data-encryption
+          rotation_period: 90d
+        - name: api-encryption
+          rotation_period: 30d
+
+  audit:
+    enabled: true
+    retention_days: 365
+    export:
+      destination: bigquery
+      dataset: audit_logs
+
+pipelines:
+  ci_cd:
+    providers:
+      - github
+      - gitlab
+    tools:
+      - jira
+      - trello
+      - bitbucket
+    
+    workflows:
+      - name: deploy-prod
+        triggers:
+          - push:
+              branches: ["main"]
+        steps:
+          - test
+          - build
+          - security-scan
+          - deploy
+      
+      - name: deploy-staging
+        triggers:
+          - push:
+              branches: ["develop"]
+        steps:
+          - test
+          - build
+          - deploy-staging

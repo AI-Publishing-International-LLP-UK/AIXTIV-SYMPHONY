@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary: #0bb1bb;
+  --secondary: #c7b299;
+  --dark: #121212;
+  --dark-accent: #1e1e2d;
+  --light-accent: #2a2a42;
+  --text-primary: #e0e0ff;
+  --text-secondary: #a0a0cc;
+  --highlight: #ff4081;
+  --success: #00e676;
+  --warning: #ffea00;
+  --danger: #ff5252;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--dark);
+  color: var(--text-primary);
+}
+
+.security-glow {
+  box-shadow: 0 0 15px rgba(11, 177, 187, 0.5);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 5px rgba(11, 177, 187, 0.5); }
+  50% { box-shadow: 0 0 20px rgba(11, 177, 187, 0.8); }
+  100% { box-shadow: 0 0 5px rgba(11, 177, 187, 0.5); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.agent-pulse {
+  animation: agentPulse 2s infinite;
+}
+
+@keyframes agentPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+#particles-js {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}

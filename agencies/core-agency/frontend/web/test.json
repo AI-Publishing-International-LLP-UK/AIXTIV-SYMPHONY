@@ -63,15 +63,7 @@
     "registered": "2017-04-22T07:58:41 -01:00",
     "latitude": -87.824919,
     "longitude": 69.538927,
-    "tags": [
-      "fugiat",
-      "labore",
-      "proident",
-      "quis",
-      "eiusmod",
-      "qui",
-      "est"
-    ],
+    "tags": ["fugiat", "labore", "proident", "quis", "eiusmod", "qui", "est"],
     "friends": [
       {
         "id": 0,
@@ -108,15 +100,7 @@
     "registered": "2016-09-01T07:49:08 -01:00",
     "latitude": -49.803812,
     "longitude": 104.93279,
-    "tags": [
-      "consequat",
-      "enim",
-      "quis",
-      "magna",
-      "est",
-      "culpa",
-      "tempor"
-    ],
+    "tags": ["consequat", "enim", "quis", "magna", "est", "culpa", "tempor"],
     "friends": [
       {
         "id": 0,

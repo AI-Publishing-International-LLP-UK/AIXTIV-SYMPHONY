@@ -1,0 +1,17 @@
+============================================
+    Dr. Claude Orchestrator Auth Report      
+============================================
+
+Firebase CLI Version: 14.2.2
+Google Cloud SDK 521.0.0
+Node.js Version: v23.9.0
+
+============================================
+Authentication Status
+============================================
+
+Firebase: Authenticated (undefined projects available)
+Firebase: Not authenticated
+gcloud: Authenticated as drlucyautomation@api-for-warp-drive.iam.gserviceaccount.com
+Service Account: drlucyautomation@api-for-warp-drive.iam.gserviceaccount.com
+Application Default Credentials: Configured

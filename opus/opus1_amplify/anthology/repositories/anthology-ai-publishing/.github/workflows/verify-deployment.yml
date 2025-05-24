@@ -1,0 +1,39 @@
+name: Verify Deployment
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Verify Directory Structure
+        run: |
+          required_dirs=(".github" "config" "jenkins" "scripts" "templates")
+          for dir in "${required_dirs[@]}"; do
+            if [ ! -d "$dir" ]; then
+              echo "Error: Required directory $dir is missing"
+              exit 1
+            fi
+          done
+
+      - name: Verify Configuration Files
+        run: |
+          required_configs=("config/synthesia_api_config.yml" "config/personalization_matrix.yml")
+          for config in "${required_configs[@]}"; do
+            if [ ! -f "$config" ]; then
+              echo "Error: Required config file $config is missing"
+              exit 1
+            fi
+          done
+
+      - name: Run Integration Tests
+        run: |
+          if [ -f "scripts/test_integration.py" ]; then
+            python scripts/test_integration.py
+          fi

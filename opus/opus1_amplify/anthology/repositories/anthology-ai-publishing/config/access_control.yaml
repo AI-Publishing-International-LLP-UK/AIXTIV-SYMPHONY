@@ -1,0 +1,48 @@
+# Access Control Configuration
+security_levels:
+  admin_and_below:
+    auth_expiry: 24h  # 24 hour expiry
+    blockchain_verification: required
+    system_access:
+      type: restricted
+      external_systems: block_by_default
+  
+  sao_ur:
+    auth_expiry: flexible  # Configurable timeframe
+    blockchain_verification: required
+    system_access:
+      type: elevated
+      external_systems: auth_required
+
+role_permissions:
+  sao:
+    level: highest
+    can_authorize_timeframes: true
+    can_override_controls: true
+    
+  admin:
+    level: restricted
+    auth_duration: 24h
+    requires_blockchain: true
+
+change_control:
+  approvals:
+    required: true
+    levels:
+      - technical_review
+      - security_review
+      - business_impact
+  
+  isolation:
+    enabled: true
+    rules:
+      - no_external_system_access
+      - owner_auth_required
+      - blockchain_verification
+
+  rollback:
+    enabled: true
+    type: comprehensive
+    restore_point: last_approved
+    verification: required
+

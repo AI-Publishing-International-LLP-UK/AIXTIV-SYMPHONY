@@ -1,0 +1,144 @@
+# Crawl4AI Category Configuration
+
+base_categories:
+  research:
+    description: "General topic research crawling"
+    depth: 2
+    extract_patterns:
+      - "research papers"
+      - "case studies"
+      - "whitepapers"
+      
+  competitors:
+    description: "Competitive analysis crawling"
+    depth: 1
+    extract_patterns:
+      - "product features"
+      - "pricing"
+      - "case studies"
+      
+  industry:
+    description: "Industry trends and news"
+    depth: 2
+    extract_patterns:
+      - "news articles"
+      - "market reports"
+      - "trend analysis"
+
+expanded_categories:
+  academic:
+    description: "Academic and research publications"
+    depth: 3
+    extract_patterns:
+      - "journal articles"
+      - "conference papers"
+      - "academic blogs"
+    domains:
+      - "scholar.google.com"
+      - "arxiv.org"
+      - "researchgate.net"
+
+  technical:
+    description: "Technical documentation and tutorials"
+    depth: 2
+    extract_patterns:
+      - "api docs"
+      - "technical guides"
+      - "code examples"
+    domains:
+      - "docs.*.com"
+      - "developer.*.com"
+      - "github.com"
+
+  educational:
+    description: "Learning resources and courses"
+    depth: 2
+    extract_patterns:
+      - "course materials"
+      - "tutorials"
+      - "learning paths"
+    domains:
+      - "coursera.org"
+      - "udemy.com"
+      - "edx.org"
+
+  regulatory:
+    description: "Regulatory and compliance information"
+    depth: 2
+    extract_patterns:
+      - "regulations"
+      - "compliance guides"
+      - "policy documents"
+    domains:
+      - "*.gov"
+      - "regulatory bodies"
+
+  market_intelligence:
+    description: "Market research and analysis"
+    depth: 2
+    extract_patterns:
+      - "market reports"
+      - "industry analysis"
+      - "forecasts"
+    domains:
+      - "marketresearch.com"
+      - "bloomberg.com"
+      - "reuters.com"
+
+  social_trends:
+    description: "Social media and public discourse"
+    depth: 1
+    extract_patterns:
+      - "discussions"
+      - "public opinion"
+      - "trending topics"
+    domains:
+      - "linkedin.com/pulse"
+      - "medium.com"
+      - "substack.com"
+
+  use_cases:
+    description: "Real-world applications and case studies"
+    depth: 2
+    extract_patterns:
+      - "case studies"
+      - "success stories"
+      - "implementations"
+    domains:
+      - "enterprise blogs"
+      - "industry forums"
+
+  product_research:
+    description: "Product documentation and reviews"
+    depth: 2
+    extract_patterns:
+      - "product specs"
+      - "user reviews"
+      - "comparisons"
+    domains:
+      - "review sites"
+      - "product forums"
+
+  developer_resources:
+    description: "Developer tools and documentation"
+    depth: 3
+    extract_patterns:
+      - "sdk docs"
+      - "api references"
+      - "development guides"
+    domains:
+      - "github.com"
+      - "gitlab.com"
+      - "dev.to"
+
+  community_content:
+    description: "Community discussions and contributions"
+    depth: 2
+    extract_patterns:
+      - "forum discussions"
+      - "community blogs"
+      - "user content"
+    domains:
+      - "stackoverflow.com"
+      - "reddit.com/r/relevant_subs"
+      - "community forums"

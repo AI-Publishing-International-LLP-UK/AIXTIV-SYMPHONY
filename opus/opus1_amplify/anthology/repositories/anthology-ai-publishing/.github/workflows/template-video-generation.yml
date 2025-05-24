@@ -1,0 +1,59 @@
+name: Template-Based Video Generation
+
+on:
+  push:
+    paths:
+      - 'content/template-data/**'
+  workflow_dispatch:
+
+env:
+  SYNTHESIA_API_KEY: ${{ secrets.SYNTHESIA_API_KEY }}
+  TEMPLATE_ID: ${{ secrets.SYNTHESIA_TEMPLATE_ID }}
+
+jobs:
+  generate-videos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install dependencies
+        run: |
+          pip install requests pyyaml google-cloud-storage
+          
+      - name: Process Template Data
+        id: template-data
+        run: |
+          python scripts/process_template_data.py \
+            --input-dir content/template-data \
+            --validate-variables true
+            
+      - name: Create Videos
+        id: create-videos
+        run: |
+          python scripts/create_template_videos.py \
+            --template-id $TEMPLATE_ID \
+            --data-file ${{ steps.template-data.outputs.processed_data }}
+            
+      - name: Monitor Generation
+        run: |
+          python scripts/monitor_template_videos.py \
+            --video-ids ${{ steps.create-videos.outputs.video_ids }}
+            
+      - name: Process Outputs
+        if: success()
+        run: |
+          python scripts/process_video_outputs.py \
+            --download-directory outputs/videos \
+            --include-captions true
+            
+      - name: Handle Failures
+        if: failure()
+        run: |
+          python scripts/handle_failures.py \
+            --error-log ${{ steps.create-videos.outputs.error_log }}
+            --notify true

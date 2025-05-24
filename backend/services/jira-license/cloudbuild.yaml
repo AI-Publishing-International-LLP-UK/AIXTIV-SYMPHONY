@@ -1,0 +1,33 @@
+steps:
+  # Install dependencies
+  - name: 'node:18'
+    entrypoint: npm
+    args: ['ci']
+    dir: 'backend/services/jira-license/functions'
+    id: 'install-dependencies'
+
+  # Run tests (if tests were implemented)
+  # - name: 'node:18'
+  #   entrypoint: npm
+  #   args: ['test']
+  #   dir: 'backend/services/jira-license/functions'
+  #   id: 'run-tests'
+
+  # Deploy Firebase Functions
+  - name: 'gcr.io/$PROJECT_ID/firebase'
+    args: ['deploy', '--only', 'functions', '--project', '$PROJECT_ID']
+    dir: 'backend/services/jira-license'
+    id: 'deploy-functions'
+
+  # Deploy Firestore Rules
+  - name: 'gcr.io/$PROJECT_ID/firebase'
+    args: ['deploy', '--only', 'firestore:rules', '--project', '$PROJECT_ID']
+    dir: 'backend/services/jira-license'
+    id: 'deploy-firestore-rules'
+
+# Define timeout
+timeout: '1800s'
+
+# Define options
+options:
+  logging: CLOUD_LOGGING_ONLY

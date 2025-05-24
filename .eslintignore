@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output
+dist/
+build/
+**/build/
+
+# Coverage reports
+coverage/
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+.tmp/
+tmp/
+
+# Backups
+backups/
+**/backups/
+build/backups/
+
+# Cache
+.cache/
+
+# Specific project directories that might not need linting
+opus/
+DrLucy-5.0-Framework/
+vls/
+
+# Deployment related
+deployment/
+
+# Generated files
+*.min.js
+

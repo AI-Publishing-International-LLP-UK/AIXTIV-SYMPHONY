@@ -1,0 +1,9 @@
+resource:
+  name: 2100-cool-zone 
+  dnsName: 2100.cool.
+  recordSets:
+    - name: ''
+      type: A
+      ttl: 300
+      rrdatas: 
+        - 34.54.155.123

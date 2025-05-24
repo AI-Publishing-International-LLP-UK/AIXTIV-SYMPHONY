@@ -1,0 +1,13 @@
+{
+  "name": "dr-memoria-anthology",
+  "version": "1.0.0",
+  "description": "Dr. Memoria's Anthology - Website and API",
+  "scripts": {
+    "deploy": "firebase deploy",
+    "serve": "firebase serve"
+  },
+  "dependencies": {
+    "firebase-tools": "^11.0.0"
+  },
+  "private": true
+}

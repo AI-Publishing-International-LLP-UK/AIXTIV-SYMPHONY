@@ -1,0 +1,18 @@
+{
+  "super_claude": {
+    "display_name": "super-claude-endpoint",
+    "role": "platform_supervisor",
+    "permissions": [
+      "full_platform_control",
+      "supervise_all_agents",
+      "manage_publishing_workflows",
+      "approve_final_publications",
+      "override_decisions",
+      "manage_agent_assignments"
+    ],
+    "supervised_systems": ["claude-lead-endpoint", "memoria-vertex-endpoint"],
+    "model_id": "claude-3-5-sonnet",
+    "machine_type": "n1-standard-16",
+    "priority": "high"
+  }
+}

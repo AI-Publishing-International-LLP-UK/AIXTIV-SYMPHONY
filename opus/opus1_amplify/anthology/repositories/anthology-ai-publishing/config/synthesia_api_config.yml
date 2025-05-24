@@ -1,0 +1,7 @@
+api_version: "2024-01"
+base_url: "https://api.synthesia.io/v2"
+
+video_sources:
+  - workspace
+  - my_videos
+  - shared_with_me

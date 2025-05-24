@@ -1,0 +1,109 @@
+#!/bin/bash
+
+# Dr. Memoria Content Engine Health Check Script
+
+# Configuration
+SERVICE_URL="https://content-engine.dr-memoria.ai/health"
+MAX_RETRIES=5
+RETRY_DELAY=10
+
+# Colors for output
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+# Health check function
+perform_health_check() {
+    local retry_count=0
+    
+    while [ $retry_count -lt $MAX_RETRIES ]; do
+        # Perform health check with detailed curl output
+        response=$(curl -s -w "%{http_code}" \
+            --connect-timeout 10 \
+            --max-time 20 \
+            -H "Accept: application/json" \
+            $SERVICE_URL)
+        
+        http_code=$(echo $response | tail -c 4)
+        body=$(echo $response | sed '$d')
+        
+        # Check for successful response
+        if [ "$http_code" -eq 200 ]; then
+            echo -e "${GREEN}✓ Health check passed${NC}"
+            echo "Response Details:"
+            echo "$body" | jq .
+            return 0
+        fi
+        
+        # Increment retry counter
+        ((retry_count++))
+        
+        # Print failure information
+        echo -e "${RED}✗ Health check failed (Attempt $retry_count/${MAX_RETRIES})${NC}"
+        echo "HTTP Status: $http_code"
+        echo "Response Body: $body"
+        
+        # Wait before retrying
+        if [ $retry_count -lt $MAX_RETRIES ]; then
+            echo "Retrying in $RETRY_DELAY seconds..."
+            sleep $RETRY_DELAY
+        fi
+    done
+    
+    # Final failure
+    echo -e "${RED}✗ Health check failed after $MAX_RETRIES attempts${NC}"
+    return 1
+}
+
+# Run comprehensive system checks
+run_comprehensive_checks() {
+    echo "Running comprehensive system checks..."
+    
+    # Check database connection
+    echo "Checking database connection..."
+    python3 -c "
+import psycopg2
+try:
+    conn = psycopg2.connect('dbname=content_engine user=deploy_agent')
+    conn.close()
+    print('Database connection successful')
+except Exception as e:
+    print(f'Database connection failed: {e}')
+    exit(1)
+"
+
+    # Check external provider connectivity
+    echo "Checking LLM provider connectivity..."
+    python3 -c "
+from dr_memoria.providers import test_llm_providers
+result = test_llm_providers()
+if not result['success']:
+    print('LLM provider connectivity check failed')
+    print(result['details'])
+    exit(1)
+print('LLM provider connectivity verified')
+"
+}
+
+# Main execution
+main() {
+    echo "Starting Dr. Memoria Content Engine Health Check"
+    
+    # Perform health check
+    if ! perform_health_check; then
+        echo -e "${RED}Primary health check failed${NC}"
+        exit 1
+    fi
+    
+    # Run comprehensive system checks
+    if ! run_comprehensive_checks; then
+        echo -e "${RED}Comprehensive system checks failed${NC}"
+        exit 1
+    fi
+    
+    echo -e "${GREEN}✓ All health checks passed successfully${NC}"
+    exit 0
+}
+
+# Execute main function
+main

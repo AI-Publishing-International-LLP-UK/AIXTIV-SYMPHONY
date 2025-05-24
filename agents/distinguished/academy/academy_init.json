@@ -1,58 +1,65 @@
 {
-    "academy_version": "1.0.0",
-    "core_configuration": {
-        "name": "Distinguished Agents Academy",
-        "description": "Advanced training and coordination hub for specialized AI agents",
-        "blockchain_enabled": true,
-        "confidence_threshold": 0.95
+  "academy_version": "1.0.0",
+  "core_configuration": {
+    "name": "Distinguished Agents Academy",
+    "description": "Advanced training and coordination hub for specialized AI agents",
+    "blockchain_enabled": true,
+    "confidence_threshold": 0.95
+  },
+  "integration_points": {
+    "dream_commander": {
+      "endpoint": "/api/v1/dream-commander",
+      "role": "central_coordinator",
+      "priority": "highest",
+      "permissions": [
+        "full_system_access",
+        "agent_deployment",
+        "strategy_override"
+      ]
     },
-    "integration_points": {
-        "dream_commander": {
-            "endpoint": "/api/v1/dream-commander",
-            "role": "central_coordinator",
-            "priority": "highest",
-            "permissions": ["full_system_access", "agent_deployment", "strategy_override"]
-        },
-        "pilot_coordinator": {
-            "endpoint": "/api/v1/pilot-coordinator",
-            "role": "squadron_leader",
-            "permissions": ["agent_management", "task_assignment", "performance_monitoring"]
-        }
-    },
-    "agent_squadrons": {
-        "alpha_squadron": {
-            "lead": "SystemArchitect",
-            "members": ["CodeNavigator", "TestPilot", "SecurityGuardian"],
-            "focus": "system_architecture_and_development"
-        },
-        "beta_squadron": {
-            "lead": "RIXManager",
-            "members": ["DataScientist", "IntegrationSpecialist", "APIEngineer"],
-            "focus": "data_and_integration"
-        },
-        "gamma_squadron": {
-            "lead": "DeploymentStrategist",
-            "members": ["CloudArchitect", "SecurityAnalyst", "PerformanceEngineer"],
-            "focus": "deployment_and_infrastructure"
-        }
-    },
-    "verification_protocols": {
-        "blockchain_verification": {
-            "enabled": true,
-            "consensus_mechanism": "proof_of_capability",
-            "verification_threshold": 0.98
-        },
-        "agent_authentication": {
-            "method": "zero_knowledge_proof",
-            "token_validity": "24h",
-            "refresh_mechanism": "automatic"
-        }
-    },
-    "operational_parameters": {
-        "max_concurrent_tasks": 50,
-        "task_timeout": "2h",
-        "retry_attempts": 3,
-        "error_tolerance": "low"
+    "pilot_coordinator": {
+      "endpoint": "/api/v1/pilot-coordinator",
+      "role": "squadron_leader",
+      "permissions": [
+        "agent_management",
+        "task_assignment",
+        "performance_monitoring"
+      ]
     }
+  },
+  "agent_squadrons": {
+    "alpha_squadron": {
+      "lead": "SystemArchitect",
+      "members": ["CodeNavigator", "TestPilot", "SecurityGuardian"],
+      "focus": "system_architecture_and_development"
+    },
+    "beta_squadron": {
+      "lead": "RIXManager",
+      "members": ["DataScientist", "IntegrationSpecialist", "APIEngineer"],
+      "focus": "data_and_integration"
+    },
+    "gamma_squadron": {
+      "lead": "DeploymentStrategist",
+      "members": ["CloudArchitect", "SecurityAnalyst", "PerformanceEngineer"],
+      "focus": "deployment_and_infrastructure"
+    }
+  },
+  "verification_protocols": {
+    "blockchain_verification": {
+      "enabled": true,
+      "consensus_mechanism": "proof_of_capability",
+      "verification_threshold": 0.98
+    },
+    "agent_authentication": {
+      "method": "zero_knowledge_proof",
+      "token_validity": "24h",
+      "refresh_mechanism": "automatic"
+    }
+  },
+  "operational_parameters": {
+    "max_concurrent_tasks": 50,
+    "task_timeout": "2h",
+    "retry_attempts": 3,
+    "error_tolerance": "low"
+  }
 }
-

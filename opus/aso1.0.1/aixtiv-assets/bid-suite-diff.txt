@@ -1,0 +1,433 @@
+diff --git a/models/Bid.ts b/models/Bid.ts
+new file mode 100644
+index 0000000..f4baea2
+--- /dev/null
++++ b/models/Bid.ts
+@@ -0,0 +1,66 @@
++/**
++ * Bid Suite - Core Interfaces
++ * Part of AIXTIV Symphony Architecture
++ */
++
++export enum BidStatus {
++  DRAFT = 'DRAFT',
++  SUBMITTED = 'SUBMITTED',
++  PENDING_REVIEW = 'PENDING_REVIEW',
++  ACCEPTED = 'ACCEPTED',
++  REJECTED = 'REJECTED',
++  EXPIRED = 'EXPIRED',
++}
++
++export enum BidType {
++  STANDARD = 'STANDARD',
++  RUSH = 'RUSH',
++  SPECIALIZED = 'SPECIALIZED',
++  ENTERPRISE = 'ENTERPRISE',
++}
++
++export interface BidRequirements {
++  technicalSpecifications: string;
++  deliveryTimeline: string;
++  budgetRange: {
++    min: number;
++    max: number;
++    currency: string;
++  };
++  requiredCertifications?: string[];
++  additionalRequirements?: Record<string, any>;
++}
++
++export interface BidMetrics {
++  completenessScore: number;  // 0-100
++  technicalMatchScore: number;  // 0-100
++  budgetAlignmentScore: number;  // 0-100
++  vendorReliabilityScore?: number;  // 0-100
++  overallRank?: number;
++}
++
++export interface Bid {
++  id: string;
++  projectId: string;
++  vendorId: string;
++  title: string;
++  description: string;
++  createdAt: Date;
++  updatedAt: Date;
++  submittedAt?: Date;
++  expiresAt: Date;
++  status: BidStatus;
++  type: BidType;
++  amount: number;
++  currency: string;
++  requirements: BidRequirements;
++  proposedSolution: string;
++  attachments?: string[];  // URLs to stored files
++  metrics?: BidMetrics;
++  tags?: string[];
++  metadata?: Record<string, any>;
++}
++
++// For lightweight bid listings/searching
++export type BidSummary = Pick<Bid, 'id' | 'projectId' | 'vendorId' | 'title' | 'status' | 'type' | 'amount' | 'currency' | 'createdAt' | 'expiresAt'>;
+diff --git a/services/BidBuilder.ts b/services/BidBuilder.ts
+new file mode 100644
+index 0000000..fe3a22e
+--- /dev/null
++++ b/services/BidBuilder.ts
+@@ -0,0 +1,64 @@
++/**
++ * BidBuilder Service
++ * Handles creation and management of bids
++ * Part of AIXTIV Symphony Bid Suite
++ */
++
++import { v4 as uuidv4 } from 'uuid';
++import { Bid, BidStatus, BidType, BidRequirements } from '../models/Bid';
++
++export class BidBuilder {
++  /**
++   * Creates a new bid draft with basic information
++   */
++  public createBidDraft(
++    projectId: string,
++    vendorId: string,
++    title: string,
++    description: string,
++    amount: number,
++    currency: string = 'USD',
++    type: BidType = BidType.STANDARD
++  ): Bid {
++    const now = new Date();
++    const expiresAt = new Date();
++    expiresAt.setDate(expiresAt.getDate() + 30); // Default 30 day expiration
++
++    // Create empty requirements structure
++    const requirements: BidRequirements = {
++      technicalSpecifications: '',
++      deliveryTimeline: '',
++      budgetRange: {
++        min: 0,
++        max: 0,
++        currency
++      }
++    };
++
++    return {
++      id: uuidv4(),
++      projectId,
++      vendorId,
++      title,
++      description,
++      createdAt: now,
++      updatedAt: now,
++      expiresAt,
++      status: BidStatus.DRAFT,
++      type,
++      amount,
++      currency,
++      requirements,
++      proposedSolution: '',
++    };
++  }
++
++  /**
++   * Updates an existing bid with new information
++   * @todo Implement full update logic
++   */
++  public updateBid(existingBid: Bid, updates: Partial<Bid>): Bid {
++    // Skeleton implementation - would validate updates, handle status transitions, etc.
++    return { ...existingBid, ...updates, updatedAt: new Date() };
++  }
++}
++
++export default new BidBuilder();
+diff --git a/services/BidRanker.ts b/services/BidRanker.ts
+new file mode 100644
+index 0000000..1c0c7e2
+--- /dev/null
++++ b/services/BidRanker.ts
+@@ -0,0 +1,76 @@
++/**
++ * BidRanker Service
++ * Handles ranking and scoring of bids based on multiple criteria
++ * Part of AIXTIV Symphony Bid Suite
++ */
++
++import { Bid, BidMetrics } from '../models/Bid';
++
++export class BidRanker {
++  /**
++   * Evaluates a bid against requirements and returns metrics
++   */
++  public evaluateBid(bid: Bid, projectRequirements?: any): BidMetrics {
++    // Calculate completeness score based on bid fields
++    const completenessScore = this.calculateCompletenessScore(bid);
++    
++    // Calculate technical match score (placeholder implementation)
++    const technicalMatchScore = this.calculateTechnicalMatchScore(bid, projectRequirements);
++    
++    // Calculate budget alignment score
++    const budgetAlignmentScore = this.calculateBudgetAlignmentScore(bid, projectRequirements);
++    
++    // Return combined metrics
++    return {
++      completenessScore,
++      technicalMatchScore,
++      budgetAlignmentScore,
++    };
++  }
++
++  /**
++   * Ranks a collection of bids for a project
++   */
++  public rankBids(bids: Bid[], projectRequirements?: any): Bid[] {
++    // First ensure all bids have metrics
++    const evaluatedBids = bids.map(bid => {
++      if (!bid.metrics) {
++        bid.metrics = this.evaluateBid(bid, projectRequirements);
++      }
++      return bid;
++    });
++
++    // Calculate weighted score for each bid
++    const scoredBids = evaluatedBids.map(bid => {
++      const weightedScore = 
++        (bid.metrics?.completenessScore || 0) * 0.2 + 
++        (bid.metrics?.technicalMatchScore || 0) * 0.5 + 
++        (bid.metrics?.budgetAlignmentScore || 0) * 0.3;
++      
++      return { bid, weightedScore };
++    });
++
++    // Sort bids by score (descending)
++    scoredBids.sort((a, b) => b.weightedScore - a.weightedScore);
++    
++    // Assign ranks and return sorted bids
++    return scoredBids.map((item, index) => {
++      if (item.bid.metrics) {
++        item.bid.metrics.overallRank = index + 1;
++      }
++      return item.bid;
++    });
++  }
++
++  // Placeholder implementations for scoring algorithms
++  private calculateCompletenessScore(bid: Bid): number {
++    return 85; // Placeholder score
++  }
++
++  private calculateTechnicalMatchScore(bid: Bid, requirements?: any): number {
++    return 75; // Placeholder score
++  }
++
++  private calculateBudgetAlignmentScore(bid: Bid, requirements?: any): number {
++    return 90; // Placeholder score
++  }
++}
++
++export default new BidRanker();
+diff --git a/services/BidSeeker.ts b/services/BidSeeker.ts
+new file mode 100644
+index 0000000..d3ceeea
+--- /dev/null
++++ b/services/BidSeeker.ts
+@@ -0,0 +1,103 @@
++/**
++ * BidSeeker Service
++ * Handles search and filtering of bids
++ * Part of AIXTIV Symphony Bid Suite
++ */
++
++import { Bid, BidStatus, BidType, BidSummary } from '../models/Bid';
++
++interface BidSearchCriteria {
++  projectId?: string;
++  vendorId?: string;
++  statuses?: BidStatus[];
++  types?: BidType[];
++  minAmount?: number;
++  maxAmount?: number;
++  createdAfter?: Date;
++  createdBefore?: Date;
++  expiresAfter?: Date;
++  expiresBefore?: Date;
++  keywords?: string[];
++  tags?: string[];
++  sortBy?: 'createdAt' | 'updatedAt' | 'amount' | 'expiresAt';
++  sortDirection?: 'asc' | 'desc';
++  limit?: number;
++  offset?: number;
++}
++
++export class BidSeeker {
++  /**
++   * Search for bids based on specified criteria
++   */
++  public async searchBids(criteria: BidSearchCriteria): Promise<BidSummary[]> {
++    // This would normally query a database, but for this skeleton implementation
++    // we'll return mock data that matches the search criteria
++    
++    // Simulate database delay
++    await new Promise(resolve => setTimeout(resolve, 100));
++    
++    // Return empty array if no results found (placeholder)
++    return [];
++  }
++
++  /**
++   * Get detailed information for a single bid by ID
++   */
++  public async getBidById(bidId: string): Promise<Bid | null> {
++    // This would normally query a database or API
++    // Simulate database delay
++    await new Promise(resolve => setTimeout(resolve, 50));
++    
++    // Return null if not found (placeholder)
++    return null;
++  }
++
++  /**
++   * Get all bids for a specific project
++   */
++  public async getBidsByProject(projectId: string): Promise<BidSummary[]> {
++    return this.searchBids({ projectId });
++  }
++
++  /**
++   * Get all bids from a specific vendor
++   */
++  public async getBidsByVendor(vendorId: string): Promise<BidSummary[]> {
++    return this.searchBids({ vendorId });
++  }
++
++  /**
++   * Find expiring bids that need attention
++   */
++  public async findExpiringBids(daysUntilExpiration: number = 7): Promise<BidSummary[]> {
++    const expiresAfter = new Date();
++    const expiresBefore = new Date();
++    expiresBefore.setDate(expiresBefore.getDate() + daysUntilExpiration);
++    
++    return this.searchBids({
++      expiresAfter,
++      expiresBefore,
++      statuses: [BidStatus.SUBMITTED, BidStatus.PENDING_REVIEW],
++      sortBy: 'expiresAt',
++      sortDirection: 'asc'
++    });
++  }
++
++  /**
++   * Find recently created bids
++   */
++  public async findRecentBids(days: number = 7): Promise<BidSummary[]> {
++    const createdAfter = new Date();
++    createdAfter.setDate(createdAfter.getDate() - days);
++    
++    return this.searchBids({
++      createdAfter,
++      sortBy: 'createdAt',
++      sortDirection: 'desc',
++      limit: 10
++    });
++  }
++}
++
++export default new BidSeeker();
+diff --git a/services/BidSuiteService.ts b/services/BidSuiteService.ts
+new file mode 100644
+index 0000000..0538f28
+--- /dev/null
++++ b/services/BidSuiteService.ts
+@@ -0,0 +1,91 @@
++/**
++ * BidSuiteService
++ * Main orchestration service for the Bid Suite
++ * Part of AIXTIV Symphony Architecture
++ */
++
++import { Bid, BidStatus, BidMetrics, BidSummary } from '../models/Bid';
++import BidSeeker from './BidSeeker';
++import BidRanker from './BidRanker';
++import BidBuilder from './BidBuilder';
++
++export class BidSuiteService {
++  private bidSeeker: typeof BidSeeker;
++  private bidRanker: typeof BidRanker;
++  private bidBuilder: typeof BidBuilder;
++
++  constructor() {
++    this.bidSeeker = BidSeeker;
++    this.bidRanker = BidRanker;
++    this.bidBuilder = BidBuilder;
++  }
++
++  /**
++   * Creates a new bid draft
++   */
++  public createBidDraft(
++    projectId: string,
++    vendorId: string,
++    title: string,
++    description: string,
++    amount: number,
++    currency: string = 'USD'
++  ): Bid {
++    return this.bidBuilder.createBidDraft(
++      projectId,
++      vendorId,
++      title,
++      description,
++      amount,
++      currency
++    );
++  }
++
++  /**
++   * Submits a bid, changing its status from DRAFT to SUBMITTED
++   */
++  public async submitBid(bid: Bid): Promise<Bid> {
++    if (bid.status !== BidStatus.DRAFT) {
++      throw new Error('Only draft bids can be submitted');
++    }
++    
++    const updatedBid = this.bidBuilder.updateBid(bid, {
++      status: BidStatus.SUBMITTED,
++      submittedAt: new Date()
++    });
++    
++    // Evaluate the bid upon submission
++    updatedBid.metrics = this.bidRanker.evaluateBid(updatedBid);
++    
++    // This would normally save to a database
++    return updatedBid;
++  }
++
++  /**
++   * Finds and ranks all bids for a specific project
++   */
++  public async findAndRankProjectBids(projectId: string): Promise<Bid[]> {
++    const bidSummaries = await this.bidSeeker.getBidsByProject(projectId);
++    
++    // Convert summaries to full bids (in a real implementation, you'd fetch the full bids)
++    const bids: Bid[] = await Promise.all(
++      bidSummaries.map(async summary => {
++        const fullBid = await this.bidSeeker.getBidById(summary.id);
++        return fullBid as Bid; // Type assertion as we'd handle nulls properly in real implementation
++      })
++    );
++    
++    // Rank the bids
++    return this.bidRanker.rankBids(bids);
++  }
++
++  /**
++   * Finds expiring bids that need attention
++   */
++  public async findExpiringBids(daysUntilExpiration: number = 7): Promise<BidSummary[]> {
++    return this.bidSeeker.findExpiringBids(daysUntilExpiration);
++  }
++}
++
++// Export a singleton instance
++export default new BidSuiteService();

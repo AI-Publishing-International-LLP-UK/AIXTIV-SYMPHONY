@@ -1,0 +1,134 @@
+# KDP Publication Requirements
+
+version: '2.0'
+type: publishing-standards
+security: TOP_SECRET
+
+isbn_standards:
+  ebook:
+    - type: free_isbn_kdp
+      format: 13_digit
+      requirements:
+        - unique_per_format
+        - kdp_assigned
+        - non_transferable
+    - type: own_isbn
+      format: 13_digit
+      requirements:
+        - publisher_registered
+        - format_specific
+        - metadata_matched
+
+  print:
+    paperback:
+      - type: free_isbn_kdp
+        format: 13_digit
+        requirements:
+          - unique_per_format
+          - kdp_assigned
+          - print_specific
+      - type: own_isbn
+        format: 13_digit
+        requirements:
+          - publisher_provided
+          - print_registered
+          - metadata_matched
+
+    hardcover:
+      - type: free_isbn_kdp
+        format: 13_digit
+        requirements:
+          - unique_per_format
+          - kdp_assigned
+          - hardcover_specific
+      - type: own_isbn
+        format: 13_digit
+        requirements:
+          - publisher_provided
+          - hardcover_registered
+          - metadata_matched
+
+metadata_requirements:
+  title_information:
+    - primary_title:
+        max_length: 200
+        special_chars: limited
+    - subtitle:
+        optional: true
+        max_length: 200
+    - series_info:
+        optional: true
+        format: "Series Name (Book X)"
+
+  author_information:
+    - author_name:
+        required: true
+        format: legal_or_pen_name
+    - contributors:
+        optional: true
+        roles: [illustrator, editor, translator]
+
+  description:
+    - format: html_limited
+    - max_length: 4000
+    - requirements:
+        - no_promotional_urls
+        - no_email_addresses
+        - no_offensive_content
+
+  keywords:
+    - count: 7
+    - requirements:
+        - relevant_to_content
+        - no_competitor_names
+        - no_misleading_terms
+
+  categories:
+    - primary: required
+    - secondary: optional
+    - requirements:
+        - accurate_representation
+        - specific_selection
+        - genre_appropriate
+
+pricing_standards:
+  ebook:
+    - currency: USD
+    - range:
+        min: 0.99
+        max: 999.99
+    - royalty_options:
+        - rate: 35%
+          requirements: [all_territories]
+        - rate: 70%
+          requirements:
+            - list_price: 2.99-9.99
+            - specific_territories
+            - delivery_cost
+
+  print:
+    - currency: USD
+    - pricing_formula:
+        base: printing_cost
+        multiplier: minimum_40_percent
+    - territory_requirements:
+        - market_specific_pricing
+        - currency_conversion
+        - local_regulations
+
+territorial_rights:
+  ebook:
+    - worldwide_rights:
+        required: true
+        exceptions: [managed_territories]
+    - pricing_territories:
+        required: true
+        format: market_specific
+
+  print:
+    - distribution_channels:
+        - amazon_marketplace
+        - expanded_distribution
+    - territory_restrictions:
+        optional: true
+        format: country_list

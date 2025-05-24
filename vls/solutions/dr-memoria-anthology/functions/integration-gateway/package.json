@@ -1,0 +1,24 @@
+{
+  "name": "anthology-integration-gateway",
+  "version": "1.0.0",
+  "description": "Integration Gateway for Dr. Memoria Anthology",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "start": "node index.js",
+    "lint": "eslint ."
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "axios": "^0.21.1",
+    "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0"
+  },
+  "devDependencies": {
+    "jest": "^27.0.6",
+    "eslint": "^7.32.0"
+  }
+}
+

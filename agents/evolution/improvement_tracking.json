@@ -8,7 +8,7 @@
         "window": "24h"
       },
       "decisionAccuracy": {
-        "baseline": 0.90,
+        "baseline": 0.9,
         "target": 0.98,
         "window": "12h"
       },
@@ -44,11 +44,7 @@
       }
     },
     "validation": {
-      "methods": [
-        "peer_review",
-        "simulation",
-        "production_testing"
-      ],
+      "methods": ["peer_review", "simulation", "production_testing"],
       "requirementsThreshold": 0.9
     }
   },
@@ -59,11 +55,7 @@
     },
     "analysis": {
       "frequency": "7d",
-      "metrics": [
-        "success_rate",
-        "improvement_velocity",
-        "stability_index"
-      ]
+      "metrics": ["success_rate", "improvement_velocity", "stability_index"]
     }
   },
   "reporting": {
@@ -84,4 +76,3 @@
     }
   }
 }
-

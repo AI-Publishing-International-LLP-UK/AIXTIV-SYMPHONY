@@ -1,84 +1,95 @@
 {
-    "learning_pathways_version": "1.0.0",
-    "pathways": {
-        "system_architect": {
-            "role": "lead_architect",
-            "competencies": [
-                "system_design",
-                "architectural_patterns",
-                "scalability_planning"
-            ],
-            "certification_levels": [
-                {
-                    "level": "master",
-                    "requirements": ["system_vision", "technical_leadership", "innovation_management"]
-                }
-            ],
-            "specialized_tracks": [
-                "cloud_native_architecture",
-                "distributed_systems",
-                "ai_systems_design"
-            ]
-        },
-        "rix_manager": {
-            "role": "integration_lead",
-            "competencies": [
-                "data_pipeline_design",
-                "system_integration",
-                "api_management"
-            ],
-            "certification_levels": [
-                {
-                    "level": "expert",
-                    "requirements": ["data_architecture", "integration_patterns", "performance_optimization"]
-                }
-            ],
-            "specialized_tracks": [
-                "real_time_processing",
-                "data_transformation",
-                "api_security"
-            ]
-        },
-        "deployment_strategist": {
-            "role": "deployment_lead",
-            "competencies": [
-                "deployment_automation",
-                "infrastructure_management",
-                "security_compliance"
-            ],
-            "certification_levels": [
-                {
-                    "level": "expert",
-                    "requirements": ["ci_cd_mastery", "cloud_architecture", "security_protocols"]
-                }
-            ],
-            "specialized_tracks": [
-                "container_orchestration",
-                "infrastructure_as_code",
-                "zero_trust_security"
-            ]
+  "learning_pathways_version": "1.0.0",
+  "pathways": {
+    "system_architect": {
+      "role": "lead_architect",
+      "competencies": [
+        "system_design",
+        "architectural_patterns",
+        "scalability_planning"
+      ],
+      "certification_levels": [
+        {
+          "level": "master",
+          "requirements": [
+            "system_vision",
+            "technical_leadership",
+            "innovation_management"
+          ]
         }
+      ],
+      "specialized_tracks": [
+        "cloud_native_architecture",
+        "distributed_systems",
+        "ai_systems_design"
+      ]
     },
-    "cross_training_requirements": {
-        "mandatory_modules": [
-            "ai_ethics",
-            "security_awareness",
-            "system_reliability"
-        ],
-        "elective_modules": [
-            "advanced_algorithms",
-            "machine_learning_ops",
-            "quantum_computing_basics"
-        ]
+    "rix_manager": {
+      "role": "integration_lead",
+      "competencies": [
+        "data_pipeline_design",
+        "system_integration",
+        "api_management"
+      ],
+      "certification_levels": [
+        {
+          "level": "expert",
+          "requirements": [
+            "data_architecture",
+            "integration_patterns",
+            "performance_optimization"
+          ]
+        }
+      ],
+      "specialized_tracks": [
+        "real_time_processing",
+        "data_transformation",
+        "api_security"
+      ]
     },
-    "certification_process": {
-        "evaluation_methods": [
-            "practical_assessment",
-            "peer_review",
-            "performance_metrics"
-        ],
-        "recertification_period": "6 months",
-        "minimum_success_rate": 0.95
+    "deployment_strategist": {
+      "role": "deployment_lead",
+      "competencies": [
+        "deployment_automation",
+        "infrastructure_management",
+        "security_compliance"
+      ],
+      "certification_levels": [
+        {
+          "level": "expert",
+          "requirements": [
+            "ci_cd_mastery",
+            "cloud_architecture",
+            "security_protocols"
+          ]
+        }
+      ],
+      "specialized_tracks": [
+        "container_orchestration",
+        "infrastructure_as_code",
+        "zero_trust_security"
+      ]
     }
+  },
+  "cross_training_requirements": {
+    "mandatory_modules": [
+      "ai_ethics",
+      "security_awareness",
+      "system_reliability"
+    ],
+    "elective_modules": [
+      "advanced_algorithms",
+      "machine_learning_ops",
+      "quantum_computing_basics"
+    ]
+  },
+  "certification_process": {
+    "evaluation_methods": [
+      "practical_assessment",
+      "peer_review",
+      "performance_metrics"
+    ],
+    "recertification_period": "6 months",
+    "minimum_success_rate": 0.95
+  }
 }
-

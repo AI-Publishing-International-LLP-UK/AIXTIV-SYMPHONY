@@ -1,0 +1,9 @@
+wing/Users/next-swc.darwin-arm64.node
+wing/agencies/core-agency/next-swc.darwin-arm64.node
+wing/agencies/core-agency/wing_consolidation_20250323_043907.log.plan
+wing/frontend/web/academy/next-swc.darwin-arm64.node
+wing/frontend/web/next-swc.darwin-arm64.node
+wing/frontend/next-swc.darwin-arm64.node
+wing/training/simulation/next-swc.darwin-arm64.node
+wing/Users/as/aixtiv-symphony-opus1.0.1/next-swc.darwin-arm64.node
+wing/wing/other/next-swc.darwin-arm64.node

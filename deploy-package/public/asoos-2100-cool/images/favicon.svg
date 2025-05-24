@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .logo-text {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+    }
+    .number-21 {
+      fill: #4169E1; /* Royal Blue */
+    }
+  </style>
+  
+  <!-- Circular background -->
+  <circle cx="16" cy="16" r="16" fill="#F1F1F1" />
+  
+  <!-- "21" centered -->
+  <text x="5" y="22" class="logo-text number-21" font-size="18">21</text>
+</svg>

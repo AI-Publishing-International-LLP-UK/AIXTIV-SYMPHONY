@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASOOS.2100.COOL | Aixtiv Symphony Opus</title>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <!-- Local CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/interface.css">
+    <style>
+        /* Additional inline styles for the ASOOS interface */
+        body {
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        /* Left Sidebar */
+        .left-sidebar {
+            width: 80px;
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+        }
+
+        .sidebar-icons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        .sidebar-icon {
+            width: 40px;
+            height: 40px;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .sidebar-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .sidebar-icon.active {
+            transform: scale(1.1);
+        }
+
+        .icon-inner {
+            opacity: 0.8;
+        }
+
+        .icon-tooltip {
+            position: absolute;
+            left: 100%;
+            top: 0;
+            background-color: #333;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            width: 150px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 10;
+            margin-left: 10px;
+        }
+
+        .sidebar-icon:hover .icon-tooltip {
+            opacity: 1;
+        }
+
+        /* Header */
+        .header {
+            height: 60px;
+            padding: 0 1.5rem;
+            background-color: white;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-left: 80px;
+        }
+
+        /* Content Area */
+        .content-area {
+            display: flex;
+            margin-left: 80px;
+            height: calc(100vh - 110px);
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1.5;
+            background-color: white;
+            border-right: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            max-width: 80%;
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .message.user {
+            background-color: #0bb1bb;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .message.ai {
+            background-color: #f3f4f6;
+            color: #000;
+            align-self: flex-start;
+        }
+
+        .input-area {
+            border-top: 1px solid #e5e7eb;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            outline: none;
+        }
+
+        .send-button, .mic-button, .audio-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f3f4f6;
+            color: #4b5563;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-button {
+            background-color: #0bb1bb;
+            color: white;
+        }
+
+        .mic-button.listening {
+            background-color: #ef4444;
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        /* Right Panel */
+        .right-panel {
+            flex: 1;
+            background-color: white;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .agent-avatar {
+            width: 50px;
+            height: 50px;
+            position: relative;
+            margin-right: 0.5rem;
+        }
+
+        .agent-avatar.speaking {
+            animation: speak 1s infinite;
+        }
+
+        @keyframes speak {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .panel-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .panel-card-header {
+            padding: 0.75rem 1rem;
+            background-color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+
+        .panel-card-content {
+            padding: 1rem;
+        }
+
+        .panel-bullet {
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .panel-bullet-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #0bb1bb;
+            margin-right: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .stat-box {
+            padding: 0.5rem;
+            background-color: #f9fafb;
+            border-radius: 0.25rem;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .stat-value {
+            font-weight: 600;
+        }
+
+        /* Integration Bar */
+        .integration-bar {
+            height: 50px;
+            margin-left: 80px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            padding: 0 1.5rem;
+            background-color: white;
+        }
+
+        .settings-button {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #f3f4f6;
+            color: #4b5563;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .integrations {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            overflow-x: auto;
+        }
+
+        .integration-category {
+            display: flex;
+            align-items: center;
+        }
+
+        .integration-label {
+            font-size: 0.75rem;
+            margin-right: 0.5rem;
+            color: #6b7280;
+        }
+
+        .integration-icons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .integration-icon {
+            width: 24px;
+            height: 24px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .integration-icon-text {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .divider {
+            width: 1px;
+            height: 20px;
+            background-color: #e5e7eb;
+        }
+
+        .integration-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background-color: #0bb1bb;
+            color: white;
+            border-radius: 9999px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.6rem;
+            margin-left: 1rem;
+            cursor: pointer;
+            height: 40px;
+        }
+
+        /* Integrations Page Styles */
+        .integrations-header, .settings-header {
+            height: 60px;
+            padding: 0 1.5rem;
+            background-color: #000;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .integrations-content {
+            padding: 1.5rem;
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+        }
+
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-tab {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: 1px solid #e5e7eb;
+            background-color: white;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .category-tab.active {
+            background-color: #0bb1bb;
+            color: white;
+            border-color: #0bb1bb;
+        }
+
+        .search-bar {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            outline: none;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+        }
+
+        .integrations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .integration-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .integration-card-header {
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .integration-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 0.5rem;
+            background-color: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: 600;
+        }
+
+        .integration-logo.connected {
+            color: white;
+        }
+
+        .integration-info {
+            flex: 1;
+        }
+
+        .integration-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .integration-description {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .integration-card-footer {
+            padding: 0.75rem 1rem;
+            background-color: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .integration-status {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .integration-status.connected {
+            color: #10b981;
+        }
+
+        .integration-action {
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .integration-action.connect {
+            background-color: #0bb1bb;
+            color: white;
+            border: none;
+        }
+
+        .integration-action.disconnect {
+            background-color: transparent;
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+        }
+
+        .add-integration-card {
+            border: 1px dashed #e5e7eb;
+            border-radius: 0.5rem;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            cursor: pointer;
+        }
+
+        .add-integration-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .add-integration-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: #0bb1bb;
+        }
+
+        .add-integration-text {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .add-integration-subtext {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        /* Settings Styles */
+        .back-button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+
+        .settings-content {
+            display: flex;
+            padding: 1.5rem;
+            height: calc(100vh - 60px);
+            background-color: #f3f4f6;
+            overflow: hidden;
+        }
+
+        .human-section {
+            flex: 1;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 0.5rem;
+            overflow-y: auto;
+            margin: 0 0.75rem;
+            max-height: calc(100vh - 100px);
+        }
+
+        .human-section-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .human-section-content {
+            margin-bottom: 2rem;
+        }
+
+        .settings-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-summary {
+            cursor: pointer;
+            padding: 0.75rem;
+            background-color: #f9fafb;
+            border-radius: 0.5rem;
+        }
+
+        .settings-details {
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0 0 0.5rem 0.5rem;
+            margin-top: -0.5rem;
+        }
+
+        .language-select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.25rem;
+            background-color: white;
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .theme-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .theme-card.active {
+            border-width: 2px;
+        }
+
+        .theme-preview {
+            height: 5rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+            background-color: #f9fafb;
+            border-radius: 0.25rem;
+            overflow: hidden;
+        }
+
+        .theme-color {
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 50%;
+            margin-bottom: 0.5rem;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 3rem;
+            height: 1.5rem;
+        }
+
+        .switch-input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .switch-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            transition: 0.3s;
+        }
+
+        .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 1.25rem;
+            width: 1.25rem;
+            left: 0.125rem;
+            bottom: 0.125rem;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .switch-input:checked + .switch-slider {
+            background-color: var(--peer-checked, #0bb1bb);
+        }
+
+        .switch-input:checked + .switch-slider:before {
+            transform: translateX(1.5rem);
+        }
+
+        .save-button {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #0bb1bb;
+            color: white;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <!-- Root Container -->
+    <div id="root"></div>
+
+    <!-- Integration with SallyPort Authentication -->
+    <script>
+        // SallyPort Authentication Configuration
+        window.sallyPortConfig = {
+            apiUrl: 'https://api.sallyport.aixtiv.dev',
+            appId: 'asoos-2100-cool',
+            redirectUri: window.location.origin + '/auth-callback',
+        };
+    </script>
+
+    <!-- ASOOS Interface Script -->
+    <script src="js/interface.js"></script>
+</body>
+</html>

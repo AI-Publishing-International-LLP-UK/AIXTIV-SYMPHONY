@@ -1,0 +1,37 @@
+# Synthesia API Configuration
+api_version: "2024-01"
+base_url: "https://api.synthesia.io/v2"
+
+# Video Source Settings
+video_sources:
+  - workspace     # Organization workspace videos
+  - my_videos     # Personal videos
+  - shared_with_me # Shared videos
+
+# Template Sources
+template_sources:
+  - workspace    # Custom organization templates
+  - synthesia    # Stock Synthesia templates
+
+# Output Configuration
+output_formats:
+  captions:
+    - srt
+    - vtt
+  thumbnail: true
+  versions: all   # Include all generated versions
+
+# Webhook Configuration
+webhook_events:
+  - video.completed
+  - video.failed  # New failure event handler
+
+# API Parameters
+parameters:
+  list_videos:
+    source: "workspace"  # Default to workspace
+    include_drafts: true
+    
+  list_templates:
+    source: "workspace"  # Default to workspace templates
+    include_stock: true

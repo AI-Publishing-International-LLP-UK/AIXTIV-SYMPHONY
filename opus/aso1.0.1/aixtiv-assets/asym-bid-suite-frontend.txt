@@ -1,0 +1,766 @@
+/**
+ * AIXTIV Bid Suite Frontend Implementation
+ * 
+ * This file implements the frontend components for the AIXTIV Bid Suite,
+ * including the Growth icon for Symphony integration and standalone UI.
+ */
+
+import React, { useState, useEffect } from 'react';
+import { Box, Button, Container, Grid, Typography, Paper, Card, CardContent, CardActions, 
+         CircularProgress, Chip, Dialog, DialogTitle, DialogContent, DialogActions,
+         Stepper, Step, StepLabel, Tabs, Tab } from '@mui/material';
+import { styled } from '@mui/system';
+import { 
+  Search as SearchIcon, 
+  Assessment as AssessmentIcon,
+  Brightness7 as BrandIcon,
+  CheckCircle as CheckerIcon,
+  Send as SubmitIcon,
+  EmojiEvents as WinIcon,
+  ArrowForward as ArrowIcon,
+  Timeline as TimelineIcon,
+  Business as BusinessIcon
+} from '@mui/icons-material';
+
+// Styled components
+const DashboardCard = styled(Card)(({ theme }) => ({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'translateY(-5px)',
+    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.15)',
+  }
+}));
+
+const StyledChip = styled(Chip)(({ theme, color }) => ({
+  fontWeight: 'bold',
+}));
+
+/**
+ * Growth Icon Component for AIXTIV Symphony Integration
+ */
+const GrowthIcon = ({ onClick }) => {
+  return (
+    <Box 
+      onClick={onClick}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        cursor: 'pointer',
+        padding: 1,
+        borderRadius: 2,
+        transition: 'background-color 0.3s',
+        '&:hover': {
+          backgroundColor: 'rgba(0, 0, 0, 0.05)',
+        }
+      }}
+    >
+      <TimelineIcon sx={{ fontSize: 40, color: '#3f51b5' }} />
+      <Typography variant="caption" align="center" sx={{ mt: 0.5 }}>
+        Growth
+      </Typography>
+    </Box>
+  );
+};
+
+/**
+ * StatusChip Component - Displays status with appropriate color
+ */
+const StatusChip = ({ status }) => {
+  let color = 'default';
+  
+  if (status.includes('positive') || status.includes('ready') || status.includes('win')) {
+    color = 'success';
+  } else if (status.includes('negative') || status.includes('loss')) {
+    color = 'error';
+  } else if (status.includes('building') || status.includes('negotiation')) {
+    color = 'warning';
+  } else if (status.includes('submitted') || status.includes('monitoring')) {
+    color = 'info';
+  }
+  
+  return (
+    <StyledChip 
+      label={status.replace(/_/g, ' ').toUpperCase()} 
+      color={color} 
+      size="small" 
+    />
+  );
+};
+
+/**
+ * Opportunity Card Component
+ */
+const OpportunityCard = ({ opportunity, onAction }) => {
+  return (
+    <DashboardCard>
+      <CardContent>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+          <Typography variant="h6" noWrap>
+            {opportunity.title}
+          </Typography>
+          <StatusChip status={opportunity.status} />
+        </Box>
+        
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          {opportunity.description?.substring(0, 100)}...
+        </Typography>
+        
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <Typography variant="body2" color="text.secondary">
+              Value:
+            </Typography>
+            <Typography variant="body1" fontWeight="bold">
+              ${opportunity.value?.toLocaleString() || 'N/A'}
+            </Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant="body2" color="text.secondary">
+              Deadline:
+            </Typography>
+            <Typography variant="body1">
+              {new Date(opportunity.deadline).toLocaleDateString() || 'N/A'}
+            </Typography>
+          </Grid>
+        </Grid>
+      </CardContent>
+      <CardActions sx={{ mt: 'auto', justifyContent: 'flex-end' }}>
+        <Button 
+          size="small" 
+          variant="contained" 
+          endIcon={<ArrowIcon />}
+          onClick={() => onAction(opportunity)}
+        >
+          {getActionButtonText(opportunity.status)}
+        </Button>
+      </CardActions>
+    </DashboardCard>
+  );
+};
+
+/**
+ * Helper function to get appropriate action button text based on status
+ */
+function getActionButtonText(status) {
+  if (status === 'discovered') return 'Process';
+  if (status === 'ranked_positive') return 'Check Brand';
+  if (status === 'brand_positive') return 'Prepare Bid';
+  if (status.includes('preparation')) return 'View Progress';
+  if (status === 'ready_for_submission') return 'Submit';
+  if (status.includes('submitted')) return 'Monitor';
+  return 'View Details';
+}
+
+/**
+ * Bid Suite Dashboard Component
+ */
+export const BidSuiteDashboard = ({ isStandalone = false, onClose }) => {
+  const [opportunities, setOpportunities] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState(0);
+  const [selectedOpportunity, setSelectedOpportunity] = useState(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  
+  useEffect(() => {
+    // In a real implementation, this would fetch data from the API
+    const fetchOpportunities = async () => {
+      try {
+        // Simulate API call with timeout
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Sample data - in a real implementation, this would come from the API
+        const sampleOpportunities = [
+          {
+            id: '1',
+            title: 'Enterprise Software Implementation',
+            description: 'Implementation of enterprise resource planning software for a large manufacturing company.',
+            value: 750000,
+            deadline: '2023-12-15',
+            status: 'discovered',
+            source: 'SAP Ariba',
+            industry: 'Manufacturing'
+          },
+          {
+            id: '2',
+            title: 'IT Infrastructure Upgrade',
+            description: 'Comprehensive upgrade of network infrastructure and security systems.',
+            value: 250000,
+            deadline: '2023-11-30',
+            status: 'ranked_positive',
+            bidRankScore: 78,
+            source: 'Government Procurement Portal',
+            industry: 'Public Sector'
+          },
+          {
+            id: '3',
+            title: 'Digital Transformation Consulting',
+            description: 'Strategic consulting for digital transformation initiatives across the organization.',
+            value: 500000,
+            deadline: '2024-01-15',
+            status: 'brand_positive',
+            bidRankScore: 82,
+            brandScore: 75,
+            source: 'Private RFP',
+            industry: 'Healthcare'
+          },
+          {
+            id: '4',
+            title: 'Cloud Migration Project',
+            description: 'Migration of legacy systems to cloud-based infrastructure with minimal disruption.',
+            value: 350000,
+            deadline: '2023-12-01',
+            status: 'preparation',
+            bidRankScore: 91,
+            brandScore: 88,
+            source: 'Oracle Procurement',
+            industry: 'Financial Services'
+          },
+          {
+            id: '5',
+            title: 'Cybersecurity Assessment',
+            description: 'Comprehensive assessment of security posture and remediation planning.',
+            value: 120000,
+            deadline: '2023-11-20',
+            status: 'ready_for_submission',
+            bidRankScore: 95,
+            brandScore: 92,
+            source: 'University Procurement System',
+            industry: 'Education'
+          },
+          {
+            id: '6',
+            title: 'Data Analytics Platform',
+            description: 'Implementation of advanced analytics platform with machine learning capabilities.',
+            value: 430000,
+            deadline: '2024-02-28',
+            status: 'submitted',
+            bidRankScore: 88,
+            brandScore: 85,
+            source: 'Microsoft Procurement',
+            industry: 'Retail'
+          }
+        ];
+        
+        setOpportunities(sampleOpportunities);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching opportunities:', error);
+        setLoading(false);
+      }
+    };
+    
+    fetchOpportunities();
+  }, []);
+  
+  const handleTabChange = (event, newValue) => {
+    setActiveTab(newValue);
+  };
+  
+  const handleActionClick = (opportunity) => {
+    setSelectedOpportunity(opportunity);
+    setDetailsOpen(true);
+  };
+  
+  const handleCloseDetails = () => {
+    setDetailsOpen(false);
+  };
+  
+  const filteredOpportunities = activeTab === 0 
+    ? opportunities 
+    : opportunities.filter(opp => {
+        if (activeTab === 1) return ['discovered', 'ranked_positive', 'brand_positive'].includes(opp.status);
+        if (activeTab === 2) return ['preparation', 'ready_for_submission'].includes(opp.status);
+        if (activeTab === 3) return ['submitted', 'submission_confirmed', 'monitoring'].includes(opp.status);
+        if (activeTab === 4) return opp.status.includes('outcome_');
+        return true;
+      });
+  
+  return (
+    <Container maxWidth={isStandalone ? 'xl' : 'lg'} sx={{ pt: 4, pb: 8 }}>
+      {isStandalone ? (
+        <Typography variant="h4" component="h1" gutterBottom sx={{ display: 'flex', alignItems: 'center' }}>
+          <BusinessIcon sx={{ mr: 1, fontSize: 36 }} />
+          AIXTIV Bid Suite
+        </Typography>
+      ) : (
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h5" component="h1">
+            Growth Opportunities
+          </Typography>
+          <Button variant="outlined" onClick={onClose}>
+            Back to Symphony
+          </Button>
+        </Box>
+      )}
+      
+      <Paper sx={{ mb: 4 }}>
+        <Tabs
+          value={activeTab}
+          onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
+          aria-label="opportunity stages"
+        >
+          <Tab icon={<SearchIcon />} label="All Opportunities" />
+          <Tab icon={<AssessmentIcon />} label="Evaluation" />
+          <Tab icon={<CheckerIcon />} label="Preparation" />
+          <Tab icon={<SubmitIcon />} label="Submitted" />
+          <Tab icon={<WinIcon />} label="Completed" />
+        </Tabs>
+      </Paper>
+      
+      {loading ? (
+        <Box display="flex" justifyContent="center" alignItems="center" minHeight="300px">
+          <CircularProgress />
+        </Box>
+      ) : filteredOpportunities.length === 0 ? (
+        <Paper sx={{ p: 4, textAlign: 'center' }}>
+          <Typography variant="h6">No opportunities found in this category</Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            Use Bid Seeker to discover new opportunities or change filter settings
+          </Typography>
+          <Button 
+            variant="contained" 
+            startIcon={<SearchIcon />} 
+            sx={{ mt: 3 }}
+          >
+            Discover Opportunities
+          </Button>
+        </Paper>
+      ) : (
+        <Grid container spacing={3}>
+          {filteredOpportunities.map((opportunity) => (
+            <Grid item xs={12} sm={6} md={4} key={opportunity.id}>
+              <OpportunityCard 
+                opportunity={opportunity} 
+                onAction={handleActionClick}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      )}
+      
+      {/* Opportunity Details Dialog */}
+      <OpportunityDetailsDialog 
+        open={detailsOpen}
+        opportunity={selectedOpportunity}
+        onClose={handleCloseDetails}
+      />
+    </Container>
+  );
+};
+
+/**
+ * Opportunity Details Dialog Component
+ */
+const OpportunityDetailsDialog = ({ open, opportunity, onClose }) => {
+  const [activeStep, setActiveStep] = useState(0);
+  
+  useEffect(() => {
+    if (opportunity) {
+      // Set active step based on status
+      if (opportunity.status === 'discovered') setActiveStep(0);
+      else if (opportunity.status === 'ranked_positive') setActiveStep(1);
+      else if (opportunity.status === 'brand_positive') setActiveStep(2);
+      else if (opportunity.status.includes('preparation')) setActiveStep(3);
+      else if (opportunity.status === 'ready_for_submission') setActiveStep(4);
+      else if (opportunity.status.includes('submitted')) setActiveStep(5);
+      else if (opportunity.status.includes('outcome_')) setActiveStep(6);
+    }
+  }, [opportunity]);
+  
+  if (!opportunity) return null;
+  
+  const steps = [
+    'Discovery', 
+    'Bid Rank', 
+    'Brand Diagnostic', 
+    'Bid Preparation', 
+    'Quality Check', 
+    'Submission', 
+    'Outcome'
+  ];
+  
+  return (
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+      <DialogTitle>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Typography variant="h6">{opportunity.title}</Typography>
+          <StatusChip status={opportunity.status} />
+        </Box>
+      </DialogTitle>
+      <DialogContent dividers>
+        <Stepper activeStep={activeStep} alternativeLabel sx={{ mb: 4 }}>
+          {steps.map((label) => (
+            <Step key={label}>
+              <StepLabel>{label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={6}>
+            <Paper sx={{ p: 2, height: '100%' }}>
+              <Typography variant="h6" gutterBottom>Opportunity Details</Typography>
+              
+              <Box sx={{ mb: 2 }}>
+                <Typography variant="body2" color="text.secondary">Description</Typography>
+                <Typography variant="body1">{opportunity.description}</Typography>
+              </Box>
+              
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Typography variant="body2" color="text.secondary">Value</Typography>
+                  <Typography variant="h6">${opportunity.value?.toLocaleString()}</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body2" color="text.secondary">Deadline</Typography>
+                  <Typography variant="h6">{new Date(opportunity.deadline).toLocaleDateString()}</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body2" color="text.secondary">Source</Typography>
+                  <Typography variant="body1">{opportunity.source}</Typography>
+                </Grid>
+                <Grid item xs={6}>
+                  <Typography variant="body2" color="text.secondary">Industry</Typography>
+                  <Typography variant="body1">{opportunity.industry}</Typography>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+          
+          <Grid item xs={12} md={6}>
+            <Paper sx={{ p: 2, height: '100%' }}>
+              <Typography variant="h6" gutterBottom>Current Status</Typography>
+              
+              {renderStatusContent(opportunity, activeStep)}
+            </Paper>
+          </Grid>
+        </Grid>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={onClose}>Close</Button>
+        {renderActionButton(opportunity, activeStep)}
+      </DialogActions>
+    </Dialog>
+  );
+};
+
+/**
+ * Helper function to render status content based on current step
+ */
+function renderStatusContent(opportunity, activeStep) {
+  switch (activeStep) {
+    case 0: // Discovery
+      return (
+        <Box>
+          <Typography variant="body2">
+            This opportunity was discovered and is ready for evaluation.
+          </Typography>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            startIcon={<AssessmentIcon />}
+            sx={{ mt: 2 }}
+          >
+            Start Evaluation
+          </Button>
+        </Box>
+      );
+    
+    case 1: // Bid Rank
+      return (
+        <Box>
+          <Typography variant="body2" gutterBottom>
+            Bid Rank has evaluated this opportunity as suitable for your business.
+          </Typography>
+          
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+            <CircularProgress 
+              variant="determinate" 
+              value={opportunity.bidRankScore || 75} 
+              size={60}
+              thickness={5}
+              sx={{ mr: 2 }}
+            />
+            <Box>
+              <Typography variant="h5">{opportunity.bidRankScore || 75}/100</Typography>
+              <Typography variant="body2" color="text.secondary">Bid Rank Score</Typography>
+            </Box>
+          </Box>
+          
+          <Button 
+            variant="contained" 
+            color="primary" 
+            startIcon={<BrandIcon />}
+            sx={{ mt: 2 }}
+          >
+            Check Brand Readiness
+          </Button>
+        </Box>
+      );
+    
+    case 2: // Brand Diagnostic
+      return (
+        <Box>
+          <Typography variant="body2" gutterBottom>
+            Your brand is well-positioned for this opportunity.
+          </Typography>
+          
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+            <CircularProgress 
+              variant="determinate" 
+              value={opportunity.brandScore || 70} 
+              size={60}
+              thickness={5}
+              sx={{ mr: 2 }}
+            />
+            <Box>
+              <Typography variant="h5">{opportunity.brandScore || 70}/100</Typography>
+              <Typography variant="body2" color="text.secondary">Brand Diagnostic Score</Typography>
+            </Box>
+          </Box>
+          
+          <Button 
+            variant="contained" 
+            color="primary" 
+            sx={{ mt: 2 }}
+          >
+            Initiate Bid Preparation
+          </Button>
+        </Box>
+      );
+    
+    case 3: // Bid Preparation
+      return (
+        <Box>
+          <Typography variant="body2" gutterBottom>
+            Bid preparation is in progress with Co-Pilot assistance.
+          </Typography>
+          
+          <Box sx={{ mt: 2, mb: 3 }}>
+            <Typography variant="body2" color="text.secondary" gutterBottom>
+              Preparation Progress
+            </Typography>
+            <LinearProgressWithLabel value={65} />
+          </Box>
+          
+          <Typography variant="body2">
+            Estimated completion: {new Date(Date.now() + 1000 * 60 * 60 * 12).toLocaleString()}
+          </Typography>
+        </Box>
+      );
+    
+    case 4: // Quality Check
+      return (
+        <Box>
+          <Typography variant="body2" gutterBottom>
+            Bid preparation is complete and has passed quality checks.
+          </Typography>
+          
+          <Box sx={{ mt: 2, display: 'flex', alignItems: 'center' }}>
+            <Box 
+              sx={{ 
+                bgcolor: 'gold', 
+                color: 'black', 
+                fontWeight: 'bold',
+                p: 1,
+                borderRadius: 1,
+                mr: 2
+              }}
+            >
+              CIG-QA
+            </Box>
+            <Typography variant="body1">
+              99.99% Accuracy Verified
+            </Typography>
+          </Box>
+          
+          <Button 
+            variant="contained" 
+            color="primary" 
+            startIcon={<SubmitIcon />}
+            sx={{ mt: 2 }}
+          >
+            Submit Bid
+          </Button>
+        </Box>
+      );
+    
+    case 5: // Submission
+      return (
+        <Box>
+          <Typography variant="body2" gutterBottom>
+            Bid has been submitted and is being monitored.
+          </Typography>
+          
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body2" color="text.secondary">Submitted On</Typography>
+            <Typography variant="body1">{new Date().toLocaleDateString()}</Typography>
+          </Box>
+          
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body2" color="text.secondary">Confirmation ID</Typography>
+            <Typography variant="body1">CONF-{Math.floor(Math.random() * 1000000)}</Typography>
+          </Box>
+          
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body2" color="text.secondary">Next Check</Typography>
+            <Typography variant="body1">{new Date(Date.now() + 1000 * 60 * 60 * 8).toLocaleTimeString()}</Typography>
+          </Box>
+        </Box>
+      );
+    
+    case 6: // Outcome
+      return (
+        <Box>
+          <Typography variant="body2" gutterBottom>
+            This bid has received a decision.
+          </Typography>
+          
+          <Box sx={{ mt: 2, mb: 2 }}>
+            <Typography variant="body2" color="text.secondary">Outcome</Typography>
+            <Typography variant="h6" color="success.main">Win</Typography>
+          </Box>
+          
+          <Typography variant="body2" gutterBottom>
+            The Win Protocol has been activated with the following steps:
+          </Typography>
+          
+          <ul>
+            <li>Project implementation planning</li>
+            <li>Resource allocation</li>
+            <li>Project tracking setup</li>
+          </ul>
+        </Box>
+      );
+    
+    default:
+      return (
+        <Typography variant="body2">
+          Status information not available.
+        </Typography>
+      );
+  }
+}
+
+/**
+ * Helper component for linear progress with label
+ */
+const LinearProgressWithLabel = ({ value }) => {
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+      <Box sx={{ width: '100%', mr: 1 }}>
+        <LinearProgress variant="determinate" value={value} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography variant="body2" color="text.secondary">{`${Math.round(value)}%`}</Typography>
+      </Box>
+    </Box>
+  );
+};
+
+/**
+ * Helper function to render action button based on current step
+ */
+function renderActionButton(opportunity, activeStep) {
+  switch (activeStep) {
+    case 0: // Discovery
+      return (
+        <Button 
+          variant="contained" 
+          color="primary"
+        >
+          Start Evaluation
+        </Button>
+      );
+    
+    case 1: // Bid Rank
+      return (
+        <Button 
+          variant="contained" 
+          color="primary"
+        >
+          Check Brand Readiness
+        </Button>
+      );
+    
+    case 2: // Brand Diagnostic
+      return (
+        <Button 
+          variant="contained" 
+          color="primary"
+        >
+          Initiate Bid Preparation
+        </Button>
+      );
+    
+    case 3: // Bid Preparation
+      return (
+        <Button 
+          variant="outlined" 
+          color="primary"
+        >
+          View Details
+        </Button>
+      );
+    
+    case 4: // Quality Check
+      return (
+        <Button 
+          variant="contained" 
+          color="primary"
+        >
+          Submit Bid
+        </Button>
+      );
+    
+    case 5: // Submission
+      return (
+        <Button 
+          variant="outlined" 
+          color="primary"
+        >
+          View Monitoring
+        </Button>
+      );
+    
+    case 6: // Outcome
+      return (
+        <Button 
+          variant="contained" 
+          color="success"
+        >
+          View Implementation
+        </Button>
+      );
+    
+    default:
+      return null;
+  }
+}
+
+/**
+ * Standalone Bid Suite Application Component
+ */
+export const StandaloneBidSuiteApp = () => {
+  return (
+    <div className="aixtiv-bid-suite-app">
+      <BidSuiteDashboard isStandalone={true} />
+    </div>
+  );
+};
+
+/**
+ * Export components for use in AIXTIV Symphony or standalone
+ */
+export default {
+  GrowthIcon,
+  BidSuiteDashboard,
+  StandaloneBidSuiteApp
+};

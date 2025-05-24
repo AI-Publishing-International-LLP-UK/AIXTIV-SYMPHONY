@@ -1,0 +1,36 @@
+high_risk_companies:
+  tech_giants:
+    - name: "TechCorp Global"
+      known_tactics:
+        - Sending multiple representatives under different pretexts
+        - Attempting to schedule informal meetings
+        - Proposing joint research initiatives
+        - Requesting system architecture details
+    - name: "DataVision Enterprises"
+      known_tactics:
+        - Offering inflated partnership deals
+        - Attempting to place internal consultants
+        - Requesting detailed technical documentation
+    - name: "AI Nexus Solutions"
+      known_tactics:
+        - Aggressive talent acquisition attempts
+        - Proposing shared development environments
+        - Requesting access to training data
+  consulting_firms:
+    - name: "Strategic Insights Group"
+      known_tactics:
+        - Conducting detailed market research
+        - Attempting to interview key personnel
+        - Requesting process documentation
+    - name: "Global Tech Advisors"
+      known_tactics:
+        - Proposing audit services
+        - Attempting to access development environments
+        - Requesting architectural reviews
+  surveillance_indicators:
+    - Unusual meeting requests
+    - Excessive technical questions
+    - Requests for system documentation
+    - Attempts to discuss architecture details
+    - Interest in specific AI models or training methods
+

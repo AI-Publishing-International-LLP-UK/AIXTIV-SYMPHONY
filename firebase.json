@@ -1,27 +1,74 @@
 {
   "hosting": {
+    "target": "asoos-2100-cool",
     "public": "public",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
     "rewrites": [
       {
-        "source": "/api/**",
-        "function": "api"
+        "source": "/set-mode",
+        "function": "setMode"
       },
       {
-        "source": "/academy/**",
-        "destination": "/academy/index.html"
+        "source": "/amplify",
+        "destination": "/v2/amplify.html"
       },
       {
-        "source": "/giftshop/**",
-        "destination": "/giftshop/index.html"
+        "source": "/about",
+        "destination": "/v2/about.html"
       },
       {
-        "source": "/marketplace/**",
-        "destination": "/marketplace/index.html"
+        "source": "**",
+        "function": "routeInterfaceVersion"
       }
     ]
   },
   "functions": {
-    "source": "functions"
+    "source": "functions",
+    "runtime": "nodejs22"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}
+
+{
+  "hosting": [
+    {
+      "target": "asoos",
+      "public": "public/asoos-2100-cool",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "simple-test",
+      "public": "public/asoos-2100-cool-test",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    },
+    {
+      "target": "drlucy-live",
+      "public": "public/dr-memoria-anthology",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ]
+    }
+  ],
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs20",
+    "region": "us-west1"
   }
 }

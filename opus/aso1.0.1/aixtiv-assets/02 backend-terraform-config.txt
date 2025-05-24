@@ -1,0 +1,303 @@
+# root/main.tf
+
+terraform {
+  required_version = ">= 1.0.0"
+  
+  backend "gcs" {
+    bucket = "terraform-state-aixtiv"
+    prefix = "terraform/state"
+  }
+
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 4.0"
+    }
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = "~> 4.0"
+    }
+  }
+}
+
+provider "google" {
+  project = var.project_id
+  region  = var.region
+  zone    = var.zone
+}
+
+provider "google-beta" {
+  project = var.project_id
+  region  = var.region
+  zone    = var.zone
+}
+
+# Network Module
+module "network" {
+  source = "./modules/network"
+  
+  project_id    = var.project_id
+  network_name  = "global-vpc"
+  subnets = [
+    {
+      name          = "primary-subnet"
+      ip_cidr_range = "10.0.0.0/20"
+      region        = var.region
+      purpose       = "PRIVATE"
+    },
+    {
+      name          = "service-subnet"
+      ip_cidr_range = "10.0.16.0/20"
+      region        = var.region
+      purpose       = "PRIVATE_SERVICES"
+    }
+  ]
+}
+
+# GKE Module
+module "gke" {
+  source = "./modules/gke"
+  depends_on = [module.network]
+
+  project_id    = var.project_id
+  cluster_name  = "primary-gke"
+  network       = module.network.network_name
+  subnetwork    = module.network.subnet_names[0]
+  
+  node_pools = [
+    {
+      name               = "general"
+      machine_type      = "n1-standard-4"
+      min_count        = 3
+      max_count        = 10
+      disk_size_gb     = 100
+      disk_type        = "pd-ssd"
+      auto_repair      = true
+      auto_upgrade     = true
+    },
+    {
+      name               = "ai-workload"
+      machine_type      = "n1-highmem-8"
+      min_count        = 2
+      max_count        = 8
+      disk_size_gb     = 200
+      disk_type        = "pd-ssd"
+      accelerator_type = "nvidia-tesla-t4"
+      accelerator_count = 1
+    }
+  ]
+}
+
+# Compute Instances Module
+module "compute" {
+  source = "./modules/compute"
+  depends_on = [module.network]
+
+  project_id = var.project_id
+  network    = module.network.network_name
+  subnetwork = module.network.subnet_names[0]
+
+  instances = {
+    mcp = {
+      name         = "mcp-server"
+      machine_type = "n1-standard-8"
+      boot_disk_size = 100
+      tags         = ["mcp", "prod"]
+    },
+    coaching = {
+      name         = "coaching-server"
+      machine_type = "n1-standard-8"
+      boot_disk_size = 100
+      tags         = ["coaching", "prod"]
+    },
+    warpdrive = {
+      name         = "warpdrive-prod-01"
+      machine_type = "n1-standard-16"
+      boot_disk_size = 200
+      tags         = ["warpdrive", "prod"]
+    },
+    staging = {
+      name         = "staging-server"
+      machine_type = "n1-standard-4"
+      boot_disk_size = 50
+      tags         = ["staging"]
+    }
+  }
+}
+
+# Cloud SQL Module
+module "cloudsql" {
+  source = "./modules/cloudsql"
+
+  project_id    = var.project_id
+  instance_name = "primary-db"
+  database_version = "POSTGRES_14"
+  region        = var.region
+  tier          = "db-custom-8-32768"
+
+  backup_configuration = {
+    enabled            = true
+    start_time        = "02:00"
+    retention_days    = 7
+  }
+}
+
+# Cloud Storage Module
+module "storage" {
+  source = "./modules/storage"
+
+  project_id = var.project_id
+  buckets = {
+    user_content = {
+      name          = "user-content-${var.project_id}"
+      location      = var.region
+      storage_class = "STANDARD"
+      versioning    = true
+      lifecycle_rules = [
+        {
+          action = {
+            type = "Delete"
+          }
+          condition = {
+            age = 90
+            with_state = "ARCHIVED"
+          }
+        }
+      ]
+    },
+    model_artifacts = {
+      name          = "model-artifacts-${var.project_id}"
+      location      = var.region
+      storage_class = "STANDARD"
+      versioning    = true
+    }
+  }
+}
+
+# Security Module
+module "security" {
+  source = "./modules/security"
+
+  project_id = var.project_id
+  
+  service_accounts = {
+    agent_system = {
+      account_id = "agent-system"
+      display_name = "Agent System Service Account"
+      roles = [
+        "roles/ai.user",
+        "roles/datastore.user"
+      ]
+    },
+    monitoring = {
+      account_id = "monitoring"
+      display_name = "Monitoring Service Account"
+      roles = [
+        "roles/monitoring.viewer",
+        "roles/logging.viewer"
+      ]
+    }
+  }
+
+  kms_keyrings = {
+    system = {
+      name     = "system-keyring"
+      location = var.region
+      keys = [
+        {
+          name            = "data-encryption"
+          rotation_period = "7776000s"  # 90 days
+        },
+        {
+          name            = "api-encryption"
+          rotation_period = "2592000s"  # 30 days
+        }
+      ]
+    }
+  }
+}
+
+# Monitoring Module
+module "monitoring" {
+  source = "./modules/monitoring"
+
+  project_id = var.project_id
+  
+  metrics = [
+    "agent_response_time",
+    "model_inference_latency",
+    "user_session_duration"
+  ]
+
+  alerts = {
+    high_latency = {
+      display_name = "High Latency Alert"
+      combiner     = "OR"
+      conditions = [
+        {
+          display_name = "High Agent Response Time"
+          condition    = "metric.type=\"custom.googleapis.com/agent_response_time\" AND metric.label.\"threshold\" > 2000"
+        }
+      ]
+      notification_channels = ["email", "slack"]
+    }
+  }
+}
+
+# Ray Cluster Module
+module "ray" {
+  source = "./modules/ray"
+  depends_on = [module.gke]
+
+  project_id    = var.project_id
+  cluster_name  = "agent-orchestration"
+  network       = module.network.network_name
+  subnetwork    = module.network.subnet_names[0]
+
+  head_node = {
+    machine_type = "n1-standard-8"
+    disk_size_gb = 100
+  }
+
+  worker_nodes = {
+    machine_type = "n1-standard-4"
+    min_workers  = 2
+    max_workers  = 10
+    disk_size_gb = 100
+  }
+}
+
+# Variables
+variable "project_id" {
+  description = "The project ID to deploy to"
+  type        = string
+}
+
+variable "region" {
+  description = "The region to deploy to"
+  type        = string
+  default     = "us-west1"
+}
+
+variable "zone" {
+  description = "The zone to deploy to"
+  type        = string
+  default     = "us-west1-a"
+}
+
+# Outputs
+output "gke_cluster_name" {
+  value = module.gke.cluster_name
+}
+
+output "vpc_network" {
+  value = module.network.network_name
+}
+
+output "cloudsql_connection_name" {
+  value = module.cloudsql.connection_name
+}
+
+output "service_account_emails" {
+  value = module.security.service_account_emails
+}

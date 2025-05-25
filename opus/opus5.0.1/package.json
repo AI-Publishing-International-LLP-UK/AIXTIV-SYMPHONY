@@ -1,0 +1,51 @@
+{
+  "name": "aixtiv-symphony-opus5",
+  "version": "5.0.1",
+  "description": "AI & Income & Taxes - Tax systems and wealth redistribution module for Aixtiv Symphony",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint . --ext .ts"
+  },
+  "keywords": [
+    "aixtiv",
+    "symphony",
+    "AI",
+    "taxes",
+    "income",
+    "wealth",
+    "redistribution"
+  ],
+  "author": "AI Publishing International LLP",
+  "license": "UNLICENSED",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.enterprise.com/aixtiv-symphony/aixtiv-symphony-opus5.0.1.git"
+  },
+  "bugs": {
+    "url": "https://github.enterprise.com/aixtiv-symphony/aixtiv-symphony-opus5.0.1/issues"
+  },
+  "homepage": "https://github.enterprise.com/aixtiv-symphony/aixtiv-symphony-opus5.0.1#readme",
+  "dependencies": {
+    "firebase": "^9.22.0",
+    "firebase-admin": "^11.8.0",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.1",
+    "@types/node": "^20.2.3",
+    "@typescript-eslint/eslint-plugin": "^5.59.7",
+    "@typescript-eslint/parser": "^5.59.7",
+    "eslint": "^8.41.0",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}
+

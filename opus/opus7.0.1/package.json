@@ -1,0 +1,68 @@
+{
+  "name": "aixtiv-symphony-opus7",
+  "version": "7.0.1",
+  "description": "Universal AI Knowledge Repository (Metagenesis) - AI-powered knowledge sharing module for Aixtiv Symphony",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint 'src/**/*.{ts,tsx}'",
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "clean": "rimraf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.enterprise.com/aixtiv-symphony/opus7.git"
+  },
+  "keywords": [
+    "aixtiv",
+    "symphony",
+    "opus7",
+    "knowledge",
+    "repository",
+    "metagenesis",
+    "AI",
+    "machine-learning",
+    "knowledge-base"
+  ],
+  "author": "AI Publishing International LLP",
+  "license": "UNLICENSED",
+  "private": true,
+  "bugs": {
+    "url": "https://github.enterprise.com/aixtiv-symphony/opus7/issues"
+  },
+  "homepage": "https://github.enterprise.com/aixtiv-symphony/opus7#readme",
+  "dependencies": {
+    "firebase": "^10.5.0",
+    "firebase-admin": "^11.10.1",
+    "pinecone-client": "^1.1.0",
+    "langchain": "^0.0.140",
+    "openai": "^4.10.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "winston": "^3.10.0",
+    "zod": "^3.22.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.14",
+    "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.4",
+    "@types/node": "^20.6.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "eslint": "^8.49.0",
+    "jest": "^29.7.0",
+    "rimraf": "^5.0.1",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
+

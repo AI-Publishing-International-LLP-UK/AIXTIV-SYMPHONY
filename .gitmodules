@@ -1,3 +1,24 @@
 [submodule "aixtiv-cli"]
 	path = aixtiv-cli
 	url = https://github.com/AI-Publishing-International-LLP-UK/aixtiv-cli.git
+[submodule "Aixtiv-Symphony"]
+	path = Aixtiv-Symphony
+	url = https://github.com/AI-Publishing-International-LLP-UK/Aixtiv-Symphony.git
+[submodule "Roark-5.0-Framework"]
+	path = Roark-5.0-Framework
+	url = https://github.com/AI-Publishing-International-LLP-UK/Roark-5.0-Framework.git
+[submodule "academy"]
+	path = academy
+	url = https://github.com/AI-Publishing-International-LLP-UK/academy.git
+[submodule "adk-samples"]
+	path = adk-samples
+	url = https://github.com/AI-Publishing-International-LLP-UK/adk-samples.git
+[submodule "aixtiv-push"]
+	path = aixtiv-push
+	url = https://github.com/AI-Publishing-International-LLP-UK/aixtiv-push.git
+[submodule "aixtiv-symphony-opus1.0.1"]
+	path = aixtiv-symphony-opus1.0.1
+	url = https://github.com/AI-Publishing-International-LLP-UK/aixtiv-symphony-opus1.0.1.git
+[submodule "integration-gateway"]
+	path = integration-gateway
+	url = https://github.com/AI-Publishing-International-LLP-UK/integration-gateway.git

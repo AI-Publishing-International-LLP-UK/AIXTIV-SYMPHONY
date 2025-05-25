@@ -51,3 +51,9 @@ firestore-debug.log*
 
 # Desktop database
 desktop/controller/dbs/
+
+# Backup files
+backups/
+.gitmodules.backup
+backup_*/
+

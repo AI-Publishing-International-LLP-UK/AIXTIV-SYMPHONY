@@ -16,9 +16,6 @@
 [submodule "aixtiv-push"]
 	path = aixtiv-push
 	url = https://github.com/AI-Publishing-International-LLP-UK/aixtiv-push.git
-[submodule "aixtiv-symphony-opus1.0.1"]
-	path = aixtiv-symphony-opus1.0.1
-	url = https://github.com/AI-Publishing-International-LLP-UK/aixtiv-symphony-opus1.0.1.git
 [submodule "integration-gateway"]
 	path = integration-gateway
 	url = https://github.com/AI-Publishing-International-LLP-UK/integration-gateway.git

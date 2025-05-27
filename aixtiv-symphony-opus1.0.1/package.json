@@ -1,0 +1,92 @@
+{
+  "name": "aixtiv-symphony-opus1.0.1",
+  "version": "1.0.1",
+  "description": "Aixtiv Symphony Orchestrating Operating System - Opus 1.0.1",
+  "main": "src/index.js",
+  "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "deploy": "npm run build && firebase deploy --only hosting:asoos-primary",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:all": "npm run build && firebase deploy",
+    "lint": "eslint src/**/*.{js,jsx}",
+    "lint:fix": "eslint src/**/*.{js,jsx} --fix",
+    "format": "prettier --write 'src/**/*.{js,jsx,css,scss}'",
+    "analyze": "source-map-explorer 'build/static/js/*.js'"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.4.3",
+    "@firebase/auth": "^1.10.6",
+    "@firebase/firestore": "^4.7.16",
+    "@firebase/functions": "^0.12.8",
+    "@firebase/storage": "^0.13.12",
+    "@google-cloud/language": "^7.0.2",
+    "@google-cloud/secret-manager": "^6.0.1",
+    "@google-cloud/speech": "^7.1.0",
+    "@google-cloud/text-to-speech": "^6.1.0",
+    "axios": "^1.9.0",
+    "classnames": "^2.3.2",
+    "core-js": "^3.42.0",
+    "date-fns": "^2.30.0",
+    "firebase": "^11.8.1",
+    "framer-motion": "^10.16.4",
+    "lodash": "^4.17.21",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.18.0",
+    "react-scripts": "^3.0.1",
+    "react-spring": "^9.7.3",
+    "styled-components": "^6.1.1",
+    "uuid": "^9.0.1",
+    "zustand": "^4.4.6"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.5.1",
+    "autoprefixer": "^10.4.16",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.4.0",
+    "eslint-plugin-react": "^7.33.2",
+    "firebase-tools": "^14.4.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.0.2",
+    "postcss": "^8.4.31",
+    "prettier": "^3.0.3",
+    "source-map-explorer": "^2.5.3",
+    "tailwindcss": "^3.3.5"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "src/**/*.{css,scss}": [
+      "prettier --write"
+    ]
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "short_name": "Symphony",
+  "name": "ASOOS Symphony Opus 1.0.1",
+  "description": "Aixtiv Symphony Orchestrating Operating System - A modular, agent-driven enterprise solution for AI orchestration and human collaboration",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#0bb1bb",
+  "background_color": "#f8f9fa",
+  "scope": "/",
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View system dashboard",
+      "url": "/#dashboard",
+      "icons": [{ "src": "icons/dashboard.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Agent Management",
+      "short_name": "Agents",
+      "description": "Manage and monitor system agents",
+      "url": "/#agents",
+      "icons": [{ "src": "icons/agents.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Dewey Cards",
+      "short_name": "Cards",
+      "description": "View task cards and performance",
+      "url": "/#dewey",
+      "icons": [{ "src": "icons/cards.png", "sizes": "96x96" }]
+    }
+  ],
+  "categories": ["productivity", "business", "utilities", "artificial intelligence"],
+  "related_applications": [
+    {
+      "platform": "web",
+      "url": "https://asoos-2100-com.web.app"
+    }
+  ],
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "screenshots/dashboard.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Dashboard overview showing agent statistics"
+    },
+    {
+      "src": "screenshots/agents.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Agent management interface"
+    },
+    {
+      "src": "screenshots/dewey.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "label": "Dewey Card system for task tracking"
+    }
+  ],
+  "lang": "en-US",
+  "dir": "ltr"
+}
+

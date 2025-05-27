@@ -1,0 +1,17 @@
+{
+  "root": true,
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "rules": {
+    "no-trailing-spaces": "off",
+    "indent": "off",
+    "comma-dangle": "off",
+    "max-len": "off",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+  }
+}

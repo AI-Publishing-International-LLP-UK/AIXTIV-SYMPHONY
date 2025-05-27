@@ -1047,8 +1047,14 @@
   
   <script>
     // SallyPort Authentication Configuration
+    // SECURITY IMPORTANT: This configuration MUST be updated before production deployment
+    // Using placeholder values in production is a severe security risk that could lead to:
+    // - Unauthorized access to user data
+    // - Authentication failures
+    // - Data breaches
+    // - Service disruptions
     const SALLYPORT_CONFIG = {
-      clientId: 'your-client-id-here', // Replace with your actual SallyPort client ID
+      clientId: 'REPLACE_WITH_ACTUAL_SALLYPORT_CLIENT_ID', // SECURITY CRITICAL: Must be replaced with your real SallyPort client ID
       redirectUri: 'https://asoos.2100.cool/dashboard', // Replace with your actual redirect URI
       scope: 'openid profile email',
       responseType: 'code'

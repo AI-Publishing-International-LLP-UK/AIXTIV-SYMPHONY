@@ -1,0 +1,808 @@
+{
+  "mainDomain": "2100.cool",
+  "timestamp": "2025-05-27T04:57:46.055Z",
+  "domains": [
+    {
+      "domain": "2100.cool",
+      "timestamp": "2025-05-27T04:57:46.055Z",
+      "dns": {
+        "success": false,
+        "addresses": [
+          "34.169.95.205"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "records": [
+          [
+            "Firebase.com"
+          ],
+          [
+            "34.169.95.205"
+          ],
+          [
+            "fah-claim=002-02-9c7ef196-48ab-480f-841c-4122f85095d8"
+          ],
+          [
+            "google-site-verification=ejKcrkL4gDPD1me5SAosXt1s6lo4s_ely8BniTRU_kQ"
+          ],
+          [
+            "google-site-verification=EUVg1xIOCN2aLJoitL5DanAMDhGbC3XJqtTGjs7H-Es"
+          ]
+        ]
+      },
+      "http": {
+        "success": false,
+        "error": "Timeout"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "www.2100.cool",
+      "timestamp": "2025-05-27T04:57:59.377Z",
+      "dns": {
+        "success": false,
+        "addresses": [
+          "34.169.95.205"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "records": [
+          [
+            "google-site-verification=EUVg1xIOCN2aLJoitL5DanAMDhGbC3XJqtTGjs7H-Es"
+          ],
+          [
+            "34.169.95.205"
+          ],
+          [
+            "Firebase.com"
+          ],
+          [
+            "fah-claim=002-02-9c7ef196-48ab-480f-841c-4122f85095d8"
+          ],
+          [
+            "google-site-verification=ejKcrkL4gDPD1me5SAosXt1s6lo4s_ely8BniTRU_kQ"
+          ]
+        ]
+      },
+      "http": {
+        "success": false,
+        "error": "Timeout"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "asoos.2100.cool",
+      "timestamp": "2025-05-27T04:58:09.578Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": true,
+        "records": [
+          [
+            "firebase=--force"
+          ]
+        ]
+      },
+      "http": {
+        "success": true,
+        "status": 200,
+        "statusText": "OK"
+      },
+      "status": "success"
+    },
+    {
+      "domain": "zena.2100.cool",
+      "timestamp": "2025-05-27T04:58:10.449Z",
+      "dns": {
+        "success": false,
+        "addresses": [
+          "34.169.95.205"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA zena.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Timeout"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "vision.2100.cool",
+      "timestamp": "2025-05-27T04:58:20.773Z",
+      "dns": {
+        "success": false,
+        "addresses": [
+          "34.169.95.205"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA vision.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Timeout"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "app.2100.cool",
+      "timestamp": "2025-05-27T04:58:30.998Z",
+      "dns": {
+        "success": false,
+        "addresses": [
+          "34.169.95.205"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "records": []
+      },
+      "http": {
+        "success": false,
+        "error": "Timeout"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "api.2100.cool",
+      "timestamp": "2025-05-27T04:58:41.432Z",
+      "dns": {
+        "success": false,
+        "addresses": [
+          "34.169.95.205"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "records": []
+      },
+      "http": {
+        "success": false,
+        "error": "Timeout"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "2100.2100.cool",
+      "timestamp": "2025-05-27T04:58:51.711Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA 2100.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: 2100.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "angel-jg.2100.cool",
+      "timestamp": "2025-05-27T04:58:52.169Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA angel-jg.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: angel-jg.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "architecture.2100.cool",
+      "timestamp": "2025-05-27T04:58:52.779Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA architecture.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: architecture.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "automation.2100.cool",
+      "timestamp": "2025-05-27T04:58:53.286Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA automation.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: automation.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "caio.2100.cool",
+      "timestamp": "2025-05-27T04:58:53.797Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA caio.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: caio.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "ceo.2100.cool",
+      "timestamp": "2025-05-27T04:58:54.408Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA ceo.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: ceo.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "cfo.2100.cool",
+      "timestamp": "2025-05-27T04:58:55.026Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA cfo.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: cfo.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "chro.2100.cool",
+      "timestamp": "2025-05-27T04:58:55.491Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA chro.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: chro.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "cmo.2100.cool",
+      "timestamp": "2025-05-27T04:58:56.114Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA cmo.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: cmo.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "coach.2100.cool",
+      "timestamp": "2025-05-27T04:58:57.109Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA coach.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: coach.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "coo.2100.cool",
+      "timestamp": "2025-05-27T04:58:57.579Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA coo.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: coo.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "cro.2100.cool",
+      "timestamp": "2025-05-27T04:58:58.007Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA cro.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: cro.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "cto.2100.cool",
+      "timestamp": "2025-05-27T04:58:58.432Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA cto.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: cto.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "drburby.2100.cool",
+      "timestamp": "2025-05-27T04:58:58.854Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA drburby.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: drburby.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "drclaude.2100.cool",
+      "timestamp": "2025-05-27T04:58:59.367Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA drclaude.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: drclaude.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "drcypriot.2100.cool",
+      "timestamp": "2025-05-27T04:58:59.937Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA drcypriot.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: drcypriot.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "drgrant.2100.cool",
+      "timestamp": "2025-05-27T04:59:00.423Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA drgrant.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: drgrant.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "drlucy.2100.cool",
+      "timestamp": "2025-05-27T04:59:00.970Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA drlucy.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: drlucy.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "drmaria.2100.cool",
+      "timestamp": "2025-05-27T04:59:01.497Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA drmaria.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: drmaria.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "drmatch.2100.cool",
+      "timestamp": "2025-05-27T04:59:02.004Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA drmatch.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: drmatch.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "drmemoria.2100.cool",
+      "timestamp": "2025-05-27T04:59:02.619Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA drmemoria.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: drmemoria.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "drsabina.2100.cool",
+      "timestamp": "2025-05-27T04:59:03.038Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA drsabina.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: drsabina.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "founder.2100.cool",
+      "timestamp": "2025-05-27T04:59:03.522Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA founder.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: founder.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "gitlucy.2100.cool",
+      "timestamp": "2025-05-27T04:59:03.980Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA gitlucy.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: gitlucy.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "growth.2100.cool",
+      "timestamp": "2025-05-27T04:59:04.457Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA growth.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: growth.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "innovation.2100.cool",
+      "timestamp": "2025-05-27T04:59:04.931Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA innovation.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: innovation.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "legal.2100.cool",
+      "timestamp": "2025-05-27T04:59:05.460Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA legal.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: legal.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "mrroark.2100.cool",
+      "timestamp": "2025-05-27T04:59:05.854Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA mrroark.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: mrroark.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "proactivity.2100.cool",
+      "timestamp": "2025-05-27T04:59:06.339Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA proactivity.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: proactivity.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "proflee.2100.cool",
+      "timestamp": "2025-05-27T04:59:06.800Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA proflee.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: proflee.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "real-estate.2100.cool",
+      "timestamp": "2025-05-27T04:59:07.389Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA real-estate.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: real-estate.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "thepoet.2100.cool",
+      "timestamp": "2025-05-27T04:59:07.818Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA thepoet.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: thepoet.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    },
+    {
+      "domain": "venture.2100.cool",
+      "timestamp": "2025-05-27T04:59:08.316Z",
+      "dns": {
+        "success": true,
+        "addresses": [
+          "199.36.158.100"
+        ]
+      },
+      "txt": {
+        "success": false,
+        "error": "queryTxt ENODATA venture.2100.cool"
+      },
+      "http": {
+        "success": false,
+        "error": "Hostname/IP does not match certificate's altnames: Host: venture.2100.cool. is not in the cert's altnames: DNS:firebaseapp.com, DNS:*.firebaseapp.com"
+      },
+      "status": "failed"
+    }
+  ],
+  "stats": {
+    "total": 40,
+    "success": 1,
+    "failed": 39
+  }
+}

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASOOS | Aixtiv Symphony Operating System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/navigation.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+    <!-- ASOOS Navigation System -->
+    <div id="side-nav">
+        <div class="nav-icon" data-id="wing-command" title="Wing Command">
+            <i class="fas fa-plane"></i>
+            <div class="tooltip">Wing Command</div>
+        </div>
+        <div class="nav-icon" data-id="copilot" title="Copilot">
+            <i class="fas fa-user-astronaut"></i>
+            <div class="tooltip">Copilot</div>
+        </div>
+        <div class="nav-icon" data-id="executive" title="Executive Intelligence">
+            <i class="fas fa-chart-line"></i>
+            <div class="tooltip">Executive</div>
+        </div>
+        <div class="nav-icon" data-id="agents" title="Agent Dashboard">
+            <i class="fas fa-robot"></i>
+            <div class="tooltip">Agents</div>
+        </div>
+        <div class="nav-icon" data-id="sally-port" title="SallyPort Security">
+            <i class="fas fa-shield-alt"></i>
+            <div class="tooltip">SallyPort</div>
+        </div>
+    </div>
+    
+    <div id="bottom-nav">
+        <div class="nav-section">
+            <div class="nav-icon" data-id="search" title="Search">
+                <i class="fas fa-search"></i>
+                <div class="tooltip bottom">Search</div>
+            </div>
+            <div class="nav-icon" data-id="settings" title="Settings">
+                <i class="fas fa-cog"></i>
+                <div class="tooltip bottom">Settings</div>
+            </div>
+        </div>
+        <div class="nav-section">
+            <div class="nav-icon" data-id="notifications" title="Notifications">
+                <i class="fas fa-bell"></i>
+                <div class="tooltip bottom">Notifications</div>
+            </div>
+            <div class="nav-icon active" data-id="user" title="User Profile">
+                <i class="fas fa-user"></i>
+                <div class="tooltip bottom">Profile</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Platform Interface -->
+    <div id="platform-interface" class="hidden">
+        <!-- This will be populated dynamically based on navigation -->
+        <div id="copilot-panel" class="interface-panel">
+            <h2>Copilot Interface</h2>
+            <div class="copilot-content">
+                <div class="copilot-status">
+                    <div class="avatar">
+                        <img src="images/copilot-avatar.png" onerror="this.src='https://via.placeholder.com/60?text=CP'" alt="Copilot">
+                    </div>
+                    <div class="status">
+                        <h3>Flight Copilot</h3>
+                        <div class="status-indicator online"></div>
+                        <span class="status-text">Online and Ready</span>
+                    </div>
+                </div>
+                
+                <div class="copilot-dashboard">
+                    <div class="dashboard-section">
+                        <h3>Active Tasks</h3>
+                        <div class="task-list">
+                            <div class="task">
+                                <div class="task-status in-progress"></div>
+                                <div class="task-content">
+                                    <h4>Meeting Preparation</h4>
+                                    <p>Gathering materials for upcoming strategy session</p>
+                                </div>
+                            </div>
+                            <div class="task">
+                                <div class="task-status pending"></div>
+                                <div class="task-content">
+                                    <h4>Market Analysis</h4>
+                                    <p>Compile data from Q2 performance reports</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-section">
+                        <h3>Knowledge Systems</h3>
+                        <div class="knowledge-grid">
+                            <div class="knowledge-card">
+                                <i class="fas fa-brain"></i>
+                                <h4>Industry Reports</h4>
+                                <span class="count">15</span>
+                            </div>
+                            <div class="knowledge-card">
+                                <i class="fas fa-file-alt"></i>
+                                <h4>Legal Documents</h4>
+                                <span class="count">23</span>
+                            </div>
+                            <div class="knowledge-card">
+                                <i class="fas fa-chart-pie"></i>
+                                <h4>Analytics</h4>
+                                <span class="count">42</span>
+                            </div>
+                            <div class="knowledge-card">
+                                <i class="fas fa-users"></i>
+                                <h4>Team Profiles</h4>
+                                <span class="count">8</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="copilot-prompt">
+                    <textarea placeholder="What can I help you with today? Your Copilot is ready to assist..."></textarea>
+                    <button class="submit-btn"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="executive-panel" class="interface-panel">
+            <h2>Executive Intelligence</h2>
+            <div class="executive-content">
+                <div class="executive-dashboard">
+                    <div class="kpi-section">
+                        <h3>Key Performance Indicators</h3>
+                        <div class="kpi-grid">
+                            <div class="kpi-card">
+                                <h4>Revenue Growth</h4>
+                                <div class="kpi-value increase">+12.4%</div>
+                                <div class="kpi-chart">
+                                    <div class="chart-bar" style="height: 80%"></div>
+                                    <div class="chart-bar" style="height: 60%"></div>
+                                    <div class="chart-bar" style="height: 75%"></div>
+                                    <div class="chart-bar" style="height: 90%"></div>
+                                </div>
+                            </div>
+                            <div class="kpi-card">
+                                <h4>Customer Satisfaction</h4>
+                                <div class="kpi-value">4.8/5.0</div>
+                                <div class="kpi-chart">
+                                    <div class="chart-bar" style="height: 85%"></div>
+                                    <div class="chart-bar" style="height: 90%"></div>
+                                    <div class="chart-bar" style="height: 95%"></div>
+                                    <div class="chart-bar" style="height: 96%"></div>
+                                </div>
+                            </div>
+                            <div class="kpi-card">
+                                <h4>Operational Efficiency</h4>
+                                <div class="kpi-value increase">+8.7%</div>
+                                <div class="kpi-chart">
+                                    <div class="chart-bar" style="height: 65%"></div>
+                                    <div class="chart-bar" style="height: 70%"></div>
+                                    <div class="chart-bar" style="height: 72%"></div>
+                                    <div class="chart-bar" style="height: 87%"></div>
+                                </div>
+                            </div>
+                            <div class="kpi-card">
+                                <h4>Team Performance</h4>
+                                <div class="kpi-value increase">+15.2%</div>
+                                <div class="kpi-chart">
+                                    <div class="chart-bar" style="height: 60%"></div>
+                                    <div class="chart-bar" style="height: 75%"></div>
+                                    <div class="chart-bar" style="height: 85%"></div>
+                                    <div class="chart-bar" style="height: 92%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="insights-section">
+                        <h3>Executive Insights</h3>
+                        <div class="insights-list">
+                            <div class="insight">
+                                <div class="insight-icon"><i class="fas fa-lightbulb"></i></div>
+                                <div class="insight-content">
+                                    <h4>Market Opportunity</h4>
+                                    <p>Competitive analysis indicates potential for 15% market share growth in APAC region.</p>
+                                </div>
+                            </div>
+                            <div class="insight">
+                                <div class="insight-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                <div class="insight-content">
+                                    <h4>Risk Alert</h4>
+                                    <p>Supply chain vulnerabilities detected in manufacturing division requiring attention.</p>
+                                </div>
+                            </div>
+                            <div class="insight">
+                                <div class="insight-icon"><i class="fas fa-chart-line"></i></div>
+                                <div class="insight-content">
+                                    <h4>Performance Trend</h4>
+                                    <p>Marketing campaign ROI exceeding projections by 22% since implementation.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="executive-actions">
+                    <button class="action-btn"><i class="fas fa-file-pdf"></i> Generate Report</button>
+                    <button class="action-btn"><i class="fas fa-calendar-alt"></i> Schedule Meeting</button>
+                    <button class="action-btn"><i class="fas fa-briefcase"></i> Strategic Planning</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="sally-port-panel" class="interface-panel">
+            <h2>SallyPort Security</h2>
+            <div class="sallyport-content">
+                <div class="security-status">
+                    <div class="status-card active">
+                        <div class="status-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="status-info">
+                            <h3>Security Status</h3>
+                            <p>All systems operational</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="access-controls">
+                    <h3>Access Management</h3>
+                    <div class="controls-grid">
+                        <div class="control-card">
+                            <div class="control-icon"><i class="fas fa-user-shield"></i></div>
+                            <h4>User Authentication</h4>
+                            <p>Multi-factor authentication active</p>
+                            <div class="control-toggle active"></div>
+                        </div>
+                        <div class="control-card">
+                            <div class="control-icon"><i class="fas fa-lock"></i></div>
+                            <h4>Data Encryption</h4>
+                            <p>End-to-end encryption enabled</p>
+                            <div class="control-toggle active"></div>
+                        </div>
+                        <div class="control-card">
+                            <div class="control-icon"><i class="fas fa-id-card"></i></div>
+                            <h4>Identity Verification</h4>
+                            <p>Biometric verification active</p>
+                            <div class="control-toggle active"></div>
+                        </div>
+                        <div class="control-card">
+                            <div class="control-icon"><i class="fas fa-eye"></i></div>
+                            <h4>Activity Monitoring</h4>
+                            <p>Real-time monitoring enabled</p>
+                            <div class="control-toggle active"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="security-log">
+                    <h3>Recent Activities</h3>
+                    <div class="log-entries">
+                        <div class="log-entry">
+                            <div class="log-time">09:45 AM</div>
+                            <div class="log-icon success"><i class="fas fa-check-circle"></i></div>
+                            <div class="log-message">Executive dashboard accessed by authorized user</div>
+                        </div>
+                        <div class="log-entry">
+                            <div class="log-time">08:30 AM</div>
+                            <div class="log-icon warning"><i class="fas fa-exclamation-circle"></i></div>
+                            <div class="log-message">Multiple login attempts detected - IP blocked</div>
+                        </div>
+                        <div class="log-entry">
+                            <div class="log-time">Yesterday</div>
+                            <div class="log-icon info"><i class="fas fa-info-circle"></i></div>
+                            <div class="log-message">System security patch applied successfully</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Additional panels will be added for each navigation item -->
+    </div>
+    
+    <!-- Login Screen -->
+    <div id="login-screen" class="active">
+        <div class="login-container">
+            <div class="login-logo">
+                <img src="images/asoos-logo.svg" onerror="this.src='https://via.placeholder.com/200x80?text=ASOOS'" alt="ASOOS Logo">
+            </div>
+            <h1>Aixtiv Symphony Operating System</h1>
+            <p class="login-subtitle">Secure access with SallyPort authentication</p>
+            
+            <div class="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter your username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password">
+                </div>
+                <div class="form-actions">
+                    <button id="login-button" class="btn btn-primary">Login</button>
+                    <div class="form-help">
+                        <a href="#forgot-password" class="help-link">Forgot Password?</a>
+                        <a href="#help" class="help-link">Need Help?</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="security-notice">
+                <i class="fas fa-shield-alt"></i>
+                <p>This system is protected by SallyPort Security Protocol</p>
+            </div>
+        </div>
+        
+        <footer class="login-footer">
+            <p>&copy; 2025 Aixtiv Symphony | AI Publishing International LLP UK</p>
+        </footer>
+    </div>
+
+    <!-- Popup Notifications -->
+    <div id="notification-container">
+        <!-- Dynamic notifications will appear here -->
+    </div>
+
+    <!-- SallyPort Authentication Integration -->
+    <script>
+        // SallyPort Authentication Configuration
+        window.sallyPortConfig = {
+            apiUrl: 'https://api.sallyport.aixtiv.dev',
+            appId: 'asoos-2100-cool',
+            redirectUri: window.location.origin + '/auth-callback',
+        };
+    </script>
+    
+    <!-- Application Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/sallyport-auth.js"></script>
+    
+    <script>
+        // Simplified login process for demonstration
+        document.getElementById('login-button').addEventListener('click', function() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username && password) {
+                // Show loading state
+                this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+                this.disabled = true;
+                
+                // Simulate authentication process
+                setTimeout(() => {
+                    // Hide login screen
+                    document.getElementById('login-screen').classList.remove('active');
+                    
+                    // Show main interface
+                    document.getElementById('platform-interface').classList.remove('hidden');
+                    
+                    // Show welcome notification
+                    showNotification('Welcome to ASOOS', 'Login successful. You are now connected to Aixtiv Symphony.', 'success');
+                    
+                    // Simulate Copilot being active
+                    const copilotPanel = document.getElementById('copilot-panel');
+                    if (copilotPanel) {
+                        copilotPanel.classList.add('active');
+                    }
+                }, 1500);
+            } else {
+                showNotification('Login Failed', 'Please enter both username and password.', 'error');
+            }
+        });
+        
+        // Notification function
+        function showNotification(title, message, type = 'info') {
+            const container = document.getElementById('notification-container');
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'}"></i>
+                <div class="notification-content">
+                    <h3>${title}</h3>
+                    <p>${message}</p>
+                </div>
+            `;
+            
+            container.appendChild(notification);
+            
+            // Fade in
+            setTimeout(() => notification.classList.add('show'), 10);
+            
+            // Remove after delay
+            setTimeout(() => {
+                notification.classList.add('fade-out');
+                setTimeout(() => notification.remove(), 500);
+            }, 5000);
+        }
+        
+        // Navigation panel handling
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up navigation click handlers
+            document.querySelectorAll('#side-nav .nav-icon, #bottom-nav .nav-icon').forEach(navItem => {
+                navItem.addEventListener('click', function() {
+                    const panelId = this.getAttribute('data-id');
+                    
+                    // Toggle active state on nav items
+                    document.querySelectorAll('#side-nav .nav-icon, #bottom-nav .nav-icon').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    
+                    // Hide all panels
+                    document.querySelectorAll('.interface-panel').forEach(panel => {
+                        panel.classList.remove('active');
+                    });
+                    
+                    // Show selected panel
+                    const selectedPanel = document.getElementById(`${panelId}-panel`);
+                    if (selectedPanel) {
+                        selectedPanel.classList.add('active');
+                    }
+                    
+                    // Dispatch section change event
+                    const event = new CustomEvent('sectionChange', {
+                        detail: {
+                            section: panelId,
+                            name: this.getAttribute('title')
+                        }
+                    });
+                    document.dispatchEvent(event);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

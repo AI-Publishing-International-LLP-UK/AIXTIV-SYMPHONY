@@ -48,3 +48,17 @@ export const api = onRequest(
     });
   }
 );
+
+// ASOOS API function
+export const asoosApi = onRequest(
+  { region: 'us-west1' },
+  (req, res) => {
+    logger.info('ASOOS API request received', req.path);
+    res.json({
+      status: 'ok',
+      service: 'ASOOS API Gateway',
+      version: '1.0.1',
+      timestamp: new Date().toISOString()
+    });
+  }
+);

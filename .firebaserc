@@ -5,14 +5,14 @@
   "targets": {
     "api-for-warp-drive": {
       "hosting": {
-        "asoos": [
-          "2100-cool"
-        ],
         "dr-memoria": [
           "dr-memoria"
         ],
         "drlucy-live": [
           "drlucy-live"
+        ],
+        "asoos": [
+          "2100-cool"
         ]
       }
     }

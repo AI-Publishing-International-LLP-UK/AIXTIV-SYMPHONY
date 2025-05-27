@@ -1,0 +1,357 @@
+{
+  "hosting": [
+    {
+      "target": "asoos",
+      "public": "public/asoos-2100-cool",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "asoosApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "2100-cool",
+      "public": "public/2100-cool",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "copilotApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "ai-pilot-agents",
+      "public": "public/ai-pilot-agents",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "pilotApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "aixtiv-symphony-opus1",
+      "public": "public/aixtiv-symphony-opus1",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "symphonyApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "api-for-warp-drive",
+      "public": "public/api-for-warp-drive",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "warpDriveApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "coaching2100",
+      "public": "public/coaching2100",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "coachingApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "coaching2100-com",
+      "public": "public/coaching2100-com",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "coaching2Api" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "community-groups",
+      "public": "public/community-groups",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "communityApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "knowledge-content",
+      "public": "public/knowledge-content",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "knowledgeApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "primary-platforms",
+      "public": "public/primary-platforms",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "platformsApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "professional-dev",
+      "public": "public/professional-dev",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "profDevApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "regional-domains",
+      "public": "public/regional-domains",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "regionalApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "specialty-domains",
+      "public": "public/specialty-domains",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "specialtyApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "vision-coaching-domain",
+      "public": "public/vision-coaching-domain",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "visionCoachApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    
+    // VLS Solutions Integration
+    {
+      "target": "dr-lucy-flight-memory",
+      "public": "public/vls/dr-lucy-flight-memory",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "drLucyApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "dr-burby-s2do-blockchain",
+      "public": "public/vls/dr-burby-s2do-blockchain",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "drBurbyApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "professor-lee-q4d-lenz",
+      "public": "public/vls/professor-lee-q4d-lenz",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "professorLeeApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "dr-sabina-dream-commander",
+      "public": "public/vls/dr-sabina-dream-commander",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "drSabinaApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "dr-memoria-anthology",
+      "public": "public/vls/dr-memoria-anthology",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "drMemoriaApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "dr-match-bid-suite",
+      "public": "public/vls/dr-match-bid-suite",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "drMatchApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "dr-grant-cybersecurity",
+      "public": "public/vls/dr-grant-cybersecurity",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "drGrantApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "dr-cypriot-rewards",
+      "public": "public/vls/dr-cypriot-rewards",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "drCypriotApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "dr-maria-support",
+      "public": "public/vls/dr-maria-support",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "drMariaApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "dr-roark-wish-vision",
+      "public": "public/vls/dr-roark-wish-vision",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "drRoarkApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "dr-claude-orchestrator",
+      "public": "public/vls/dr-claude-orchestrator",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "drClaudeApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "dr-celeste-navigation",
+      "public": "public/vls/dr-celeste-navigation",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "drCelesteApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "dr-atlas-geographic",
+      "public": "public/vls/dr-atlas-geographic",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "drAtlasApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    
+    // Wing Squadron Structure
+    {
+      "target": "squadron-01",
+      "public": "public/wing/squadron-01",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "squadron01Api" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "squadron-02",
+      "public": "public/wing/squadron-02",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "squadron02Api" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "squadron-03",
+      "public": "public/wing/squadron-03",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "squadron03Api" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "squadron-04",
+      "public": "public/wing/squadron-04",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "squadron04Api" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "squadron-05",
+      "public": "public/wing/squadron-05",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "squadron05Api" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "squadron-06",
+      "public": "public/wing/squadron-06",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "squadron06Api" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "ground-crew",
+      "public": "public/wing/ground-crew",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "groundCrewApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "tower-blockchain",
+      "public": "public/wing/tower-blockchain",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "towerBlockchainApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "queen-mint",
+      "public": "public/wing/queen-mint",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "queenMintApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    
+    // Social Integration
+    {
+      "target": "professor-levi",
+      "public": "public/social/levi",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "professorLeviApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    },
+    {
+      "target": "professor-lucinda",
+      "public": "public/social/lucinda",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        { "source": "/api/**", "function": "professorLucindaApi" },
+        { "source": "**", "destination": "/index.html" }
+      ]
+    }
+  ],
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs20",
+    "region": "us-west1"
+  }
+}

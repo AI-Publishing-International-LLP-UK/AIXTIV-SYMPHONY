@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    autopilot.gke.io/resource-adjustment: '{"input":{"containers":[{"limits":{"cpu":"8","memory":"32Gi"},"requests":{"cpu":"8","memory":"32Gi"},"name":"admin-container"}]},"output":{"containers":[{"limits":{"cpu":"8","ephemeral-storage":"1Gi","memory":"32Gi"},"requests":{"cpu":"8","ephemeral-storage":"1Gi","memory":"32Gi"},"name":"admin-container"}]},"modified":true}'
+    autopilot.gke.io/warden-version: 31.23.0-gke.5
+    deployment.kubernetes.io/revision: "2"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"scheduler.alpha.kubernetes.io/critical-pod":""},"name":"force-nodes","namespace":"default"},"spec":{"replicas":5,"selector":{"matchLabels":{"app":"force-nodes"}},"template":{"metadata":{"annotations":{"scheduler.alpha.kubernetes.io/critical-pod":""},"labels":{"app":"force-nodes"}},"spec":{"affinity":{"nodeAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"preference":{"matchExpressions":[{"key":"cloud.google.com/gke-nodepool","operator":"Exists"}]},"weight":100}]}},"containers":[{"image":"gcr.io/google-containers/pause:3.2","name":"admin-container","resources":{"limits":{"cpu":"8","memory":"32Gi"},"requests":{"cpu":"8","memory":"32Gi"}}}],"priorityClassName":"super-high-priority","serviceAccountName":"default","tolerations":[{"effect":"NoSchedule","key":"kubernetes.io/arch","operator":"Equal","value":"amd64"},{"effect":"NoSchedule","operator":"Exists"},{"effect":"NoExecute","operator":"Exists"},{"effect":"NoSchedule","key":"cloud.google.com/gke-preemptible","operator":"Equal","value":"true"}],"topologySpreadConstraints":[{"labelSelector":{"matchLabels":{"app":"force-nodes"}},"maxSkew":1,"topologyKey":"topology.kubernetes.io/zone","whenUnsatisfiable":"DoNotSchedule"}]}}}}
+    scheduler.alpha.kubernetes.io/critical-pod: ""
+  creationTimestamp: "2025-01-22T17:07:10Z"
+  generation: 2
+  name: force-nodes
+  namespace: default
+  resourceVersion: "1748288376300271014"
+  uid: 38cdcfa5-0e4b-4d95-84c6-2891f450adf6
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 5
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: force-nodes
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        autopilot.gke.io/no-connect: "true"
+        scheduler.alpha.kubernetes.io/critical-pod: ""
+      creationTimestamp: null
+      labels:
+        app: force-nodes
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - preference:
+              matchExpressions:
+              - key: cloud.google.com/gke-nodepool
+                operator: Exists
+            weight: 100
+      containers:
+      - image: gcr.io/google-containers/pause:3.2
+        imagePullPolicy: IfNotPresent
+        name: admin-container
+        resources:
+          limits:
+            cpu: "8"
+            ephemeral-storage: 1Gi
+            memory: 32Gi
+          requests:
+            cpu: "8"
+            ephemeral-storage: 1Gi
+            memory: 32Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      priorityClassName: super-high-priority
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: default
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 30
+      tolerations:
+      - effect: NoSchedule
+        key: kubernetes.io/arch
+        operator: Equal
+        value: amd64
+      - effect: NoSchedule
+        operator: Exists
+      - effect: NoExecute
+        operator: Exists
+      - effect: NoSchedule
+        key: cloud.google.com/gke-preemptible
+        operator: Equal
+        value: "true"
+      topologySpreadConstraints:
+      - labelSelector:
+          matchLabels:
+            app: force-nodes
+        maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: ScheduleAnyway
+status:
+  availableReplicas: 5
+  conditions:
+  - lastTransitionTime: "2025-02-04T00:42:02Z"
+    lastUpdateTime: "2025-03-13T12:38:29Z"
+    message: ReplicaSet "force-nodes-67bcbfbd77" has successfully progressed.
+    reason: NewReplicaSetAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2025-05-26T19:39:34Z"
+    lastUpdateTime: "2025-05-26T19:39:34Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  observedGeneration: 2
+  readyReplicas: 5
+  replicas: 5
+  updatedReplicas: 5

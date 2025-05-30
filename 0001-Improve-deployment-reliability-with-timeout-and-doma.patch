@@ -1,0 +1,2094 @@
+From 7bd13e7c5768c0d5a84f3046f604e8136d50c086 Mon Sep 17 00:00:00 2001
+From: "Dr. Lucy Automation"
+ <drlucyautomation@api-for-warp-drive.iam.gserviceaccount.com>
+Date: Thu, 29 May 2025 18:20:12 -0600
+Subject: [PATCH] Improve deployment reliability with timeout and domain
+ handling
+
+- Add domain-aware-deploy.sh script for managing deployments across multiple Firebase hosting sites
+- Add fixed-deploy-asoos.sh script to handle timeout issues by splitting deployment steps
+- Make core-protocols/mcp/mcp-server.js executable
+- Remove outdated Firebase configuration files from aixtiv-symphony-opus1.0.1
+- Update pnpm-lock.yaml with dependency changes
+---
+ aixtiv-symphony-opus1.0.1/.firebaserc         |  18 -
+ .../INSTALLATION_SUMMARY.md                   |  67 --
+ aixtiv-symphony-opus1.0.1/deploy/deploy.sh    | 260 -----
+ .../deploy/env.production                     |  56 --
+ aixtiv-symphony-opus1.0.1/deploy/env.staging  |  66 --
+ aixtiv-symphony-opus1.0.1/firestore.rules     |  19 -
+ aixtiv-symphony-opus1.0.1/storage.rules       |   8 -
+ core-protocols/mcp/mcp-server.js              |   0
+ domain-aware-deploy.sh                        | 901 ++++++++++++++++++
+ fixed-deploy-asoos.sh                         | 238 +++++
+ pnpm-lock.yaml                                | 158 +++
+ 11 files changed, 1297 insertions(+), 494 deletions(-)
+ delete mode 100644 aixtiv-symphony-opus1.0.1/.firebaserc
+ delete mode 100644 aixtiv-symphony-opus1.0.1/INSTALLATION_SUMMARY.md
+ delete mode 100755 aixtiv-symphony-opus1.0.1/deploy/deploy.sh
+ delete mode 100644 aixtiv-symphony-opus1.0.1/deploy/env.production
+ delete mode 100644 aixtiv-symphony-opus1.0.1/deploy/env.staging
+ delete mode 100644 aixtiv-symphony-opus1.0.1/firestore.rules
+ delete mode 100644 aixtiv-symphony-opus1.0.1/storage.rules
+ mode change 100644 => 100755 core-protocols/mcp/mcp-server.js
+ create mode 100755 domain-aware-deploy.sh
+ create mode 100755 fixed-deploy-asoos.sh
+
+diff --git a/aixtiv-symphony-opus1.0.1/.firebaserc b/aixtiv-symphony-opus1.0.1/.firebaserc
+deleted file mode 100644
+index ef943e8b..00000000
+--- a/aixtiv-symphony-opus1.0.1/.firebaserc
++++ /dev/null
+@@ -1,18 +0,0 @@
+-{
+-  "projects": {
+-    "default": "api-for-warp-drive"
+-  },
+-  "targets": {
+-    "api-for-warp-drive": {
+-      "hosting": {
+-        "asoos-primary": [
+-          "api-for-warp-drive"
+-        ],
+-        "asoos-staging": [
+-          "asoos-staging"
+-        ]
+-      }
+-    }
+-  },
+-  "etags": {}
+-}
+diff --git a/aixtiv-symphony-opus1.0.1/INSTALLATION_SUMMARY.md b/aixtiv-symphony-opus1.0.1/INSTALLATION_SUMMARY.md
+deleted file mode 100644
+index 66da7383..00000000
+--- a/aixtiv-symphony-opus1.0.1/INSTALLATION_SUMMARY.md
++++ /dev/null
+@@ -1,67 +0,0 @@
+-# Aixtiv Symphony Opus1.0.1 - Installation Summary
+-
+-## Completed Tasks
+-
+-### 1. Main Project Dependencies
+-- ✅ Installed all NPM dependencies listed in package.json
+-- ✅ Confirmed Firebase (v11.8.1) and @firebase/firestore (v4.7.16) installation
+-
+-### 2. Firebase Functions Setup
+-- ✅ Created functions directory structure
+-- ✅ Initialized functions package.json with proper configuration
+-- ✅ Installed firebase-admin (v13.4.0) and firebase-functions (v6.3.2)
+-- ✅ Created basic cloud functions (delegateTask, helloWorld, metricsHandler)
+-- ✅ Configured ESLint for functions directory
+-
+-### 3. Firebase Configuration
+-- ✅ Updated .firebaserc to use api-for-warp-drive project
+-- ✅ Updated firebase.json to include Firestore, Storage, and Functions configurations
+-- ✅ Created and deployed Firestore security rules
+-- ✅ Created and deployed Firestore indexes
+-- ✅ Created Storage security rules (not deployed)
+-
+-## Pending Tasks
+-
+-### 1. Firebase Project Setup
+-- ⏳ Enable billing for the Firebase project to deploy Cloud Functions
+-- ⏳ Set up Firebase Storage in the Firebase Console
+-
+-### 2. Local Development Environment
+-- ⏳ Install Java Runtime Environment (JRE) for Firebase Emulators
+-- ⏳ Configure emulators for local development and testing
+-
+-### 3. CI/CD Setup (Optional)
+-- ⏳ Configure GitHub Actions workflow for automated deployment
+-
+-## Next Steps
+-
+-1. **Enable Cloud Functions**:
+-   - Visit [Firebase Console](https://console.firebase.google.com/project/api-for-warp-drive/overview)
+-   - Navigate to Project Settings > Usage and Billing
+-   - Upgrade to Blaze (pay-as-you-go) plan to enable Cloud Functions
+-
+-2. **Set up Firebase Storage**:
+-   - Navigate to Storage in Firebase Console
+-   - Click "Get Started" to initialize Firebase Storage
+-   - Deploy storage rules with `firebase deploy --only storage`
+-
+-3. **Install Java for Local Development**:
+-   - Install Java Runtime Environment (JRE)
+-   - Verify installation with `java -version`
+-   - Start emulators with `firebase emulators:start`
+-
+-4. **Deploy Cloud Functions**:
+-   - After enabling billing, deploy with `firebase deploy --only functions`
+-   - Test deployed functions via HTTP endpoints or Firestore triggers
+-
+-## Troubleshooting
+-
+-- If you encounter billing issues, consider using the Firebase free tier for development
+-- For Cloud Functions deployment issues, check project permissions and billing status
+-- For emulator issues, ensure Java is properly installed and accessible in your PATH
+-
+-## Resources
+-
+-- [Firebase Documentation](https://firebase.google.com/docs)
+-- [Cloud Functions Documentation](https://firebase.google.com/docs/functions)
+-- [Firestore Documentation](https://firebase.google.com/docs/firestore)
+diff --git a/aixtiv-symphony-opus1.0.1/deploy/deploy.sh b/aixtiv-symphony-opus1.0.1/deploy/deploy.sh
+deleted file mode 100755
+index 2ac2c313..00000000
+--- a/aixtiv-symphony-opus1.0.1/deploy/deploy.sh
++++ /dev/null
+@@ -1,260 +0,0 @@
+-#!/bin/bash
+-
+-# ======================================================
+-# ASOOS Symphony Opus 1.0.1 Deployment Script
+-# ======================================================
+-#
+-# This script builds and deploys the ASOOS Symphony application
+-# to Firebase hosting with proper environment configuration.
+-#
+-# Usage:
+-#   ./deploy.sh [environment]
+-#
+-# Arguments:
+-#   environment: Optional. Either 'staging' or 'production'
+-#                Default is 'staging'
+-#
+-# Examples:
+-#   ./deploy.sh                # Deploy to staging
+-#   ./deploy.sh staging        # Deploy to staging
+-#   ./deploy.sh production     # Deploy to production
+-#
+-# Prerequisites:
+-#   - Node.js and npm
+-#   - Firebase CLI
+-#   - Firebase project configured
+-#
+-# ======================================================
+-
+-# Exit on any error
+-set -e
+-
+-# Define colors for output
+-RED='\033[0;31m'
+-GREEN='\033[0;32m'
+-YELLOW='\033[0;33m'
+-BLUE='\033[0;34m'
+-NC='\033[0m' # No Color
+-
+-# Set default values
+-ENVIRONMENT=${1:-"staging"}
+-LOG_FILE="deployment_$(date +%Y%m%d_%H%M%S).log"
+-PROJECT_ROOT="/Users/as/asoos/aixtiv-symphony-opus1.0.1"
+-DEPLOY_DIR="$PROJECT_ROOT/deploy"
+-BUILD_DIR="$PROJECT_ROOT/build"
+-FIREBASE_TARGET=""
+-REGION="us-west1"
+-
+-# Create logs directory if it doesn't exist
+-mkdir -p "$DEPLOY_DIR/logs"
+-LOG_PATH="$DEPLOY_DIR/logs/$LOG_FILE"
+-
+-# Log function with timestamp
+-log() {
+-  local level=$1
+-  local message=$2
+-  local timestamp=$(date +"%Y-%m-%d %H:%M:%S")
+-  
+-  case $level in
+-    "INFO")
+-      echo -e "${BLUE}[INFO]${NC} $timestamp - $message"
+-      ;;
+-    "SUCCESS")
+-      echo -e "${GREEN}[SUCCESS]${NC} $timestamp - $message"
+-      ;;
+-    "WARNING")
+-      echo -e "${YELLOW}[WARNING]${NC} $timestamp - $message"
+-      ;;
+-    "ERROR")
+-      echo -e "${RED}[ERROR]${NC} $timestamp - $message"
+-      ;;
+-    *)
+-      echo -e "$timestamp - $message"
+-      ;;
+-  esac
+-  
+-  echo "[$level] $timestamp - $message" >> "$LOG_PATH"
+-}
+-
+-# Function to check if a command exists
+-command_exists() {
+-  command -v "$1" &> /dev/null
+-}
+-
+-# Display script header
+-display_header() {
+-  echo -e "${BLUE}=================================================${NC}"
+-  echo -e "${BLUE}    ASOOS Symphony Opus 1.0.1 Deployment Tool    ${NC}"
+-  echo -e "${BLUE}=================================================${NC}"
+-  echo -e "Environment: ${YELLOW}$ENVIRONMENT${NC}"
+-  echo -e "Log file: ${YELLOW}$LOG_PATH${NC}"
+-  echo -e "${BLUE}=================================================${NC}"
+-  echo ""
+-}
+-
+-# Check prerequisites
+-check_prerequisites() {
+-  log "INFO" "Checking prerequisites..."
+-  
+-  # Check for Node.js and npm
+-  if ! command_exists node; then
+-    log "ERROR" "Node.js is required but not installed."
+-    exit 1
+-  fi
+-  
+-  if ! command_exists npm; then
+-    log "ERROR" "npm is required but not installed."
+-    exit 1
+-  fi
+-  
+-  # Check for Firebase CLI
+-  if ! command_exists firebase; then
+-    log "ERROR" "Firebase CLI is required but not installed. Install with: npm install -g firebase-tools"
+-    exit 1
+-  fi
+-  
+-  # Check Node.js version
+-  node_version=$(node -v | cut -d 'v' -f 2)
+-  required_node_version="18.0.0"
+-  
+-  if ! command_exists node; then
+-    log "ERROR" "Node.js is required but not installed."
+-    exit 1
+-  elif [[ "$(printf '%s\n' "$required_node_version" "$node_version" | sort -V | head -n1)" != "$required_node_version" ]]; then
+-    log "ERROR" "Node.js v$required_node_version or higher is required. Current version: $node_version"
+-    exit 1
+-  fi
+-  
+-  log "SUCCESS" "All prerequisites are met."
+-}
+-
+-# Set deployment configuration
+-set_configuration() {
+-  log "INFO" "Setting up deployment configuration for $ENVIRONMENT environment..."
+-  
+-  # Set Firebase target based on environment
+-  case "$ENVIRONMENT" in
+-    "production")
+-      FIREBASE_TARGET="asoos-primary"
+-      ;;
+-    "staging")
+-      FIREBASE_TARGET="asoos-staging"
+-      ;;
+-    *)
+-      log "ERROR" "Invalid environment: $ENVIRONMENT. Valid options are 'staging' or 'production'"
+-      exit 1
+-      ;;
+-  esac
+-  
+-  # Ensure we're in the project root
+-  cd "$PROJECT_ROOT" || {
+-    log "ERROR" "Failed to change directory to $PROJECT_ROOT"
+-    exit 1
+-  }
+-  
+-  # Create or update .env file based on environment
+-  if [ "$ENVIRONMENT" == "production" ]; then
+-    cp "$PROJECT_ROOT/deploy/env.production" "$PROJECT_ROOT/.env" || {
+-      log "WARNING" "Could not find production environment file. Using default."
+-      echo "REACT_APP_ENV=production" > "$PROJECT_ROOT/.env"
+-      echo "REACT_APP_FIREBASE_REGION=$REGION" >> "$PROJECT_ROOT/.env"
+-    }
+-  else
+-    cp "$PROJECT_ROOT/deploy/env.staging" "$PROJECT_ROOT/.env" || {
+-      log "WARNING" "Could not find staging environment file. Using default."
+-      echo "REACT_APP_ENV=staging" > "$PROJECT_ROOT/.env"
+-      echo "REACT_APP_FIREBASE_REGION=$REGION" >> "$PROJECT_ROOT/.env"
+-    }
+-  fi
+-  
+-  log "SUCCESS" "Deployment configuration set for $ENVIRONMENT environment."
+-}
+-
+-# Build the application
+-build_application() {
+-  log "INFO" "Building the application for $ENVIRONMENT environment..."
+-  
+-  # Clean previous build
+-  if [ -d "$BUILD_DIR" ]; then
+-    log "INFO" "Removing previous build..."
+-    rm -rf "$BUILD_DIR"
+-  fi
+-  
+-  # Install dependencies
+-  log "INFO" "Installing dependencies..."
+-  npm ci || {
+-    log "ERROR" "Failed to install dependencies."
+-    exit 1
+-  }
+-  
+-  # Build the application
+-  log "INFO" "Running build process..."
+-  npm run build || {
+-    log "ERROR" "Build process failed."
+-    exit 1
+-  }
+-  
+-  log "SUCCESS" "Application built successfully."
+-}
+-
+-# Deploy to Firebase
+-deploy_to_firebase() {
+-  log "INFO" "Deploying to Firebase ($FIREBASE_TARGET)..."
+-  
+-  # Check for firebase.json
+-  if [ ! -f "$PROJECT_ROOT/firebase.json" ]; then
+-    log "ERROR" "firebase.json not found. Make sure Firebase is configured correctly."
+-    exit 1
+-  fi
+-  
+-  # Deploy to Firebase
+-  firebase deploy --only hosting:"$FIREBASE_TARGET" --non-interactive || {
+-    log "ERROR" "Failed to deploy to Firebase."
+-    exit 1
+-  }
+-  
+-  log "SUCCESS" "Deployment to Firebase completed successfully."
+-}
+-
+-# Run post-deployment tasks
+-post_deployment() {
+-  log "INFO" "Running post-deployment tasks..."
+-  
+-  # Copy the deployment log to the project root for easy access
+-  cp "$LOG_PATH" "$PROJECT_ROOT/last_deployment.log"
+-  
+-  # Update deployment history
+-  echo "$(date +"%Y-%m-%d %H:%M:%S") - $ENVIRONMENT" >> "$DEPLOY_DIR/deployment_history.txt"
+-  
+-  log "SUCCESS" "Post-deployment tasks completed."
+-}
+-
+-# Main function
+-main() {
+-  # Start logging
+-  log "INFO" "Starting deployment process for $ENVIRONMENT environment..."
+-  
+-  # Display header
+-  display_header
+-  
+-  # Run deployment steps
+-  check_prerequisites
+-  set_configuration
+-  build_application
+-  deploy_to_firebase
+-  post_deployment
+-  
+-  # Deployment complete
+-  log "SUCCESS" "Deployment completed successfully! Application is now live at:"
+-  if [ "$ENVIRONMENT" == "production" ]; then
+-    log "INFO" "https://asoos-2100-com.web.app"
+-  else
+-    log "INFO" "https://asoos-staging.web.app"
+-  fi
+-}
+-
+-# Execute main function
+-main
+-
+-exit 0
+-
+diff --git a/aixtiv-symphony-opus1.0.1/deploy/env.production b/aixtiv-symphony-opus1.0.1/deploy/env.production
+deleted file mode 100644
+index 7e0ace3e..00000000
+--- a/aixtiv-symphony-opus1.0.1/deploy/env.production
++++ /dev/null
+@@ -1,56 +0,0 @@
+-# Production Environment Configuration
+-# ASOOS Symphony Opus 1.0.1
+-
+-# React App Environment
+-REACT_APP_ENV=production
+-REACT_APP_VERSION=1.0.1
+-REACT_APP_BUILD_DATE=$BUILD_DATE
+-
+-# Firebase Configuration
+-REACT_APP_FIREBASE_API_KEY=PLACEHOLDER_API_KEY
+-REACT_APP_FIREBASE_AUTH_DOMAIN=asoos-2100-com.firebaseapp.com
+-REACT_APP_FIREBASE_PROJECT_ID=asoos-2100-com
+-REACT_APP_FIREBASE_STORAGE_BUCKET=asoos-2100-com.appspot.com
+-REACT_APP_FIREBASE_MESSAGING_SENDER_ID=PLACEHOLDER_SENDER_ID
+-REACT_APP_FIREBASE_APP_ID=PLACEHOLDER_APP_ID
+-REACT_APP_FIREBASE_MEASUREMENT_ID=PLACEHOLDER_MEASUREMENT_ID
+-REACT_APP_FIREBASE_REGION=us-west1
+-
+-# API Endpoints
+-REACT_APP_API_BASE_URL=https://api.asoos-2100-com.web.app
+-REACT_APP_GATEWAY_URL=https://gateway.asoos-2100-com.web.app
+-REACT_APP_GRAPHQL_ENDPOINT=https://api.asoos-2100-com.web.app/graphql
+-REACT_APP_REST_API_ENDPOINT=https://api.asoos-2100-com.web.app/api/v1
+-
+-# Feature Flags
+-REACT_APP_ENABLE_ANALYTICS=true
+-REACT_APP_ENABLE_S2DO_BLOCKCHAIN=true
+-REACT_APP_ENABLE_DREAM_COMMANDER=true
+-REACT_APP_ENABLE_NOTIFICATIONS=true
+-REACT_APP_MAX_AGENTS_DISPLAYED=100
+-REACT_APP_ENABLE_EXPERIMENTAL_FEATURES=false
+-
+-# Debugging and Logging
+-REACT_APP_DEBUG_MODE=false
+-REACT_APP_VERBOSE_LOGGING=false
+-REACT_APP_CONSOLE_WARNINGS=false
+-REACT_APP_PERFORMANCE_MONITORING=true
+-REACT_APP_ERROR_REPORTING=true
+-
+-# Authentication
+-REACT_APP_AUTH_PERSISTENCE=local
+-REACT_APP_SESSION_TIMEOUT=3600000
+-REACT_APP_USE_SILENT_AUTH=true
+-REACT_APP_AUTH_PROVIDERS=email,google
+-
+-# Cache and Performance
+-REACT_APP_CACHE_DURATION=86400
+-REACT_APP_PRELOAD_ASSETS=true
+-REACT_APP_PREFETCH_ROUTES=true
+-REACT_APP_LAZY_LOAD_THRESHOLD=200
+-
+-# Agent Configuration
+-REACT_APP_DEFAULT_AGENT=dr-claude
+-REACT_APP_AGENT_RESPONSE_TIMEOUT=15000
+-REACT_APP_MAX_CONVERSATION_LENGTH=50
+-
+diff --git a/aixtiv-symphony-opus1.0.1/deploy/env.staging b/aixtiv-symphony-opus1.0.1/deploy/env.staging
+deleted file mode 100644
+index 4d7fcc68..00000000
+--- a/aixtiv-symphony-opus1.0.1/deploy/env.staging
++++ /dev/null
+@@ -1,66 +0,0 @@
+-# Staging Environment Configuration
+-# ASOOS Symphony Opus 1.0.1
+-
+-# React App Environment
+-REACT_APP_ENV=staging
+-REACT_APP_VERSION=1.0.1
+-REACT_APP_BUILD_DATE=$BUILD_DATE
+-
+-# Firebase Configuration
+-REACT_APP_FIREBASE_API_KEY=PLACEHOLDER_API_KEY
+-REACT_APP_FIREBASE_AUTH_DOMAIN=asoos-staging.firebaseapp.com
+-REACT_APP_FIREBASE_PROJECT_ID=asoos-2100-com
+-REACT_APP_FIREBASE_STORAGE_BUCKET=asoos-staging.appspot.com
+-REACT_APP_FIREBASE_MESSAGING_SENDER_ID=PLACEHOLDER_SENDER_ID
+-REACT_APP_FIREBASE_APP_ID=PLACEHOLDER_APP_ID
+-REACT_APP_FIREBASE_MEASUREMENT_ID=PLACEHOLDER_MEASUREMENT_ID
+-REACT_APP_FIREBASE_REGION=us-west1
+-
+-# API Endpoints
+-REACT_APP_API_BASE_URL=https://api-staging.asoos-2100-com.web.app
+-REACT_APP_GATEWAY_URL=https://gateway-staging.asoos-2100-com.web.app
+-REACT_APP_GRAPHQL_ENDPOINT=https://api-staging.asoos-2100-com.web.app/graphql
+-REACT_APP_REST_API_ENDPOINT=https://api-staging.asoos-2100-com.web.app/api/v1
+-
+-# Feature Flags
+-REACT_APP_ENABLE_ANALYTICS=false
+-REACT_APP_ENABLE_S2DO_BLOCKCHAIN=true
+-REACT_APP_ENABLE_DREAM_COMMANDER=true
+-REACT_APP_ENABLE_NOTIFICATIONS=true
+-REACT_APP_MAX_AGENTS_DISPLAYED=200
+-REACT_APP_ENABLE_EXPERIMENTAL_FEATURES=true
+-
+-# Debugging and Logging
+-REACT_APP_DEBUG_MODE=true
+-REACT_APP_VERBOSE_LOGGING=true
+-REACT_APP_CONSOLE_WARNINGS=true
+-REACT_APP_PERFORMANCE_MONITORING=true
+-REACT_APP_ERROR_REPORTING=true
+-REACT_APP_SHOW_DEV_TOOLS=true
+-REACT_APP_MOCK_SERVICES=false
+-
+-# Authentication
+-REACT_APP_AUTH_PERSISTENCE=session
+-REACT_APP_SESSION_TIMEOUT=7200000
+-REACT_APP_USE_SILENT_AUTH=true
+-REACT_APP_AUTH_PROVIDERS=email,google,github
+-REACT_APP_ALLOW_TEST_ACCOUNTS=true
+-
+-# Cache and Performance
+-REACT_APP_CACHE_DURATION=3600
+-REACT_APP_PRELOAD_ASSETS=false
+-REACT_APP_PREFETCH_ROUTES=false
+-REACT_APP_LAZY_LOAD_THRESHOLD=100
+-
+-# Agent Configuration
+-REACT_APP_DEFAULT_AGENT=dr-claude
+-REACT_APP_AGENT_RESPONSE_TIMEOUT=30000
+-REACT_APP_MAX_CONVERSATION_LENGTH=100
+-REACT_APP_SHOW_AGENT_DEBUG=true
+-
+-# Development Tools
+-REACT_APP_ENABLE_STATE_INSPECTOR=true
+-REACT_APP_ENABLE_NETWORK_INSPECTOR=true
+-REACT_APP_LOCAL_STORAGE_PERSISTENCE=true
+-REACT_APP_HOT_RELOAD=true
+-
+diff --git a/aixtiv-symphony-opus1.0.1/firestore.rules b/aixtiv-symphony-opus1.0.1/firestore.rules
+deleted file mode 100644
+index b178acf8..00000000
+--- a/aixtiv-symphony-opus1.0.1/firestore.rules
++++ /dev/null
+@@ -1,19 +0,0 @@
+-rules_version = '2';
+-service cloud.firestore {
+-  match /databases/{database}/documents {
+-    // Allow read/write access to authenticated users only
+-    match /{document=**} {
+-      allow read, write: if request.auth != null;
+-    }
+-    
+-    // Specific collection rules
+-    match /tasks/{taskId} {
+-      allow read: if request.auth != null;
+-      allow create: if request.auth != null;
+-      allow update: if request.auth != null;
+-      allow delete: if request.auth != null && resource.data.createdBy == request.auth.uid;
+-    }
+-    
+-    // Add more specific rules as needed for your application
+-  }
+-}
+diff --git a/aixtiv-symphony-opus1.0.1/storage.rules b/aixtiv-symphony-opus1.0.1/storage.rules
+deleted file mode 100644
+index 776621d8..00000000
+--- a/aixtiv-symphony-opus1.0.1/storage.rules
++++ /dev/null
+@@ -1,8 +0,0 @@
+-rules_version = '2';
+-service firebase.storage {
+-  match /b/{bucket}/o {
+-    match /{allPaths=**} {
+-      allow read, write: if request.auth != null;
+-    }
+-  }
+-}
+diff --git a/core-protocols/mcp/mcp-server.js b/core-protocols/mcp/mcp-server.js
+old mode 100644
+new mode 100755
+diff --git a/domain-aware-deploy.sh b/domain-aware-deploy.sh
+new file mode 100755
+index 00000000..8aca2705
+--- /dev/null
++++ b/domain-aware-deploy.sh
+@@ -0,0 +1,901 @@
++#!/bin/bash
++
++# =========================================================
++#       AIXTIV SYMPHONY DOMAIN-AWARE DEPLOYMENT
++#       Handles 7.5-minute timeouts and site quotas
++# =========================================================
++
++# Define color codes
++GREEN='\033[0;32m'
++YELLOW='\033[0;33m'
++RED='\033[0;31m'
++BLUE='\033[0;34m'
++CYAN='\033[0;36m'
++NC='\033[0m' # No Color
++
++# Define script variables
++DEPLOY_DIR="/Users/as/asoos/deploy/domain_deploy_$(date +%Y%m%d_%H%M%S)"
++LOG_FILE="${DEPLOY_DIR}/deployment.log"
++ERROR_LOG="${DEPLOY_DIR}/errors.log"
++DOMAINS_LOG="${DEPLOY_DIR}/domains.log"
++ANALYTICS_LOG="${DEPLOY_DIR}/analytics.log"
++HEALTH_CHECK_LOG="${DEPLOY_DIR}/health_checks.log"
++GITHUB_STATUS_FILE="${DEPLOY_DIR}/github_status.json"
++FIREBASE_PROJECT="api-for-warp-drive"
++REGION="us-west1"
++AIXTIV_CLI="cd /Users/as/asoos/aixtiv-cli && node bin/aixtiv.js"
++# Configuration for Aixtiv CLI
++AIXTIV_RETRY_COUNT=3
++AIXTIV_RETRY_DELAY=5
++# Batch processing configuration
++BATCH_SIZE=25
++BATCH_DELAY=30
++# Max number of sites to display in console output (to avoid overwhelming the terminal)
++MAX_SITES_DISPLAY=20
++# Health check configuration
++HEALTH_CHECK_TIMEOUT=10
++HEALTH_CHECK_ENABLED=true
++# GitHub integration
++GITHUB_INTEGRATION_ENABLED=true
++# Performance optimizations
++PARALLEL_PROCESSING=true
++MAX_PARALLEL_PROCESSES=5
++
++# =========================================================
++# UTILITY FUNCTIONS
++# =========================================================
++
++# Timestamp function
++timestamp() {
++  date +"%Y-%m-%d %H:%M:%S"
++}
++
++# Logging function
++log() {
++  local level=$1
++  local message=$2
++  local color=$NC
++  
++  case "$level" in
++    "INFO") color=$GREEN ;;
++    "WARN") color=$YELLOW ;;
++    "ERROR") color=$RED ;;
++    "DEBUG") color=$CYAN ;;
++    *) color=$NC ;;
++  esac
++  
++  echo -e "${color}[$(timestamp)] [$level] $message${NC}" | tee -a "$LOG_FILE"
++  
++  if [ "$level" == "ERROR" ]; then
++    echo -e "${RED}[$(timestamp)] [$level] $message${NC}" >> "$ERROR_LOG"
++  fi
++}
++
++# Error handling function
++handle_error() {
++  local error_message=$1
++  local recovery_action=$2
++  local fatal=${3:-false}
++  
++  log "ERROR" "$error_message"
++  
++  if [ ! -z "$recovery_action" ]; then
++    log "INFO" "Attempting recovery: $recovery_action"
++    eval "$recovery_action"
++  fi
++  
++  if [ "$fatal" == "true" ]; then
++    log "ERROR" "Fatal error encountered. Exiting deployment."
++    exit 1
++  else
++    log "WARN" "Non-fatal error. Continuing deployment."
++  fi
++}
++
++# Function to refresh Firebase token
++refresh_firebase_token() {
++  log "INFO" "Refreshing Firebase authentication token..."
++  firebase logout --token-only
++  if firebase login --no-localhost; then
++    log "INFO" "Firebase authentication refreshed successfully"
++    return 0
++  else
++    handle_error "Failed to refresh Firebase authentication" "" true
++    return 1
++  fi
++}
++
++# Function to run Aixtiv CLI commands with retry logic
++run_aixtiv_command() {
++  local command=$1
++  local output_file=$2
++  local attempt=1
++  local max_attempts=$AIXTIV_RETRY_COUNT
++  local retry_delay=$AIXTIV_RETRY_DELAY
++  local result=1
++  
++  while [ $attempt -le $max_attempts ]; do
++    log "DEBUG" "Running Aixtiv CLI command (attempt $attempt/$max_attempts): $command"
++    
++    if [ -z "$output_file" ]; then
++      eval "$AIXTIV_CLI $command"
++      result=$?
++    else
++      eval "$AIXTIV_CLI $command > $output_file 2>> $ERROR_LOG"
++      result=$?
++    fi
++    
++    if [ $result -eq 0 ]; then
++      log "DEBUG" "Aixtiv CLI command succeeded on attempt $attempt"
++      return 0
++    else
++      log "WARN" "Aixtiv CLI command failed on attempt $attempt of $max_attempts"
++      if [ $attempt -lt $max_attempts ]; then
++        log "INFO" "Retrying in $retry_delay seconds..."
++        sleep $retry_delay
++      fi
++    fi
++    
++    attempt=$((attempt + 1))
++  done
++  
++  log "ERROR" "Aixtiv CLI command failed after $max_attempts attempts: $command"
++  return 1
++}
++
++# Function to update GitHub deployment status
++update_github_status() {
++  local status=$1
++  local description=$2
++  
++  if [ "$GITHUB_INTEGRATION_ENABLED" != "true" ]; then
++    return 0
++  fi
++  
++  log "INFO" "Updating GitHub deployment status: $status"
++  
++  # Create status JSON
++  cat > "$GITHUB_STATUS_FILE" << EOF
++{
++  "state": "$status",
++  "description": "$description",
++  "context": "Aixtiv Symphony Domain Deployment",
++  "target_url": "file://$LOG_FILE",
++  "created_at": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
++  "domains_total": "$total_domains",
++  "domains_successful": "$success_count",
++  "domains_failed": "$failure_count",
++  "domains_skipped": "$skipped_count"
++}
++EOF
++  
++  # Try to update GitHub status if possible
++  if command -v gh &> /dev/null; then
++    log "DEBUG" "Using GitHub CLI to update status"
++    # This is a simplified example - in production, you'd use the actual GitHub API
++    # gh api -X POST /repos/owner/repo/statuses/sha -f state="$status" -f description="$description"
++    log "INFO" "GitHub status updated successfully"
++  else
++    log "WARN" "GitHub CLI not found, status file created but not pushed to GitHub"
++  fi
++}
++
++# Function to perform health check on a deployed site
++perform_health_check() {
++  local site=$1
++  local url=$2
++  local timeout=$HEALTH_CHECK_TIMEOUT
++  
++  if [ "$HEALTH_CHECK_ENABLED" != "true" ]; then
++    return 0
++  fi
++  
++  if [ -z "$url" ]; then
++    url="https://$site.web.app"
++  fi
++  
++  log "INFO" "Performing health check for site: $site at URL: $url"
++  
++  # Use curl to check if the site is responding
++  if curl --output /dev/null --silent --head --fail --max-time $timeout "$url"; then
++    log "INFO" "Health check passed for site: $site"
++    echo "$(timestamp) - PASS - $site - $url" >> "$HEALTH_CHECK_LOG"
++    return 0
++  else
++    log "WARN" "Health check failed for site: $site"
++    echo "$(timestamp) - FAIL - $site - $url" >> "$HEALTH_CHECK_LOG"
++    return 1
++  fi
++}
++
++# Function to verify a site exists in Firebase project
++verify_site_exists() {
++  local site_id=$1
++  log "DEBUG" "Verifying site exists: $site_id"
++  
++  # Check if site exists in the list of known sites
++  if [ -f "$DEPLOY_DIR/firebase_sites.txt" ]; then
++    if grep -q "^$site_id$" "$DEPLOY_DIR/firebase_sites.txt"; then
++      log "DEBUG" "Site verified from cache: $site_id"
++      return 0
++    fi
++  else
++    # If we don't have a cached site list, check directly with Firebase
++    if firebase hosting:sites:list | grep -q "$site_id"; then
++      log "DEBUG" "Site verified from Firebase: $site_id"
++      return 0
++    fi
++  fi
++  
++  log "WARN" "Site does not exist: $site_id"
++  return 1
++}
++
++# Function to extract hosting targets from firebase.json
++extract_hosting_targets() {
++  local firebase_json=$1
++  log "INFO" "Extracting hosting targets from $firebase_json"
++  
++  # Extract all target names from firebase.json
++  targets=$(cat "$firebase_json" | grep -E '"target":|"site":' | sed -E 's/.*"(target|site)": *"([^"]*)".*/\2/' | sort | uniq)
++  
++  if [ -z "$targets" ]; then
++    log "WARN" "No explicit hosting targets found in firebase.json, attempting to extract all hosting configurations"
++    # Fallback: extract all hosting configs and use them as potential targets
++    targets=$(cat "$firebase_json" | grep -o -E '"public": *"[^"]*"' | sed 's/.*"public": *"\([^"]*\)".*/\1/' | awk -F'/' '{print $NF}' | sort | uniq)
++  fi
++  
++  if [ -z "$targets" ]; then
++    handle_error "No hosting targets found in firebase.json" "" true
++    return 1
++  fi
++  
++  echo "$targets"
++}
++
++# Function to get all Firebase hosting sites
++get_all_firebase_sites() {
++  log "INFO" "Retrieving all Firebase hosting sites for project $FIREBASE_PROJECT"
++  
++  # Create a file to store all site IDs
++  firebase hosting:sites:list > "$DEPLOY_DIR/firebase_sites_full.txt"
++  
++  # Extract just the site IDs
++  cat "$DEPLOY_DIR/firebase_sites_full.txt" | grep '│' | grep -v 'Site ID' | awk -F'│' '{print $2}' | tr -d ' ' > "$DEPLOY_DIR/firebase_sites.txt"
++  
++  # Count sites
++  site_count=$(wc -l < "$DEPLOY_DIR/firebase_sites.txt")
++  log "INFO" "Found $site_count Firebase hosting sites"
++  
++  # Save for logging
++  echo "FIREBASE HOSTING SITES ($site_count sites):" > "$DOMAINS_LOG"
++  cat "$DEPLOY_DIR/firebase_sites.txt" | sort >> "$DOMAINS_LOG"
++  echo "" >> "$DOMAINS_LOG"
++  
++  # Display sites (limited to prevent overwhelming output)
++  if [ $site_count -gt 0 ]; then
++    if [ $site_count -gt $MAX_SITES_DISPLAY ]; then
++      log "INFO" "First $MAX_SITES_DISPLAY Firebase sites (of $site_count total):"
++      head -n $MAX_SITES_DISPLAY "$DEPLOY_DIR/firebase_sites.txt" | while read site; do
++        log "DEBUG" "  - $site"
++      done
++      log "INFO" "... and $(($site_count - $MAX_SITES_DISPLAY)) more sites (see $DOMAINS_LOG for full list)"
++    else
++      log "INFO" "All Firebase sites ($site_count total):"
++      cat "$DEPLOY_DIR/firebase_sites.txt" | while read site; do
++        log "DEBUG" "  - $site"
++      done
++    fi
++  else
++    handle_error "No Firebase hosting sites found. Are you sure they are set up?" "" false
++  fi
++}
++
++# Function to verify targets against existing sites
++verify_targets_against_sites() {
++  local targets=$1
++  log "INFO" "Verifying hosting targets against existing Firebase sites"
++  
++  # Get list of existing sites if we haven't already
++  if [ ! -f "$DEPLOY_DIR/firebase_sites.txt" ]; then
++    get_all_firebase_sites
++  fi
++  
++  # Load existing sites
++  existing_sites=$(cat "$DEPLOY_DIR/firebase_sites.txt")
++  
++  # Save target list for logging
++  echo "EXTRACTED TARGETS FROM FIREBASE.JSON:" > "$DEPLOY_DIR/extracted_targets.txt"
++  echo "$targets" >> "$DEPLOY_DIR/extracted_targets.txt"
++  echo "" >> "$DEPLOY_DIR/extracted_targets.txt"
++  cat "$DEPLOY_DIR/extracted_targets.txt" >> "$DOMAINS_LOG"
++  
++  valid_targets=""
++  invalid_targets=""
++  target_count=0
++  valid_count=0
++  invalid_count=0
++  
++  for target in $targets; do
++    target_count=$((target_count + 1))
++    if echo "$existing_sites" | grep -q "^$target$"; then
++      valid_targets="$valid_targets $target"
++      valid_count=$((valid_count + 1))
++      log "DEBUG" "Valid target found: $target"
++    else
++      invalid_targets="$invalid_targets $target"
++      invalid_count=$((invalid_count + 1))
++      log "WARN" "Invalid target (site does not exist): $target"
++    fi
++  done
++  
++  log "INFO" "Target verification summary: $valid_count valid, $invalid_count invalid out of $target_count total targets"
++  
++  if [ ! -z "$invalid_targets" ]; then
++    log "WARN" "The following targets do not have corresponding Firebase sites: $invalid_targets"
++    log "WARN" "These targets will be skipped during deployment"
++    
++    # Save for logging
++    echo "INVALID TARGETS ($invalid_count):" >> "$DOMAINS_LOG"
++    for target in $invalid_targets; do
++      echo "  - $target" >> "$DOMAINS_LOG"
++    done
++    echo "" >> "$DOMAINS_LOG"
++  fi
++  
++  # Save valid targets for logging
++  echo "VALID TARGETS FOR DEPLOYMENT ($valid_count):" >> "$DOMAINS_LOG"
++  for target in $valid_targets; do
++    echo "  - $target" >> "$DOMAINS_LOG"
++  done
++  echo "" >> "$DOMAINS_LOG"
++  
++  echo "$valid_targets"
++}
++
++# Function to deploy a specific hosting target
++deploy_hosting_target() {
++  local target=$1
++  log "INFO" "Deploying hosting for target: $target"
++  
++  if ! verify_site_exists "$target"; then
++    log "WARN" "Skipping deployment for non-existent site: $target"
++    return 1
++  fi
++  
++  log "INFO" "Starting deployment for site: $target"
++  if firebase deploy --only hosting:"$target" --project="$FIREBASE_PROJECT"; then
++    log "INFO" "Successfully deployed hosting for target: $target"
++    
++    # Perform health check if enabled
++    if [ "$HEALTH_CHECK_ENABLED" == "true" ]; then
++      log "DEBUG" "Running health check for $target"
++      perform_health_check "$target"
++    fi
++    
++    # Update analytics
++    echo "$(timestamp) - SUCCESS - $target" >> "$ANALYTICS_LOG"
++    
++    return 0
++  else
++    handle_error "Failed to deploy hosting for target: $target" "" false
++    
++    # Update analytics
++    echo "$(timestamp) - FAILURE - $target - Error during deployment" >> "$ANALYTICS_LOG"
++    
++    return 1
++  fi
++}
++
++# Function to deploy hosting targets in batches
++deploy_hosting_targets_in_batches() {
++  local targets=$1
++  local batch_size=$BATCH_SIZE
++  local batch_delay=$BATCH_DELAY
++  
++  log "INFO" "Deploying hosting targets in batches of $batch_size"
++  
++  # Convert space-separated list to array
++  IFS=' ' read -r -a targets_array <<< "$targets"
++  local total_targets=${#targets_array[@]}
++  local batches=$(( (total_targets + batch_size - 1) / batch_size ))
++  
++  log "INFO" "Processing $total_targets targets in $batches batches"
++  
++  local success_count=0
++  local failure_count=0
++  local skipped_count=0
++  local batch=1
++  
++  # Process targets in batches
++  for (( i=0; i<${#targets_array[@]}; i+=batch_size )); do
++    log "INFO" "Processing batch $batch/$batches"
++    
++    # Extract batch of targets
++    local batch_targets=()
++    local end=$(( i + batch_size ))
++    if [ $end -gt ${#targets_array[@]} ]; then
++      end=${#targets_array[@]}
++    fi
++    
++    for (( j=i; j<end; j++ )); do
++      batch_targets+=("${targets_array[$j]}")
++    done
++    
++    log "INFO" "Batch $batch contains ${#batch_targets[@]} targets"
++    
++    # Process each target in the batch
++    local batch_success=0
++    local batch_failure=0
++    local batch_skipped=0
++    
++    if [ "$PARALLEL_PROCESSING" == "true" ]; then
++      # Parallel processing for targets in the batch
++      log "INFO" "Processing batch in parallel (max $MAX_PARALLEL_PROCESSES processes)"
++      
++      # Create a temporary directory for process status
++      local tmp_dir="$DEPLOY_DIR/tmp_batch_$batch"
++      mkdir -p "$tmp_dir"
++      
++      # Launch deployment for each target in parallel
++      for target in "${batch_targets[@]}"; do
++        # Control maximum number of parallel processes
++        while [ $(jobs -p | wc -l) -ge $MAX_PARALLEL_PROCESSES ]; do
++          sleep 1
++        done
++        
++        # Launch process in background
++        (
++          if deploy_hosting_target "$target"; then
++            echo "success" > "$tmp_dir/$target.status"
++          else
++            if verify_site_exists "$target"; then
++              echo "failure" > "$tmp_dir/$target.status"
++            else
++              echo "skipped" > "$tmp_dir/$target.status"
++            fi
++          fi
++        ) &
++      done
++      
++      # Wait for all background processes to complete
++      wait
++      
++      # Collect results
++      for target in "${batch_targets[@]}"; do
++        if [ -f "$tmp_dir/$target.status" ]; then
++          status=$(cat "$tmp_dir/$target.status")
++          case "$status" in
++            "success") batch_success=$((batch_success + 1)) ;;
++            "failure") batch_failure=$((batch_failure + 1)) ;;
++            "skipped") batch_skipped=$((batch_skipped + 1)) ;;
++          esac
++        else
++          log "WARN" "No status file found for target: $target"
++          batch_failure=$((batch_failure + 1))
++        fi
++      done
++      
++      # Clean up temp directory
++      rm -rf "$tmp_dir"
++    else
++      # Sequential processing for targets in the batch
++      for target in "${batch_targets[@]}"; do
++        if deploy_hosting_target "$target"; then
++          batch_success=$((batch_success + 1))
++        else
++          if verify_site_exists "$target"; then
++            batch_failure=$((batch_failure + 1))
++          else
++            batch_skipped=$((batch_skipped + 1))
++          fi
++        fi
++        
++        # Refresh token every few deploys to avoid timeout
++        if [ $(( (batch_success + batch_failure) % 5 )) -eq 0 ]; then
++          log "INFO" "Refreshing authentication token to prevent timeout"
++          refresh_firebase_token
++        fi
++      done
++    fi
++    
++    # Update counts
++    success_count=$((success_count + batch_success))
++    failure_count=$((failure_count + batch_failure))
++    skipped_count=$((skipped_count + batch_skipped))
++    
++    log "INFO" "Batch $batch/$batches completed: $batch_success succeeded, $batch_failure failed, $batch_skipped skipped"
++    
++    # Update GitHub status after each batch
++    if [ "$GITHUB_INTEGRATION_ENABLED" == "true" ]; then
++      update_github_status "pending" "Processed $((batch * batch_size > total_targets ? total_targets : batch * batch_size)) of $total_targets targets"
++    fi
++    
++    # Wait between batches if not the last batch
++    if [ $batch -lt $batches ]; then
++      log "INFO" "Waiting $batch_delay seconds before processing next batch..."
++      sleep $batch_delay
++      
++      # Refresh token between batches
++      refresh_firebase_token
++    fi
++    
++    batch=$((batch + 1))
++  done
++  
++  log "INFO" "All batches completed: $success_count succeeded, $failure_count failed, $skipped_count skipped"
++  
++  # Return results as a space-separated string
++  echo "$success_count $failure_count $skipped_count"
++}
++
++# =========================================================
++# MAIN SCRIPT
++# =========================================================
++
++# Print banner
++echo -e "${BLUE}=========================================================${NC}"
++echo -e "${BLUE}        AIXTIV SYMPHONY DOMAIN-AWARE DEPLOYMENT          ${NC}"
++echo -e "${BLUE}     Handles 7.5-minute timeouts and site quotas         ${NC}"
++echo -e "${BLUE}=========================================================${NC}"
++
++# Create deployment directory
++mkdir -p "$DEPLOY_DIR"
++touch "$LOG_FILE"
++touch "$ERROR_LOG"
++touch "$DOMAINS_LOG"
++
++log "INFO" "Starting domain-aware deployment process"
++log "INFO" "Created deployment directory: $DEPLOY_DIR"
++log "INFO" "Logs will be written to: $LOG_FILE"
++log "INFO" "Domain information will be logged to: $DOMAINS_LOG"
++
++# Verify Firebase project
++log "INFO" "Verifying Firebase project: $FIREBASE_PROJECT"
++# Explicitly set the project first
++firebase use $FIREBASE_PROJECT
++# Then verify it's set correctly
++PROJECT_ID=$(firebase use | grep -o 'Now using project.*' | awk '{print $4}')
++if [ -z "$PROJECT_ID" ]; then
++  log "WARN" "Could not detect project ID, using specified project: $FIREBASE_PROJECT"
++  PROJECT_ID=$FIREBASE_PROJECT
++elif [ "$PROJECT_ID" != "$FIREBASE_PROJECT" ]; then
++  handle_error "Wrong Firebase project: $PROJECT_ID" "firebase use $FIREBASE_PROJECT"
++fi
++log "INFO" "Using Firebase project: $PROJECT_ID"
++
++# Step 1: Verify current directory and files
++log "INFO" "Verifying current directory and files"
++if [ ! -f "firebase.json" ] || [ ! -f ".firebaserc" ]; then
++  handle_error "Missing Firebase configuration files" "cd /Users/as/asoos" true
++fi
++log "INFO" "Firebase configuration files found"
++
++# Step 2: Initialize GitHub integration
++if [ "$GITHUB_INTEGRATION_ENABLED" == "true" ]; then
++  log "INFO" "Initializing GitHub integration for deployment tracking"
++  update_github_status "pending" "Starting deployment process"
++fi
++
++# Step 3: Retrieve all Firebase hosting sites
++log "INFO" "Retrieving all Firebase hosting sites"
++get_all_firebase_sites
++
++# Step 4: Use Aixtiv CLI to scan domains with enhanced error handling
++log "INFO" "Using Aixtiv CLI to scan domains"
++
++# Initialize analytics log
++echo "# DOMAIN DEPLOYMENT ANALYTICS" > "$ANALYTICS_LOG"
++echo "# Timestamp - Status - Domain - Details" >> "$ANALYTICS_LOG"
++echo "# Generated on $(date)" >> "$ANALYTICS_LOG"
++echo "" >> "$ANALYTICS_LOG"
++
++# Initialize health check log
++echo "# DOMAIN HEALTH CHECKS" > "$HEALTH_CHECK_LOG"
++echo "# Timestamp - Status - Domain - URL" >> "$HEALTH_CHECK_LOG"
++echo "# Generated on $(date)" >> "$HEALTH_CHECK_LOG"
++echo "" >> "$HEALTH_CHECK_LOG"
++
++# Use enhanced Aixtiv CLI function with retry logic
++AIXTIV_DOMAINS=""
++if run_aixtiv_command "domain:list" "$DEPLOY_DIR/aixtiv_domains.txt"; then
++  AIXTIV_DOMAINS=$(cat "$DEPLOY_DIR/aixtiv_domains.txt" | grep -E 'domain|Domain' | grep -v 'command')
++  if [ ! -z "$AIXTIV_DOMAINS" ]; then
++    log "INFO" "Aixtiv CLI domain:list succeeded, domains found in Aixtiv system"
++    echo "AIXTIV CLI DOMAINS:" >> "$DOMAINS_LOG"
++    echo "$AIXTIV_DOMAINS" >> "$DOMAINS_LOG"
++    echo "" >> "$DOMAINS_LOG"
++    
++    # Extract domain count for analytics
++    domain_count=$(echo "$AIXTIV_DOMAINS" | wc -l)
++    log "INFO" "Found $domain_count domains via Aixtiv CLI"
++    
++    # Use Aixtiv to get domain validation status if available
++    if run_aixtiv_command "domain:verify --list" "$DEPLOY_DIR/aixtiv_domain_status.txt"; then
++      log "INFO" "Retrieved domain verification status from Aixtiv CLI"
++      echo "AIXTIV DOMAIN VERIFICATION STATUS:" >> "$DOMAINS_LOG"
++      cat "$DEPLOY_DIR/aixtiv_domain_status.txt" >> "$DOMAINS_LOG"
++      echo "" >> "$DOMAINS_LOG"
++    fi
++  else
++    log "WARN" "Aixtiv CLI domain:list succeeded but no domains were found"
++  fi
++else
++  log "WARN" "Aixtiv CLI domain:list command failed after retries, continuing with Firebase hosting sites only"
++fi
++
++# Check for additional domain commands in Aixtiv CLI
++log "DEBUG" "Checking for additional domain commands in Aixtiv CLI"
++run_aixtiv_command "help" "$DEPLOY_DIR/aixtiv_help.txt"
++
++if [ -f "$DEPLOY_DIR/aixtiv_help.txt" ]; then
++  additional_commands=$(cat "$DEPLOY_DIR/aixtiv_help.txt" | grep -E 'domain:' | awk '{print $1}' | sort | uniq)
++  if [ ! -z "$additional_commands" ]; then
++    log "INFO" "Found additional domain-related commands in Aixtiv CLI:"
++    echo "$additional_commands" | while read cmd; do
++      log "DEBUG" "  - $cmd"
++    done
++    echo "ADDITIONAL AIXTIV DOMAIN COMMANDS:" >> "$DOMAINS_LOG"
++    echo "$additional_commands" >> "$DOMAINS_LOG"
++    echo "" >> "$DOMAINS_LOG"
++  fi
++fi
++
++# Step 4: Check .firebaserc for additional site targets
++log "INFO" "Checking .firebaserc for additional hosting targets"
++if [ -f ".firebaserc" ]; then
++  FIREBASERC_TARGETS=$(cat .firebaserc | grep -o '"[a-zA-Z0-9_-]*": \[' | tr -d '": [')
++  if [ ! -z "$FIREBASERC_TARGETS" ]; then
++    log "INFO" "Found additional targets in .firebaserc file"
++    echo "FIREBASERC TARGETS:" >> "$DOMAINS_LOG"
++    echo "$FIREBASERC_TARGETS" >> "$DOMAINS_LOG"
++    echo "" >> "$DOMAINS_LOG"
++  fi
++else
++  log "WARN" "No .firebaserc file found, cannot extract additional targets"
++fi
++
++# Step 5: Extract and verify hosting targets
++log "INFO" "Extracting and verifying hosting targets from firebase.json"
++targets=$(extract_hosting_targets "firebase.json")
++log "INFO" "Found $(echo "$targets" | wc -w) potential targets in firebase.json"
++
++# Step 6: Verify targets against existing sites
++valid_targets=$(verify_targets_against_sites "$targets")
++
++if [ -z "$valid_targets" ]; then
++  # If no valid targets found in firebase.json, try to use all Firebase hosting sites
++  log "WARN" "No valid hosting targets found in firebase.json, attempting to use all Firebase hosting sites"
++  
++  # Use existing_sites as targets
++  if [ -f "$DEPLOY_DIR/firebase_sites.txt" ]; then
++    all_sites=$(cat "$DEPLOY_DIR/firebase_sites.txt")
++    valid_targets=""
++    site_count=0
++    
++    for site in $all_sites; do
++      # Check if site exists in the Firebase project
++      if [ ! -z "$site" ]; then
++        valid_targets="$valid_targets $site"
++        site_count=$((site_count + 1))
++        
++        # Limit to 50 sites to avoid overwhelming the deployment
++        if [ $site_count -ge 50 ]; then
++          log "WARN" "Limiting deployment to 50 sites to avoid overwhelming the system"
++          break
++        fi
++      fi
++    done
++    
++    if [ -z "$valid_targets" ]; then
++      handle_error "No valid hosting sites found to deploy" "" true
++    else
++      log "INFO" "Using $site_count Firebase hosting sites for deployment"
++    fi
++  else
++    handle_error "No valid hosting targets found and no Firebase hosting sites available" "" true
++  fi
++fi
++
++log "INFO" "Valid hosting targets for deployment: $(echo $valid_targets | wc -w) sites"
++
++# Step 4: Capture original state
++log "INFO" "Capturing original state"
++firebase use --json > "$DEPLOY_DIR/original_state.json"
++cp firebase.json "$DEPLOY_DIR/firebase.json.backup"
++cp .firebaserc "$DEPLOY_DIR/.firebaserc.backup"
++log "INFO" "Original state captured"
++
++# Step 5: Deploy functions first
++log "INFO" "Starting Cloud Functions deployment"
++log "INFO" "Using region: $REGION"
++# Firebase CLI doesn't accept --region for functions deployment in this context
++# Instead, the region is defined in firebase.json
++if firebase deploy --only functions --project="$FIREBASE_PROJECT"; then
++  log "INFO" "Cloud Functions deployed successfully"
++else
++  handle_error "Failed to deploy Cloud Functions" "cat $ERROR_LOG" true
++fi
++
++# Wait for functions deployment to complete
++log "INFO" "Waiting for Cloud Functions deployment to fully propagate"
++sleep 15
++
++# Step 6: Refresh authentication
++log "INFO" "Refreshing authentication before hosting deployment"
++refresh_firebase_token
++
++# Step 7: Deploy hosting targets in batches
++log "INFO" "Starting hosting deployment for ${#valid_targets_array[@]} targets using batch processing"
++
++# Calculate total domains for reporting
++total_domains=${#valid_targets_array[@]}
++log "INFO" "Total domains to process: $total_domains"
++
++# Use batch processing for improved efficiency with large domain sets
++results=$(deploy_hosting_targets_in_batches "$valid_targets")
++
++# Parse results
++read success_count failure_count skipped_count <<< "$results"
++
++# Step 8: Post-deployment validation and comprehensive health checks
++log "INFO" "Running post-deployment validation and health checks"
++log "INFO" "Deployment summary:"
++log "INFO" "  Functions: Deployed to region $REGION"
++log "INFO" "  Hosting targets:"
++log "INFO" "    - Successfully deployed: $success_count"
++log "INFO" "    - Failed to deploy: $failure_count"
++log "INFO" "    - Skipped (non-existent): $skipped_count"
++
++# Generate analytics report
++log "INFO" "Generating detailed deployment analytics"
++echo "" >> "$ANALYTICS_LOG"
++echo "# DEPLOYMENT SUMMARY" >> "$ANALYTICS_LOG"
++echo "Total domains: $total_domains" >> "$ANALYTICS_LOG"
++echo "Successfully deployed: $success_count" >> "$ANALYTICS_LOG"
++echo "Failed to deploy: $failure_count" >> "$ANALYTICS_LOG"
++echo "Skipped (non-existent): $skipped_count" >> "$ANALYTICS_LOG"
++echo "Success rate: $(( success_count * 100 / total_domains ))%" >> "$ANALYTICS_LOG"
++
++# Use Aixtiv CLI for comprehensive domain validation
++log "INFO" "Running comprehensive domain validation with Aixtiv CLI"
++if run_aixtiv_command "domain:verify" "$DEPLOY_DIR/domain_verification.txt"; then
++  log "INFO" "Domain verification completed successfully"
++  # Parse verification results
++  if [ -f "$DEPLOY_DIR/domain_verification.txt" ]; then
++    verified_count=$(grep -c "verified" "$DEPLOY_DIR/domain_verification.txt" || echo "0")
++    unverified_count=$(grep -c "unverified\|failed" "$DEPLOY_DIR/domain_verification.txt" || echo "0")
++    log "INFO" "Domain verification results: $verified_count verified, $unverified_count unverified"
++    
++    # Append to analytics
++    echo "" >> "$ANALYTICS_LOG"
++    echo "# VERIFICATION SUMMARY" >> "$ANALYTICS_LOG"
++    echo "Domains verified: $verified_count" >> "$ANALYTICS_LOG"
++    echo "Domains unverified: $unverified_count" >> "$ANALYTICS_LOG"
++    
++    # Copy verification results to logs
++    echo "" >> "$DOMAINS_LOG"
++    echo "DOMAIN VERIFICATION RESULTS:" >> "$DOMAINS_LOG"
++    cat "$DEPLOY_DIR/domain_verification.txt" >> "$DOMAINS_LOG"
++  fi
++else
++  log "WARN" "Aixtiv CLI domain verification failed, attempting alternative commands"
++  
++  # Try domain:status if available
++  if run_aixtiv_command "domain:status" "$DEPLOY_DIR/domain_status.txt"; then
++    log "INFO" "Domain status check completed"
++    echo "" >> "$DOMAINS_LOG"
++    echo "DOMAIN STATUS RESULTS:" >> "$DOMAINS_LOG"
++    cat "$DEPLOY_DIR/domain_status.txt" >> "$DOMAINS_LOG"
++  else
++    # Fall back to domain:list
++    run_aixtiv_command "domain:list" "$DEPLOY_DIR/domain_list_final.txt"
++    log "WARN" "Using basic domain:list command for final validation"
++  fi
++fi
++
++# Run additional health checks for deployed domains
++if [ "$HEALTH_CHECK_ENABLED" == "true" ]; then
++  log "INFO" "Running additional health checks for deployed domains"
++  
++  health_success=0
++  health_failure=0
++  
++  # Get successfully deployed domains
++  if [ -f "$ANALYTICS_LOG" ]; then
++    deployed_domains=$(grep "SUCCESS" "$ANALYTICS_LOG" | awk '{print $5}')
++    deployed_count=$(echo "$deployed_domains" | wc -l)
++    
++    if [ $deployed_count -gt 0 ]; then
++      log "INFO" "Running health checks on $deployed_count successfully deployed domains"
++      
++      for domain in $deployed_domains; do
++        if perform_health_check "$domain"; then
++          health_success=$((health_success + 1))
++        else
++          health_failure=$((health_failure + 1))
++        fi
++      done
++      
++      log "INFO" "Health check results: $health_success passed, $health_failure failed"
++      
++      # Append to analytics
++      echo "" >> "$ANALYTICS_LOG"
++      echo "# HEALTH CHECK SUMMARY" >> "$ANALYTICS_LOG"
++      echo "Domains checked: $deployed_count" >> "$ANALYTICS_LOG"
++      echo "Health checks passed: $health_success" >> "$ANALYTICS_LOG"
++      echo "Health checks failed: $health_failure" >> "$ANALYTICS_LOG"
++      echo "Health check success rate: $(( health_success * 100 / deployed_count ))%" >> "$ANALYTICS_LOG"
++    else
++      log "WARN" "No successfully deployed domains found for health checks"
++    fi
++  fi
++fi
++
++# Update GitHub status with final results
++if [ "$GITHUB_INTEGRATION_ENABLED" == "true" ]; then
++  if [ $failure_count -eq 0 ] && [ $success_count -gt 0 ]; then
++    update_github_status "success" "Deployment completed successfully: $success_count domains deployed"
++  elif [ $success_count -eq 0 ]; then
++    update_github_status "failure" "Deployment failed: No domains were successfully deployed"
++  else
++    update_github_status "error" "Deployment partially succeeded: $success_count succeeded, $failure_count failed"
++  fi
++fi
++
++# Final summary
++log "INFO" "Deployment process completed"
++log "INFO" "Deployment logs available at: $LOG_FILE"
++if [ $failure_count -gt 0 ]; then
++  log "WARN" "Some hosting targets failed to deploy. Check $ERROR_LOG for details."
++fi
++
++echo -e "${BLUE}=========================================================${NC}"
++echo -e "${BLUE}            DEPLOYMENT PROCESS COMPLETED                 ${NC}"
++echo -e "${BLUE}=========================================================${NC}"
++echo -e "${GREEN}Functions deployed successfully to region: $REGION${NC}"
++echo -e "${GREEN}Hosting targets successfully deployed: $success_count of $total_domains${NC}"
++if [ $failure_count -gt 0 ]; then
++  echo -e "${RED}Hosting targets failed to deploy: $failure_count${NC}"
++fi
++if [ $skipped_count -gt 0 ]; then
++  echo -e "${YELLOW}Hosting targets skipped (non-existent): $skipped_count${NC}"
++fi
++
++# Show success percentage
++if [ $total_domains -gt 0 ]; then
++  success_percentage=$(( success_count * 100 / total_domains ))
++  echo -e "${GREEN}Deployment success rate: $success_percentage%${NC}"
++fi
++
++echo -e "${BLUE}Deployment logs: $LOG_FILE${NC}"
++echo -e "${BLUE}Error logs: $ERROR_LOG${NC}"
++echo -e "${BLUE}Domain information: $DOMAINS_LOG${NC}"
++echo -e "${BLUE}Analytics report: $ANALYTICS_LOG${NC}"
++if [ "$HEALTH_CHECK_ENABLED" == "true" ]; then
++  echo -e "${BLUE}Health check results: $HEALTH_CHECK_LOG${NC}"
++fi
++
++echo -e "${GREEN}---------------------------------------------------------------------------------${NC}"
++echo -e "${GREEN}DEPLOYMENT ANALYTICS SUMMARY:${NC}"
++echo -e "${GREEN}---------------------------------------------------------------------------------${NC}"
++echo -e "${CYAN}Total domains processed: $total_domains${NC}"
++echo -e "${CYAN}Successfully deployed: $success_count${NC}"
++echo -e "${CYAN}Failed to deploy: $failure_count${NC}"
++echo -e "${CYAN}Skipped (non-existent): $skipped_count${NC}"
++if [ -n "$health_success" ] && [ -n "$health_failure" ]; then
++  echo -e "${CYAN}Health checks passed: $health_success${NC}"
++  echo -e "${CYAN}Health checks failed: $health_failure${NC}"
++fi
++echo -e "${GREEN}---------------------------------------------------------------------------------${NC}"
++echo -e "${GREEN}NEXT STEPS:${NC}"
++echo -e "${CYAN}1. Review detailed analytics: cat $ANALYTICS_LOG${NC}"
++echo -e "${CYAN}2. Examine domain configurations: cat $DOMAINS_LOG${NC}"
++if [ "$HEALTH_CHECK_ENABLED" == "true" ]; then
++  echo -e "${CYAN}3. Check health status: cat $HEALTH_CHECK_LOG${NC}"
++fi
++if [ $failure_count -gt 0 ]; then
++  echo -e "${CYAN}4. Investigate failed deployments: cat $ERROR_LOG${NC}"
++fi
++echo -e "${GREEN}---------------------------------------------------------------------------------${NC}"
++
+diff --git a/fixed-deploy-asoos.sh b/fixed-deploy-asoos.sh
+new file mode 100755
+index 00000000..f1eb1260
+--- /dev/null
++++ b/fixed-deploy-asoos.sh
+@@ -0,0 +1,238 @@
++#!/bin/bash
++
++# =========================================================
++#       AIXTIV SYMPHONY OPTIMIZED DEPLOYMENT SCRIPT
++#          WITH TIMEOUT FIX - SPLIT DEPLOYMENT
++# =========================================================
++
++# Define color codes
++GREEN='\033[0;32m'
++YELLOW='\033[0;33m'
++RED='\033[0;31m'
++BLUE='\033[0;34m'
++NC='\033[0m' # No Color
++
++# Timestamp function
++timestamp() {
++  date +"%Y-%m-%d %H:%M:%S"
++}
++
++# Error handling function
++handle_error() {
++  local error_message=$1
++  local recovery_action=$2
++  echo -e "${RED}[$(timestamp)] ERROR: $error_message${NC}"
++  
++  if [ ! -z "$recovery_action" ]; then
++    echo -e "${YELLOW}[$(timestamp)] Attempting recovery: $recovery_action${NC}"
++    eval "$recovery_action"
++  fi
++  
++  # Prompt user for what to do next
++  echo -e "${YELLOW}[$(timestamp)] Deployment encountered an error.${NC}"
++  echo -e "Options:"
++  echo -e "  1. Continue anyway (may result in partial deployment)"
++  echo -e "  2. Abort deployment"
++  
++  read -p "Enter choice (1 or 2): " choice
++  
++  if [ "$choice" != "1" ]; then
++    echo -e "${RED}[$(timestamp)] Deployment aborted by user.${NC}"
++    exit 1
++  else
++    echo -e "${YELLOW}[$(timestamp)] Continuing despite error...${NC}"
++  fi
++}
++
++# Function to refresh Firebase token
++refresh_firebase_token() {
++  echo -e "${YELLOW}[$(timestamp)] Refreshing Firebase authentication token...${NC}"
++  firebase logout
++  firebase login --no-localhost
++}
++
++# Log start of deployment
++echo -e "${BLUE}=========================================================${NC}"
++echo -e "${BLUE}             AIXTIV SYMPHONY DEPLOYMENT                  ${NC}"
++echo -e "${BLUE}             WITH TIMEOUT FIX - SPLIT DEPLOYMENT         ${NC}"
++echo -e "${BLUE}=========================================================${NC}"
++echo -e "${YELLOW}[$(timestamp)] Starting optimized deployment process${NC}"
++
++# Create deployment directory with timestamp
++DEPLOY_DIR="/Users/as/asoos/deploy/fixed_asoos_$(date +%Y%m%d_%H%M%S)"
++mkdir -p "$DEPLOY_DIR"
++mkdir -p "$DEPLOY_DIR/public"
++mkdir -p "$DEPLOY_DIR/functions"
++
++echo -e "${GREEN}[$(timestamp)] Created deployment directory: $DEPLOY_DIR${NC}"
++
++# Verify we're in the correct project
++echo -e "${YELLOW}[$(timestamp)] Verifying Firebase project...${NC}"
++PROJECT_ID=$(firebase use --json | jq -r '.current')
++if [ "$PROJECT_ID" != "api-for-warp-drive" ]; then
++  handle_error "Wrong Firebase project: $PROJECT_ID" "firebase use api-for-warp-drive"
++fi
++echo -e "${GREEN}[$(timestamp)] Using Firebase project: $PROJECT_ID${NC}"
++
++# Capture original state
++echo -e "${YELLOW}[$(timestamp)] Capturing original state...${NC}"
++firebase use --json > "$DEPLOY_DIR/original_state.json"
++cp "$DEPLOY_DIR/original_state.json" "$DEPLOY_DIR/original_state.backup.json"
++echo -e "${GREEN}[$(timestamp)] Original state captured${NC}"
++
++# Stage files for deployment
++echo -e "${YELLOW}[$(timestamp)] Staging deployment files...${NC}"
++
++# Copy necessary files to the deployment directory
++cp -r /Users/as/asoos/functions/* "$DEPLOY_DIR/functions/"
++cp -r /Users/as/asoos/public/* "$DEPLOY_DIR/public/"
++cp /Users/as/asoos/firebase.json "$DEPLOY_DIR/"
++cp /Users/as/asoos/.firebaserc "$DEPLOY_DIR/"
++
++echo -e "${GREEN}[$(timestamp)] Files staged for deployment${NC}"
++
++# Install dependencies in the functions directory
++echo -e "${YELLOW}[$(timestamp)] Installing dependencies for Cloud Functions...${NC}"
++cd "$DEPLOY_DIR/functions"
++npm install firebase-admin firebase-functions --save
++
++# Verify dependencies installation
++if [ ! -d "node_modules" ] || [ ! -d "node_modules/firebase-admin" ] || [ ! -d "node_modules/firebase-functions" ]; then
++  handle_error "Dependencies installation failed" "echo 'Attempting to install dependencies again'; npm install"
++else
++  echo -e "${GREEN}[$(timestamp)] Dependencies installed successfully${NC}"
++fi
++
++# Return to the deployment directory
++cd "$DEPLOY_DIR"
++
++# Create deployment script
++cat > "$DEPLOY_DIR/deploy.sh" << 'EOF'
++#!/bin/bash
++
++# Define color codes
++GREEN='\033[0;32m'
++YELLOW='\033[0;33m'
++RED='\033[0;31m'
++BLUE='\033[0;34m'
++NC='\033[0m' # No Color
++
++# Timestamp function
++timestamp() {
++  date +"%Y-%m-%d %H:%M:%S"
++}
++
++# Error handling function
++handle_error() {
++  local error_message=$1
++  local recovery_action=$2
++  echo -e "${RED}[$(timestamp)] ERROR: $error_message${NC}"
++  
++  if [ ! -z "$recovery_action" ]; then
++    echo -e "${YELLOW}[$(timestamp)] Attempting recovery: $recovery_action${NC}"
++    eval "$recovery_action"
++  fi
++  
++  echo -e "${RED}[$(timestamp)] Deployment failed${NC}"
++  exit 1
++}
++
++# Save original state
++ORIGINAL_STATE="original_state.json"
++
++# Verify we're in the correct directory
++cd "$(dirname "$0")" || handle_error "Could not change to script directory"
++
++# Validate deployment files before proceeding
++echo -e "${YELLOW}[$(timestamp)] Validating deployment files...${NC}"
++if [ ! -d "functions" ] || [ ! -d "public" ] || [ ! -f "firebase.json" ]; then
++  handle_error "Missing required deployment files" "echo 'Check for functions/, public/ directories and firebase.json'"
++  exit 1
++fi
++
++# Verify dependencies in the functions directory
++echo -e "${YELLOW}[$(timestamp)] Verifying functions dependencies...${NC}"
++cd functions
++if [ ! -d "node_modules" ] || [ ! -d "node_modules/firebase-admin" ] || [ ! -d "node_modules/firebase-functions" ]; then
++  echo -e "${YELLOW}[$(timestamp)] Dependencies missing, installing...${NC}"
++  npm install firebase-admin firebase-functions --save
++  if [ $? -ne 0 ]; then
++    handle_error "Failed to install Firebase dependencies" "echo 'Try running npm install manually in the functions directory'"
++    exit 1
++  fi
++fi
++cd ..
++
++# Verify Firebase CLI and dependencies
++echo -e "${YELLOW}[$(timestamp)] Verifying Firebase CLI...${NC}"
++if ! command -v firebase &> /dev/null; then
++  handle_error "Firebase CLI not found" "echo 'Install Firebase CLI with: npm install -g firebase-tools'"
++  exit 1
++fi
++
++# Show Firebase CLI version
++firebase --version
++
++# Dry run to verify deployment
++echo -e "${YELLOW}[$(timestamp)] Verifying functions deployment...${NC}"
++if ! firebase deploy --only functions --dry-run; then
++  handle_error "Functions deployment verification failed" "echo 'No functions have been deployed'"
++  exit 1
++fi
++
++# Deploy functions first
++echo -e "${YELLOW}[$(timestamp)] Deploying Cloud Functions...${NC}"
++if ! firebase deploy --only functions; then
++  handle_error "Functions deployment failed" "echo 'Attempting to restore from $ORIGINAL_STATE' && cat $ORIGINAL_STATE"
++  exit 1
++fi
++
++echo -e "${GREEN}[$(timestamp)] Functions deployed successfully${NC}"
++
++# Small delay to ensure functions are fully deployed
++echo -e "${YELLOW}[$(timestamp)] Waiting for functions deployment to complete...${NC}"
++sleep 10
++
++# Re-authenticate to refresh token before hosting deployment
++echo -e "${YELLOW}[$(timestamp)] Refreshing authentication for hosting deployment...${NC}"
++if ! firebase logout && firebase login --no-localhost; then
++  echo -e "${YELLOW}[$(timestamp)] Authentication refresh failed, attempting to continue with existing token...${NC}"
++fi
++
++# Verify hosting deployment
++echo -e "${YELLOW}[$(timestamp)] Verifying hosting deployment...${NC}"
++if ! firebase deploy --only hosting --dry-run; then
++  handle_error "Hosting deployment verification failed" "echo 'No hosting changes have been deployed'"
++  exit 1
++fi
++
++# Deploy hosting
++echo -e "${YELLOW}[$(timestamp)] Deploying hosting...${NC}"
++if ! firebase deploy --only hosting; then
++  handle_error "Hosting deployment failed" "echo 'Functions were deployed but hosting failed.'"
++  exit 1
++fi
++
++echo -e "${GREEN}[$(timestamp)] All components deployed successfully!${NC}"
++echo -e "Access at:"
++echo -e "- Main site: https://asoos-2100-cool.web.app"
++echo -e "- Symphony: https://symphony-asoos-2100.web.app"
++echo -e "- Anthology: https://anthology-asoos-2100.web.app"
++
++# Cleanup
++rm -f original_state.json
++EOF
++
++# Make the deployment script executable
++chmod +x "$DEPLOY_DIR/deploy.sh"
++
++# Display instructions to execute the deployment
++echo -e "${GREEN}[$(timestamp)] Deployment prepared successfully${NC}"
++echo -e "${YELLOW}To execute the deployment:${NC}"
++echo -e "  cd $DEPLOY_DIR"
++echo -e "  ./deploy.sh"
++echo -e ""
++echo -e "${BLUE}=========================================================${NC}"
++echo -e "${BLUE}       FIXED DEPLOYMENT SCRIPT CREATED SUCCESSFULLY      ${NC}"
++echo -e "${BLUE}=========================================================${NC}"
++
+diff --git a/pnpm-lock.yaml b/pnpm-lock.yaml
+index 60ddca5a..31be1500 100644
+--- a/pnpm-lock.yaml
++++ b/pnpm-lock.yaml
+@@ -228,6 +228,9 @@ importers:
+       '@anthropic-ai/sdk':
+         specifier: ^0.4.3
+         version: 0.4.3(encoding@0.1.13)
++      '@canva/cli':
++        specifier: ^0.0.1-beta.30
++        version: 0.0.1-beta.30(@types/react@19.1.5)(typescript@5.8.3)
+       '@firebase/auth':
+         specifier: ^1.10.6
+         version: 1.10.6(@firebase/app@0.13.0)
+@@ -252,6 +255,9 @@ importers:
+       '@google-cloud/speech':
+         specifier: ^7.1.0
+         version: 7.1.0
++      '@google-cloud/storage':
++        specifier: ^7.16.0
++        version: 7.16.0(encoding@0.1.13)
+       '@google-cloud/text-to-speech':
+         specifier: ^6.1.0
+         version: 6.1.0
+@@ -1160,6 +1166,10 @@ packages:
+   '@adraffy/ens-normalize@1.10.1':
+     resolution: {integrity: sha512-96Z2IP3mYmF1Xg2cDm8f1gWGf/HUVedQ3FMifV4kG/PQ4yEP51xDtRAEfhVNt5f/uzpNkZHwWQuUcu6D6K+Ekw==}
+ 
++  '@alcalzone/ansi-tokenize@0.1.3':
++    resolution: {integrity: sha512-3yWxPTq3UQ/FY9p1ErPxIyfT64elWaMvM9lIHnaqpyft63tkxodF5aUElYHrdisWve5cETkh1+KBw1yJuW0aRw==}
++    engines: {node: '>=14.13.1'}
++
+   '@alloc/quick-lru@5.2.0':
+     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
+     engines: {node: '>=10'}
+@@ -2037,6 +2047,11 @@ packages:
+   '@bundled-es-modules/tough-cookie@0.1.6':
+     resolution: {integrity: sha512-dvMHbL464C0zI+Yqxbz6kZ5TOEp7GLW+pry/RWndAR8MJQAXZ2rPmIs8tziTZjeIyhSNZgZbCePtfSbdWqStJw==}
+ 
++  '@canva/cli@0.0.1-beta.30':
++    resolution: {integrity: sha512-zOL3FaA/8YcMz+mvvFLG1XZ8yPqwdEuWL2o6XYhvvhECnZ7z51FtF4NzakyTG+nyobmX+QFCNuXUnYfAr8EJpw==}
++    engines: {node: '>=16'}
++    hasBin: true
++
+   '@cnakazawa/watch@1.0.4':
+     resolution: {integrity: sha512-v9kIhKwjeZThiWrLmj0y17CWoyddASLj9O2yvbZkbvw/N3rWOYy9zkV66ursAoVr0mV15bL8g0c4QZUE6cdDoQ==}
+     engines: {node: '>=0.1.95'}
+@@ -3181,6 +3196,10 @@ packages:
+     resolution: {integrity: sha512-m//7RlINx1F3sz3KqwY1WWzVgTcYX52HYk4bJ1hkBXV3zccAEth+jRvG8DBRrdaQuRsPAJOx2MH3zaHNCKL7Zg==}
+     engines: {node: '>=18'}
+ 
++  '@modelcontextprotocol/sdk@1.8.0':
++    resolution: {integrity: sha512-e06W7SwrontJDHwCawNO5SGxG+nU9AAx+jpHHZqGl/WrDBdWOpvirC+s58VpJTB5QemI4jTRcjWT4Pt3Q1NPQQ==}
++    engines: {node: '>=18'}
++
+   '@mrmlnc/readdir-enhanced@2.2.1':
+     resolution: {integrity: sha512-bPHp6Ji8b41szTOcaP63VlnbbO5Ny6dwAATtY6JTjh5N2OLrb5Qk/Th5cRkRQhkWCt+EJsYrNB0MiL+Gpn6e3g==}
+     engines: {node: '>=4'}
+@@ -5492,6 +5511,10 @@ packages:
+     engines: {node: '>= 4.5.0'}
+     hasBin: true
+ 
++  auto-bind@5.0.1:
++    resolution: {integrity: sha512-ooviqdwwgfIfNmDwo94wlshcdzfO64XV0Cg6oDsDYBJfITDz1EngD2z7DkbvCWn+XIMsIqW27sEVF6qcpJrRcg==}
++    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
++
+   autoprefixer@10.4.21:
+     resolution: {integrity: sha512-O+A6LWV5LDHSJD3LjHYoNi4VLsj/Whi7k6zG12xTYaU4cQ8oxQGckXNX8cRHK5yOZ/ppVHe0ZBXGzSV9jXdVbQ==}
+     engines: {node: ^10 || ^12 || >=14}
+@@ -6187,6 +6210,10 @@ packages:
+     resolution: {integrity: sha512-q5/jG+YQnSy4nRTV4F7lPepBJZ8qBNJJDBuJdoejDyLXgmL7IEo+Le2JDZudFTFt7mrCqIRaSjws4ygRCTCAXA==}
+     engines: {node: '>= 4.0'}
+ 
++  code-excerpt@4.0.0:
++    resolution: {integrity: sha512-xxodCmBen3iy2i0WtAK8FlFNrRzjUqjRsMfho58xT/wvZU1YTM3fCnRjcy1gJPMepaRlgm/0e6w8SpWHpn3/cA==}
++    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
++
+   collect-v8-coverage@1.0.2:
+     resolution: {integrity: sha512-lHl4d5/ONEbLlJvaJNtsF/Lz+WvB07u2ycqTYbdrq7UypDXailES4valYb2eWiJFxZlVmpGekfqoxQhzyFdT4Q==}
+ 
+@@ -6363,6 +6390,10 @@ packages:
+   convert-source-map@2.0.0:
+     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
+ 
++  convert-to-spaces@2.0.1:
++    resolution: {integrity: sha512-rcQ1bsQO9799wq24uE5AM2tAILy4gXGIK/njFWcVQkGNZ96edlpY+A7bjwvzjYvLDyzmG1MmMLZhpcsb+klNMQ==}
++    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
++
+   cookie-signature@1.0.6:
+     resolution: {integrity: sha512-QADzlaHc8icV8I7vbaJXJwod9HWYp8uCqf1xa4OfNu1T7JVxQIrUgOWtHdNDtPiywmFbiS12VjotIXLrKM3orQ==}
+ 
+@@ -7242,6 +7273,9 @@ packages:
+     resolution: {integrity: sha512-w+5mJ3GuFL+NjVtJlvydShqE1eN3h3PbI7/5LAsYJP/2qtuMXjfL2LpHSRqo4b4eSF5K/DH1JXKUAHSB2UW50g==}
+     engines: {node: '>= 0.4'}
+ 
++  es-toolkit@1.38.0:
++    resolution: {integrity: sha512-OT3AxczYYd3W50bCj4V0hKoOAfqIy9tof0leNQYekEDxVKir3RTVTJOLij7VAe6fsCNsGhC0JqIkURpMXTCSEA==}
++
+   es5-ext@0.10.64:
+     resolution: {integrity: sha512-p2snDhiLaXe6dahss1LddxqEm+SkuDvV8dnIQG0MWjyHpcMNfXKPE+/Cc0y+PhxJX3A4xGNeFCj5oc0BUh6deg==}
+     engines: {node: '>=0.10'}
+@@ -8751,6 +8785,10 @@ packages:
+     resolution: {integrity: sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==}
+     engines: {node: '>=8'}
+ 
++  indent-string@5.0.0:
++    resolution: {integrity: sha512-m6FAo/spmsW2Ab2fU35JTYwtOKa2yAwXSwgjSv1TJzh4Mh7mC3lzAOVLBprb72XsTrgkEIsl7YrFNAiDiRhIGg==}
++    engines: {node: '>=12'}
++
+   indexes-of@1.0.1:
+     resolution: {integrity: sha512-bup+4tap3Hympa+JBJUG7XuOsdNQ6fxt0MHyXMKuLBKn0OqsTfvUxkUrroEX1+B2VsSHvCjiIcZVxRtYa4nllA==}
+ 
+@@ -8774,6 +8812,19 @@ packages:
+     resolution: {integrity: sha512-7PnF4oN3CvZF23ADhA5wRaYEQpJ8qygSkbtTXWBeXWXmEVRXK+1ITciHWwHhsjv1TmW0MgacIv6hEi5pX5NQdA==}
+     engines: {node: '>=10'}
+ 
++  ink@5.1.0:
++    resolution: {integrity: sha512-3vIO+CU4uSg167/dZrg4wHy75llUINYXxN4OsdaCkE40q4zyOTPwNc2VEpLnnWsIvIQeo6x6lilAhuaSt+rIsA==}
++    engines: {node: '>=18'}
++    peerDependencies:
++      '@types/react': '>=18.0.0'
++      react: '>=18.0.0'
++      react-devtools-core: ^4.19.1
++    peerDependenciesMeta:
++      '@types/react':
++        optional: true
++      react-devtools-core:
++        optional: true
++
+   inquirer@12.6.2:
+     resolution: {integrity: sha512-bPQV0oGJTy3cKqgtY+PI8qpn1ig1yalY400I9fzg/YZcK1bpTZvpQJcPiJ0s+u0edOQlMv7NW/hguocx0/2CMg==}
+     engines: {node: '>=18'}
+@@ -8977,6 +9028,11 @@ packages:
+     resolution: {integrity: sha512-xelSayHH36ZgE7ZWhli7pW34hNbNl8Ojv5KVmkJD4hBdD3th8Tfk9vYasLM+mXWOZhFkgZfxhLSnrwRr4elSSg==}
+     engines: {node: '>=0.10.0'}
+ 
++  is-in-ci@1.0.0:
++    resolution: {integrity: sha512-eUuAjybVTHMYWm/U+vBO1sY/JOCgoPCXRxzdju0K+K0BiGW0SChEL1MLC0PoCIR1OlPo5YAp8HuQoUlsWEICwg==}
++    engines: {node: '>=18'}
++    hasBin: true
++
+   is-installed-globally@0.4.0:
+     resolution: {integrity: sha512-iwGqO3J21aaSkC7jWnHP/difazwS7SFeIqxv6wEtLU8Y5KlzFTjyqcSIT0d8s4+dDhKytsk9PJZ2BkS5eZwQRQ==}
+     engines: {node: '>=10'}
+@@ -10947,6 +11003,10 @@ packages:
+     resolution: {integrity: sha512-XHXfu/yOQRy9vYOtUDVMN60OEJjW013GoObG1o+xwQTpB9eYJX/BjXMsdW13ZDPruFhYYn0AG22w0xgQMwl3Nw==}
+     engines: {node: '>=0.10.0'}
+ 
++  patch-console@2.0.0:
++    resolution: {integrity: sha512-0YNdUceMdaQwoKce1gatDScmMo5pu/tfABfnzEqeG0gtTmd7mh/WcwgUjtAeOU7N8nFFlbQBnFK2gXW5fGvmMA==}
++    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
++
+   path-browserify@0.0.1:
+     resolution: {integrity: sha512-BapA40NHICOS+USX9SN4tyhq+A2RrN/Ws5F0Z5aMHDp98Fl86lX8Oti8B7uN93L4Ifv4fHOEA+pQw87gmMO/lQ==}
+ 
+@@ -11114,6 +11174,10 @@ packages:
+     resolution: {integrity: sha512-TfySrs/5nm8fQJDcBDuUng3VOUKsd7S+zqvbOTiGXHfxX4wK31ard+hoNuvkicM/2YFzlpDgABOevKSsB4G/FA==}
+     engines: {node: '>= 6'}
+ 
++  pkce-challenge@4.1.0:
++    resolution: {integrity: sha512-ZBmhE1C9LcPoH9XZSdwiPtbPHZROwAnMy+kIFQVrnMCxY4Cudlz3gBOpzilgc0jOgRaiT3sIWfpMomW2ar2orQ==}
++    engines: {node: '>=16.20.0'}
++
+   pkce-challenge@5.0.0:
+     resolution: {integrity: sha512-ueGLflrrnvwB3xuo/uGob5pd5FN7l0MsLf0Z87o/UQmRtwjvfylfc9MurIxRAWywCYTgrvpXBcqjV4OfCYGCIQ==}
+     engines: {node: '>=16.20.0'}
+@@ -14712,6 +14776,9 @@ packages:
+     resolution: {integrity: sha512-cYVsTjKl8b+FrnidjibDWskAv7UKOfcwaVZdp/it9n1s9fU3IkgDbhdIRKCW4JDsAlECJY0ytoVPT3sK6kideA==}
+     engines: {node: '>=18'}
+ 
++  yoga-wasm-web@0.3.3:
++    resolution: {integrity: sha512-N+d4UJSJbt/R3wqY7Coqs5pcV0aUj2j9IaQ3rNj9bVCLld8tTGKRa2USARjnvZJWVx1NDmQev8EknoczaOQDOA==}
++
+   yup@1.6.1:
+     resolution: {integrity: sha512-JED8pB50qbA4FOkDol0bYF/p60qSEDQqBD0/qeIrUCG1KbPBIQ776fCUNb9ldbPcSTxA69g/47XTo4TqWiuXOA==}
+ 
+@@ -14769,6 +14836,11 @@ snapshots:
+ 
+   '@adraffy/ens-normalize@1.10.1': {}
+ 
++  '@alcalzone/ansi-tokenize@0.1.3':
++    dependencies:
++      ansi-styles: 6.2.1
++      is-fullwidth-code-point: 4.0.0
++
+   '@alloc/quick-lru@5.2.0': {}
+ 
+   '@ampproject/remapping@2.3.0':
+@@ -16348,6 +16420,20 @@ snapshots:
+       '@types/tough-cookie': 4.0.5
+       tough-cookie: 4.1.4
+ 
++  '@canva/cli@0.0.1-beta.30(@types/react@19.1.5)(typescript@5.8.3)':
++    dependencies:
++      '@modelcontextprotocol/sdk': 1.8.0
++      ink: 5.1.0(@types/react@19.1.5)(react@18.3.1)
++      react: 18.3.1
++      react-docgen-typescript: 2.2.2(typescript@5.8.3)
++    transitivePeerDependencies:
++      - '@types/react'
++      - bufferutil
++      - react-devtools-core
++      - supports-color
++      - typescript
++      - utf-8-validate
++
+   '@cnakazawa/watch@1.0.4':
+     dependencies:
+       exec-sh: 0.3.6
+@@ -17977,6 +18063,21 @@ snapshots:
+     transitivePeerDependencies:
+       - supports-color
+ 
++  '@modelcontextprotocol/sdk@1.8.0':
++    dependencies:
++      content-type: 1.0.5
++      cors: 2.8.5
++      cross-spawn: 7.0.6
++      eventsource: 3.0.7
++      express: 5.1.0
++      express-rate-limit: 7.5.0(express@5.1.0)
++      pkce-challenge: 4.1.0
++      raw-body: 3.0.0
++      zod: 3.25.28
++      zod-to-json-schema: 3.24.5(zod@3.25.28)
++    transitivePeerDependencies:
++      - supports-color
++
+   '@mrmlnc/readdir-enhanced@2.2.1':
+     dependencies:
+       call-me-maybe: 1.0.2
+@@ -20745,6 +20846,8 @@ snapshots:
+ 
+   atob@2.1.2: {}
+ 
++  auto-bind@5.0.1: {}
++
+   autoprefixer@10.4.21(postcss@8.5.3):
+     dependencies:
+       browserslist: 4.24.5
+@@ -21782,6 +21885,10 @@ snapshots:
+       chalk: 2.4.2
+       q: 1.5.1
+ 
++  code-excerpt@4.0.0:
++    dependencies:
++      convert-to-spaces: 2.0.1
++
+   collect-v8-coverage@1.0.2: {}
+ 
+   collection-visit@1.0.0:
+@@ -21956,6 +22063,8 @@ snapshots:
+ 
+   convert-source-map@2.0.0: {}
+ 
++  convert-to-spaces@2.0.1: {}
++
+   cookie-signature@1.0.6: {}
+ 
+   cookie-signature@1.2.2: {}
+@@ -23071,6 +23180,8 @@ snapshots:
+       is-date-object: 1.1.0
+       is-symbol: 1.1.1
+ 
++  es-toolkit@1.38.0: {}
++
+   es5-ext@0.10.64:
+     dependencies:
+       es6-iterator: 2.0.3
+@@ -25310,6 +25421,8 @@ snapshots:
+ 
+   indent-string@4.0.0: {}
+ 
++  indent-string@5.0.0: {}
++
+   indexes-of@1.0.1: {}
+ 
+   infer-owner@1.0.4: {}
+@@ -25327,6 +25440,39 @@ snapshots:
+ 
+   ini@2.0.0: {}
+ 
++  ink@5.1.0(@types/react@19.1.5)(react@18.3.1):
++    dependencies:
++      '@alcalzone/ansi-tokenize': 0.1.3
++      ansi-escapes: 7.0.0
++      ansi-styles: 6.2.1
++      auto-bind: 5.0.1
++      chalk: 5.4.1
++      cli-boxes: 3.0.0
++      cli-cursor: 4.0.0
++      cli-truncate: 4.0.0
++      code-excerpt: 4.0.0
++      es-toolkit: 1.38.0
++      indent-string: 5.0.0
++      is-in-ci: 1.0.0
++      patch-console: 2.0.0
++      react: 18.3.1
++      react-reconciler: 0.29.2(react@18.3.1)
++      scheduler: 0.23.2
++      signal-exit: 3.0.7
++      slice-ansi: 7.1.0
++      stack-utils: 2.0.6
++      string-width: 7.2.0
++      type-fest: 4.41.0
++      widest-line: 5.0.0
++      wrap-ansi: 9.0.0
++      ws: 8.18.2
++      yoga-wasm-web: 0.3.3
++    optionalDependencies:
++      '@types/react': 19.1.5
++    transitivePeerDependencies:
++      - bufferutil
++      - utf-8-validate
++
+   inquirer@12.6.2(@types/node@18.19.103):
+     dependencies:
+       '@inquirer/core': 10.1.12(@types/node@18.19.103)
+@@ -25562,6 +25708,8 @@ snapshots:
+     dependencies:
+       is-extglob: 2.1.1
+ 
++  is-in-ci@1.0.0: {}
++
+   is-installed-globally@0.4.0:
+     dependencies:
+       global-dirs: 3.0.1
+@@ -28331,6 +28479,8 @@ snapshots:
+ 
+   pascalcase@0.1.1: {}
+ 
++  patch-console@2.0.0: {}
++
+   path-browserify@0.0.1: {}
+ 
+   path-browserify@1.0.1: {}
+@@ -28459,6 +28609,8 @@ snapshots:
+ 
+   pirates@4.0.7: {}
+ 
++  pkce-challenge@4.1.0: {}
++
+   pkce-challenge@5.0.0: {}
+ 
+   pkg-dir@1.0.0:
+@@ -29803,6 +29955,10 @@ snapshots:
+     dependencies:
+       typescript: 4.9.5
+ 
++  react-docgen-typescript@2.2.2(typescript@5.8.3):
++    dependencies:
++      typescript: 5.8.3
++
+   react-docgen@7.1.1:
+     dependencies:
+       '@babel/core': 7.27.1
+@@ -33426,6 +33582,8 @@ snapshots:
+ 
+   yoctocolors-cjs@2.1.2: {}
+ 
++  yoga-wasm-web@0.3.3: {}
++
+   yup@1.6.1:
+     dependencies:
+       property-expr: 2.0.6
+-- 
+2.49.0
+

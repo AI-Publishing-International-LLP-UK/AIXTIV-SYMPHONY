@@ -1,0 +1,9 @@
+# Ensure consistent text encoding
+* text=auto
+
+# Prevent diffing large binary or compressed files
+*.zip -diff
+*.png -diff
+*.jpg -diff
+*.woff -diff
+*.pdf -diff

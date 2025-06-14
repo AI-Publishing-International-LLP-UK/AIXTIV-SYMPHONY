@@ -1,30 +1,40 @@
-FROM node:18-alpine
-
-# Set environment variables
-ENV NODE_ENV=production
+# Stage 1: Dependencies and Build
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files first for better caching
+# Copy package files
 COPY package*.json ./
 
 # Install dependencies
-RUN npm ci --only=production
+RUN npm ci
 
-# Copy application code
+# Copy source files
 COPY . .
 
-# Make the CLI executable
-RUN chmod +x ./bin/aixtiv.js
+# Build TypeScript code
+RUN npm run build
 
-# Set up environment for Cloud Build/Run
-ENV PORT=8080
-EXPOSE ${PORT}
+# Stage 2: Production Runtime
+FROM node:18-alpine AS runner
 
-# Start command - either run the CLI directly or start a server if needed
-# For a CLI tool in container context, you might want a server wrapping the CLI or
-# use the container for specific CLI commands
-CMD ["node", "server.js"]
+WORKDIR /app
 
-# Alternative: To use as pure CLI tool (e.g. for CI/CD pipelines)
-# ENTRYPOINT ["node", "bin/aixtiv.js"]
+# Copy package files
+COPY package*.json ./
+
+# Install production dependencies only
+RUN npm ci --only=production
+
+# Copy built assets from builder stage
+COPY --from=builder /app/dist ./dist
+
+# Set environment to production
+ENV NODE_ENV production
+
+# Expose the port your app runs on
+EXPOSE 3000
+
+# Start the application
+CMD ["node", "dist/index.js"]
+

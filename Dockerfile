@@ -20,20 +20,27 @@ FROM node:18-alpine AS runner
 
 WORKDIR /app
 
+# Install curl for healthcheck
+RUN apk add --no-cache curl
+
 # Copy package files
 COPY package*.json ./
 
 # Install production dependencies only
-RUN npm ci --only=production
+RUN npm ci --omit=dev
 
 # Copy built assets from builder stage
 COPY --from=builder /app/dist ./dist
 
 # Set environment to production
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 # Expose the port your app runs on
-EXPOSE 3000
+EXPOSE 8080
+
+# Add health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
 
 # Start the application
 CMD ["node", "dist/index.js"]

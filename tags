@@ -1,0 +1,7 @@
+check_prerequisites	ci-deploy.sh	/^check_prerequisites() {$/
+error_exit	ci-deploy.sh	/^error_exit() {$/
+info	ci-deploy.sh	/^info() {$/
+log	ci-deploy.sh	/^log() {$/
+setup_secrets	ci-deploy.sh	/^setup_secrets() {$/
+success	ci-deploy.sh	/^success() {$/
+warn	ci-deploy.sh	/^warn() {$/

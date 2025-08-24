@@ -42,7 +42,7 @@ export default {
       return new Response('API endpoint not found', { status: 404, headers });
     }
 
-    // Serve main ASOOS interface - this will be replaced with actual HTML
+    // Serve main ASOOS interface with full 20M+ agents content
     return new Response(await getASOOSHTML(), { status: 200, headers });
   }
 };

@@ -113,8 +113,8 @@ export default {
 };
 
 async function handleAuthentication(request, env) {
-  // Comprehensive multi-provider authentication system
-  // Integrates with existing oauth2-auth-only.pr-aef.workers.dev infrastructure
+  // COMPLETE original auth.html content - EXACTLY as designed
+  // Multi-provider authentication with company MCP discovery
   
   const authHTML = `<!DOCTYPE html>
 <html lang="en">
@@ -125,7 +125,11 @@ async function handleAuthentication(request, env) {
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       font-family: 'Montserrat', sans-serif;

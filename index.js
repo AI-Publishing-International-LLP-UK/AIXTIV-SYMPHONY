@@ -407,7 +407,7 @@ async function handleAuthentication(request, env) {
     <!-- Auth Options -->
     <div class="auth-options">
       <!-- LinkedIn Professional -->
-      <a href="javascript:void(0)" onclick="authenticate('linkedin')" class="auth-option">
+      <a href="#" onclick="authenticate('linkedin')" class="auth-option">
         <div class="auth-icon linkedin">
           <i class="fab fa-linkedin"></i>
         </div>
@@ -419,7 +419,7 @@ async function handleAuthentication(request, env) {
       </a>
 
       <!-- Microsoft/Outlook -->
-      <a href="javascript:void(0)" onclick="authenticate('microsoft')" class="auth-option">
+      <a href="#" onclick="authenticate('microsoft')" class="auth-option">
         <div class="auth-icon microsoft">
           <i class="fab fa-microsoft"></i>
         </div>
@@ -431,7 +431,7 @@ async function handleAuthentication(request, env) {
       </a>
 
       <!-- Google Workspace -->
-      <a href="javascript:void(0)" onclick="authenticate('google')" class="auth-option">
+      <a href="#" onclick="authenticate('google')" class="auth-option">
         <div class="auth-icon google">
           <i class="fab fa-google"></i>
         </div>
@@ -443,7 +443,7 @@ async function handleAuthentication(request, env) {
       </a>
 
       <!-- WhatsApp Business -->
-      <a href="javascript:void(0)" onclick="authenticate('whatsapp')" class="auth-option">
+      <a href="#" onclick="authenticate('whatsapp')" class="auth-option">
         <div class="auth-icon whatsapp">
           <i class="fab fa-whatsapp"></i>
         </div>
@@ -455,7 +455,7 @@ async function handleAuthentication(request, env) {
       </a>
 
       <!-- Search Company MCP -->
-      <a href="javascript:void(0)" onclick="searchCompanyMCP()" class="auth-option">
+      <a href="#" onclick="searchCompanyMCP()" class="auth-option">
         <div class="auth-icon search">
           <i class="fas fa-search"></i>
         </div>
@@ -962,7 +962,7 @@ function getFullASOOSInterface(env) {
         <a href="#features" class="nav-link">Features</a>
         <a href="#team" class="nav-link">Team</a>
         <a href="#stats" class="nav-link">Network</a>
-        <a href="javascript:void(0)" onclick="initiateAuthentication('app')" class="cta-button">Launch App</a>
+        <a href="#" onclick="initiateAuthentication('app')" class="cta-button">Launch App</a>
       </div>
     </div>
   </nav>
@@ -978,11 +978,11 @@ function getFullASOOSInterface(env) {
         your organization with our revolutionary DIDC Archives system.
       </p>
       <div class="hero-buttons">
-        <a href="javascript:void(0)" onclick="initiateAuthentication('symphony')" class="hero-button primary-button">
+        <a href="#" onclick="initiateAuthentication('symphony')" class="hero-button primary-button">
           Start Your Symphony
         </a>
         <a href="#features" class="hero-button secondary-button">Explore Features</a>
-        <a href="javascript:void(0)" onclick="initiateAuthentication('start')" class="hero-button tertiary-button">
+        <a href="#" onclick="initiateAuthentication('start')" class="hero-button tertiary-button">
           Get Started Now
         </a>
       </div>
@@ -1032,7 +1032,7 @@ function getFullASOOSInterface(env) {
   <section class="footer-cta">
     <h2>Ready to Transform Your Organization?</h2>
     <p>Join the AI revolution with 20M+ intelligent agents at your service.</p>
-    <a href="javascript:void(0)" onclick="initiateAuthentication('final')" class="hero-button tertiary-button">
+    <a href="#" onclick="initiateAuthentication('final')" class="hero-button tertiary-button">
       Get Started Now
     </a>
   </section>

@@ -167,22 +167,21 @@ make the same for each dr. Grant, Lucy, Roark, Sabina, Maria, Cypriot, Match, Bu
 
 ### **Client Request Flow**:
 
-**For LLP Members (Super Admin Path):**
-1. **LLP Entry**: `ASOOS.2100.cool` → **LLP Member Check**
-   - ✅ **LLP Member Verified**: Continue to Step 2
-   - ❌ **Not LLP Member**: **AUTO-REDIRECT** to `2100.cool`
-   - ❌ **No Account Found**: **AUTO-REDIRECT** to `2100.cool`
-2. **Authentication**: `auth.html` → Multi-provider authentication
-3. **Client Interface**: `mcp.client.2100.cool` → Owner subscriber interface
+**ASOOS.2100.cool - Primary Flow (LLP Members Only):**
+1. **Interface First**: `ASOOS.2100.cool` → **20M+ agents interface** (loads immediately)
+2. **LLP Member Check**: System verifies LLP membership status
+   - ✅ **2a. LLP Member Verified**: `auth.html` → Multi-provider authentication → `mcp.client.2100.cool`
+   - ❌ **2b. Not LLP Member**: **AUTO-REDIRECT** to `2100.cool` → Subscribe/Compete
+   - ❌ **2b. No Account Found**: **AUTO-REDIRECT** to `2100.cool` → Subscribe/Compete
 
-**For General Public:**
+**2100.cool - Public Gateway:**
 1. **Public Entry**: `2100.cool` → Choose Subscribe/Compete
 2. **Authentication**: `auth.html` → Multi-provider authentication
 3. **Client Interface**: `mcp.client.2100.cool` → Owner subscriber interface
 
-**Security Enforcement:**
-🔒 **ASOOS.2100.cool** = **AI Publishing International LLP Members ONLY**
-🌍 **2100.cool** = **Public Gateway** (Subscribe/Compete for everyone else)
+**Security Architecture:**
+🔒 **ASOOS.2100.cool** = **Show interface first, verify membership second**
+🌍 **2100.cool** = **Public fallback for non-LLP members**
 
 **System Coordination:**
 4. **Orchestration**: MOCORIX2 dr-claude01 coordination (325,000+ agents)

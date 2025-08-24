@@ -176,17 +176,17 @@ async function handleAuthentication(request, env) {
     }
 
     .logo {
-      font-size: 32px;
+      font-size: 19px;
       font-weight: 900;
       background: linear-gradient(135deg, #FFD700, #c7b299, #50C878, #0bb1bb);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
     }
 
     .subtitle {
-      font-size: 14px;
+      font-size: 8px;
       color: #aaa;
       font-weight: 300;
     }
@@ -196,18 +196,18 @@ async function handleAuthentication(request, env) {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 30px;
-      padding: 35px;
-      max-width: 500px;
+      border-radius: 18px;
+      padding: 21px;
+      max-width: 300px;
       width: 100%;
-      box-shadow: 0 20px 60px rgba(11, 177, 187, 0.1);
+      box-shadow: 0 12px 36px rgba(11, 177, 187, 0.1);
     }
 
     .auth-title {
       text-align: center;
-      font-size: 24px;
+      font-size: 14px;
       font-weight: 700;
-      margin-bottom: 10px;
+      margin-bottom: 6px;
       background: linear-gradient(135deg, #0bb1bb, #50C878);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -215,29 +215,29 @@ async function handleAuthentication(request, env) {
 
     .auth-description {
       text-align: center;
-      font-size: 14px;
+      font-size: 8px;
       color: #aaa;
-      margin-bottom: 30px;
+      margin-bottom: 18px;
       line-height: 1.5;
     }
 
     /* Auth Options */
     .auth-options {
       display: grid;
-      gap: 15px;
-      margin-bottom: 25px;
+      gap: 9px;
+      margin-bottom: 15px;
     }
 
     .auth-option {
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 15px;
+      border-radius: 7px;
+      padding: 9px;
       cursor: pointer;
       transition: all 0.3s ease;
       display: flex;
       align-items: center;
-      gap: 15px;
+      gap: 9px;
       text-decoration: none;
       color: inherit;
     }
@@ -245,18 +245,18 @@ async function handleAuthentication(request, env) {
     .auth-option:hover {
       background: rgba(255, 255, 255, 0.08);
       border-color: #0bb1bb;
-      box-shadow: 0 10px 30px rgba(11, 177, 187, 0.2);
-      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(11, 177, 187, 0.2);
+      transform: translateY(-2px);
     }
 
     .auth-icon {
-      width: 45px;
-      height: 45px;
-      border-radius: 10px;
+      width: 27px;
+      height: 27px;
+      border-radius: 6px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 12px;
       flex-shrink: 0;
     }
 
@@ -272,20 +272,20 @@ async function handleAuthentication(request, env) {
     }
 
     .auth-name {
-      font-size: 16px;
+      font-size: 10px;
       font-weight: 600;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
       color: #fff;
     }
 
     .auth-desc {
-      font-size: 12px;
+      font-size: 7px;
       color: #aaa;
       line-height: 1.4;
     }
 
     .auth-arrow {
-      font-size: 20px;
+      font-size: 12px;
       color: #0bb1bb;
       opacity: 0.7;
       transition: all 0.3s ease;
@@ -293,34 +293,34 @@ async function handleAuthentication(request, env) {
 
     .auth-option:hover .auth-arrow {
       opacity: 1;
-      transform: translateX(5px);
+      transform: translateX(3px);
     }
 
     /* Manual Entry */
     .manual-entry {
-      margin-top: 30px;
-      padding: 20px;
+      margin-top: 18px;
+      padding: 12px;
       background: rgba(255, 255, 255, 0.02);
-      border-radius: 15px;
+      border-radius: 9px;
       border: 1px dashed rgba(255, 255, 255, 0.1);
     }
 
     .manual-title {
-      font-size: 16px;
+      font-size: 10px;
       font-weight: 600;
-      margin-bottom: 15px;
+      margin-bottom: 9px;
       color: #0bb1bb;
     }
 
     .email-input {
       width: 100%;
-      padding: 12px 15px;
+      padding: 7px 9px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
+      border-radius: 5px;
       color: #fff;
-      font-size: 16px;
-      margin-bottom: 15px;
+      font-size: 10px;
+      margin-bottom: 9px;
       outline: none;
       transition: border-color 0.3s ease;
     }
@@ -335,20 +335,20 @@ async function handleAuthentication(request, env) {
 
     .continue-btn {
       width: 100%;
-      padding: 12px;
+      padding: 7px;
       background: linear-gradient(135deg, #0bb1bb, #50C878);
       border: none;
-      border-radius: 8px;
+      border-radius: 5px;
       color: #000;
-      font-size: 16px;
+      font-size: 10px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
     }
 
     .continue-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(11, 177, 187, 0.4);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 15px rgba(11, 177, 187, 0.4);
     }
 
     .continue-btn:disabled {
@@ -499,7 +499,7 @@ async function handleAuthentication(request, env) {
         const particle = document.createElement('div');
         particle.className = 'particle';
         particle.style.left = Math.random() * 100 + '%';
-        particle.style.width = (Math.random() * 4 + 2) + 'px';
+        particle.style.width = (Math.random() * 2.4 + 1.2) + 'px';
         particle.style.height = particle.style.width;
         particle.style.animationDelay = Math.random() * 20 + 's';
         particle.style.animationDuration = (10 + Math.random() * 10) + 's';

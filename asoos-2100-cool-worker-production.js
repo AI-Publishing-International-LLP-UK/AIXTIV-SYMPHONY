@@ -34,67 +34,11 @@ export default {
       return handleAPIEndpoints(url, request, env);
     }
 
-    // Serve content from asoos-clean-deploy-2025 Pages deployment
-    try {
-      const pagesUrl = 'https://main.asoos-clean-deploy-2025.pages.dev' + url.pathname + url.search;
-      const pagesResponse = await fetch(pagesUrl, {
-        headers: {
-          'User-Agent': 'ASOOS-Worker/2.0',
-          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
-        }
-      });
-      
-      if (pagesResponse.ok) {
-        let content = await pagesResponse.text();
-        
-        // Inject authentication integration into the Pages content
-        content = content.replace(
-          '</head>',
-          `<script>
-            // Enhanced authentication integration for ASOOS.2100.cool
-            window.ASOOS_AUTH_ENABLED = true;
-            window.ASOOS_DOMAIN = 'asoos.2100.cool';
-            window.ASOOS_PAGES_SOURCE = 'asoos-clean-deploy-2025';
-            
-            console.log('🎭 ASOOS.2100.cool - 20M+ AI Agents Ready');
-            console.log('📡 Serving from Pages: asoos-clean-deploy-2025');
-            console.log('🔐 SallyPort Authentication Enabled');
-          </script>
-          </head>`
-        );
-        
-        // Override ALL authentication functions to redirect to /auth
-        content = content.replace(
-          /function initiateAuthentication\([^}]*\}[^}]*\}/gs,
-          `function initiateAuthentication(source) {
-            console.log('🎭 ASOOS Authentication initiated from:', source);
-            console.log('🔐 Redirecting to direct auth page...');
-            window.location.href = '/auth';
-          }`
-        );
-        
-        return new Response(content, {
-          status: pagesResponse.status,
-          headers: {
-            ...securityHeaders,
-            'Content-Type': pagesResponse.headers.get('Content-Type') || 'text/html;charset=UTF-8'
-          }
-        });
-      } else {
-        // Fallback to embedded interface if Pages is unavailable
-        return new Response(getFallbackInterface(), {
-          status: 200,
-          headers: securityHeaders
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching from Pages:', error);
-      // Fallback to embedded interface
-      return new Response(getFallbackInterface(), {
-        status: 200,
-        headers: securityHeaders
-      });
-    }
+    // Serve the corrected ASOOS interface directly (no more Pages dependency)
+    return new Response(getFullASOOSInterface(env), {
+      status: 200,
+      headers: securityHeaders
+    });
   }
 };
 

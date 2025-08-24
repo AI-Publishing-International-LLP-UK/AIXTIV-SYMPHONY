@@ -1,4 +1,4 @@
-name = "asoos-2100-cool-professional"
+name = "asoos-2100-cool-worker-production"
 main = "index.js"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
@@ -32,7 +32,7 @@ watch_dir = ""
 
 # Production Environment Configuration
 [env.production]
-name = "asoos-2100-cool-professional"
+name = "asoos-2100-cool-worker-production"
 routes = [
   { pattern = "asoos.2100.cool/*", zone_name = "2100.cool" },
   { pattern = "asoos.2100.cool", zone_name = "2100.cool" }

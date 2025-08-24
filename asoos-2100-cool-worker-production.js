@@ -56,35 +56,21 @@ export default {
             window.ASOOS_DOMAIN = 'asoos.2100.cool';
             window.ASOOS_PAGES_SOURCE = 'asoos-clean-deploy-2025';
             
-            // Override authentication functions for SallyPort integration
-            function initiateAuthentication(source) {
-              console.log('ASOOS Authentication initiated from:', source);
-              console.log('Domain:', window.ASOOS_DOMAIN);
-              console.log('Pages Source:', window.ASOOS_PAGES_SOURCE);
-              
-              // Check if user is already authenticated
-              const authToken = localStorage.getItem('asoos_auth_token');
-              
-              if (authToken) {
-                // Redirect authenticated users to MCP interface
-                window.location.href = '/api/redirect/mcp';
-              } else {
-                // Redirect to authentication page
-                window.location.href = '/auth';
-              }
-            }
-            
-            // LLP Member check integration
-            function checkLLPMembership() {
-              console.log('Checking LLP membership via SallyPort...');
-              // Integration with SALLY_PORT_SECRET_KEY handled by Worker
-            }
-            
             console.log('🎭 ASOOS.2100.cool - 20M+ AI Agents Ready');
             console.log('📡 Serving from Pages: asoos-clean-deploy-2025');
             console.log('🔐 SallyPort Authentication Enabled');
           </script>
           </head>`
+        );
+        
+        // Override ALL authentication functions to redirect to /auth
+        content = content.replace(
+          /function initiateAuthentication\([^}]*\}[^}]*\}/gs,
+          `function initiateAuthentication(source) {
+            console.log('🎭 ASOOS Authentication initiated from:', source);
+            console.log('🔐 Redirecting to direct auth page...');
+            window.location.href = '/auth';
+          }`
         );
         
         return new Response(content, {

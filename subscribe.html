@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscribe - 2100.Cool Platform Access</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="particles"></div>
+    
+    <nav class="subscription-nav">
+        <div class="container">
+            <div class="nav-brand">
+                <a href="index.html">← Back to 2100.Cool</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="subscription-main">
+        <div class="container">
+            <div class="subscription-header">
+                <h1>Join the AI Revolution</h1>
+                <p class="lead">Get access to 20M+ AI agents and transform your organization</p>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Explorer</h3>
+                        <div class="price">Free</div>
+                        <p>Perfect for getting started</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✓ Access to basic AI agents</li>
+                        <li>✓ Community support</li>
+                        <li>✓ Basic tutorials</li>
+                        <li>✓ Limited symphony orchestration</li>
+                    </ul>
+                    <button class="btn btn-secondary">Get Started Free</button>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-header">
+                        <h3>Professional</h3>
+                        <div class="price">$2100<span>/month</span></div>
+                        <p>For serious AI implementation</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✓ Full access to 20M+ AI agents</li>
+                        <li>✓ Priority support</li>
+                        <li>✓ Advanced symphony orchestration</li>
+                        <li>✓ Custom integrations</li>
+                        <li>✓ Analytics dashboard</li>
+                        <li>✓ Team collaboration</li>
+                    </ul>
+                    <button class="btn btn-primary">Start Professional</button>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>Enterprise</h3>
+                        <div class="price">Custom</div>
+                        <p>Tailored for large organizations</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>✓ Everything in Professional</li>
+                        <li>✓ Dedicated support team</li>
+                        <li>✓ Custom AI agent development</li>
+                        <li>✓ On-premise deployment</li>
+                        <li>✓ White-label solutions</li>
+                        <li>✓ SLA guarantees</li>
+                    </ul>
+                    <button class="btn btn-accent">Contact Sales</button>
+                </div>
+            </div>
+
+            <div class="subscription-features">
+                <h2>Why Choose 2100.Cool?</h2>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <h4>🤖 20M+ AI Agents</h4>
+                        <p>Largest collection of specialized AI agents across every industry</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🎼 Symphony Orchestration</h4>
+                        <p>Coordinate complex AI workflows with unprecedented precision</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>🔒 Enterprise Security</h4>
+                        <p>Bank-grade security with full compliance and audit trails</p>
+                    </div>
+                    <div class="feature-item">
+                        <h4>⚡ Real-time Processing</h4>
+                        <p>Lightning-fast AI responses with global edge deployment</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Subscription-specific functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('💰 Subscription page loaded');
+            
+            // Add click handlers for subscription buttons
+            document.querySelectorAll('.pricing-card button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const plan = this.closest('.pricing-card').querySelector('h3').textContent;
+                    console.log(`🎯 Selected plan: ${plan}`);
+                    
+                    if (plan === 'Explorer') {
+                        alert('Free Explorer access - redirecting to registration...');
+                    } else if (plan === 'Professional') {
+                        alert('Professional plan selected - redirecting to payment...');
+                    } else {
+                        alert('Enterprise plan - redirecting to sales contact...');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

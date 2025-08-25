@@ -1,18 +1,7 @@
+# 2100.Cool Primary - Cloudflare Pages Configuration
 name = "2100-cool-primary"
 compatibility_date = "2024-08-24"
 pages_build_output_dir = "."
-
-[env.production]
-name = "2100-cool-primary"
-
-[build]
-command = "npm run build"
-cwd = ""
-watch_dir = "."
-
-# No build needed for static files
-[build.upload]
-format = "modules"
 
 [vars]
 ENVIRONMENT = "production"

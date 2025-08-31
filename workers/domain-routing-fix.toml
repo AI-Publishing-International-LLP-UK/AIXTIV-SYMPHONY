@@ -1,0 +1,42 @@
+name = "domain-routing-fix"
+main = "domain-routing-fix.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+account_id = "aef30d920913c188b9b6048cc7f42951"
+
+# EMERGENCY ROUTING FIX
+# Fixes the critical issue where ASOOS, SALLYPORT, and MCP domains serve identical content
+# IMMEDIATE DEPLOYMENT REQUIRED
+
+[vars]
+ENVIRONMENT = "production"
+FIX_STATUS = "EMERGENCY_ROUTING_ACTIVE"
+DEPLOYMENT_PRIORITY = "URGENT"
+
+# Production routes for all affected domains
+[env.production]
+name = "domain-routing-fix-prod"
+
+# Route all three problematic domains to this worker
+[[env.production.routes]]
+pattern = "asoos.2100.cool/*"
+zone_name = "2100.cool"
+
+[[env.production.routes]]
+pattern = "sallyport.2100.cool/*"
+zone_name = "2100.cool"
+
+[[env.production.routes]]
+pattern = "mcp.aipub.2100.cool/*"
+zone_name = "2100.cool"
+
+[env.production.vars]
+ENVIRONMENT = "production"
+FIX_STATUS = "EMERGENCY_ROUTING_ACTIVE"
+ASOOS_DOMAIN = "asoos.2100.cool"
+SALLYPORT_DOMAIN = "sallyport.2100.cool"
+MCP_DOMAIN = "mcp.aipub.2100.cool"
+DEPLOYMENT_TIMESTAMP = "2025-08-31T05:45:00Z"
+
+[build]
+command = ""

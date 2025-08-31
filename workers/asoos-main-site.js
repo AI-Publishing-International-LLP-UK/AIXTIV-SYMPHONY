@@ -54,148 +54,136 @@ async function getMainSiteHTML() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ASOOS - Aixtiv Symphony Orchestrating Operating System</title>
+    <title>ASOOS.2100.Cool - Aixtiv Symphony Orchestrating Operating System</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a0a;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
             color: #ffffff;
+            min-height: 100vh;
             overflow-x: hidden;
         }
-        
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            backdrop-filter: blur(10px);
-            padding: 20px 50px;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            background: linear-gradient(45deg, #0bb1bb, #50C878);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        .auth-button {
-            background: linear-gradient(45deg, #0bb1bb, #50C878);
-            color: #000;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        
-        .auth-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(11, 177, 187, 0.5);
-        }
-        
-        /* Hero Section */
         .hero {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            background: radial-gradient(circle at center, rgba(11, 177, 187, 0.1) 0%, transparent 70%);
+            align-items: center;
+            text-align: center;
+            padding: 20px;
             position: relative;
         }
-        
-        .hero-content {
-            text-align: center;
-            max-width: 1200px;
-            padding: 0 20px;
-        }
-        
-        h1 {
-            font-size: 72px;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #0bb1bb, #50C878, #0bb1bb);
-            background-size: 200% 200%;
+        .logo {
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ff88, #0bb1bb, #ffd700);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradient 3s ease infinite;
+            margin-bottom: 20px;
+            animation: glow 3s ease-in-out infinite alternate;
         }
-        
-        @keyframes gradient {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.3)); }
+            to { filter: drop-shadow(0 0 40px rgba(0, 255, 136, 0.6)); }
         }
-        
-        .subtitle {
-            font-size: 24px;
-            color: #888;
+        .tagline {
+            font-size: 1.5rem;
             margin-bottom: 40px;
+            opacity: 0.9;
+            max-width: 800px;
         }
-        
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 30px;
-            margin: 60px 0;
+            margin: 40px 0;
+            max-width: 1000px;
+            width: 100%;
         }
-        
-        .stat-card {
+        .stat {
             background: rgba(255, 255, 255, 0.05);
             padding: 30px;
             border-radius: 15px;
-            border: 1px solid rgba(11, 177, 187, 0.3);
-            transition: all 0.3s;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            backdrop-filter: blur(10px);
         }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            border-color: #0bb1bb;
-            box-shadow: 0 10px 30px rgba(11, 177, 187, 0.2);
-        }
-        
         .stat-number {
-            font-size: 36px;
+            font-size: 2.5rem;
             font-weight: bold;
-            color: #0bb1bb;
+            color: #00ff88;
+            margin-bottom: 10px;
         }
-        
         .stat-label {
-            font-size: 16px;
-            color: #888;
-            margin-top: 10px;
+            font-size: 1rem;
+            opacity: 0.8;
         }
-        
-        /* Features */
-        .features {
-            padding: 100px 50px;
-            max-width: 1400px;
-            margin: 0 auto;
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
-        
-        .feature {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            margin-bottom: 100px;
-            align-items: center;
+        .btn {
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
         }
-        
-        .feature:nth-child(even) {
-            direction: rtl;
+        .btn-primary {
+            background: linear-gradient(135deg, #00ff88, #0bb1bb);
+            color: #000;
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #00ff88;
+            border: 2px solid #00ff88;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
+        }
+        .nav {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .nav a:hover {
+            background: rgba(0, 255, 136, 0.2);
+        }
+        .fix-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: #00ff00;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .logo { font-size: 2.5rem; }
+            .tagline { font-size: 1.2rem; }
+            .stats { grid-template-columns: 1fr 1fr; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .nav { position: static; justify-content: center; margin-bottom: 20px; }
         }
         
         .feature:nth-child(even) .feature-content {
@@ -373,51 +361,64 @@ async function getMainSiteHTML() {
     </style>
 </head>
 <body>
-    <!-- Auth Loading Overlay -->
-    <div class="auth-loading" id="authLoading">
-        <div class="spinner"></div>
-    </div>
-
-    <!-- Navigation -->
-    <nav>
-        <div class="logo">ASOOS</div>
-        <a href="#" class="auth-button" onclick="authenticate()">🔐 Diamond SAO Login</a>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content fade-in">
-            <h1>ASOOS</h1>
-            <p class="subtitle">Aixtiv Symphony Orchestrating Operating System</p>
+    <div class="hero">
+        <nav class="nav">
+            <a href="https://sallyport.2100.cool">SallyPort Gateway</a>
+            <a href="https://mcp.aipub.2100.cool">MCP Console</a>
+        </nav>
+        
+        <div class="logo">ASOOS.2100.Cool</div>
+        <div class="tagline">Aixtiv Symphony Orchestrating Operating System<br>Unleash the power of 20+ million AI agents across 200+ industry sectors</div>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">20M+</div>
+                <div class="stat-label">AI Agent Instances</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">200+</div>
+                <div class="stat-label">Industry Sectors</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">850K</div>
+                <div class="stat-label">DIDC Archives</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">1.6M</div>
+                <div class="stat-label">Workflows</div>
+            </div>
+        </div>
+        
+        <div class="cta-buttons">
+            <a href="https://sallyport.2100.cool" class="btn btn-primary">Access Security Gateway</a>
+            <a href="https://mcp.aipub.2100.cool" class="btn btn-secondary">Owner Console</a>
+        </div>
+        
+        <div style="margin-top: 60px; max-width: 1000px; text-align: left;">
+            <h2 style="color: #00ff88; text-align: center; margin-bottom: 40px;">🚀 Revolutionary Features</h2>
             
-            <div class="stats">
-                <div class="stat-card">
-                    <div class="stat-number">20M+</div>
-                    <div class="stat-label">AI Agents</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+                <div style="background: rgba(255, 255, 255, 0.03); padding: 25px; border-radius: 15px;">
+                    <h3 style="color: #00ff88; margin-bottom: 15px;">🤝 DIDC Archives System</h3>
+                    <p>Dynamic collaboration archives that orchestrate multi-agent workflows with embedded tech stacks and smart contracts on Tower Blockchain.</p>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">64M</div>
-                    <div class="stat-label">Jobs Mapped</div>
+                
+                <div style="background: rgba(255, 255, 255, 0.03); padding: 25px; border-radius: 15px;">
+                    <h3 style="color: #00ff88; margin-bottom: 15px;">👥 Squadron Network</h3>
+                    <p>44 specialized agents organized into 4 strategic squadrons: Core, Deploy, Engage, and RIX. Each brings unique expertise.</p>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-number">200</div>
-                    <div class="stat-label">Industry Sectors</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">98%</div>
-                    <div class="stat-label">Future Prediction</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">10M+</div>
-                    <div class="stat-label">Daily Prompts</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">2M+</div>
-                    <div class="stat-label">Workflows</div>
+                
+                <div style="background: rgba(255, 255, 255, 0.03); padding: 25px; border-radius: 15px;">
+                    <h3 style="color: #00ff88; margin-bottom: 15px;">🎯 Lifecycle Visualization</h3>
+                    <p>Map any of 560,000 job roles across 50 sectors to 15+ lifecycle stages with optimal tech stack recommendations.</p>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+    
+    <div class="fix-status">
+        ✅ ROUTING FIXED - Serving ASOOS Main Site
+    </div>
 
     <!-- Features Section -->
     <section class="features">

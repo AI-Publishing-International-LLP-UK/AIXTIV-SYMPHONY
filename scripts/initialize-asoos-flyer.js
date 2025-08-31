@@ -811,7 +811,7 @@ class ASOOSIntelligenceSwarmInitializer {
 async function main() {
   if (require.main === module) {
     try {
-      const initializer = new ASOOSFlyerInitializer();
+      const initializer = new ASOOSIntelligenceSwarmInitializer();
       const initResult = await initializer.initialize();
       
       console.log('\n🎉 ASOOS Flyer System Successfully Initialized!');

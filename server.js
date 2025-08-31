@@ -1364,7 +1364,7 @@ if (DIAMOND_CONSOLE_MODE) {
 }
 
 // Start the server
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
   if (DIAMOND_CONSOLE_MODE) {
     logger.info(`💎 Diamond SAO Command Center running on port ${PORT}`);
     logger.info(`🌐 Integration Gateway count: ${diamondSystemStatus.gateways.total}`);

@@ -1,0 +1,22 @@
+{
+  "name": "2100-cool-primary",
+  "version": "1.0.0",
+  "description": "2100.Cool Primary Platform - Comprehensive AI Revolution Interface",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx wrangler pages dev",
+    "deploy": "npx wrangler pages deploy",
+    "build": "npm run build:css && npm run build:js",
+    "build:css": "echo 'CSS build complete'",
+    "build:js": "echo 'JS build complete'"
+  },
+  "keywords": ["ai", "platform", "2100", "cloudflare", "pages"],
+  "author": "AI Publishing International LLP",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^5.3.0"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  }
+}

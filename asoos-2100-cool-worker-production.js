@@ -168,8 +168,8 @@ async function handleAuthentication(request, env) {
       display: flex;
       align-items: center;
       gap: 9px;
-      text-decoration: none;
-      color: inherit;
+      text-decoration: none !important;
+      color: inherit !important;
     }
 
     .auth-option:hover {
@@ -177,6 +177,8 @@ async function handleAuthentication(request, env) {
       border-color: #0bb1bb;
       box-shadow: 0 6px 18px rgba(11, 177, 187, 0.2);
       transform: translateY(-2px);
+      text-decoration: none !important;
+      color: inherit !important;
     }
 
     .auth-icon {
@@ -295,10 +297,10 @@ async function handleAuthentication(request, env) {
       left: 30px;
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
+      color: #fff !important;
       padding: 10px 20px;
       border-radius: 25px;
-      text-decoration: none;
+      text-decoration: none !important;
       font-size: 14px;
       transition: all 0.3s ease;
     }
@@ -306,6 +308,8 @@ async function handleAuthentication(request, env) {
     .back-btn:hover {
       background: rgba(255, 255, 255, 0.2);
       border-color: #0bb1bb;
+      text-decoration: none !important;
+      color: #fff !important;
     }
 
     /* Responsive */
@@ -697,16 +701,18 @@ function getFullASOOSInterface(env) {
       background: linear-gradient(135deg, #FFD700, #FFA500);
       border: none;
       border-radius: 25px;
-      color: black;
+      color: black !important;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s;
-      text-decoration: none;
+      text-decoration: none !important;
     }
     
     .cta-button:hover {
       transform: translateY(-2px);
       box-shadow: 0 5px 20px rgba(255, 193, 7, 0.5);
+      color: black !important;
+      text-decoration: none !important;
     }
     
     /* Hero Section */
@@ -763,7 +769,7 @@ function getFullASOOSInterface(env) {
       border-radius: 50px;
       cursor: pointer;
       transition: all 0.3s;
-      text-decoration: none;
+      text-decoration: none !important;
       display: inline-block;
       min-width: 200px;
     }
@@ -787,6 +793,7 @@ function getFullASOOSInterface(env) {
     .hero-button:hover {
       transform: translateY(-3px);
       box-shadow: 0 10px 30px rgba(11, 177, 187, 0.3);
+      text-decoration: none !important;
     }
     
     /* Stats Section */

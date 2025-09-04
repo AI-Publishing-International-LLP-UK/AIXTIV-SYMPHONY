@@ -1,0 +1,9 @@
+name = "wfa-orchestration-worker-production"
+main = "worker.js"
+compatibility_date = "2025-01-02"
+compatibility_flags = ["nodejs_compat"]
+account_id = "aef30d920913c188b9b6048cc7f42951"
+
+# Production environment for 20M agents MCP system
+[env.production]
+vars = { ENVIRONMENT = "production", MCP_DOMAIN = "mcp.aipub.2100.cool", MASTER_MCP_SERVER = "mcp.asoos.2100.cool", AGENT_CAPACITY = "20000000", SECTORS = "200", CLOUD_ML_REGION = "us-west1", GCP_PROJECT = "api-for-warp-drive", DNS_MODE = "automated", HEALING_MODE = "enabled" }

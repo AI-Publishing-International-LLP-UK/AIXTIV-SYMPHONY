@@ -1,0 +1,49 @@
+name = "wfa-orchestration-worker-production"
+main = "production-wfa-orchestration.js"
+compatibility_date = "2025-01-02"
+compatibility_flags = ["nodejs_compat"]
+
+# Production environment for 20M agents MCP system
+[env.production]
+account_id = "aef30d920913c188b9b6048cc7f42951"
+workers_dev = false
+routes = [
+  { pattern = "mcp.aipub.2100.cool/*", zone_id = "" },
+  { pattern = "mcp.asoos.2100.cool/*", zone_id = "" }
+]
+
+# Variables for MCP system
+[env.production.vars]
+ENVIRONMENT = "production"
+MCP_DOMAIN = "mcp.aipub.2100.cool"
+MASTER_MCP_SERVER = "mcp.asoos.2100.cool"
+AGENT_CAPACITY = "20000000"
+SECTORS = "200"
+CLOUD_ML_REGION = "us-west1"
+GCP_PROJECT = "api-for-warp-drive"
+DNS_MODE = "automated"
+HEALING_MODE = "enabled"
+
+# KV namespaces and D1 database will be created later
+# Removed for initial deployment simplicity
+
+# Production limits for 20M agents
+[env.production.limits]
+cpu_ms = 50000
+memory = 512
+
+# AI binding for intelligent routing
+[env.production.ai]
+binding = "AI"
+
+# Queue configuration removed for simplicity
+
+# Durable Objects for session management
+[[env.production.durable_objects.bindings]]
+name = "AGENT_SESSION"
+class_name = "AgentSessionManager"
+
+# Migrations for durable objects
+[[migrations]]
+tag = "v1"
+new_classes = [ "AgentSessionManager" ]

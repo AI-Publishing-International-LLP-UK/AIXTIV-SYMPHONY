@@ -1,0 +1,134 @@
+{
+  "diamondSAO": {
+    "authority": "Mr. Phillip Corey Roark (0000001)",
+    "classification": "DIAMOND_SAO_COMMAND_CENTER",
+    "version": "1.0.0-alpha"
+  },
+  "elevenLabs": {
+    "apiEndpoint": "https://api.elevenlabs.io/v1",
+    "model": "eleven_multilingual_v2",
+    "timeout": 30000,
+    "retryAttempts": 3,
+    "retryDelay": 1000
+  },
+  "voices": {
+    "default": {
+      "voiceId": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Bella",
+      "description": "Professional female voice for general interface use",
+      "stability": 0.75,
+      "similarity_boost": 0.75,
+      "style": 0.5,
+      "use_speaker_boost": true
+    },
+    "ownerInterface": {
+      "voiceId": "pNInz6obpgDQGcFmaJgB",
+      "name": "Adam",
+      "description": "Authoritative male voice for owner interface",
+      "stability": 0.8,
+      "similarity_boost": 0.8,
+      "style": 0.3,
+      "use_speaker_boost": true
+    },
+    "mocaInterface": {
+      "voiceId": "ErXwobaYiN019PkySvjV",
+      "name": "Antoni",
+      "description": "Warm and engaging voice for MOCA interactions",
+      "stability": 0.7,
+      "similarity_boost": 0.75,
+      "style": 0.6,
+      "use_speaker_boost": true
+    },
+    "diamondSAO": {
+      "voiceId": "VR6AewLTigWG4xSOukaG",
+      "name": "Josh",
+      "description": "Professional and clear voice for Diamond SAO authority",
+      "stability": 0.85,
+      "similarity_boost": 0.8,
+      "style": 0.2,
+      "use_speaker_boost": true
+    }
+  },
+  "authentication": {
+    "gcpSecretName": "ELEVENLABS_API_KEY",
+    "gcpProject": "api-for-warp-drive",
+    "fallbackEnvVar": "ELEVENLABS_API_KEY",
+    "validationEndpoint": "/user"
+  },
+  "storage": {
+    "audioOutputPath": "./owner-interface-audio",
+    "tempAudioPath": "./temp-audio",
+    "voiceResponsesPath": "./voice-responses",
+    "maxAudioFiles": 100,
+    "audioFormat": "mp3",
+    "compressionLevel": "medium"
+  },
+  "integration": {
+    "diamondCLI": true,
+    "ownerInterface": true,
+    "mocaInterface": true,
+    "sallyPortAuth": true,
+    "gcpSecretManager": true,
+    "conversationalAgents": true,
+    "webInterface": true
+  },
+  "interfaceMessages": {
+    "startup": {
+      "text": "MOCOA Owner Interface is initializing. Diamond SAO Command Center online.",
+      "priority": "high",
+      "preGenerate": true
+    },
+    "ready": {
+      "text": "All systems operational. Awaiting Diamond SAO commands.",
+      "priority": "high",
+      "preGenerate": true
+    },
+    "authenticated": {
+      "text": "Diamond SAO authentication confirmed. Maximum authority granted.",
+      "priority": "high",
+      "preGenerate": true
+    },
+    "deploymentStart": {
+      "text": "Initiating deployment sequence. All systems prepared.",
+      "priority": "medium",
+      "preGenerate": true
+    },
+    "deploymentComplete": {
+      "text": "Deployment completed successfully. All services operational.",
+      "priority": "medium",
+      "preGenerate": true
+    },
+    "mcpUpdate": {
+      "text": "MCP domain configuration updated. Company integration active.",
+      "priority": "medium",
+      "preGenerate": true
+    },
+    "securityAlert": {
+      "text": "Security alert detected. Diamond SAO intervention required.",
+      "priority": "critical",
+      "preGenerate": true
+    },
+    "systemError": {
+      "text": "System error detected. Diagnostic mode activated.",
+      "priority": "critical",
+      "preGenerate": true
+    },
+    "shutdown": {
+      "text": "MOCOA Owner Interface shutting down. Diamond SAO session complete.",
+      "priority": "high",
+      "preGenerate": true
+    },
+    "maintenance": {
+      "text": "System entering maintenance mode. Operations will resume shortly.",
+      "priority": "medium",
+      "preGenerate": false
+    }
+  },
+  "logging": {
+    "level": "INFO",
+    "includeTimestamp": true,
+    "includeDiamondSAO": true,
+    "logToFile": false,
+    "logFilePath": "./logs/elevenlabs.log"
+  }
+}

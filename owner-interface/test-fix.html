@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MOCOA JavaScript Fix Test</title>
+</head>
+<body>
+    <div style="padding: 20px; font-family: Arial, sans-serif;">
+        <h2>MOCOA JavaScript Fix Test</h2>
+        <p>This tests if the sendCopilotMessage fix works properly.</p>
+        
+        <input type="text" id="copilotInput" placeholder="Type a message and press Enter" style="width: 300px; padding: 8px; margin: 10px 0;" onkeypress="handleCopilotKeyPress(event)">
+        <button onclick="sendCopilotMessage()" style="padding: 8px 15px; margin: 5px;">Send Message</button>
+        
+        <div id="copilotMessages" style="border: 1px solid #ccc; padding: 10px; margin: 10px 0; min-height: 100px; background: #f9f9f9;">
+            <!-- Messages will appear here -->
+        </div>
+        
+        <div id="status" style="margin: 10px 0; padding: 10px; background: #e8f5e8; border: 1px solid #4caf50;">
+            ✅ Page loaded successfully. JavaScript functions are working!
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let activeRIX = 'QB';
+        
+        // Handle Copilot Communication - FIXED VERSION (no duplicate)
+        function sendCopilotMessage() {
+            const input = document.getElementById('copilotInput');
+            const messagesContainer = document.getElementById('copilotMessages');
+            
+            if (!input || !messagesContainer || !input.value.trim()) return;
+            
+            const userMessage = input.value.trim();
+            input.value = '';
+            
+            // Add user message
+            addMessage(messagesContainer, userMessage, 'user');
+            
+            // Process message with simple response
+            setTimeout(() => {
+                const response = `Hello! I'm ${activeRIX} RIX. You said: "${userMessage}"`;
+                addMessage(messagesContainer, response, 'copilot');
+            }, 500);
+        }
+        
+        function handleCopilotKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendCopilotMessage();
+            }
+        }
+        
+        function addMessage(container, text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                padding: 8px 10px;
+                border-radius: 8px;
+                margin-bottom: 6px;
+                ${sender === 'user' 
+                  ? 'background: #e3f2fd; border: 1px solid #2196f3; text-align: right;'
+                  : 'background: #f3e5f5; border: 1px solid #9c27b0;'
+                }
+            `;
+            
+            if (sender === 'copilot') {
+                messageDiv.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                        <div style="width: 6px; height: 6px; background: #9c27b0; border-radius: 50%;"></div>
+                        <strong style="color: #9c27b0; font-size: 12px;">${activeRIX} RIX</strong>
+                    </div>
+                    <div style="color: #333; font-size: 14px; line-height: 1.3;">${text}</div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div style="color: #333; font-size: 14px; line-height: 1.3;">${text}</div>
+                `;
+            }
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        // Test that function is available globally
+        window.sendCopilotMessage = sendCopilotMessage;
+        window.handleCopilotKeyPress = handleCopilotKeyPress;
+        
+        // Page load test
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ Test page loaded - JavaScript functions working properly');
+            
+            // Auto-test after 2 seconds
+            setTimeout(() => {
+                const input = document.getElementById('copilotInput');
+                if (input) {
+                    input.value = 'Auto-test message';
+                    sendCopilotMessage();
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

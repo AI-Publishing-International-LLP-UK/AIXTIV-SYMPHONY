@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MOCOA Test - Minimal</title>
+</head>
+<body style="background: #0a0a0a; color: white; font-family: Arial, sans-serif; padding: 20px;">
+  <h1>MOCOA Functionality Test</h1>
+  
+  <div style="margin: 20px 0;">
+    <button id="testButton" onclick="testFunction()" style="background: #0bb1bb; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+      TEST BUTTON
+    </button>
+    <span id="result" style="margin-left: 20px; color: #50C878;"></span>
+  </div>
+  
+  <div style="margin: 20px 0;">
+    <input type="text" id="testInput" placeholder="Type something and press Enter..." 
+           onkeypress="handleKeyPress(event)" 
+           style="background: #1a1a1a; color: white; border: 1px solid #333; padding: 10px; border-radius: 5px; width: 300px;">
+    <button onclick="sendMessage()" style="background: #50C878; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">
+      SEND
+    </button>
+  </div>
+  
+  <div id="messages" style="background: #1a1a1a; padding: 15px; border-radius: 5px; min-height: 100px; margin: 20px 0;"></div>
+
+  <script>
+    function testFunction() {
+      document.getElementById('result').textContent = '✅ JavaScript Working!';
+      console.log('Test function executed');
+    }
+    
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        sendMessage();
+      }
+    }
+    
+    function sendMessage() {
+      const input = document.getElementById('testInput');
+      const messages = document.getElementById('messages');
+      const message = input.value.trim();
+      
+      if (message) {
+        messages.innerHTML += `<div style="color: #0bb1bb; margin: 5px 0;">Message: ${message}</div>`;
+        input.value = '';
+        console.log('Message sent:', message);
+      }
+    }
+    
+    // Test that script loads
+    console.log('✅ MOCOA Test Script Loaded');
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('✅ DOM Loaded');
+      document.getElementById('result').textContent = 'Ready to test';
+    });
+  </script>
+</body>
+</html>

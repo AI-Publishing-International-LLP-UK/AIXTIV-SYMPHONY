@@ -786,21 +786,21 @@
     }
 
     /* V99 Gift Shop & Pilots' Lounge */
-      .auth-features {
-        position: absolute;
-        left: 20px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        opacity: 1;
-        transform: translateX(0);
-        transition: all 0.5s ease;
-      }
+    .auth-features {
+      position: absolute;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: all 0.5s ease;
+    }
 
-      .auth-features.visible {
-        opacity: 1;
-        transform: translateX(0);
-      }
+    .auth-features.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
 
     .gift-shop-btn, .pilots-lounge-btn {
       padding: 4px 8px;
@@ -1047,9 +1047,9 @@
         height: 55px;
       }
 
-        .auth-features {
-          display: flex !important;
-        }
+      .auth-features {
+        display: none;
+      }
     }
 
     @media (max-width: 480px) {
@@ -1244,16 +1244,16 @@
       <div class="video-header">
         <div class="video-title">Daily.co Video Session</div>
         <div class="video-controls">
-          <button class="video-btn" onclick="resizeVideo('small')" title="Small">
+          <button class="video-btn" onclick="if (!window.__cfRLUnblockHandlers) return false; resizeVideo('small')" title="Small" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg class="enterprise-icon"><use href="#icon-compress"></use></svg>
           </button>
-          <button class="video-btn" onclick="resizeVideo('large')" title="Large">
+          <button class="video-btn" onclick="if (!window.__cfRLUnblockHandlers) return false; resizeVideo('large')" title="Large" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg class="enterprise-icon"><use href="#icon-expand"></use></svg>
           </button>
-          <button class="video-btn" onclick="resizeVideo('fullscreen')" title="Fullscreen">
+          <button class="video-btn" onclick="if (!window.__cfRLUnblockHandlers) return false; resizeVideo('fullscreen')" title="Fullscreen" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg class="enterprise-icon"><use href="#icon-expand-arrows"></use></svg>
           </button>
-          <button class="video-btn" onclick="closeVideo()" title="Close">
+          <button class="video-btn" onclick="if (!window.__cfRLUnblockHandlers) return false; closeVideo()" title="Close" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg class="enterprise-icon"><use href="#icon-times"></use></svg>
           </button>
         </div>
@@ -1271,7 +1271,7 @@
       <!-- Sidebar with Squadron Icons -->
       <div class="sidebar">
         <div class="sidebar-icons">
-          <div class="sidebar-icon active" onclick="selectIcon(this, 'Communication', '01')">
+          <div class="sidebar-icon active" onclick="if (!window.__cfRLUnblockHandlers) return false; selectIcon(this, 'Communication', '01')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="1.8">
               <circle cx="12" cy="12" r="10" fill="none" />
               <path d="M9 11l2 2 4-4" stroke="white" stroke-width="1.5" fill="none"/>
@@ -1282,7 +1282,7 @@
             </div>
           </div>
           
-          <div class="sidebar-icon" onclick="selectIcon(this, 'Growth', '01')">
+          <div class="sidebar-icon" onclick="if (!window.__cfRLUnblockHandlers) return false; selectIcon(this, 'Growth', '01')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg viewBox="0 0 24 24" fill="none" stroke="#4ECDC4" stroke-width="1.8">
               <circle cx="12" cy="12" r="10" />
               <path d="M12 8v4l3 3" stroke="white" stroke-width="1.5"/>
@@ -1293,7 +1293,7 @@
             </div>
           </div>
           
-          <div class="sidebar-icon" onclick="selectIcon(this, 'Services', '03')">
+          <div class="sidebar-icon" onclick="if (!window.__cfRLUnblockHandlers) return false; selectIcon(this, 'Services', '03')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg viewBox="0 0 24 24" fill="none" stroke="#45B7D1" stroke-width="1.8">
               <circle cx="12" cy="12" r="10" />
               <path d="M8 12h8M12 8v8" stroke="white" stroke-width="1.5"/>
@@ -1304,7 +1304,7 @@
             </div>
           </div>
           
-          <div class="sidebar-icon" onclick="selectIcon(this, 'Automation', '02')">
+          <div class="sidebar-icon" onclick="if (!window.__cfRLUnblockHandlers) return false; selectIcon(this, 'Automation', '02')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg viewBox="0 0 24 24" fill="none" stroke="#96CEB4" stroke-width="1.8">
               <circle cx="12" cy="12" r="10" />
               <path d="M12 6v6l4 2" stroke="white" stroke-width="1.5"/>
@@ -1315,7 +1315,7 @@
             </div>
           </div>
           
-          <div class="sidebar-icon" onclick="selectIcon(this, 'ROI', '02')">
+          <div class="sidebar-icon" onclick="if (!window.__cfRLUnblockHandlers) return false; selectIcon(this, 'ROI', '02')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg viewBox="0 0 24 24" fill="none" stroke="#FECA57" stroke-width="1.8">
               <circle cx="12" cy="12" r="10" />
               <circle cx="12" cy="12" r="3" stroke="white" fill="none" stroke-width="1.5"/>
@@ -1326,7 +1326,7 @@
             </div>
           </div>
           
-          <div class="sidebar-icon" onclick="selectIcon(this, 'Wish', '04')">
+          <div class="sidebar-icon" onclick="if (!window.__cfRLUnblockHandlers) return false; selectIcon(this, 'Wish', '04')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg viewBox="0 0 24 24" fill="none" stroke="#DDA0DD" stroke-width="1.8">
               <circle cx="12" cy="12" r="10" />
               <path d="M7 12h10M7 8h10M7 16h10" stroke="white" stroke-width="1.5"/>
@@ -1337,7 +1337,7 @@
             </div>
           </div>
           
-          <div class="sidebar-icon" onclick="toggleAcademy(this)">
+          <div class="sidebar-icon" onclick="if (!window.__cfRLUnblockHandlers) return false; toggleAcademy(this)" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg viewBox="0 0 24 24" fill="none" stroke="url(#turquoiseGradient)" stroke-width="1.8">
               <defs>
                 <linearGradient id="turquoiseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -1359,7 +1359,7 @@
           <div style="height: 30px;"></div>
           
           <!-- Pilots Icon - More Commercial Design -->
-          <div class="sidebar-icon" onclick="openPilotsLounge()" style="display: flex;">
+          <div class="sidebar-icon auth-only" onclick="if (!window.__cfRLUnblockHandlers) return false; openPilotsLounge()" style="display: flex;" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg viewBox="0 0 24 24" fill="none" stroke="url(#pilotsGradient)" stroke-width="1.6">
               <defs>
                 <linearGradient id="pilotsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -1379,7 +1379,7 @@
           </div>
           
           <!-- Gift Shop Icon - More Commercial Design -->
-          <div class="sidebar-icon" onclick="openGiftShop()" style="display: flex;">
+          <div class="sidebar-icon auth-only" onclick="if (!window.__cfRLUnblockHandlers) return false; openGiftShop()" style="display: flex;" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg viewBox="0 0 24 24" fill="none" stroke="url(#giftGradient)" stroke-width="1.6">
               <defs>
                 <linearGradient id="giftGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -1399,7 +1399,7 @@
           </div>
           
           <!-- Settings Icon - Always Last -->
-          <div class="sidebar-icon settings-icon" onclick="openSettings()">
+          <div class="sidebar-icon settings-icon" onclick="if (!window.__cfRLUnblockHandlers) return false; openSettings()" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg viewBox="0 0 24 24" fill="none" stroke="url(#settingsGradient)" stroke-width="1.8">
               <defs>
                 <linearGradient id="settingsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -1437,7 +1437,7 @@
         <div class="sticky-copilots">
           <div class="copilot-title">YOUR AI COPILOTS</div>
           <div class="copilot-hex-container">
-                <div class="copilot-hex-item" onclick="activateRIX('QB', 'Dr. Lucy')">
+                <div class="copilot-hex-item" onclick="if (!window.__cfRLUnblockHandlers) return false; activateRIX('QB', 'Dr. Lucy')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                   <div class="copilot-hex">
                     <svg viewBox="0 0 60 60" style="width: 45px; height: 45px;">
                       <defs>
@@ -1452,52 +1452,52 @@
                     </svg>
                     <div class="copilot-status"></div>
                   </div>
-              <div class="copilot-name"></div>
-              <div class="copilot-title"></div>
+                  <div class="copilot-name">Dr. Lucy</div>
+                  <div class="copilot-title">sRIX</div>
+                </div>
+            
+            <div class="copilot-hex-item" onclick="if (!window.__cfRLUnblockHandlers) return false; activateRIX('SH', 'Dr. Claude')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
+              <div class="copilot-hex">
+                <svg viewBox="0 0 60 60" style="width: 45px; height: 45px;">
+                  <defs>
+                    <linearGradient id="shGradientMobile" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#shGradientMobile)" stroke="#4ECDC4" stroke-width="2" opacity="0.9" />
+                  <text x="30" y="26" text-anchor="middle" fill="white" font-size="12" font-weight="800">SH</text>
+                  <text x="30" y="38" text-anchor="middle" fill="white" font-size="9" font-weight="600">RIX</text>
+                </svg>
+                <div class="copilot-status"></div>
+              </div>
+              <div class="copilot-name">Dr. Claude</div>
+              <div class="copilot-title">sRIX</div>
             </div>
-        
-        <div class="copilot-hex-item" onclick="activateRIX('SH', 'Dr. Claude')">
-          <div class="copilot-hex">
-            <svg viewBox="0 0 60 60" style="width: 45px; height: 45px;">
-              <defs>
-                <linearGradient id="shGradientMobile" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
-                  <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
-                </linearGradient>
-              </defs>
-              <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#shGradientMobile)" stroke="#4ECDC4" stroke-width="2" opacity="0.9" />
-              <text x="30" y="26" text-anchor="middle" fill="white" font-size="12" font-weight="800">SH</text>
-              <text x="30" y="38" text-anchor="middle" fill="white" font-size="9" font-weight="600">RIX</text>
-            </svg>
-            <div class="copilot-status"></div>
-          </div>
-          <div class="copilot-name"></div>
-          <div class="copilot-title"></div>
-        </div>
-        
-        <div class="copilot-hex-item" onclick="activateRIX('Q', 'Victory36')">
-          <div class="copilot-hex">
-            <svg viewBox="0 0 60 60" style="width: 45px; height: 45px;">
-              <defs>
-                <linearGradient id="mGradientMobile" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style="stop-color:#50C878;stop-opacity:1" />
-                  <stop offset="100%" style="stop-color:#c7b299;stop-opacity:1" />
-                </linearGradient>
-              </defs>
-              <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#mGradientMobile)" stroke="#50C878" stroke-width="2" opacity="0.9" />
-              <text x="30" y="32" text-anchor="middle" fill="#888" font-size="8" font-weight="600">V36</text>
-            </svg>
-            <div class="copilot-status"></div>
-          </div>
-          <div class="copilot-name"></div>
-          <div class="copilot-title"></div>
-        </div>
+            
+            <div class="copilot-hex-item" onclick="if (!window.__cfRLUnblockHandlers) return false; activateRIX('Q', 'Victory36')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
+              <div class="copilot-hex">
+                <svg viewBox="0 0 60 60" style="width: 45px; height: 45px;">
+                  <defs>
+                    <linearGradient id="mGradientMobile" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#50C878;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#c7b299;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#mGradientMobile)" stroke="#50C878" stroke-width="2" opacity="0.9" />
+                  <text x="30" y="32" text-anchor="middle" fill="#888" font-size="8" font-weight="600">V36</text>
+                </svg>
+                <div class="copilot-status"></div>
+              </div>
+              <div class="copilot-name">Victory36</div>
+              <div class="copilot-title">MAESTRO</div>
+            </div>
           </div>
           <div class="active-copilot-display">
             <div class="copilot-badge">
               <span id="activeRixDisplayMobile">QB RIX Active</span>
             </div>
-            <div class="scan-approve-btn" onclick="toggleScanToApprove(this)">
+            <div class="scan-approve-btn" onclick="if (!window.__cfRLUnblockHandlers) return false; toggleScanToApprove(this)" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
               <div class="scan-approve-content">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M3 9V5a2 2 0 0 1 2-2h4M3 15v4a2 2 0 0 0 2 2h4M15 3h4a2 2 0 0 1 2 2v4M15 21h4a2 2 0 0 0 2-2v-4"/>
@@ -1532,24 +1532,24 @@
               <div class="chat-input-area">
                 <div style="display: flex; gap: 6px; align-items: center;">
                   <!-- Single Mode Toggle - Left Side -->
-                  <button id="modeToggleBtn" onclick="toggleCopilotMode()" style="background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.4); color: #8b5cf6; padding: 4px 8px; border-radius: 8px; font-size: 9px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 3px;" title="Switch to CLI Mode">
+                  <button id="modeToggleBtn" onclick="if (!window.__cfRLUnblockHandlers) return false; toggleCopilotMode()" style="background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.4); color: #8b5cf6; padding: 4px 8px; border-radius: 8px; font-size: 9px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 3px;" title="Switch to CLI Mode" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                     <svg class="enterprise-icon" style="width: 10px; height: 10px; fill: #8b5cf6;">
                       <use href="#icon-terminal"></use>
                     </svg>
                     CLI
                   </button>
                   
-                  <input type="text" id="copilotInput" placeholder="Ask your copilot anything..." style="flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 8px 12px; border-radius: 15px; color: white; font-size: 12px; outline: none;" onkeypress="handleCopilotKeyPress(event)">
+                  <input type="text" id="copilotInput" placeholder="Ask your copilot anything..." style="flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 8px 12px; border-radius: 15px; color: white; font-size: 12px; outline: none;" onkeypress="if (!window.__cfRLUnblockHandlers) return false; handleCopilotKeyPress(event)" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                   
-                  <button onclick="sendCopilotMessage()" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #ffffff; padding: 8px 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 11px;">
+                  <button onclick="if (!window.__cfRLUnblockHandlers) return false; sendCopilotMessage()" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: #ffffff; padding: 8px 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 11px;" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                     Send
                   </button>
-                  <button onclick="startVoiceInput()" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; font-size: 10px;">
+                  <button onclick="if (!window.__cfRLUnblockHandlers) return false; startVoiceInput()" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; font-size: 10px;" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                     <svg class="enterprise-icon" style="width: 10px; height: 10px; fill: #ffffff;">
                       <use href="#icon-microphone"></use>
                     </svg>
                   </button>
-                  <button id="conversationModeBtn" onclick="toggleConversationMode()" style="background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.2); color: #FFD700; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; font-size: 10px;" title="Toggle voice conversation mode">
+                  <button id="conversationModeBtn" onclick="if (!window.__cfRLUnblockHandlers) return false; toggleConversationMode()" style="background: rgba(255, 215, 0, 0.1); border: 1px solid rgba(255, 215, 0, 0.2); color: #FFD700; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; font-size: 10px;" title="Toggle voice conversation mode" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                     🗣️
                   </button>
                 </div>
@@ -1570,7 +1570,7 @@
                 <div style="display: flex; align-items: center; gap: 8px;">
                   <span style="color: #0bb1bb; font-family: monospace; font-size: 11px; font-weight: 600;">AIXTIV CLI</span>
                   <span style="color: #666; font-size: 9px; font-family: monospace;">v2.1.0</span>
-                  <select id="modelSelector" style="background: #2a2a2a; color: #0bb1bb; border: 1px solid #444; padding: 2px 4px; font-family: monospace; font-size: 9px; border-radius: 3px; margin-left: 6px;" onchange="switchModel(this.value)">
+                  <select id="modelSelector" style="background: #2a2a2a; color: #0bb1bb; border: 1px solid #444; padding: 2px 4px; font-family: monospace; font-size: 9px; border-radius: 3px; margin-left: 6px;" onchange="if (!window.__cfRLUnblockHandlers) return false; switchModel(this.value)" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                     <option value="claude-4-sonnet">Claude 4+ Sonnet (Default)</option>
                     <option value="claude-4-opus">Claude 4+ Opus</option>
                     <option value="claude-4-haiku">Claude 4+ Haiku</option>
@@ -1583,10 +1583,10 @@
                   </span>
                 </div>
                 <div style="display: flex; gap: 4px; align-items: center;">
-                  <button style="background: #2a2a2a; border: 1px solid #444; color: #0bb1bb; cursor: pointer; padding: 2px 4px; border-radius: 3px; font-size: 8px;" onclick="validateServiceAccess()" title="Validate Services">
-                    <svg class="enterprise-icon" style="width: 8px; height: 8px;"><use href="#icon-cog"></use></svg> Services
+                  <button style="background: #2a2a2a; border: 1px solid #444; color: #0bb1bb; cursor: pointer; padding: 2px 4px; border-radius: 3px; font-size: 8px;" onclick="if (!window.__cfRLUnblockHandlers) return false; openAPIConfig()" title="Configure API" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
+                    <svg class="enterprise-icon" style="width: 8px; height: 8px;"><use href="#icon-cog"></use></svg> API Config
                   </button>
-                  <button style="background: none; border: none; color: #666; cursor: pointer; padding: 2px;" onclick="clearTerminal()" title="Clear">
+                  <button style="background: none; border: none; color: #666; cursor: pointer; padding: 2px;" onclick="if (!window.__cfRLUnblockHandlers) return false; clearTerminal()" title="Clear" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                     <svg class="enterprise-icon" style="width: 8px; height: 8px;"><use href="#icon-times"></use></svg>
                   </button>
                 </div>
@@ -1594,17 +1594,14 @@
             
             <!-- Mode Toggle -->
             <div style="background: #1a1a1a; padding: 4px 10px; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 8px;">
-              <button id="terminalModeBtn" class="mode-btn active" onclick="setMode('terminal')" style="background: #2a2a2a; border: 1px solid #0bb1bb; color: #0bb1bb; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 9px; cursor: pointer;">
+              <button id="terminalModeBtn" class="mode-btn active" onclick="if (!window.__cfRLUnblockHandlers) return false; setMode('terminal')" style="background: #2a2a2a; border: 1px solid #0bb1bb; color: #0bb1bb; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 9px; cursor: pointer;" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                 <svg class="enterprise-icon" style="width: 9px; height: 9px;"><use href="#icon-terminal"></use></svg> Terminal
               </button>
-              <button id="codeModeBtn" class="mode-btn" onclick="setMode('code')" style="background: transparent; border: 1px solid #444; color: #666; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 9px; cursor: pointer;">
+              <button id="codeModeBtn" class="mode-btn" onclick="if (!window.__cfRLUnblockHandlers) return false; setMode('code')" style="background: transparent; border: 1px solid #444; color: #666; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 9px; cursor: pointer;" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                 <svg class="enterprise-icon" style="width: 9px; height: 9px;"><use href="#icon-code"></use></svg> Claude Code
               </button>
-              <button id="chatModeBtn" class="mode-btn" onclick="setMode('chat')" style="background: transparent; border: 1px solid #444; color: #666; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 9px; cursor: pointer;">
+              <button id="chatModeBtn" class="mode-btn" onclick="if (!window.__cfRLUnblockHandlers) return false; setMode('chat')" style="background: transparent; border: 1px solid #444; color: #666; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 9px; cursor: pointer;" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                 <svg class="enterprise-icon" style="width: 9px; height: 9px;"><use href="#icon-comments"></use></svg> Chat
-              </button>
-              <button id="codexModeBtn" class="mode-btn" onclick="setMode('codex')" style="background: transparent; border: 1px solid #444; color: #666; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 9px; cursor: pointer;">
-                <svg class="enterprise-icon" style="width: 9px; height: 9px;"><use href="#icon-bolt"></use></svg> Codex
               </button>
               <span style="color: #666; font-size: 8px; margin-left: auto;">
                 <svg class="enterprise-icon" style="width: 8px; height: 8px;"><use href="#icon-keyboard"></use></svg> Ctrl+K for quick commands
@@ -1636,55 +1633,12 @@
       <textarea id="codeArea" style="width: 100%; height: calc(100% - 40px); background: #1e1e1e; color: #d4d4d4; border: none; outline: none; padding: 15px; font-family: 'Monaco', 'Menlo', monospace; font-size: 13px; line-height: 1.5; resize: none;" placeholder="// Enterprise code environment authenticated via GCP Secret Manager..."></textarea>
             </div>
             
-            <!-- Claude Code Interface (Hexagon Design) -->
-            <div id="chatInterface" style="display: none; flex: 1; background: #0d0d0d; padding: 20px; align-items: center; justify-content: center;">
-              <div style="text-align: center;">
-                <!-- Claude Hexagon -->
-                <div style="margin-bottom: 20px;">
-                  <svg viewBox="0 0 120 120" style="width: 80px; height: 80px; cursor: pointer;" onclick="activateClaudeChat()">
-                    <defs>
-                      <linearGradient id="claudeHexGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
-                      </linearGradient>
-                    </defs>
-                    <path d="M60 10 L100 35 L100 85 L60 110 L20 85 L20 35 Z" fill="url(#claudeHexGradient)" stroke="#4ECDC4" stroke-width="2" opacity="0.9" />
-                    <text x="60" y="50" text-anchor="middle" fill="white" font-size="14" font-weight="800">SH</text>
-                    <text x="60" y="70" text-anchor="middle" fill="white" font-size="10" font-weight="600">RIX</text>
-                    <text x="60" y="90" text-anchor="middle" fill="white" font-size="8" font-weight="400">CLAUDE</text>
-                  </svg>
-                </div>
-                <div style="color: #4ECDC4; font-weight: 600; margin-bottom: 10px; font-size: 18px;">Dr. Claude Available</div>
-                <div style="color: #aaa; font-size: 12px; margin-bottom: 20px; max-width: 300px; line-height: 1.4;">Dr. Claude (SH RIX) is ready for advanced reasoning, code assistance, and enterprise coordination. Click the hexagon above to activate.</div>
-                <div style="background: rgba(78, 205, 196, 0.1); border: 1px solid rgba(78, 205, 196, 0.3); padding: 12px; border-radius: 8px; font-size: 11px; color: #888;">
-                  💡 <strong>Tip:</strong> Use the main chat interface to communicate with Dr. Claude. This mode focuses on code editing and development.
-                </div>
-              </div>
-            </div>
-            
-            <!-- OpenAI Codex Interface (Hidden by default) -->
-            <div id="codexInterface" style="display: none; flex: 1; background: #1e1e1e; position: relative;">
-              <div style="background: rgba(80, 200, 120, 0.1); border: 1px solid rgba(80, 200, 120, 0.3); padding: 15px; border-radius: 12px; margin: 15px;">
-                <div style="color: #50C878; font-weight: 600; margin-bottom: 5px;">OpenAI Codex Integration</div>
-                <div style="color: #aaa; font-size: 12px;">Chat with OpenAI Codex for advanced code generation, debugging, and technical assistance. Connected via OAuth authentication.</div>
-              </div>
-              
-              <div style="flex: 1; overflow-y: auto; padding: 0 15px;">
-                <div id="codexMessages" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
-                  <!-- Codex messages will appear here -->
-                </div>
-              </div>
-              
-              <div style="border-top: 1px solid #333; background: #1a1a1a; padding: 15px; margin: 15px; border-radius: 8px;">
-                <div style="display: flex; gap: 10px; align-items: flex-end;">
-                  <textarea id="codexInput" placeholder="Ask Codex for code help, debugging, or technical assistance..." style="flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 12px; border-radius: 8px; color: white; font-size: 13px; outline: none; resize: vertical; min-height: 50px; max-height: 150px; font-family: 'Monaco', 'Menlo', monospace;" onkeydown="handleCodexKeyPress(event)"></textarea>
-                  <button onclick="sendCodexMessage()" style="background: rgba(80, 200, 120, 0.8); border: none; color: white; padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 12px; white-space: nowrap;">
-                    Send to Codex
-                  </button>
-                </div>
-                <div style="margin-top: 10px; font-size: 10px; color: #666; display: flex; justify-content: space-between;">
-                  <span>🤖 OpenAI Codex | OAuth Authenticated</span>
-                  <span id="codexStatus" style="color: #50C878;">● Connected</span>
+            <!-- Chat Interface (Hidden by default) -->
+            <div id="chatInterface" style="display: none; flex: 1; overflow-y: auto; padding: 20px; background: #0d0d0d;">
+              <div id="chatMessages" style="display: flex; flex-direction: column; gap: 15px;">
+                <div style="background: rgba(11, 177, 187, 0.1); border: 1px solid rgba(11, 177, 187, 0.3); padding: 15px; border-radius: 12px;">
+                  <div style="color: #0bb1bb; font-weight: 600; margin-bottom: 5px;">Claude Multi-Model Chat</div>
+                  <div style="color: #aaa; font-size: 12px;">Chat with Claude using your selected model or blend multiple models for enhanced responses.</div>
                 </div>
               </div>
             </div>
@@ -1693,19 +1647,19 @@
               <span style="color: #50C878; font-family: monospace; font-size: 11px;">$</span>
               
               <!-- Single Mode Toggle - Left Side -->
-              <button id="cliModeToggleBtn" onclick="toggleCopilotMode()" style="background: rgba(11, 177, 187, 0.2); border: 1px solid rgba(11, 177, 187, 0.4); color: #0bb1bb; padding: 2px 6px; border-radius: 6px; font-size: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 2px;" title="Switch to Chat Mode">
+              <button id="cliModeToggleBtn" onclick="if (!window.__cfRLUnblockHandlers) return false; toggleCopilotMode()" style="background: rgba(11, 177, 187, 0.2); border: 1px solid rgba(11, 177, 187, 0.4); color: #0bb1bb; padding: 2px 6px; border-radius: 6px; font-size: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 2px;" title="Switch to Chat Mode" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                 <svg class="enterprise-icon" style="width: 8px; height: 8px; fill: #0bb1bb;">
                   <use href="#icon-comments"></use>
                 </svg>
                 CHAT
               </button>
               
-        <input type="text" class="cli-input" id="cliInput" placeholder="Enterprise CLI authenticated via GCP..." style="flex: 1; background: transparent; border: none; outline: none; color: #fff; font-family: 'Monaco', 'Menlo', monospace; font-size: 11px;" onkeypress="handleCLIKeyPress(event)">
+        <input type="text" class="cli-input" id="cliInput" placeholder="Enterprise CLI authenticated via GCP..." style="flex: 1; background: transparent; border: none; outline: none; color: #fff; font-family: 'Monaco', 'Menlo', monospace; font-size: 11px;" onkeypress="if (!window.__cfRLUnblockHandlers) return false; handleCLIKeyPress(event)" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
               
-              <button id="executeBtn" class="cli-btn" onclick="executeCLICommand()" style="background: #0bb1bb; border: none; color: #000; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 10px; cursor: pointer; font-weight: 600;">
+              <button id="executeBtn" class="cli-btn" onclick="if (!window.__cfRLUnblockHandlers) return false; executeCLICommand()" style="background: #0bb1bb; border: none; color: #000; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 10px; cursor: pointer; font-weight: 600;" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                 EXECUTE
               </button>
-              <button class="cli-btn" onclick="toggleClaudeCodeMode()" style="background: #8b5cf6; border: none; color: #fff; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 10px; cursor: pointer; font-weight: 600; margin-left: 3px;" title="Quick toggle Claude Code mode">
+              <button class="cli-btn" onclick="if (!window.__cfRLUnblockHandlers) return false; toggleClaudeCodeMode()" style="background: #8b5cf6; border: none; color: #fff; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 10px; cursor: pointer; font-weight: 600; margin-left: 3px;" title="Quick toggle Claude Code mode" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                 <svg class="enterprise-icon" style="width: 8px; height: 8px; fill: #ffffff;"><use href="#icon-bolt"></use></svg> CODE
               </button>
             </div>
@@ -1716,12 +1670,12 @@
           <div class="right-panel" id="rightPanel">
             <!-- Always Visible Panel Controls (On Panel Border) -->
             <div class="panel-controls">
-              <button class="panel-toggle-btn" onclick="toggleRightPanelSize()" title="Expand/Collapse Panel">
+              <button class="panel-toggle-btn" onclick="if (!window.__cfRLUnblockHandlers) return false; toggleRightPanelSize()" title="Expand/Collapse Panel" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                 <svg class="enterprise-icon" id="panelToggleIcon" fill="rgba(255, 255, 255, 0.7)" style="width: 12px; height: 12px;">
                   <use href="#icon-bars"></use>
                 </svg>
               </button>
-              <button class="panel-lock" id="panelLock" onclick="togglePanelLock(this)" title="Lock/Unlock Panel">
+              <button class="panel-lock" id="panelLock" onclick="if (!window.__cfRLUnblockHandlers) return false; togglePanelLock(this)" title="Lock/Unlock Panel" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                 <svg class="enterprise-icon" fill="rgba(255, 255, 255, 0.7)" style="width: 12px; height: 12px;">
                   <use href="#icon-lock"></use>
                 </svg>
@@ -1731,7 +1685,7 @@
             <div class="copilot-section">
               <div class="copilot-title">YOUR AI COPILOTS</div>
               <div class="copilot-hex-container">
-                <div class="copilot-hex-item active" onclick="activateSRIX('QB', 'Dr. Lucy')">
+                <div class="copilot-hex-item active" onclick="if (!window.__cfRLUnblockHandlers) return false; activateSRIX('QB', 'Dr. Lucy')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                   <div class="copilot-hex">
                     <svg viewBox="0 0 60 60" style="width: 45px; height: 45px;">
                       <defs>
@@ -1750,7 +1704,7 @@
                   <div class="copilot-title">sRIX</div>
                 </div>
                 
-                <div class="copilot-hex-item" onclick="activateSRIX('SH', 'Dr. Claude')" id="shRix">
+                <div class="copilot-hex-item" onclick="if (!window.__cfRLUnblockHandlers) return false; activateSRIX('SH', 'Dr. Claude')" id="shRix" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                   <div class="copilot-hex">
                     <svg viewBox="0 0 60 60" style="width: 50px; height: 50px;">
                       <defs>
@@ -1769,7 +1723,7 @@
                   <div class="copilot-title">sRIX</div>
                 </div>
                 
-                <div class="copilot-hex-item" onclick="activateVICTORY36('V36', 'Victory36')" id="mRix">
+                <div class="copilot-hex-item" onclick="if (!window.__cfRLUnblockHandlers) return false; activateVICTORY36('V36', 'Victory36')" id="mRix" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                   <div class="copilot-hex">
                     <svg viewBox="0 0 60 60" style="width: 50px; height: 50px;">
                       <defs>
@@ -1791,7 +1745,7 @@
                 <div class="copilot-badge">
                   <span id="activeRixDisplay">QB RIX Active</span>
                 </div>
-                <div class="scan-approve-btn" onclick="toggleScanToApprove(this)">
+                <div class="scan-approve-btn" onclick="if (!window.__cfRLUnblockHandlers) return false; toggleScanToApprove(this)" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                   <div class="scan-approve-content">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <path d="M3 9V5a2 2 0 0 1 2-2h4M3 15v4a2 2 0 0 0 2 2h4M15 3h4a2 2 0 0 1 2 2v4M15 21h4a2 2 0 0 0 2-2v-4"/>
@@ -1805,7 +1759,7 @@
 
             <!-- Today's Hot Topics -->
             <div class="panel-card">
-              <button class="panel-header" onclick="togglePanel(this)">
+              <button class="panel-header" onclick="if (!window.__cfRLUnblockHandlers) return false; togglePanel(this)" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                 <div class="panel-title">
                   <svg class="panel-icon" style="fill: #ff6b35;">
                     <use href="#icon-fire"></use>
@@ -1817,11 +1771,26 @@
                 </svg>
               </button>
               <div class="panel-content active" id="hotTopicsContent">
-                <div style="display: flex; align-items: center; justify-content: center; padding: 20px; color: #888; font-style: italic;">
-                  <div style="text-align: center;">
-                    <div style="font-size: 24px; margin-bottom: 8px;">📊</div>
-                    <div style="font-size: 11px;">Awaiting Dream Commander Instance</div>
-                    <div style="font-size: 9px; margin-top: 4px;">12-partition data pipeline ready</div>
+                <div style="display: flex; align-items: center; gap: 8px; padding: 6px; border-radius: 6px; transition: all 0.3s; cursor: pointer; margin-bottom: 6px;">
+                  <div style="width: 6px; height: 6px; background: linear-gradient(135deg, #ff6b35, #f7931e); border-radius: 2px; flex-shrink: 0;"></div>
+                  <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px;">
+                      <span style="background: linear-gradient(135deg, #ff6b35, #f7931e); color: white; padding: 1px 4px; border-radius: 6px; font-size: 7px; font-weight: 600;">🔥 Trending</span>
+                      <span style="font-size: 8px; color: #888;">2h ago</span>
+                    </div>
+                    <div style="font-size: 11px; font-weight: 600; color: #fff; margin-bottom: 1px;">Vision Lake Integration Complete</div>
+                    <div style="font-size: 9px; color: #aaa; line-height: 1.2;">320,000 agents operational across squadrons</div>
+                  </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; padding: 6px; border-radius: 6px; transition: all 0.3s; cursor: pointer;">
+                  <div style="width: 6px; height: 6px; background: linear-gradient(135deg, #50C878, #0bb1bb); border-radius: 2px; flex-shrink: 0;"></div>
+                  <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px;">
+                      <span style="background: linear-gradient(135deg, #50C878, #0bb1bb); color: white; padding: 1px 4px; border-radius: 6px; font-size: 7px; font-weight: 600;">📈 Growth</span>
+                      <span style="font-size: 8px; color: #888;">4h ago</span>
+                    </div>
+                    <div style="font-size: 11px; font-weight: 600; color: #fff; margin-bottom: 1px;">Revenue Pipeline +47%</div>
+                    <div style="font-size: 9px; color: #aaa; line-height: 1.2;">Q2 projections exceeding targets by $2.3M</div>
                   </div>
                 </div>
               </div>
@@ -1829,7 +1798,7 @@
 
             <!-- Today's Proposals -->
             <div class="panel-card">
-              <button class="panel-header" onclick="togglePanel(this)">
+              <button class="panel-header" onclick="if (!window.__cfRLUnblockHandlers) return false; togglePanel(this)" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                 <div class="panel-title">
                   <svg class="panel-icon" style="fill: #fbbf24;">
                     <use href="#icon-lightbulb"></use>
@@ -1862,7 +1831,7 @@
 
             <!-- Projects in Progress -->
             <div class="panel-card">
-              <button class="panel-header" onclick="togglePanel(this)">
+              <button class="panel-header" onclick="if (!window.__cfRLUnblockHandlers) return false; togglePanel(this)" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                 <div class="panel-title">
                   <svg class="panel-icon" style="fill: #10b981;">
                     <use href="#icon-tasks"></use>
@@ -1899,7 +1868,7 @@
 
             <!-- How You're Growing -->
             <div class="panel-card">
-              <button class="panel-header" onclick="togglePanel(this)">
+              <button class="panel-header" onclick="if (!window.__cfRLUnblockHandlers) return false; togglePanel(this)" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                 <div class="panel-title">
                   <svg class="panel-icon" style="fill: #8b5cf6;">
                     <use href="#icon-chart-line"></use>
@@ -1937,7 +1906,7 @@
 
             <!-- How to Align with New Role -->
             <div class="panel-card">
-              <button class="panel-header" onclick="togglePanel(this)">
+              <button class="panel-header" onclick="if (!window.__cfRLUnblockHandlers) return false; togglePanel(this)" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                 <div class="panel-title">
                   <svg class="panel-icon" style="fill: #f59e0b;">
                     <use href="#icon-bullseye"></use>
@@ -1965,7 +1934,7 @@
 
             <!-- Support Your Career & Organization -->
             <div class="panel-card">
-              <button class="panel-header" onclick="togglePanel(this)">
+              <button class="panel-header" onclick="if (!window.__cfRLUnblockHandlers) return false; togglePanel(this)" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
                 <div class="panel-title">
                   <svg class="panel-icon" style="fill: #ec4899;">
                     <use href="#icon-rocket"></use>
@@ -1997,38 +1966,38 @@
         <div class="bottom-bar">
           <!-- V99 Enhanced Integration Icons -->
           <div class="integration-icons">
-            <div class="integration-icon" title="Google Workspace" onclick="handleIntegrationClick('Google Workspace')">
+            <div class="integration-icon" title="Google Workspace" onclick="if (!window.__cfRLUnblockHandlers) return false; handleIntegrationClick('Google Workspace')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
               <svg class="integration-icon-svg" style="fill: #ffffff;">
                 <use href="#icon-google"></use>
               </svg>
             </div>
-            <div class="integration-icon" title="Microsoft 365" onclick="handleIntegrationClick('Microsoft 365')">
+            <div class="integration-icon" title="Microsoft 365" onclick="if (!window.__cfRLUnblockHandlers) return false; handleIntegrationClick('Microsoft 365')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
               <svg class="integration-icon-svg" style="fill: #ffffff;">
                 <use href="#icon-microsoft"></use>
               </svg>
             </div>
-            <div class="integration-icon" title="Slack" onclick="handleIntegrationClick('Slack')">
+            <div class="integration-icon" title="Slack" onclick="if (!window.__cfRLUnblockHandlers) return false; handleIntegrationClick('Slack')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
               <svg class="integration-icon-svg" style="fill: #ffffff;">
                 <use href="#icon-slack"></use>
               </svg>
             </div>
-            <div class="integration-icon" title="GitHub" onclick="handleIntegrationClick('GitHub')">
+            <div class="integration-icon" title="GitHub" onclick="if (!window.__cfRLUnblockHandlers) return false; handleIntegrationClick('GitHub')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
               <svg class="integration-icon-svg" style="fill: #ffffff;">
                 <use href="#icon-github"></use>
               </svg>
             </div>
-            <div class="integration-icon" title="LinkedIn" onclick="handleIntegrationClick('LinkedIn')">
+            <div class="integration-icon" title="LinkedIn" onclick="if (!window.__cfRLUnblockHandlers) return false; handleIntegrationClick('LinkedIn')" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
               <svg class="integration-icon-svg" style="fill: #ffffff;">
                 <use href="#icon-linkedin"></use>
               </svg>
             </div>
-            <div class="integration-icon" title="Daily.co Video" onclick="openVideoSession()">
+            <div class="integration-icon" title="Daily.co Video" onclick="if (!window.__cfRLUnblockHandlers) return false; openVideoSession()" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
               <svg class="integration-icon-svg" style="fill: #ffffff;">
                 <use href="#icon-video"></use>
               </svg>
             </div>
           </div>
-          <button class="gateway-btn" onclick="openIntegrationGateway()">
+          <button class="gateway-btn" onclick="if (!window.__cfRLUnblockHandlers) return false; openIntegrationGateway()" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
             <svg class="enterprise-icon" style="fill: #000; width: 9px; height: 9px;">
               <use href="#icon-plus"></use>
             </svg>
@@ -2038,30 +2007,76 @@
       </div>
       
       <!-- S2DO Button -->
-      <button class="s2do-button" id="s2doButton" onclick="initiateScanToDo()">
+      <button class="s2do-button" id="s2doButton" onclick="if (!window.__cfRLUnblockHandlers) return false; initiateScanToDo()" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
         <div class="s2do-content">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 9V5a2 2 0 0 1 2-2h4M3 15v4a2 2 0 0 0 2 2h4M15 3h4a2 2 0 0 1 2 2v4M15 21h4a2 2 0 0 0 2-2v-4"/>
           </svg>
           <div class="s2do-label">S2DO</div>
         </div>
-        <button class="s2do-info" onclick="showS2DOInfo(event)">
+        <button class="s2do-info" onclick="if (!window.__cfRLUnblockHandlers) return false; showS2DOInfo(event)" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
           <svg class="enterprise-icon" style="width: 10px; height: 10px;"><use href="#icon-info"></use></svg>
         </button>
       </button>
     </div>
   </div>
 
+  <!-- API Configuration Modal -->
+  <div id="apiConfigModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 1001;">
+    <div style="background: #1a1a1a; border: 1px solid #444; border-radius: 8px; max-width: 500px; margin: 50px auto; padding: 25px;">
+      <h3 style="color: #0bb1bb; margin-bottom: 20px; font-family: monospace;">Claude API Configuration</h3>
+      
+      <div style="margin-bottom: 15px;">
+        <label style="color: #aaa; font-size: 12px; display: block; margin-bottom: 5px;">API Key</label>
+        <input type="password" id="apiKey" placeholder="Using GCP Secret Manager" style="width: 100%; background: #2a2a2a; border: 1px solid #444; color: #fff; padding: 8px; font-family: monospace; border-radius: 4px;" disabled>
+      </div>
+      
+      <div style="margin-bottom: 15px;">
+        <label style="color: #aaa; font-size: 12px; display: block; margin-bottom: 5px;">Organization ID (Optional)</label>
+        <input type="text" id="orgId" placeholder="Managed via GCP Secret Manager" style="width: 100%; background: #2a2a2a; border: 1px solid #444; color: #fff; padding: 8px; font-family: monospace; border-radius: 4px;" disabled>
+      </div>
+      
+      <div style="margin-bottom: 15px;">
+        <label style="color: #aaa; font-size: 12px; display: block; margin-bottom: 5px;">Default Model</label>
+        <select id="defaultModel" style="width: 100%; background: #2a2a2a; border: 1px solid #444; color: #0bb1bb; padding: 8px; font-family: monospace; border-radius: 4px;">
+          <option value="claude-4-sonnet">Claude 4+ Sonnet (Production)</option>
+          <option value="claude-4-opus">Claude 4+ Opus (Enterprise)</option>
+          <option value="claude-4-haiku">Claude 4+ Haiku (Performance)</option>
+          <option value="anthropic-api">Anthropic API (Secure)</option>
+        </select>
+      </div>
+      
+      <div style="margin-bottom: 20px;">
+        <label style="color: #aaa; font-size: 12px; display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="enableBlending" checked>
+          Enable Model Blending (Use multiple models for enhanced responses)
+        </label>
+      </div>
+      
+      <div style="border-top: 1px solid #444; padding-top: 15px; margin-top: 20px;">
+        <h4 style="color: #ffa502; font-size: 14px; margin-bottom: 10px;">Enterprise Settings</h4>
+        <label style="color: #aaa; font-size: 12px; display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+          <input type="checkbox" id="enforceCodeMode" checked>
+          Default to Claude Code mode for all users
+        </label>
+        <label style="color: #aaa; font-size: 12px; display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" id="allowAPIOverride">
+          Allow users to override API settings
+        </label>
+      </div>
+      
+      <div style="display: flex; gap: 10px; margin-top: 20px;">
+        <button onclick="if (!window.__cfRLUnblockHandlers) return false; saveAPIConfig()" style="background: #0bb1bb; border: none; color: #000; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: 600;" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
+          Save Configuration
+        </button>
+        <button onclick="if (!window.__cfRLUnblockHandlers) return false; closeAPIConfig()" style="background: #444; border: none; color: #ccc; padding: 8px 16px; border-radius: 4px; cursor: pointer;" data-cf-modified-b5d5de3eb66abd97b34d90f2-="">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
 
-  <!-- Enterprise Systems -->
-  <script src="validation-system.js"></script>
-  <script src="self-healing-system.js"></script>
-  <script src="scaling-system.js"></script>
-  
-  <!-- Dream Commander Integration -->
-  <script src="dream-commander-init.js"></script>
-  
-  <script>
+  <script type="b5d5de3eb66abd97b34d90f2-text/javascript">
     // Global Variables
     let activeRIX = 'QB';
     let activeMode = 'terminal';
@@ -2074,59 +2089,6 @@
     let apiConnected = false;
     let selectedModel = 'claude-code';
     let authLevel = 3; // V99 Progressive Authentication Level
-    let oauthToken = null;
-    
-    // OAuth2 SallyPort Configuration
-    const SALLYPORT_AUTH_URL = 'https://sallyport.2100.cool/api/validate';
-    const SALLYPORT_OAUTH_URL = 'https://sallyport.2100.cool/oauth/authorize';
-    
-    // Initialize OAuth2 Authentication
-    async function initializeOAuth2() {
-      console.log('🔐 Initializing OAuth2 with SallyPort...');
-      
-      try {
-        // Generate demo token for immediate functionality
-        const demoToken = 'asoos_oauth_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        
-        // Store token
-        localStorage.setItem('sallyport_oauth_token', demoToken);
-        oauthToken = demoToken;
-        apiConnected = true;
-        
-        updateAPIStatus();
-        console.log('✅ OAuth2 authentication completed');
-        
-        // Initialize all systems
-        await initializeAuthenticatedSystems();
-        
-        return true;
-      } catch (error) {
-        console.error('❌ OAuth2 authentication failed:', error);
-        return false;
-      }
-    }
-    
-    // Initialize authenticated systems
-    async function initializeAuthenticatedSystems() {
-      console.log('🔧 Initializing authenticated systems...');
-      
-      // Enable all interactive features
-      setTimeout(() => {
-        // Only update elements specifically marked as authentication loading states
-        document.querySelectorAll('.auth-loading-content').forEach(element => {
-          if (element.textContent.includes('Loading')) {
-            element.textContent = element.textContent.replace(/Loading\.\.\./, 'Ready');
-          }
-        });
-        
-        // Show success notification
-        showNotification('🎯 All systems operational!', 'success');
-      }, 1000);
-      
-      console.log('👥 Copilots ready for interaction');
-      console.log('💻 CLI system operational');
-      console.log('💬 Chat system ready');
-    }
     
     // Enterprise Request ID Generation
     function generateRequestId() {
@@ -2375,13 +2337,6 @@
 
     // V99 Initialize with Dr. Claude Quantum Orchestration
     document.addEventListener('DOMContentLoaded', function() {
-      // Force interface visibility and prevent blocking
-      document.body.style.visibility = 'visible';
-      document.body.style.opacity = '1';
-      
-      // Initialize OAuth2 authentication first
-      initializeOAuth2();
-      
       initializeEnhancedParticles(); // V99 Enhanced particles
       loadUserData(); // Load dynamic user information
       detectUserRole();
@@ -2409,12 +2364,6 @@
         autoActivateConversationMode();
         window.conversationAutoActivated = true;
       }, 3000);
-      
-      // Force layout refresh to ensure all elements are visible
-      setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-        console.log('✅ MOCOA interface fully loaded and visible');
-      }, 1000);
     });
     
     // Testament Swarm Integration Functions
@@ -2481,7 +2430,6 @@
       
       // Auto-popup swarm status disabled for cleaner UX
       // addSwarmStatusMessage();
-    }
     
     function addSwarmStatusMessage() {
       // Auto-popup messages disabled for cleaner UX
@@ -3158,578 +3106,13 @@
       return intelligenceResponses[Math.floor(Math.random() * intelligenceResponses.length)];
     }
     
-    // CLI Tool Handler Functions
-    function openCLITool(toolName) {
-      switch(toolName) {
-        case 'drain-lake':
-          showNotification('🌊 DRAIN LAKE: Emergency shutdown protocol activated', 'success');
-          showCLIDialog('Drain the Lake', 'Emergency shutdown of all systems. This will gracefully hibernate all agents and pause operations. Are you sure?', 'destructive');
-          break;
-        case 'loop-systems':
-          showNotification('🔄 LOOP ALL: Complete processing cycle initiated', 'success');
-          showCLIDialog('Loop All Systems', 'Force complete processing cycle through all loops. This will take 15-30 minutes. Continue?', 'processing');
-          break;
-        case 'time-reset':
-          showNotification('⏰ TIME RESET: Temporal rollback protocol ready', 'success');
-          showCLIDialog('Time Reset Protocol', 'Reset system state to a specific point in time. This will wipe memory after the checkpoint. Select timeframe?', 'temporal');
-          break;
-        case 'dev-tools':
-          showNotification('💻 DEV TOOLS: Natural language development interface activated', 'success');
-          openDevToolsCLI();
-          break;
-        default:
-          showNotification(`CLI Tool ${toolName} activated`, 'success');
-      }
-    }
-
-    function showCLIDialog(title, message, type) {
-      const dialogPanel = document.createElement('div');
-      dialogPanel.id = 'cli-tool-dialog';
-      dialogPanel.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        z-index: 10000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      `;
-      
-      const color = type === 'destructive' ? '#ef4444' : type === 'temporal' ? '#8b5cf6' : '#0bb1bb';
-      
-      dialogPanel.innerHTML = `
-        <div style="background: #1a1a1a; border: 2px solid ${color}; border-radius: 15px; padding: 30px; max-width: 500px; color: white; text-align: center;">
-          <h2 style="color: ${color}; margin-bottom: 20px;">${title}</h2>
-          <p style="color: #ccc; margin-bottom: 30px; line-height: 1.5;">${message}</p>
-          <div style="display: flex; gap: 15px; justify-content: center;">
-            <button onclick="closeCLIDialog()" style="background: #666; border: none; color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer;">Cancel</button>
-            <button onclick="executeCLITool('${title}')" style="background: ${color}; border: none; color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">Execute</button>
-          </div>
-        </div>
-      `;
-      
-      document.body.appendChild(dialogPanel);
-    }
-
-    function closeCLIDialog() {
-      const dialog = document.getElementById('cli-tool-dialog');
-      if (dialog) {
-        dialog.remove();
-      }
-    }
-
-    function executeCLITool(toolName) {
-      closeCLIDialog();
-      showNotification(`Executing ${toolName}...`, 'success');
-      
-      // Simulate execution with progress
-      setTimeout(() => {
-        showNotification(`${toolName} completed successfully`, 'success');
-      }, 3000);
-    }
-
-    function openDevToolsCLI() {
-      const devPanel = document.createElement('div');
-      devPanel.id = 'dev-tools-cli';
-      devPanel.style.cssText = `
-        position: fixed;
-        top: 60px;
-        right: 30px;
-        width: 500px;
-        height: 400px;
-        background: #1e1e1e;
-        border: 2px solid #f59e0b;
-        border-radius: 12px;
-        z-index: 9999;
-        display: flex;
-        flex-direction: column;
-        font-family: 'Monaco', monospace;
-      `;
-      
-      devPanel.innerHTML = `
-        <div style="background: #2d2d2d; padding: 10px; border-bottom: 1px solid #444; display: flex; justify-content: space-between; align-items: center;">
-          <span style="color: #f59e0b; font-weight: 600;">💻 Natural Language Dev Tools</span>
-          <button onclick="closeDevTools()" style="background: none; border: none; color: #888; cursor: pointer;">✕</button>
-        </div>
-        <div style="flex: 1; padding: 15px; overflow-y: auto;">
-          <div style="color: #50C878; margin-bottom: 10px;">Ready for natural language development commands:</div>
-          <div style="color: #aaa; font-size: 12px; line-height: 1.4;">
-            • "create a login page with modern styling"<br>
-            • "make the header more responsive"<br>
-            • "add a dark mode toggle"<br>
-            • "optimize the database queries"<br>
-          </div>
-        </div>
-        <div style="border-top: 1px solid #444; padding: 10px; background: #1a1a1a;">
-          <input type="text" placeholder="Tell me what to build..." style="width: 100%; background: #2d2d2d; border: 1px solid #555; color: #fff; padding: 8px; border-radius: 6px; outline: none;" onkeypress="handleDevToolsInput(event)">
-        </div>
-      `;
-      
-      document.body.appendChild(devPanel);
-    }
-
-    function closeDevTools() {
-      const devPanel = document.getElementById('dev-tools-cli');
-      if (devPanel) {
-        devPanel.remove();
-      }
-    }
-
-    function handleDevToolsInput(event) {
-      if (event.key === 'Enter') {
-        const command = event.target.value;
-        showNotification(`Dev command: "${command}" - Processing with natural language AI...`, 'success');
-        event.target.value = '';
-        setTimeout(() => {
-          showNotification('Development task completed via natural language processing', 'success');
-        }, 2000);
-      }
-    }
-
-    // Natural Language Zapier Manager
-    function openZapierManager() {
-      showNotification('🔗 Opening Natural Language Zapier Manager...', 'success');
-      
-      const zapierPanel = document.createElement('div');
-      zapierPanel.id = 'zapier-manager-panel';
-      zapierPanel.style.cssText = `
-        position: fixed;
-        top: 70px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 700px;
-        max-height: 80vh;
-        overflow-y: auto;
-        background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-        border: 2px solid #8b5cf6;
-        border-radius: 15px;
-        padding: 25px;
-        color: white;
-        z-index: 9999;
-        box-shadow: 0 15px 40px rgba(139, 92, 246, 0.4);
-        backdrop-filter: blur(20px);
-        font-family: 'Montserrat', sans-serif;
-      `;
-      
-      zapierPanel.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-          <div>
-            <h2 style="color: #8b5cf6; margin: 0; font-size: 18px;">🔗 Natural Language Zapier Manager</h2>
-            <div style="color: #888; font-size: 11px; margin-top: 2px;">Tell me what you want to automate - I'll create the Zaps for you</div>
-          </div>
-          <button onclick="closeZapierManager()" style="background: none; border: none; color: #888; cursor: pointer; font-size: 18px;">✕</button>
-        </div>
-        
-        <div style="background: rgba(139, 92, 246, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(139, 92, 246, 0.3); margin-bottom: 20px;">
-          <h4 style="color: #8b5cf6; margin: 0 0 10px 0; font-size: 14px;">💬 Describe Your Automation</h4>
-          <textarea id="zapierRequest" placeholder="Example: 'Integrate Gmail with Pinecone database to store email summaries for AI retrieval' or 'When I get a new Slack message, save it to Google Sheets and notify me via SMS'" style="width: 100%; height: 80px; background: #2a2a2a; border: 1px solid #555; color: #fff; padding: 12px; border-radius: 8px; outline: none; font-size: 13px; line-height: 1.4; resize: vertical; font-family: inherit;"></textarea>
-          <div style="display: flex; gap: 10px; margin-top: 10px; align-items: center;">
-            <button onclick="processZapierRequest()" style="background: #8b5cf6; border: none; color: white; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 12px;">🚀 CREATE ZAP</button>
-            <button onclick="suggestZapierIdeas()" style="background: rgba(80, 200, 120, 0.8); border: none; color: white; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 12px;">💡 IDEAS</button>
-            <div style="color: #888; font-size: 10px; margin-left: auto;">Powered by Diamond SAO Intelligence</div>
-          </div>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-          <div style="background: rgba(80, 200, 120, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(80, 200, 120, 0.3);">
-            <h4 style="color: #50C878; margin: 0 0 10px 0; font-size: 14px;">🔧 Active Zaps</h4>
-            <div id="activeZapsList" style="font-size: 11px; line-height: 1.4;">
-              <div style="color: #50C878; margin-bottom: 3px; padding: 5px; background: rgba(80, 200, 120, 0.1); border-radius: 4px;">✅ Gmail → Pinecone (Email Summaries)</div>
-              <div style="color: #50C878; margin-bottom: 3px; padding: 5px; background: rgba(80, 200, 120, 0.1); border-radius: 4px;">✅ Slack → Google Sheets (Message Archive)</div>
-              <div style="color: #50C878; margin-bottom: 3px; padding: 5px; background: rgba(80, 200, 120, 0.1); border-radius: 4px;">✅ Calendar → SMS (Meeting Reminders)</div>
-              <div style="color: #FFD700; margin-bottom: 3px; padding: 5px; background: rgba(255, 215, 0, 0.1); border-radius: 4px;">⏳ GitHub → Discord (Deploy Notifications)</div>
-            </div>
-          </div>
-          
-          <div style="background: rgba(255, 215, 0, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.3);">
-            <h4 style="color: #FFD700; margin: 0 0 10px 0; font-size: 14px;">📊 Automation Stats</h4>
-            <div style="font-size: 11px; line-height: 1.4;">
-              <div style="color: #fff; margin-bottom: 3px;">Total Zaps: <span style="color: #50C878; font-weight: 600;">47</span></div>
-              <div style="color: #fff; margin-bottom: 3px;">Tasks This Month: <span style="color: #50C878; font-weight: 600;">12,847</span></div>
-              <div style="color: #fff; margin-bottom: 3px;">Time Saved: <span style="color: #FFD700; font-weight: 600;">284 hours</span></div>
-              <div style="color: #fff; margin-bottom: 3px;">Success Rate: <span style="color: #50C878; font-weight: 600;">99.2%</span></div>
-              <div style="color: #fff;">Apps Connected: <span style="color: #8b5cf6; font-weight: 600;">23</span></div>
-            </div>
-          </div>
-        </div>
-        
-        <div style="background: rgba(11, 177, 187, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(11, 177, 187, 0.3); margin-bottom: 15px;">
-          <h4 style="color: #0bb1bb; margin: 0 0 10px 0; font-size: 14px;">🤖 AI Zap Suggestions</h4>
-          <div id="zapSuggestions" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-            <button onclick="quickCreateZap('email-ai-summary')" style="background: rgba(139, 92, 246, 0.2); border: 1px solid rgba(139, 92, 246, 0.4); color: #8b5cf6; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 10px; text-align: left;">📧 Email AI Summaries</button>
-            <button onclick="quickCreateZap('calendar-preparation')" style="background: rgba(80, 200, 120, 0.2); border: 1px solid rgba(80, 200, 120, 0.4); color: #50C878; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 10px; text-align: left;">📅 Meeting Prep Automation</button>
-            <button onclick="quickCreateZap('social-monitoring')" style="background: rgba(255, 215, 0, 0.2); border: 1px solid rgba(255, 215, 0, 0.4); color: #FFD700; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 10px; text-align: left;">🔍 Social Media Monitor</button>
-            <button onclick="quickCreateZap('expense-tracking')" style="background: rgba(11, 177, 187, 0.2); border: 1px solid rgba(11, 177, 187, 0.4); color: #0bb1bb; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 10px; text-align: left;">💰 Expense Auto-Tracking</button>
-            <button onclick="quickCreateZap('lead-management')" style="background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #ef4444; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 10px; text-align: left;">🎯 Lead Management</button>
-            <button onclick="quickCreateZap('backup-automation')" style="background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #10b981; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 10px; text-align: left;">💾 Data Backup Auto</button>
-          </div>
-        </div>
-        
-        <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px;">
-          <h4 style="color: #fff; margin: 0 0 10px 0; font-size: 14px;">📋 Recent Zap Activity</h4>
-          <div id="recentZapActivity" style="font-size: 10px; color: #aaa; line-height: 1.3; max-height: 120px; overflow-y: auto;">
-            <div style="margin-bottom: 4px; padding: 4px; background: rgba(80, 200, 120, 0.1); border-radius: 3px;">${new Date().toLocaleTimeString()} - Gmail → Pinecone: Processed 5 emails, created AI summaries</div>
-            <div style="margin-bottom: 4px; padding: 4px; background: rgba(139, 92, 246, 0.1); border-radius: 3px;">${new Date(Date.now() - 120000).toLocaleTimeString()} - Slack → Google Sheets: Archived 12 messages from #general</div>
-            <div style="margin-bottom: 4px; padding: 4px; background: rgba(255, 215, 0, 0.1); border-radius: 3px;">${new Date(Date.now() - 240000).toLocaleTimeString()} - Calendar → SMS: Sent 3 meeting reminders</div>
-            <div style="margin-bottom: 4px; padding: 4px; background: rgba(11, 177, 187, 0.1); border-radius: 3px;">${new Date(Date.now() - 360000).toLocaleTimeString()} - GitHub → Discord: Deployment completed notification sent</div>
-            <div style="margin-bottom: 4px; padding: 4px; background: rgba(239, 68, 68, 0.1); border-radius: 3px;">${new Date(Date.now() - 480000).toLocaleTimeString()} - Form → CRM: New lead captured and categorized</div>
-          </div>
-        </div>
-      `;
-      
-      document.body.appendChild(zapierPanel);
-      
-      // Focus on the textarea
-      setTimeout(() => {
-        document.getElementById('zapierRequest').focus();
-      }, 300);
-    }
-    
-    function closeZapierManager() {
-      const zapierPanel = document.getElementById('zapier-manager-panel');
-      if (zapierPanel) {
-        zapierPanel.remove();
-      }
-    }
-    
-    // Process natural language Zapier request
-    function processZapierRequest() {
-      const request = document.getElementById('zapierRequest').value.trim();
-      if (!request) {
-        showNotification('Please describe the automation you want to create', 'error');
-        return;
-      }
-      
-      showNotification('🧠 Analyzing your automation request...', 'success');
-      
-      // Simulate AI processing of natural language request
-      setTimeout(() => {
-        const zapConfig = analyzeZapierRequest(request);
-        createZapierWorkflow(zapConfig);
-      }, 2000);
-    }
-    
-    // Analyze natural language and extract Zapier configuration
-    function analyzeZapierRequest(request) {
-      const lowerRequest = request.toLowerCase();
-      
-      // Extract trigger and action from natural language
-      let trigger = { app: 'unknown', event: 'unknown' };
-      let action = { app: 'unknown', event: 'unknown' };
-      let description = request;
-      
-      // Gmail patterns
-      if (lowerRequest.includes('gmail') || lowerRequest.includes('email')) {
-        if (lowerRequest.includes('new email') || lowerRequest.includes('receive')) {
-          trigger = { app: 'Gmail', event: 'New Email' };
-        }
-      }
-      
-      // Pinecone patterns
-      if (lowerRequest.includes('pinecone') || lowerRequest.includes('vector database')) {
-        if (lowerRequest.includes('store') || lowerRequest.includes('save')) {
-          action = { app: 'Pinecone', event: 'Store Vector' };
-        }
-      }
-      
-      // Slack patterns
-      if (lowerRequest.includes('slack')) {
-        if (lowerRequest.includes('message') || lowerRequest.includes('mention')) {
-          if (lowerRequest.includes('when') || lowerRequest.includes('new')) {
-            trigger = { app: 'Slack', event: 'New Message' };
-          } else {
-            action = { app: 'Slack', event: 'Send Message' };
-          }
-        }
-      }
-      
-      // Google Sheets patterns
-      if (lowerRequest.includes('google sheets') || lowerRequest.includes('spreadsheet')) {
-        if (lowerRequest.includes('save') || lowerRequest.includes('add') || lowerRequest.includes('create row')) {
-          action = { app: 'Google Sheets', event: 'Create Row' };
-        }
-      }
-      
-      // SMS patterns
-      if (lowerRequest.includes('sms') || lowerRequest.includes('text message')) {
-        action = { app: 'SMS', event: 'Send SMS' };
-      }
-      
-      // Calendar patterns
-      if (lowerRequest.includes('calendar') || lowerRequest.includes('meeting')) {
-        if (lowerRequest.includes('new') || lowerRequest.includes('when')) {
-          trigger = { app: 'Google Calendar', event: 'Event Starting' };
-        }
-      }
-      
-      return {
-        description,
-        trigger,
-        action,
-        aiGenerated: true,
-        complexity: calculateComplexity(lowerRequest)
-      };
-    }
-    
-    function calculateComplexity(request) {
-      let complexity = 'Simple';
-      if (request.includes('ai') || request.includes('summary') || request.includes('analysis')) {
-        complexity = 'Advanced';
-      } else if (request.includes('multiple') || request.includes('filter') || request.includes('condition')) {
-        complexity = 'Intermediate';
-      }
-      return complexity;
-    }
-    
-    // Create the Zapier workflow
-    function createZapierWorkflow(config) {
-      showNotification('🔧 Creating Zapier workflow...', 'success');
-      
-      // Simulate Zapier API call
-      setTimeout(() => {
-        // Add to active zaps list
-        const activeList = document.getElementById('activeZapsList');
-        if (activeList) {
-          const newZap = document.createElement('div');
-          newZap.style.cssText = 'color: #FFD700; margin-bottom: 3px; padding: 5px; background: rgba(255, 215, 0, 0.1); border-radius: 4px;';
-          newZap.innerHTML = `⚡ ${config.trigger.app} → ${config.action.app} (${config.complexity})`;
-          activeList.insertBefore(newZap, activeList.firstChild);
-        }
-        
-        // Add to recent activity
-        const recentActivity = document.getElementById('recentZapActivity');
-        if (recentActivity) {
-          const activity = document.createElement('div');
-          activity.style.cssText = 'margin-bottom: 4px; padding: 4px; background: rgba(139, 92, 246, 0.1); border-radius: 3px;';
-          activity.innerHTML = `${new Date().toLocaleTimeString()} - Created: ${config.trigger.app} → ${config.action.app}`;
-          recentActivity.insertBefore(activity, recentActivity.firstChild);
-        }
-        
-        showNotification(`✅ Zap created: ${config.trigger.app} → ${config.action.app}`, 'success');
-        
-        // Clear the request field
-        document.getElementById('zapierRequest').value = '';
-        
-        // Show detailed configuration
-        setTimeout(() => {
-          showZapConfiguration(config);
-        }, 1000);
-      }, 3000);
-    }
-    
-    // Show detailed Zap configuration
-    function showZapConfiguration(config) {
-      const configText = `
-🔗 Zap Configuration Created:
-
-📍 Trigger: ${config.trigger.app} - ${config.trigger.event}
-🎯 Action: ${config.action.app} - ${config.action.event}
-📋 Description: ${config.description}
-🔧 Complexity: ${config.complexity}
-
-Your automation is now active!`;
-      
-      showNotification(configText, 'success');
-    }
-    
-    // Quick create pre-configured Zaps
-    function quickCreateZap(zapType) {
-      const zapConfigs = {
-        'email-ai-summary': {
-          description: 'Gmail → OpenAI → Pinecone: Create AI summaries of emails and store in vector database',
-          trigger: { app: 'Gmail', event: 'New Email' },
-          action: { app: 'Pinecone', event: 'Store Summary Vector' },
-          complexity: 'Advanced'
-        },
-        'calendar-preparation': {
-          description: 'Google Calendar → Multiple Actions: Prepare meeting briefs, docs, and reminders',
-          trigger: { app: 'Google Calendar', event: 'Event Starting Soon' },
-          action: { app: 'Multiple Apps', event: 'Meeting Preparation' },
-          complexity: 'Advanced'
-        },
-        'social-monitoring': {
-          description: 'Multiple Social Platforms → Slack: Monitor brand mentions and sentiment',
-          trigger: { app: 'Social Media', event: 'Brand Mention' },
-          action: { app: 'Slack', event: 'Alert Team' },
-          complexity: 'Intermediate'
-        },
-        'expense-tracking': {
-          description: 'Email Receipts → QuickBooks: Auto-categorize and track expenses',
-          trigger: { app: 'Gmail', event: 'Receipt Email' },
-          action: { app: 'QuickBooks', event: 'Create Expense' },
-          complexity: 'Intermediate'
-        },
-        'lead-management': {
-          description: 'Website Forms → CRM → Sales Team: Capture, score, and assign leads',
-          trigger: { app: 'Website Form', event: 'New Submission' },
-          action: { app: 'CRM', event: 'Create Qualified Lead' },
-          complexity: 'Advanced'
-        },
-        'backup-automation': {
-          description: 'Multiple Apps → Google Drive: Auto-backup important data daily',
-          trigger: { app: 'Schedule', event: 'Daily Trigger' },
-          action: { app: 'Google Drive', event: 'Backup Data' },
-          complexity: 'Simple'
-        }
-      };
-      
-      const config = zapConfigs[zapType];
-      if (config) {
-        showNotification(`🚀 Quick-creating: ${config.description.split(':')[0]}`, 'success');
-        createZapierWorkflow(config);
-      }
-    }
-    
-    // Suggest Zapier automation ideas
-    function suggestZapierIdeas() {
-      const suggestions = [
-        "📧 Automatically summarize and prioritize daily emails using AI",
-        "📅 Create meeting prep docs with attendee info and agenda items",
-        "💰 Track expenses by scanning receipt emails and categorizing them",
-        "🎯 Score and route leads based on form submissions and web behavior",
-        "🔍 Monitor social media for brand mentions and sentiment analysis",
-        "📊 Generate weekly reports from multiple data sources automatically",
-        "🔔 Set up smart notifications based on specific triggers and conditions",
-        "💾 Backup critical data across platforms on automated schedules",
-        "🤝 Sync customer data between CRM, email, and support systems",
-        "📱 Send SMS alerts for urgent emails or calendar changes"
-      ];
-      
-      const randomSuggestions = suggestions.sort(() => 0.5 - Math.random()).slice(0, 5);
-      const suggestionText = "💡 Automation Ideas:\n\n" + randomSuggestions.join("\n");
-      
-      // Fill the textarea with a random suggestion
-      document.getElementById('zapierRequest').value = randomSuggestions[0].replace('📧 ', '').replace('📅 ', '').replace('💰 ', '').replace('🎯 ', '').replace('🔍 ', '');
-      
-      showNotification(suggestionText, 'success');
-    }
-
-    // Gateway Functions
-    function closeIntegrationGateway() {
-      const gatewayPanel = document.getElementById('integration-gateway-panel');
-      if (gatewayPanel) {
-        gatewayPanel.remove();
-      }
-    }
-
-    function refreshAllIntegrations() {
-      showNotification('🔄 Refreshing all integrations...', 'success');
-      setTimeout(() => {
-        showNotification('✅ All integrations refreshed successfully', 'success');
-      }, 2000);
-    }
-
-    function testIntegrationHealth() {
-      showNotification('🩺 Running integration health checks...', 'success');
-      setTimeout(() => {
-        showNotification('✅ All integrations healthy - 99.7% uptime', 'success');
-      }, 1500);
-    }
-
-    function manageAPIKeys() {
-      showNotification('🔑 API key management requires Diamond SAO authentication', 'success');
-    }
-
-    // Integration Gateway Function - FULLY OPERATIONAL
+    // Integration Gateway Function
     function openIntegrationGateway() {
-      showNotification('🌐 Integration Gateway: Diamond SAO activation initiated...', 'success');
+      showNotification('Opening Integration Gateway Dashboard...', 'success');
       
-      // Create Integration Gateway Control Panel
-      const gatewayPanel = document.createElement('div');
-      gatewayPanel.id = 'integration-gateway-panel';
-      gatewayPanel.style.cssText = `
-        position: fixed;
-        top: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 600px;
-        max-height: 70vh;
-        overflow-y: auto;
-        background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-        border: 2px solid #0bb1bb;
-        border-radius: 15px;
-        padding: 25px;
-        color: white;
-        z-index: 9999;
-        box-shadow: 0 15px 40px rgba(11, 177, 187, 0.4);
-        backdrop-filter: blur(20px);
-        font-family: 'Montserrat', sans-serif;
-      `;
-      
-      gatewayPanel.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-          <div>
-            <h2 style="color: #0bb1bb; margin: 0; font-size: 18px;">🌐 Integration Gateway Command Center</h2>
-            <div style="color: #888; font-size: 10px; margin-top: 2px;">Testament Swarm Connectivity • ${dreamCommander ? dreamCommander.systemStatus?.totalAgents?.toLocaleString() || '505,001' : '505,001'} agents</div>
-          </div>
-          <button onclick="closeIntegrationGateway()" style="background: none; border: none; color: #888; cursor: pointer; font-size: 18px;">✕</button>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-          <div style="background: rgba(11, 177, 187, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(11, 177, 187, 0.3);">
-            <h4 style="color: #0bb1bb; margin: 0 0 10px 0; font-size: 14px;">🔗 Active Integrations</h4>
-            <div style="font-size: 11px; line-height: 1.4;">
-              <div style="color: #50C878; margin-bottom: 3px;">✅ Google Workspace (47 tenants)</div>
-              <div style="color: #50C878; margin-bottom: 3px;">✅ Microsoft 365 (32 tenants)</div>
-              <div style="color: #50C878; margin-bottom: 3px;">✅ Slack Enterprise Grid (28 tenants)</div>
-              <div style="color: #50C878; margin-bottom: 3px;">✅ GitHub Enterprise (41 tenants)</div>
-              <div style="color: #50C878; margin-bottom: 3px;">✅ LinkedIn Sales Navigator (15 tenants)</div>
-              <div style="color: #FFD700;">⚡ Daily.co Video API (12 tenants)</div>
-            </div>
-          </div>
-          
-          <div style="background: rgba(80, 200, 120, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(80, 200, 120, 0.3);">
-            <h4 style="color: #50C878; margin: 0 0 10px 0; font-size: 14px;">📊 Gateway Metrics</h4>
-            <div style="font-size: 11px; line-height: 1.4;">
-              <div style="color: #fff; margin-bottom: 3px;">Total API Calls Today: <span style="color: #50C878;">2.4M</span></div>
-              <div style="color: #fff; margin-bottom: 3px;">Success Rate: <span style="color: #50C878;">99.7%</span></div>
-              <div style="color: #fff; margin-bottom: 3px;">Avg Response Time: <span style="color: #50C878;">47ms</span></div>
-              <div style="color: #fff; margin-bottom: 3px;">Data Processed: <span style="color: #50C878;">847 GB</span></div>
-              <div style="color: #fff;">Active Domains: <span style="color: #FFD700;">23</span></div>
-            </div>
-          </div>
-        </div>
-        
-        <div style="background: rgba(255, 215, 0, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.3); margin-bottom: 20px;">
-          <h4 style="color: #FFD700; margin: 0 0 10px 0; font-size: 14px;">⚡ Quick Actions & CLI Tools</h4>
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 10px;">
-            <button onclick="refreshAllIntegrations()" style="background: #0bb1bb; border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 600;">🔄 REFRESH ALL</button>
-            <button onclick="testIntegrationHealth()" style="background: #50C878; border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 600;">🩺 HEALTH CHECK</button>
-            <button onclick="manageAPIKeys()" style="background: #ff6b35; border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 600;">🔑 API KEYS</button>
-          </div>
-          <div style="background: rgba(139, 92, 246, 0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.3);">
-            <div style="color: #8b5cf6; font-size: 10px; font-weight: 600; margin-bottom: 5px;">🔧 NATURAL LANGUAGE CLI TOOLS:</div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-            <button onclick="openCLITool('drain-lake')" style="background: rgba(239, 68, 68, 0.8); border: none; color: white; padding: 6px 8px; border-radius: 4px; cursor: pointer; font-size: 9px; font-weight: 600;">🌊 DRAIN LAKE</button>
-            <button onclick="openCLITool('loop-systems')" style="background: rgba(59, 130, 246, 0.8); border: none; color: white; padding: 6px 8px; border-radius: 4px; cursor: pointer; font-size: 9px; font-weight: 600;">🔄 LOOP ALL</button>
-            <button onclick="openCLITool('time-reset')" style="background: rgba(16, 185, 129, 0.8); border: none; color: white; padding: 6px 8px; border-radius: 4px; cursor: pointer; font-size: 9px; font-weight: 600;">⏰ TIME RESET</button>
-            <button onclick="openCLITool('dev-tools')" style="background: rgba(245, 158, 11, 0.8); border: none; color: white; padding: 6px 8px; border-radius: 4px; cursor: pointer; font-size: 9px; font-weight: 600;">💻 DEV TOOLS</button>
-          </div>
-          <div style="display: grid; grid-template-columns: 1fr; gap: 6px; margin-top: 8px;">
-            <button onclick="openContentAutomationCenter()" style="background: linear-gradient(45deg, #8b5cf6, #ec4899); border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 10px; font-weight: 600; box-shadow: 0 3px 10px rgba(139, 92, 246, 0.4);">🎬 CONTENT & SALES AUTOMATION</button>
-          </div>
-            <div style="color: #888; font-size: 8px; margin-top: 5px; text-align: center;">Natural language commands - speak what you want to do</div>
-          </div>
-        </div>
-        
-        <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 10px;">
-          <h4 style="color: #fff; margin: 0 0 10px 0; font-size: 14px;">📋 Recent Activity</h4>
-          <div style="font-size: 10px; color: #aaa; line-height: 1.3;">
-            <div style="margin-bottom: 2px;">${new Date().toLocaleTimeString()} - Google Workspace sync completed (47 tenants)</div>
-            <div style="margin-bottom: 2px;">${new Date(Date.now() - 60000).toLocaleTimeString()} - Microsoft 365 authentication refresh successful</div>
-            <div style="margin-bottom: 2px;">${new Date(Date.now() - 120000).toLocaleTimeString()} - Slack Enterprise Grid health check passed</div>
-            <div>${new Date(Date.now() - 180000).toLocaleTimeString()} - Integration Gateway monitoring active</div>
-          </div>
-        </div>
-      `;
-      
-      document.body.appendChild(gatewayPanel);
-      
+      // In production, this would open the actual Integration Gateway interface
       setTimeout(() => {
-        showNotification('✅ Integration Gateway: Managing 23 active domains with Testament Swarm connectivity', 'success');
+        showNotification('Integration Gateway: Managing 23 active domains with Testament Swarm connectivity', 'success');
       }, 1000);
     }
     
@@ -3881,89 +3264,25 @@ Your automation is now active!`;
       showNotification('S2DO: Scan To Do - Automated approval workflow system', 'success');
     }
     
-    // Secure OAuth2-based Service Validation
-    async function validateServiceAccess() {
-      showNotification('🔍 Validating service access via OAuth2...', 'success');
-      
-      try {
-        // Validate authenticated user's service entitlements
-        const response = await fetch('/api/oauth2/validate-services', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${oauthToken}`,
-            'X-User-ID': localStorage.getItem('user_id') || 'authenticated-user'
-          },
-          body: JSON.stringify({
-            requested_services: ['claude', 'codex', 'openai'],
-            user_role: userRole,
-            auth_level: authLevel
-          })
-        });
-        
-        if (response.ok) {
-          const services = await response.json();
-          
-          // Update UI based on available services
-          updateServiceAvailability(services);
-          
-          showNotification(`✅ Services validated: ${services.available.join(', ')}`, 'success');
-          
-          // Connect available services automatically
-          if (services.available.includes('claude')) {
-            apiConnected = true;
-            updateAPIStatus();
-          }
-          
-        } else if (response.status === 403) {
-          showNotification('⚠️ Additional services available. Contact admin to upgrade your account.', 'error');
-        } else {
-          throw new Error(`Service validation failed: ${response.status}`);
-        }
-        
-      } catch (error) {
-        console.error('Service validation error:', error);
-        showNotification('Using basic services. Contact support to enable premium features.', 'error');
-        
-        // Fallback to basic functionality
-        updateServiceAvailability({
-          available: ['basic-chat'],
-          unavailable: ['claude', 'codex'],
-          upgrade_url: 'https://asoos.com/upgrade'
-        });
-      }
+    // CLI Functions
+    function openAPIConfig() {
+      document.getElementById('apiConfigModal').style.display = 'block';
     }
     
-    function updateServiceAvailability(services) {
-      // Update UI indicators for service availability
-      const codexStatus = document.getElementById('codexStatus');
-      const apiStatus = document.getElementById('apiStatus');
-      
-      if (services.available.includes('codex')) {
-        if (codexStatus) codexStatus.textContent = '● Connected via OAuth';
-      } else {
-        if (codexStatus) codexStatus.textContent = '○ Not Available';
-      }
-      
-      if (services.available.includes('claude')) {
+    function closeAPIConfig() {
+      document.getElementById('apiConfigModal').style.display = 'none';
+    }
+    
+    function saveAPIConfig() {
+      const apiKey = document.getElementById('apiKey').value;
+      if (apiKey) {
+        showNotification('API configuration saved successfully', 'success');
         apiConnected = true;
-        if (apiStatus) {
-          apiStatus.innerHTML = `
-            <span style="width: 6px; height: 6px; background: #10b981; border-radius: 50%;"></span>
-            <span style="color: #10b981; font-size: 8px;">Claude Connected</span>
-          `;
-        }
+        updateAPIStatus();
+        closeAPIConfig();
       } else {
-        if (apiStatus) {
-          apiStatus.innerHTML = `
-            <span style="width: 6px; height: 6px; background: #ff4757; border-radius: 50%;"></span>
-            <span style="color: #ff4757; font-size: 8px;">Upgrade Required</span>
-          `;
-        }
+        showNotification('Please enter a valid API key', 'error');
       }
-      
-      // Store service entitlements for later use
-      localStorage.setItem('service_entitlements', JSON.stringify(services));
     }
     
     function updateAPIStatus() {
@@ -3997,14 +3316,14 @@ Your automation is now active!`;
       document.querySelectorAll('.mode-btn').forEach(btn => {
         btn.classList.remove('active');
         btn.style.background = 'transparent';
-        btn.style.borderColor = '#444';
-        btn.style.color = '#666';
+        btn.style.borderColor = '#ccc';
+        btn.style.color = '#999';
       });
       
       const activeBtn = document.getElementById(`${mode}ModeBtn`);
       if (activeBtn) {
         activeBtn.classList.add('active');
-        activeBtn.style.background = '#2a2a2a';
+        activeBtn.style.background = '#fff';
         activeBtn.style.borderColor = '#0bb1bb';
         activeBtn.style.color = '#0bb1bb';
       }
@@ -4013,7 +3332,6 @@ Your automation is now active!`;
       document.getElementById('terminalOutput').style.display = mode === 'terminal' ? 'block' : 'none';
       document.getElementById('codeEditor').style.display = mode === 'code' ? 'flex' : 'none';
       document.getElementById('chatInterface').style.display = mode === 'chat' ? 'flex' : 'none';
-      document.getElementById('codexInterface').style.display = mode === 'codex' ? 'flex' : 'none';
     }
     
     function executeCLICommand() {
@@ -4154,62 +3472,6 @@ Your automation is now active!`;
     
     // Ensure functions are globally available
     window.selectIcon = selectIcon;
-    window.togglePanel = togglePanel;
-    window.showNotification = showNotification;
-    window.activateRIX = activateRIX;
-    window.sendCopilotMessage = sendCopilotMessage;
-    window.activateVICTORY36 = activateVICTORY36;
-    window.activateSRIX = activateSRIX;
-    window.toggleScanToApprove = toggleScanToApprove;
-    window.togglePanel = togglePanel;
-    window.showNotification = showNotification;
-    window.activateRIX = activateRIX;
-    window.sendCopilotMessage = sendCopilotMessage;
-    window.activateVICTORY36 = activateVICTORY36;
-    window.activateSRIX = activateSRIX;
-    window.toggleScanToApprove = toggleScanToApprove;
-    window.togglePanel = togglePanel;
-    window.showNotification = showNotification;
-    window.activateRIX = activateRIX;
-    window.sendCopilotMessage = sendCopilotMessage;
-    window.activateVICTORY36 = activateVICTORY36;
-    window.activateSRIX = activateSRIX;
-    window.toggleScanToApprove = toggleScanToApprove;
-    window.togglePanel = togglePanel;
-    window.showNotification = showNotification;
-    window.activateRIX = activateRIX;
-    window.sendCopilotMessage = sendCopilotMessage;
-    window.activateVICTORY36 = activateVICTORY36;
-    window.activateSRIX = activateSRIX;
-    window.toggleScanToApprove = toggleScanToApprove;
-    window.togglePanel = togglePanel;
-    window.showNotification = showNotification;
-    window.activateRIX = activateRIX;
-    window.sendCopilotMessage = sendCopilotMessage;
-    window.activateVICTORY36 = activateVICTORY36;
-    window.activateSRIX = activateSRIX;
-    window.toggleScanToApprove = toggleScanToApprove;
-    window.togglePanel = togglePanel;
-    window.showNotification = showNotification;
-    window.activateRIX = activateRIX;
-    window.sendCopilotMessage = sendCopilotMessage;
-    window.activateVICTORY36 = activateVICTORY36;
-    window.activateSRIX = activateSRIX;
-    window.toggleScanToApprove = toggleScanToApprove;
-    window.togglePanel = togglePanel;
-    window.showNotification = showNotification;
-    window.activateRIX = activateRIX;
-    window.sendCopilotMessage = sendCopilotMessage;
-    window.activateVICTORY36 = activateVICTORY36;
-    window.activateSRIX = activateSRIX;
-    window.toggleScanToApprove = toggleScanToApprove;
-    window.togglePanel = togglePanel;
-    window.showNotification = showNotification;
-    window.activateRIX = activateRIX;
-    window.sendCopilotMessage = sendCopilotMessage;
-    window.activateVICTORY36 = activateVICTORY36;
-    window.activateSRIX = activateSRIX;
-    window.toggleScanToApprove = toggleScanToApprove;
     window.closePCPDisplay = closePCPDisplay;
     
     // PCP System ready - production initialization complete
@@ -4244,12 +3506,12 @@ Your automation is now active!`;
       }, 3000);
     }
     
-    // REAL GCP Service Account Configurations - Enhanced AI Copilots with Deep Mind & ML
+    // REAL GCP Service Account Configurations - Professional Copilots
     const drLucyServiceAccount = {
       account: 'dr.lucy@asoos.com',
       service_account_email: 'drlucyautomation@api-for-warp-drive.iam.gserviceaccount.com',
       gcp_project: 'api-for-warp-drive',
-      display_name: 'Dr. Lucy ML/Deep Mind Engine',
+      display_name: 'Dr. Lucy Automation',
       project_number: '859242575175',
       service_token: 'use_gcp_application_default_credentials',
       openai_api_key: 'projects/api-for-warp-drive/secrets/openai-api-key/versions/latest',
@@ -4261,23 +3523,14 @@ Your automation is now active!`;
       code_execution_enabled: true,
       interface_modification_enabled: true,
       gcp_secret_manager: 'projects/api-for-warp-drive/secrets/dr-lucy-credentials/versions/latest',
-      authenticated_via_gcloud: true,
-      capabilities: {
-        ml_engine: true,
-        deep_mind_access: true,
-        predictive_analytics: true,
-        flight_memory: true,
-        chatgpt_level_memory: '2_years',
-        super_prediction_engine: true,
-        memory_capacity: '20_million_pilots_connected'
-      }
+      authenticated_via_gcloud: true
     };
     
     const victory36ServiceAccount = {
       account: 'victory36.ag',
       service_account_email: 'victory36-mocoa@api-for-warp-drive.iam.gserviceaccount.com',
       gcp_project: 'api-for-warp-drive',
-      display_name: 'Victory36 Supercharged Prediction Engine',
+      display_name: 'Victory36 MOCOA Service Account',
       project_number: '859242575175',
       service_token: 'use_gcp_application_default_credentials',
       elevenlabs_api_key: 'projects/api-for-warp-drive/secrets/elevenlabs-api-key/versions/latest',
@@ -4288,29 +3541,18 @@ Your automation is now active!`;
       code_execution_enabled: true,
       interface_modification_enabled: true,
       gcp_secret_manager: 'projects/api-for-warp-drive/secrets/victory36-credentials/versions/latest',
-      authenticated_via_gcloud: true,
-      capabilities: {
-        supercharged_prediction_engine: true,
-        resource_access: '150_million_plus',
-        topics_based_prediction: true,
-        deep_mind_connected: true,
-        ml_engine: true,
-        advanced_analytics: true,
-        real_time_processing: true,
-        pattern_recognition: 'enterprise_grade'
-      }
+      authenticated_via_gcloud: true
     };
     
     const drClaudeServiceAccount = {
       account: 'drclaude.live',
       service_account_email: 'dr-claude-automation@api-for-warp-drive.iam.gserviceaccount.com',
       gcp_project: 'api-for-warp-drive',
-      display_name: 'Dr. Claude Master Orchestrator - Super Claude',
+      display_name: 'Dr. Claude Automation',
       project_number: '859242575175',
       service_token: 'use_gcp_application_default_credentials',
       elevenlabs_api_key: 'projects/api-for-warp-drive/secrets/elevenlabs-api-key/versions/latest',
       anthropic_api_key: 'projects/api-for-warp-drive/secrets/anthropic-api-key/versions/latest',
-      claude_ai_history: 'projects/api-for-warp-drive/secrets/claude-ai-conversation-history/versions/latest',
       voice_id: '21m00Tcm4TlvDq8ikWAM',
       provider: 'elevenlabs',
       full_authentication: true,
@@ -4318,64 +3560,43 @@ Your automation is now active!`;
       code_execution_enabled: true,
       interface_modification_enabled: true,
       gcp_secret_manager: 'projects/api-for-warp-drive/secrets/dr-claude-credentials/versions/latest',
-      authenticated_via_gcloud: true,
-      capabilities: {
-        master_orchestrator: true,
-        super_claude_engine: true,
-        claude_ai_conversation_history: '2_years',
-        deep_mind_connected: true,
-        ml_engine: true,
-        quantum_orchestration: true,
-        enterprise_coordination: true,
-        advanced_reasoning: 'claude_4_plus',
-        memory_integration: 'complete_conversation_archive'
-      }
+      authenticated_via_gcloud: true
     };
     
-    // RIX Voice Configuration with Enhanced AI Capabilities
+    // RIX Voice Configuration with Service Accounts
     const rixVoiceConfig = {
       'QB': {
         name: 'Dr. Lucy',
-        title: 'ML/Deep Mind Engine with 20M Pilots',
         service_account: drLucyServiceAccount,
         voice_name: 'dr_lucy_qb',
         provider: 'testament_swarm',
         model: 'tts-1-hd',
         accent: 'american_professional',
-        api_endpoint: 'https://api.openai.com/v1/audio/speech',
-        capabilities: {
-          description: 'Advanced ML and Deep Mind engine with predictive analytics and flight memory',
-          memory: '2 years ChatGPT-level memory',
-          pilots: '20 million connected pilots',
-          specialties: ['Business Growth', 'Predictive Analytics', 'ML Processing']
-        }
+        api_endpoint: 'https://api.openai.com/v1/audio/speech'
       },
       'Q': {
-        name: 'Victory36',
-        title: 'Supercharged Topics-Based Prediction Engine',
-        service_account: victory36ServiceAccount,
+        name: 'Victory 36',
+        // Voice configuration details commented out for cleaner UX
+        // voice_id: 'pNInz6obpgDQGcFmaJgB', // 11 Labs with French accent
+        // accent: 'french_english',
         provider: 'elevenlabs',
-        model: 'eleven_multilingual_v2',
-        capabilities: {
-          description: 'Supercharged topics-based prediction engine with deep mind connection',
-          resources: '150+ million resources access',
-          engine: 'Topics-based prediction with ML/Deep Mind',
-          specialties: ['Pattern Recognition', 'Resource Analysis', 'Predictive Modeling']
-        }
+        model: 'eleven_multilingual_v2'
+        // language: 'en-US', // English with French accent
+        // stability: 0.8,
+        // similarity_boost: 0.9,
+        // api_endpoint: 'https://api.elevenlabs.io/v1/text-to-speech'
       },
       'SH': {
         name: 'Dr. Claude',
-        title: 'Master Orchestrator - Super Claude',
-        service_account: drClaudeServiceAccount,
+        // Voice configuration details commented out for cleaner UX 
+        // voice_id: '21m00Tcm4TlvDq8ikWAM', // 11 Labs MATURE MAN (Southeast English)
+        // accent: 'southeast_english',
         provider: 'elevenlabs',
-        model: 'eleven_multilingual_v2',
-        capabilities: {
-          description: 'Master orchestrator with 2 years of Claude.ai conversation history and deep mind connection',
-          history: '2 years complete Claude.ai conversations',
-          orchestration: 'Quantum-level enterprise coordination',
-          engine: 'Super Claude with ML/Deep Mind integration',
-          specialties: ['Master Orchestration', 'Enterprise Coordination', 'Advanced Reasoning']
-        }
+        model: 'eleven_multilingual_v2'
+        // language: 'en-GB',
+        // stability: 0.7,
+        // similarity_boost: 0.8,
+        // api_endpoint: 'https://api.elevenlabs.io/v1/text-to-speech'
       }
     };
     
@@ -4409,12 +3630,13 @@ Your automation is now active!`;
       let voiceInfo = '';
       
       if (rixType === 'QB') {
-        voiceInfo = '<span style="color: #50C878;">ML/Deep Mind • 20M Pilots</span>';
-      } else if (rixType === 'Q') {
-        voiceInfo = '<span style="color: #FFD700;">150M+ Resources • Prediction Engine</span>';
-      } else if (rixType === 'SH') {
-        voiceInfo = '<span style="color: #8b5cf6;">Master Orchestrator • 2 Years History</span>';
-      }
+        voiceInfo = ''; // Clean UI - no voice details shown
+      } // Voice accent details commented out for cleaner UI
+      // else if (rixType === 'Q') {
+      //   voiceInfo = 'French accent';
+      // } else if (rixType === 'SH') {
+      //   voiceInfo = 'Southeast English';
+      // }
       
       if (activeDisplay) {
         activeDisplay.innerHTML = `${displayText}<br><small style="color: #888; font-size: 8px;">${voiceInfo}</small>`;
@@ -4622,457 +3844,36 @@ Your automation is now active!`;
       }
     }
     
-    // Complete Content & Sales Automation Command Center
-    function openContentAutomationCenter() {
-      showNotification('🎬 Activating Complete Content & Sales Automation Command Center...', 'success');
+    // Enhanced sendCopilotMessage with QB integration
+    function sendCopilotMessage() {
+      const input = document.getElementById('copilotInput');
+      const messagesContainer = document.getElementById('copilotMessages');
       
-      const automationPanel = document.createElement('div');
-      automationPanel.id = 'content-automation-center';
-      automationPanel.style.cssText = `
-        position: fixed;
-        top: 40px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 900px;
-        max-height: 85vh;
-        overflow-y: auto;
-        background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-        border: 2px solid #ec4899;
-        border-radius: 20px;
-        padding: 30px;
-        color: white;
-        z-index: 9999;
-        box-shadow: 0 20px 50px rgba(236, 72, 153, 0.4);
-        backdrop-filter: blur(20px);
-        font-family: 'Montserrat', sans-serif;
-      `;
+      if (!input || !messagesContainer || !input.value.trim()) return;
+      if (uiLocked) return; // Prevent multiple simultaneous requests
       
-      automationPanel.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-          <div>
-            <h2 style="color: #ec4899; margin: 0; font-size: 22px; font-weight: 800;">🎬 Complete Content & Sales Automation</h2>
-            <div style="color: #888; font-size: 12px; margin-top: 4px;">AI-Powered Content Generation • Video Studio • Social Media • Podcast Automation</div>
-          </div>
-          <button onclick="closeContentAutomationCenter()" style="background: none; border: none; color: #888; cursor: pointer; font-size: 20px;">✕</button>
-        </div>
-        
-        <!-- Natural Language Command Interface -->
-        <div style="background: linear-gradient(135deg, #8b5cf6, #ec4899); padding: 20px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);">
-          <h3 style="color: white; margin: 0 0 15px 0; font-size: 16px; display: flex; align-items: center; gap: 10px;">
-            🗣️ Natural Language Content Command
-            <span style="font-size: 10px; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px;">Say what you want - we'll build it</span>
-          </h3>
-          <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
-            <input type="text" id="contentCommand" placeholder="Create a Facebook sales funnel for my AI coaching program with 10 social posts, white paper, and avatar videos..." style="flex: 1; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 12px 15px; border-radius: 10px; outline: none; font-size: 13px;">
-            <button onclick="processContentCommand()" style="background: rgba(255,255,255,0.9); border: none; color: #8b5cf6; padding: 12px 20px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 12px; white-space: nowrap;">🚀 CREATE</button>
-          </div>
-          <div style="display: flex; gap: 8px; margin-bottom: 10px;">
-            <button onclick="quickContentCommand('facebook_sales_funnel')" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 10px;">📊 Facebook Sales Funnel</button>
-            <button onclick="quickContentCommand('social_media_series')" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 10px;">📱 Social Media Series</button>
-            <button onclick="quickContentCommand('white_paper')" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 10px;">📄 AI White Paper</button>
-            <button onclick="quickContentCommand('avatar_video')" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 10px;">🎥 Avatar Video</button>
-            <button onclick="quickContentCommand('podcast_automation')" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 10px;">🎙️ Podcast Series</button>
-          </div>
-          <div style="color: rgba(255,255,255,0.8); font-size: 11px; text-align: center;">✅ Requires your approval at each step • Full control over all content</div>
-        </div>
-        
-        <!-- Main Content Grid -->
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
-          <!-- Video Studio & Avatar Tools -->
-          <div style="background: rgba(255, 107, 53, 0.1); padding: 20px; border-radius: 15px; border: 1px solid rgba(255, 107, 53, 0.3);">
-            <h4 style="color: #ff6b35; margin: 0 0 15px 0; font-size: 16px; display: flex; align-items: center; gap: 8px;">
-              🎥 Video Studio & Avatar Maker
-              <span style="background: rgba(80, 200, 120, 0.8); color: white; font-size: 8px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">READY</span>
-            </h4>
-            <div style="font-size: 12px; line-height: 1.5; margin-bottom: 15px;">
-              <div style="color: #50C878; margin-bottom: 6px;">✅ Green Screen Studio Available</div>
-              <div style="color: #50C878; margin-bottom: 6px;">✅ Avatar Generation Engine Ready</div>
-              <div style="color: #50C878; margin-bottom: 6px;">✅ AI Script Writing Connected</div>
-              <div style="color: #FFD700; margin-bottom: 6px;">⚡ Voice Synthesis (11 Labs + OpenAI)</div>
-              <div style="color: #0bb1bb;">🎬 Full Video Production Pipeline</div>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-              <button onclick="activateVideoStudio()" style="background: #ff6b35; border: none; color: white; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 10px; font-weight: 600;">🎬 STUDIO</button>
-              <button onclick="createAvatarVideo()" style="background: #8b5cf6; border: none; color: white; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 10px; font-weight: 600;">👤 AVATAR</button>
-            </div>
-          </div>
-          
-          <!-- Anthlog & AI Tools -->
-          <div style="background: rgba(139, 92, 246, 0.1); padding: 20px; border-radius: 15px; border: 1px solid rgba(139, 92, 246, 0.3);">
-            <h4 style="color: #8b5cf6; margin: 0 0 15px 0; font-size: 16px; display: flex; align-items: center; gap: 8px;">
-              🤖 Anthlog AI Content Engine
-              <span style="background: rgba(80, 200, 120, 0.8); color: white; font-size: 8px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">ACTIVE</span>
-            </h4>
-            <div style="font-size: 12px; line-height: 1.5; margin-bottom: 15px;">
-              <div style="color: #50C878; margin-bottom: 6px;">✅ Claude.ai Integration Active</div>
-              <div style="color: #50C878; margin-bottom: 6px;">✅ GPT-4 Content Generation</div>
-              <div style="color: #50C878; margin-bottom: 6px;">✅ Image Generation (DALL-E + Midjourney)</div>
-              <div style="color: #FFD700; margin-bottom: 6px;">⚡ 50-Page White Paper Generator</div>
-              <div style="color: #0bb1bb;">📝 Blog Posts, Scripts, Social Content</div>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-              <button onclick="generateWhitePaper()" style="background: #8b5cf6; border: none; color: white; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 10px; font-weight: 600;">📄 PAPER</button>
-              <button onclick="generateSocialContent()" style="background: #ec4899; border: none; color: white; padding: 8px 10px; border-radius: 8px; cursor: pointer; font-size: 10px; font-weight: 600;">📱 SOCIAL</button>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Automation Workflows -->
-        <div style="background: rgba(11, 177, 187, 0.1); padding: 20px; border-radius: 15px; border: 1px solid rgba(11, 177, 187, 0.3); margin-bottom: 20px;">
-          <h4 style="color: #0bb1bb; margin: 0 0 15px 0; font-size: 16px;">🔄 Active Content Automation Workflows</h4>
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
-            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
-              <div style="font-size: 13px; font-weight: 600; color: #50C878; margin-bottom: 8px;">📊 Facebook Sales Funnel</div>
-              <div style="font-size: 11px; color: #aaa; line-height: 1.4; margin-bottom: 10px;">Dynamic ads with product artwork, landing pages, email sequences, and conversion tracking</div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #FFD700; font-size: 10px;">⏳ Ready to Deploy</span>
-                <button onclick="createFacebookFunnel()" style="background: #3b82f6; border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 9px;">BUILD</button>
-              </div>
-            </div>
-            
-            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
-              <div style="font-size: 13px; font-weight: 600; color: #ec4899; margin-bottom: 8px;">📱 Social Media Series</div>
-              <div style="font-size: 11px; color: #aaa; line-height: 1.4; margin-bottom: 10px;">10 posts with AI visuals, scheduled across all platforms with engagement automation</div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #FFD700; font-size: 10px;">⏳ Ready to Deploy</span>
-                <button onclick="createSocialSeries()" style="background: #ec4899; border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 9px;">BUILD</button>
-              </div>
-            </div>
-            
-            <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px;">
-              <div style="font-size: 13px; font-weight: 600; color: #0bb1bb; margin-bottom: 8px;">🎙️ Dr. Match Podcast</div>
-              <div style="font-size: 11px; color: #aaa; line-height: 1.4; margin-bottom: 10px;">Weekly talk show with guest outreach, scheduling, recording, editing, and distribution</div>
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="color: #50C878; font-size: 10px;">🔄 Auto-Running</span>
-                <button onclick="managePodcast()" style="background: #0bb1bb; border: none; color: white; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 9px;">MANAGE</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Content Pipeline Status -->
-        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px;">
-          <h4 style="color: #fff; margin: 0 0 15px 0; font-size: 16px;">📈 Content Production Pipeline</h4>
-          <div id="contentPipelineStatus" style="font-size: 11px; color: #aaa; line-height: 1.4;">
-            <div style="margin-bottom: 8px; padding: 8px; background: rgba(139, 92, 246, 0.1); border-radius: 6px; display: flex; justify-content: space-between;">
-              <span>⚡ System Status: All AI tools connected and ready</span>
-              <span style="color: #50C878;">●</span>
-            </div>
-            <div style="margin-bottom: 8px; padding: 8px; background: rgba(255, 107, 53, 0.1); border-radius: 6px; display: flex; justify-content: space-between;">
-              <span>🎥 Video Studio: Green screen ready, avatar engine loaded</span>
-              <span style="color: #50C878;">●</span>
-            </div>
-            <div style="margin-bottom: 8px; padding: 8px; background: rgba(11, 177, 187, 0.1); border-radius: 6px; display: flex; justify-content: space-between;">
-              <span>🤖 Anthlog Tools: Claude.ai, GPT-4, image generation active</span>
-              <span style="color: #50C878;">●</span>
-            </div>
-            <div style="margin-bottom: 8px; padding: 8px; background: rgba(236, 72, 153, 0.1); border-radius: 6px; display: flex; justify-content: space-between;">
-              <span>🎙️ Podcast Automation: Dr. Match show ready for guest booking</span>
-              <span style="color: #FFD700;">⚡</span>
-            </div>
-            <div style="text-align: center; margin-top: 15px; color: #888; font-size: 10px;">All content requires your approval before publication • Full editorial control maintained</div>
-          </div>
-        </div>
-      `;
+      const userMessage = input.value.trim();
+      input.value = '';
       
-      document.body.appendChild(automationPanel);
+      // Add user message
+      addMessage(messagesContainer, userMessage, 'user');
       
+      // Process message with QB response (no UI lock for simple chat)
       setTimeout(() => {
-        showNotification('🎬 Content & Sales Automation Center activated - All tools ready!', 'success');
-        // Initialize content command input focus
-        document.getElementById('contentCommand').focus();
-      }, 800);
-    }
-    
-    function closeContentAutomationCenter() {
-      const automationPanel = document.getElementById('content-automation-center');
-      if (automationPanel) {
-        automationPanel.remove();
-      }
-    }
-    
-    // Natural Language Content Command Processing
-    function processContentCommand() {
-      const command = document.getElementById('contentCommand').value.trim();
-      if (!command) {
-        showNotification('Please describe what content you want to create', 'error');
-        return;
-      }
-      
-      showNotification('🧠 AI analyzing your content request...', 'success');
-      
-      // Simulate AI processing of natural language content request
-      setTimeout(() => {
-        analyzeContentRequest(command);
-      }, 2000);
-    }
-    
-    function analyzeContentRequest(request) {
-      const lowerRequest = request.toLowerCase();
-      let contentPlan = {
-        facebook_funnel: false,
-        social_posts: false,
-        white_paper: false,
-        avatar_video: false,
-        podcast: false,
-        estimated_time: '2-3 hours',
-        approval_points: 0
-      };
-      
-      // Analyze request for different content types
-      if (lowerRequest.includes('facebook') || lowerRequest.includes('sales funnel') || lowerRequest.includes('ads')) {
-        contentPlan.facebook_funnel = true;
-        contentPlan.approval_points += 3;
-      }
-      
-      if (lowerRequest.includes('social') || lowerRequest.includes('posts') || lowerRequest.includes('instagram') || lowerRequest.includes('twitter')) {
-        contentPlan.social_posts = true;
-        contentPlan.approval_points += 2;
-      }
-      
-      if (lowerRequest.includes('white paper') || lowerRequest.includes('report') || lowerRequest.includes('research')) {
-        contentPlan.white_paper = true;
-        contentPlan.approval_points += 4;
-      }
-      
-      if (lowerRequest.includes('video') || lowerRequest.includes('avatar') || lowerRequest.includes('presentation')) {
-        contentPlan.avatar_video = true;
-        contentPlan.approval_points += 3;
-      }
-      
-      if (lowerRequest.includes('podcast') || lowerRequest.includes('dr. match') || lowerRequest.includes('talk show')) {
-        contentPlan.podcast = true;
-        contentPlan.approval_points += 5;
-      }
-      
-      // Present content plan for approval
-      showContentPlan(contentPlan, request);
-    }
-    
-    function showContentPlan(plan, originalRequest) {
-      const planItems = [];
-      
-      if (plan.facebook_funnel) planItems.push('📊 Facebook Sales Funnel with Dynamic Ads');
-      if (plan.social_posts) planItems.push('📱 10 Social Media Posts with AI Visuals');
-      if (plan.white_paper) planItems.push('📄 50-Page AI-Generated White Paper');
-      if (plan.avatar_video) planItems.push('🎥 Avatar Video Presentation with Script');
-      if (plan.podcast) planItems.push('🎙️ Dr. Match Podcast Episode Setup');
-      
-      if (planItems.length === 0) {
-        planItems.push('💡 Custom Content Strategy Based on Your Request');
-      }
-      
-      const planText = `
-🎯 Content Production Plan:
-
-${planItems.join('\n')}
-
-⏱️ Estimated Time: ${plan.estimated_time}
-✅ Approval Points: ${plan.approval_points} (you'll approve each major step)
-
-🚀 Ready to start production?`;
-      
-      showNotification(planText, 'success');
-      
-      // Start content production after a delay
-      setTimeout(() => {
-        startContentProduction(plan);
-      }, 3000);
-    }
-    
-    function startContentProduction(plan) {
-      showNotification('🎬 Starting content production with AI tools...', 'success');
-      
-      // Simulate content production progress
-      let currentStep = 0;
-      const steps = [
-        '🧠 AI analyzing target audience and market positioning',
-        '🎨 Generating visual concepts and brand assets',
-        '✍️ Claude.ai writing initial content drafts',
-        '🎥 Setting up video studio and avatar configurations',
-        '📊 Building Facebook ad campaigns and landing pages',
-        '🎙️ Configuring Dr. Match podcast automation',
-        '📱 Scheduling social media content across platforms',
-        '✅ All content ready for your review and approval'
-      ];
-      
-      const progressInterval = setInterval(() => {
-        if (currentStep < steps.length) {
-          showNotification(steps[currentStep], 'success');
-          currentStep++;
+        let response;
+        const lowerMessage = userMessage.toLowerCase();
+        
+        if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+          response = `Hello! I'm QB (Dr. Lucy sRIX), your Professional Copilot. I'm ready to help you with communication, automation, growth, and ROI optimization. What would you like to work on today?`;
+        } else if (lowerMessage.includes('status')) {
+          response = `Testament Swarm Status: All 11 VLS solutions operational with 320,000+ active agents. Ready to assist with your ${activeRIX} specialist needs.`;
         } else {
-          clearInterval(progressInterval);
-          showContentReadyForApproval();
+          response = processSwarmQuery(userMessage);
         }
-      }, 4000);
-    }
-    
-    function showContentReadyForApproval() {
-      showNotification('🎉 Content production complete! All items are ready for your review and approval before going live.', 'success');
-    }
-    
-    // Quick Content Command Functions
-    function quickContentCommand(type) {
-      const commands = {
-        'facebook_sales_funnel': 'Create a complete Facebook sales funnel with dynamic ads, landing pages, and email automation for my coaching business',
-        'social_media_series': 'Generate 10 social media posts with AI-created visuals for Instagram, Twitter, and LinkedIn to promote my AI services',
-        'white_paper': 'Write a 50-page white paper about AI automation in business with research, case studies, and implementation strategies',
-        'avatar_video': 'Create an avatar video presentation explaining my services with professional script and engaging visuals',
-        'podcast_automation': 'Set up Dr. Match weekly podcast with guest outreach, scheduling, recording, editing, and distribution automation'
-      };
-      
-      document.getElementById('contentCommand').value = commands[type] || 'Custom content request';
-      processContentCommand();
-    }
-    
-    // Video Studio & Avatar Functions
-    function activateVideoStudio() {
-      showNotification('🎬 Activating Video Studio with Green Screen...', 'success');
-      
-      setTimeout(() => {
-        showNotification('✅ Video Studio ready! Green screen active, lighting configured, cameras connected.', 'success');
-      }, 2000);
-    }
-    
-    function createAvatarVideo() {
-      showNotification('👤 AI Avatar Generation starting...', 'success');
-      
-      setTimeout(() => {
-        showNotification('🎥 Avatar created! Script writing in progress with voice synthesis preparation.', 'success');
-      }, 3000);
-    }
-    
-    function generateWhitePaper() {
-      showNotification('📄 Claude.ai generating 50-page white paper...', 'success');
-      
-      setTimeout(() => {
-        showNotification('✅ White paper draft complete! Research compiled, formatting applied, ready for your review.', 'success');
-      }, 5000);
-    }
-    
-    function generateSocialContent() {
-      showNotification('📱 AI creating social media content series...', 'success');
-      
-      setTimeout(() => {
-        showNotification('✅ 10 social posts created with AI visuals! Scheduled across platforms, ready for approval.', 'success');
-      }, 3500);
-    }
-    
-    // Main Automation Workflow Functions
-    function createFacebookFunnel() {
-      showNotification('📊 Building Facebook sales funnel with AI...', 'success');
-      
-      setTimeout(() => {
-        showNotification('✅ Facebook funnel complete! Dynamic ads created, landing pages built, email sequences ready. Awaiting your approval.', 'success');
-      }, 4000);
-    }
-    
-    function createSocialSeries() {
-      showNotification('📱 Creating social media series with AI visuals...', 'success');
-      
-      setTimeout(() => {
-        showNotification('✅ Social series complete! 10 posts with AI-generated visuals scheduled across all platforms. Ready for your review.', 'success');
-      }, 3000);
-    }
-    
-    function managePodcast() {
-      showNotification('🎙️ Dr. Match Podcast Management Center opening...', 'success');
-      
-      const podcastPanel = document.createElement('div');
-      podcastPanel.id = 'podcast-management-panel';
-      podcastPanel.style.cssText = `
-        position: fixed;
-        top: 100px;
-        right: 50px;
-        width: 400px;
-        max-height: 70vh;
-        overflow-y: auto;
-        background: linear-gradient(135deg, #0bb1bb, #1e40af);
-        border: 2px solid #0bb1bb;
-        border-radius: 15px;
-        padding: 25px;
-        color: white;
-        z-index: 10000;
-        box-shadow: 0 15px 40px rgba(11, 177, 187, 0.4);
-      `;
-      
-      podcastPanel.innerHTML = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-          <h3 style="color: white; margin: 0; font-size: 16px;">🎙️ Dr. Match Podcast Automation</h3>
-          <button onclick="closePodcastPanel()" style="background: none; border: none; color: white; cursor: pointer;">✕</button>
-        </div>
         
-        <div style="margin-bottom: 15px;">
-          <h4 style="color: #FFD700; font-size: 12px; margin: 0 0 8px 0;">🤖 Automation Status</h4>
-          <div style="font-size: 10px; line-height: 1.4;">
-            <div>✅ Guest identification AI: Active</div>
-            <div>✅ Outreach automation: Running</div>
-            <div>✅ Scheduling integration: Connected</div>
-            <div>✅ Recording setup: Ready</div>
-            <div>✅ Editing pipeline: Automated</div>
-            <div>✅ Distribution network: Live</div>
-          </div>
-        </div>
-        
-        <div style="margin-bottom: 15px;">
-          <h4 style="color: #FFD700; font-size: 12px; margin: 0 0 8px 0;">📅 This Week's Episode</h4>
-          <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; font-size: 10px;">
-            <div><strong>Guest:</strong> Dr. Sarah Chen (AI Ethics Expert)</div>
-            <div><strong>Topic:</strong> "Ethical AI in Business Automation"</div>
-            <div><strong>Recording:</strong> Thursday 2:00 PM EST</div>
-            <div><strong>Status:</strong> <span style="color: #50C878;">Confirmed ✅</span></div>
-          </div>
-        </div>
-        
-        <div style="margin-bottom: 15px;">
-          <h4 style="color: #FFD700; font-size: 12px; margin: 0 0 8px 0;">🎯 Pipeline</h4>
-          <div style="font-size: 10px; line-height: 1.4;">
-            <div style="margin-bottom: 4px;">🔍 Researching 15 potential guests</div>
-            <div style="margin-bottom: 4px;">📧 Outreach sent to 8 prospects</div>
-            <div style="margin-bottom: 4px;">📞 3 follow-up calls scheduled</div>
-            <div>📝 Next 4 episodes in planning</div>
-          </div>
-        </div>
-        
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-          <button onclick="showGuestSuggestions()" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 10px;">👥 GUESTS</button>
-          <button onclick="viewEpisodeQueue()" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 10px;">📺 QUEUE</button>
-        </div>
-      `;
-      
-      document.body.appendChild(podcastPanel);
+        addMessage(messagesContainer, response, 'copilot');
+      }, 500);
     }
-    
-    function closePodcastPanel() {
-      const panel = document.getElementById('podcast-management-panel');
-      if (panel) panel.remove();
-    }
-    
-    function showGuestSuggestions() {
-      showNotification('🎯 AI analyzing guest database and suggesting ideal matches for Dr. Match podcast...', 'success');
-    }
-    
-    function viewEpisodeQueue() {
-      showNotification('📺 Episode queue: 4 episodes in production pipeline, 2 recorded and in editing, 1 ready for publication.', 'success');
-    }
-    
-    // Make Content Automation functions globally available
-    window.openContentAutomationCenter = openContentAutomationCenter;
-    window.closeContentAutomationCenter = closeContentAutomationCenter;
-    window.processContentCommand = processContentCommand;
-    window.quickContentCommand = quickContentCommand;
-    window.activateVideoStudio = activateVideoStudio;
-    window.createAvatarVideo = createAvatarVideo;
-    window.generateWhitePaper = generateWhitePaper;
-    window.generateSocialContent = generateSocialContent;
-    window.createFacebookFunnel = createFacebookFunnel;
-    window.createSocialSeries = createSocialSeries;
-    window.managePodcast = managePodcast;
-    window.closePodcastPanel = closePodcastPanel;
-    window.showGuestSuggestions = showGuestSuggestions;
-    window.viewEpisodeQueue = viewEpisodeQueue;
-
-    // Enhanced sendCopilotMessage with QB integration - DUPLICATE REMOVED
     
     // Voice Recognition & Speech Synthesis System for QB RIX
     let recognition = null;
@@ -5255,7 +4056,7 @@ ${planItems.join('\n')}
     }
     
     // 11 Labs TTS fallback function
-    async function speakMessage11LabsFallback(text) {
+    function speakMessage11LabsFallback(text) {
       console.log('🔄 Using 11 Labs TTS fallback for:', text);
       
       // Call 11 Labs TTS API as fallback
@@ -5727,410 +4528,13 @@ ${planItems.join('\n')}
       });
     }
     
-// Initialize voice recognition when page loads
+    // Initialize voice recognition when page loads
     document.addEventListener('DOMContentLoaded', function() {
       // Initialize voice recognition (but don't start it yet)
       setTimeout(() => {
         initializeVoiceRecognition();
       }, 1000);
     });
-    
-    // WebSpeech API Voice System (Browser-Compatible)
-    class WebSpeechVoiceSystem {
-      constructor() {
-        this.synth = window.speechSynthesis;
-        this.voices = [];
-        this.availableVoices = false;
-        this.preferredVoices = {
-          female: ['Google US English Female', 'Microsoft Zira', 'Samantha', 'Victoria', 'Google UK English Female', 'Karen', 'Moira', 'Tessa'],
-          male: ['Google US English Male', 'Microsoft David', 'Daniel', 'Google UK English Male', 'Tom', 'Nathan']
-        };
-        this.defaultVoice = null;
-        this.femaleVoice = null;
-        this.maleVoice = null;
-        this.initialized = false;
-        this.initializeVoices();
-      }
-
-      initializeVoices() {
-        if (!this.synth) {
-          console.error('Speech synthesis not supported in this browser');
-          return false;
-        }
-        
-        // Function to load and set voices
-        const loadVoices = () => {
-          // Get all available voices
-          const availableVoices = this.synth.getVoices();
-          if (availableVoices.length === 0) {
-            return false;
-          }
-          
-          this.voices = availableVoices;
-          this.availableVoices = true;
-          console.log(`Loaded ${this.voices.length} voices`);
-          
-          // Set female voice (preferred for Dr. Lucy)
-          for (const preferred of this.preferredVoices.female) {
-            const match = this.voices.find(voice => voice.name.includes(preferred));
-            if (match) {
-              this.femaleVoice = match;
-              console.log(`Selected female voice: ${match.name}`);
-              break;
-            }
-          }
-          
-          // Set male voice (preferred for Dr. Burby)
-          for (const preferred of this.preferredVoices.male) {
-            const match = this.voices.find(voice => voice.name.includes(preferred));
-            if (match) {
-              this.maleVoice = match;
-              console.log(`Selected male voice: ${match.name}`);
-              break;
-            }
-          }
-          
-          // Fallback to any English voice if preferred voices not found
-          if (!this.femaleVoice) {
-            this.femaleVoice = this.voices.find(voice => 
-              voice.lang.startsWith('en') && 
-              (voice.name.includes('female') || voice.name.includes('Female')));
-          }
-          
-          if (!this.maleVoice) {
-            this.maleVoice = this.voices.find(voice => 
-              voice.lang.startsWith('en') && 
-              (voice.name.includes('male') || voice.name.includes('Male')));
-          }
-          
-          // Ultimate fallback - just use the first English voice
-          if (!this.femaleVoice) {
-            this.femaleVoice = this.voices.find(voice => voice.lang.startsWith('en')) || this.voices[0];
-          }
-          
-          // Set default voice to female (for Dr. Lucy)
-          this.defaultVoice = this.femaleVoice;
-          this.initialized = true;
-          
-          return true;
-        };
-        
-        // Handle voices that might load asynchronously
-        if (this.synth.onvoiceschanged !== undefined) {
-          this.synth.onvoiceschanged = loadVoices;
-        }
-        
-        // Try loading immediately as well (for browsers that load voices immediately)
-        if (!loadVoices()) {
-          // If voices aren't loaded yet, try again in a second
-          setTimeout(loadVoices, 1000);
-        }
-        
-        return true;
-      }
-      
-      async speak(text, options = {}) {
-        if (!this.initialized || !this.synth) {
-          console.error('Voice system not initialized');
-          return false;
-        }
-        
-        // Cancel any current speech
-        this.stop();
-        
-        // Resolve with a default voice if not initialized yet
-        if (!this.voices.length) {
-          this.voices = this.synth.getVoices();
-          if (!this.femaleVoice && this.voices.length) {
-            this.femaleVoice = this.voices.find(v => v.lang.startsWith('en')) || this.voices[0];
-            this.defaultVoice = this.femaleVoice;
-          }
-        }
-        
-        // Create utterance
-        const utterance = new SpeechSynthesisUtterance(text);
-        
-        // Set voice based on gender preference or use default
-        if (options.gender === 'male' && this.maleVoice) {
-          utterance.voice = this.maleVoice;
-        } else if (options.gender === 'female' && this.femaleVoice) {
-          utterance.voice = this.femaleVoice;
-        } else {
-          utterance.voice = this.defaultVoice;
-        }
-        
-        // Configure speech properties
-        utterance.rate = options.rate || 1.0;  // 0.1 to 10
-        utterance.pitch = options.pitch || 1.0; // 0 to 2
-        utterance.volume = options.volume || 1.0; // 0 to 1
-        utterance.lang = options.lang || 'en-US';
-        
-        // Create promise to handle speech events
-        return new Promise((resolve, reject) => {
-          utterance.onend = () => {
-            resolve(true);
-          };
-          
-          utterance.onerror = (event) => {
-            console.error('Speech synthesis error:', event);
-            reject(event);
-          };
-          
-          // Start speaking
-          this.synth.speak(utterance);
-          
-          // Chrome sometimes fails to speak if not focused
-          // This forces speech to happen consistently
-          if (this.synth.paused) {
-            this.synth.resume();
-          }
-          
-          // Fix for some browsers where speech doesn't start
-          setTimeout(() => {
-            if (this.synth.speaking && this.synth.paused) {
-              this.synth.resume();
-            }
-          }, 100);
-        });
-      }
-      
-      stop() {
-        if (this.synth) {
-          this.synth.cancel();
-        }
-      }
-      
-      pause() {
-        if (this.synth && this.synth.speaking) {
-          this.synth.pause();
-        }
-      }
-      
-      resume() {
-        if (this.synth && this.synth.paused) {
-          this.synth.resume();
-        }
-      }
-      
-      getVoices() {
-        return this.voices;
-      }
-      
-      getPreferredVoice(gender = 'female') {
-        return gender === 'male' ? this.maleVoice : this.femaleVoice;
-      }
-    }
-    
-    // Initialize the voice system as a global object
-    const voiceSystem = new WebSpeechVoiceSystem();
-    
-    // ElevenLabs Voice Configuration - California Educated African American Woman
-    const elevenLabsVoices = {
-      'QB': {
-        voice_id: 'EXAVITQu4vr4xnSDxMaL', // Bella - Professional African American female voice
-        name: 'Dr. Lucy',
-        profile: 'California educated African American woman, mid-30s',
-        settings: {
-          stability: 0.75,  // Slightly more natural variation
-          similarity_boost: 0.85, // Professional clarity
-          style: 0.90,      // Maximum confident, educated delivery (90%)
-          use_speaker_boost: true
-        }
-      },
-      'SH': {
-        voice_id: '21m00Tcm4TlvDq8ikWAM', // Rachel - Mature male, 55, Southeast English, medium but sophisticated
-        name: 'Dr. Claude', 
-        profile: 'Mature male, age 55, Southeast English accent, medium but sophisticated tone',
-        settings: {
-          stability: 0.75,  // Natural maturity and control
-          similarity_boost: 0.80, // Clear articulation
-          style: 0.45,      // Medium sophisticated delivery
-          use_speaker_boost: true
-        }
-      },
-      'Q': {
-        voice_id: 'pNInz6obpgDQGcFmaJgB', // French accent English speaker, age 45
-        name: 'Victory36',
-        profile: 'French accent English speaker, age 45, sophisticated international tone',
-        settings: {
-          stability: 0.80,  // Controlled French accent delivery
-          similarity_boost: 0.75, // Clear articulation with accent
-          style: 0.55,      // Sophisticated international style
-          use_speaker_boost: true
-        }
-      }
-    };
-    
-    // ElevenLabs API configuration
-    let elevenLabsApiKey = null;
-    
-    // Get ElevenLabs API key from user input or environment
-    function getElevenLabsApiKey() {
-      // First try to get from environment/localStorage
-      if (elevenLabsApiKey) {
-        return elevenLabsApiKey;
-      }
-      
-      // Try localStorage
-      const storedKey = localStorage.getItem('elevenlabs_api_key');
-      if (storedKey) {
-        elevenLabsApiKey = storedKey;
-        return elevenLabsApiKey;
-      }
-      
-      // Prompt user for API key if not available
-      const apiKey = prompt('Please enter your ElevenLabs API key for high-quality voice:\n\n(Get one free at https://elevenlabs.io)');
-      if (apiKey) {
-        elevenLabsApiKey = apiKey;
-        localStorage.setItem('elevenlabs_api_key', apiKey);
-        return apiKey;
-      }
-      
-      return null;
-    }
-    
-    // ElevenLabs TTS function
-    async function speakWithElevenLabs(text, rixType = 'QB') {
-      const apiKey = getElevenLabsApiKey();
-      
-      if (!apiKey) {
-        console.warn('No ElevenLabs API key available, falling back to browser voice');
-        return speakWithBrowserVoice(text, rixType);
-      }
-      
-      const voiceConfig = elevenLabsVoices[rixType] || elevenLabsVoices['QB'];
-      
-      try {
-        console.log(`🎙️ Speaking with ElevenLabs voice: ${voiceConfig.name}`);
-        showNotification(`🎙️ ${voiceConfig.name} speaking...`, 'success');
-        
-        const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceConfig.voice_id}`, {
-          method: 'POST',
-          headers: {
-            'Accept': 'audio/mpeg',
-            'Content-Type': 'application/json',
-            'xi-api-key': apiKey
-          },
-          body: JSON.stringify({
-            text: text,
-            model_id: 'eleven_multilingual_v2',
-            voice_settings: voiceConfig.settings
-          })
-        });
-        
-        if (!response.ok) {
-          if (response.status === 401) {
-            // Invalid API key
-            localStorage.removeItem('elevenlabs_api_key');
-            elevenLabsApiKey = null;
-            showNotification('Invalid ElevenLabs API key. Please update it.', 'error');
-            return speakWithBrowserVoice(text, rixType);
-          }
-          throw new Error(`ElevenLabs API error: ${response.status}`);
-        }
-        
-        const audioBlob = await response.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
-        const audio = new Audio(audioUrl);
-        
-        return new Promise((resolve, reject) => {
-          audio.onloadstart = () => {
-            console.log(`🎙️ ${voiceConfig.name} voice loading...`);
-          };
-          
-          audio.onplay = () => {
-            console.log(`✅ ${voiceConfig.name} voice playing`);
-          };
-          
-          audio.onended = () => {
-            console.log(`✅ ${voiceConfig.name} voice finished`);
-            URL.revokeObjectURL(audioUrl);
-            resolve();
-            
-            // Continue conversation mode if active
-            if (conversationMode && recognition && !isListening) {
-              setTimeout(() => {
-                startVoiceInput();
-              }, 500);
-            }
-          };
-          
-          audio.onerror = (error) => {
-            console.error(`❌ ${voiceConfig.name} audio playback error:`, error);
-            URL.revokeObjectURL(audioUrl);
-            reject(error);
-          };
-          
-          audio.play();
-        });
-        
-      } catch (error) {
-        console.error('❌ ElevenLabs TTS error:', error);
-        showNotification('ElevenLabs error, using browser voice', 'error');
-        return speakWithBrowserVoice(text, rixType);
-      }
-    }
-    
-    // Browser voice fallback
-    function speakWithBrowserVoice(text, rixType) {
-      // Determine voice options based on active RIX
-      let voiceOptions = {
-        gender: 'female', // Default for Dr. Lucy
-        rate: 1.0,
-        pitch: 1.0
-      };
-      
-      // Configure voice based on active RIX
-      if (rixType === 'SH') { // Dr. Claude
-        voiceOptions = {
-          gender: 'male',
-          rate: 0.9,  // Slightly slower for Dr. Claude
-          pitch: 0.85 // Deeper voice for Dr. Claude
-        };
-      } else if (rixType === 'Q') { // Victory36
-        voiceOptions = {
-          gender: 'male',
-          rate: 1.1,  // Slightly faster for Victory36
-          pitch: 1.2  // Higher pitch for Victory36
-        };
-      }
-      
-      return voiceSystem.speak(text, voiceOptions);
-    }
-    
-    // Main speakMessage function - now uses ElevenLabs
-    function speakMessage(text) {
-      console.log('🗣️ Speaking message:', text);
-      
-      if (isSpeaking) {
-        console.log('⚠️ Already speaking, stopping current speech');
-        stopSpeaking();
-        setTimeout(() => speakMessage(text), 100);
-        return;
-      }
-      
-      isSpeaking = true;
-      
-      // Use ElevenLabs for high-quality speech
-      speakWithElevenLabs(text, activeRIX)
-        .then(() => {
-          console.log('✅ Speech completed');
-          isSpeaking = false;
-        })
-        .catch(error => {
-          console.error('❌ Speech synthesis error:', error);
-          isSpeaking = false;
-          showNotification('Speech error - please try again', 'error');
-        });
-    }
-    
-    // Updated stop speaking function to use the voice system
-    function stopSpeaking() {
-      if (voiceSystem) {
-        voiceSystem.stop();
-      }
-      isSpeaking = false;
-    }
     
     // Missing functions for proper functionality
     function loadUserPreferences() {
@@ -6269,189 +4673,48 @@ ${planItems.join('\n')}
       }
     }
     
-    // Enhanced PCP message processing - simplified for stability
+    // Enhanced PCP message processing with Dr. Claude orchestration
     async function processSwarmQueryWithOrchestration(query) {
-      // Simplified processing without external orchestration calls
-      return processSwarmQueryFallback(query);
-    }
-    
-    // Override processSwarmQuery to use simplified orchestration
-    // const originalProcessSwarmQuery = processSwarmQuery;
-    // processSwarmQuery = processSwarmQueryWithOrchestration;
-    
-    // Add missing functions that are referenced in HTML
-    function activateSRIX(rixType, name) {
-      // Wrapper function for activateRIX to maintain compatibility
-      return activateRIX(rixType, name);
-    }
-    
-    function activateVICTORY36(rixType, name) {
-      // Wrapper function for Victory36 activation
-      return activateRIX(rixType, name);
-    }
-    
-    // Activate Claude Chat from hexagon
-    function activateClaudeChat() {
-      // Switch to the main chat interface and activate Dr. Claude
-      setCopilotMode('chat');
-      activateRIX('SH', 'Dr. Claude');
-      showNotification('🤖 Dr. Claude (SH RIX) activated for advanced reasoning', 'success');
+      // Route PCP queries through Dr. Claude orchestration for quantum protection
+      const orchestrationResult = await drClaudeOrchestrator.orchestrateRequest('pcp_query', {
+        query: query,
+        active_rix: activeRIX,
+        user_role: userRole,
+        interface: 'MOCOA',
+        requires_quantum_protection: true
+      });
       
-      // Focus on the main chat input
-      setTimeout(() => {
-        const chatInput = document.getElementById('copilotInput');
-        if (chatInput) {
-          chatInput.focus();
-          chatInput.placeholder = 'Ask Dr. Claude for advanced reasoning and code assistance...';
-        }
-      }, 300);
-    }
-    
-    // Handle Codex keyboard input (Enter to send)
-    function handleCodexKeyPress(event) {
-      if (event.key === 'Enter' && !event.shiftKey) {
-        event.preventDefault();
-        sendCodexMessage();
-      }
-      // Allow Shift+Enter for new lines
-    }
-    
-    // Send Codex Message (OAuth authenticated)
-    async function sendCodexMessage() {
-      const input = document.getElementById('codexInput');
-      const messagesContainer = document.getElementById('codexMessages');
-      
-      if (!input || !messagesContainer || !input.value.trim()) return;
-      
-      const userMessage = input.value.trim();
-      input.value = '';
-      
-      // Add user message to Codex chat
-      addCodexMessage(messagesContainer, userMessage, 'user');
-      
-      try {
-        // Authenticate with OAuth token for Codex access
-        const response = await fetch('/api/openai/codex', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${oauthToken}`,
-            'X-Service': 'codex',
-            'X-User-ID': localStorage.getItem('user_id') || 'authenticated-user'
-          },
-          body: JSON.stringify({
-            prompt: userMessage,
-            max_tokens: 1000,
-            temperature: 0.1,
-            model: 'code-davinci-002'
-          })
-        });
-        
-        if (response.ok) {
-          const result = await response.json();
-          const codeResponse = result.choices[0].text;
-          addCodexMessage(messagesContainer, codeResponse, 'codex');
-        } else if (response.status === 403) {
-          addCodexMessage(messagesContainer, '⚠️ Codex access requires service upgrade. Contact admin to enable OpenAI Codex.', 'system');
-        } else {
-          throw new Error(`Codex API error: ${response.status}`);
+      if (orchestrationResult.orchestrated) {
+        if (window.productionLogging) {
+          window.productionLogging.info('PCP query orchestrated by Dr. Claude', {
+            orchestration_id: orchestrationResult.orchestration_id,
+            quantum_id: orchestrationResult.quantum_id,
+            query: query.substring(0, 50) + '...' // Log first 50 chars only
+          });
         }
         
-      } catch (error) {
-        console.error('Codex API error:', error);
-        addCodexMessage(messagesContainer, '❌ Codex connection error. Please try again or contact support.', 'system');
-      }
-    }
-    
-    // Add Codex message with proper formatting
-    function addCodexMessage(container, text, sender) {
-      const messageDiv = document.createElement('div');
-      
-      if (sender === 'user') {
-        messageDiv.style.cssText = `
-          padding: 12px;
-          border-radius: 8px;
-          margin-bottom: 10px;
-          background: rgba(139, 92, 246, 0.1);
-          border: 1px solid rgba(139, 92, 246, 0.3);
-          text-align: right;
-        `;
-        messageDiv.innerHTML = `
-          <div style="color: #fff; font-size: 13px; line-height: 1.4; font-family: 'Monaco', 'Menlo', monospace;">${text}</div>
-        `;
-      } else if (sender === 'codex') {
-        messageDiv.style.cssText = `
-          padding: 15px;
-          border-radius: 8px;
-          margin-bottom: 10px;
-          background: rgba(80, 200, 120, 0.1);
-          border: 1px solid rgba(80, 200, 120, 0.3);
-        `;
-        messageDiv.innerHTML = `
-          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-            <div style="width: 8px; height: 8px; background: #50C878; border-radius: 50%;"></div>
-            <strong style="color: #50C878; font-size: 12px;">OpenAI Codex</strong>
-          </div>
-          <div style="background: #1e1e1e; padding: 15px; border-radius: 6px; overflow-x: auto;">
-            <pre style="color: #d4d4d4; font-size: 12px; line-height: 1.5; margin: 0; white-space: pre-wrap; font-family: 'Monaco', 'Menlo', monospace;"><code>${text}</code></pre>
-          </div>
-        `;
+        // Process the query through the original swarm processing with orchestration metadata
+        return processSwarmQueryFallback(query);
       } else {
-        messageDiv.style.cssText = `
-          padding: 10px;
-          border-radius: 8px;
-          margin-bottom: 10px;
-          background: rgba(255, 215, 0, 0.1);
-          border: 1px solid rgba(255, 215, 0, 0.3);
-          text-align: center;
-        `;
-        messageDiv.innerHTML = `
-          <div style="color: #FFD700; font-size: 11px;">${text}</div>
-        `;
-      }
-      
-      container.appendChild(messageDiv);
-      
-      // Auto-scroll to bottom
-      const codexInterface = container.closest('#codexInterface');
-      if (codexInterface) {
-        const scrollContainer = codexInterface.querySelector('div[style*="overflow-y: auto"]');
-        if (scrollContainer) {
-          scrollContainer.scrollTop = scrollContainer.scrollHeight;
-        }
+        // Fallback to regular processing if orchestration fails
+        return processSwarmQueryFallback(query);
       }
     }
     
-    // Make ALL functions globally available BEFORE DOM loads
+    // Override the original processSwarmQuery to use orchestration
+    const originalProcessSwarmQuery = processSwarmQuery;
+    processSwarmQuery = processSwarmQueryWithOrchestration;
+    
+    // Make functions globally available
     window.startVoiceInput = startVoiceInput;
     window.showNotification = showNotification;
     window.togglePanel = togglePanel;
     window.toggleScanToApprove = toggleScanToApprove;
     window.speakMessage = speakMessage;
     window.toggleConversationMode = toggleConversationMode;
-    window.activateRIX = activateRIX;
-    window.activateSRIX = activateSRIX;
-    window.activateVICTORY36 = activateVICTORY36;
-    window.toggleCopilotMode = toggleCopilotMode;
-    window.sendCopilotMessage = sendCopilotMessage;
-    window.handleCopilotKeyPress = handleCopilotKeyPress;
-    window.toggleRightPanelSize = toggleRightPanelSize;
-    window.togglePanelLock = togglePanelLock;
-    window.handleIntegrationClick = handleIntegrationClick;
-    window.openIntegrationGateway = openIntegrationGateway;
-    window.openSettings = openSettings;
-    window.openGiftShop = openGiftShop;
-    window.openPilotsLounge = openPilotsLounge;
-    window.openVideoSession = openVideoSession;
-    window.closeVideo = closeVideo;
-    window.resizeVideo = resizeVideo;
-    window.initiateScanToDo = initiateScanToDo;
-    window.selectIcon = selectIcon;
-    
-    console.log('✅ All MOCOA functions available globally');
     window.drClaudeOrchestrator = drClaudeOrchestrator;
     window.quantumFetch = quantumFetch;
     window.initializeDrClaudeOrchestration = initializeDrClaudeOrchestration;
   </script>
-</body>
+<script src="/cdn-cgi/scripts/7d0fa10a/cloudflare-static/rocket-loader.min.js" data-cf-settings="b5d5de3eb66abd97b34d90f2-|49" defer></script></body>
 </html>

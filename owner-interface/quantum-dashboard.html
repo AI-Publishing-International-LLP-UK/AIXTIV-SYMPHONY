@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASOOS Settings - The Diamond Gateway Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0a0a0a;
+            background: radial-gradient(ellipse at center, #0f0f0f 0%, #050505 100%);
+            color: #ffffff;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 2000px;
+        }
+
+        /* Diamond Core Structure */
+        .diamond-core {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            transform-style: preserve-3d;
+            animation: rotate 40s linear infinite; /* Slowed from 20s to 40s */
+            /* Create space for expanded nodes */
+            margin: 200px;
+        }
+        
+        /* Pause rotation on hover for better interaction */
+        .diamond-core:hover {
+            animation-play-state: paused;
+        }
+        
+        /* Hide any stray text */
+        .diamond-core * {
+            color: transparent;
+        }
+        
+        .diamond-core .sector-node,
+        .diamond-core .sector-label,
+        .diamond-core .interface-content,
+        .diamond-core .interface-content * {
+            color: initial;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotateY(0deg) rotateX(2deg); }
+            100% { transform: rotateY(360deg) rotateX(2deg); }
+        }
+
+        /* Central Q-RIX Core */
+        .quantum-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #fff 0%, #0bb1bb 30%, #42216b 70%);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 60px #0bb1bb,
+                0 0 120px rgba(11, 177, 187, 0.5),
+                inset 0 0 60px rgba(66, 33, 111, 0.5);
+            animation: pulse 4s ease-in-out infinite; /* Slowed from 3s */
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        /* Tubular Gateway Rings */
+        .gateway-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 3px solid; /* Increased from 2px */
+            border-radius: 50%;
+            transform-style: preserve-3d;
+            box-shadow: 0 0 20px currentColor; /* Added glow for better visibility */
+        }
+
+        .ring-1 {
+            width: 250px;
+            height: 250px;
+            transform: translate(-50%, -50%) rotateX(90deg);
+            border-color: rgba(11, 177, 187, 0.8);
+            animation: ring1 12s ease-in-out infinite; /* Slowed from 8s */
+        }
+
+        .ring-2 {
+            width: 350px;
+            height: 350px;
+            transform: translate(-50%, -50%) rotateY(90deg);
+            border-color: rgba(93, 193, 185, 0.6);
+            animation: ring2 15s ease-in-out infinite; /* Slowed from 10s */
+        }
+
+        .ring-3 {
+            width: 450px;
+            height: 450px;
+            transform: translate(-50%, -50%) rotateZ(45deg) rotateX(45deg);
+            border-color: rgba(66, 33, 111, 0.4);
+            animation: ring3 18s ease-in-out infinite; /* Slowed from 12s */
+        }
+
+        @keyframes ring1 {
+            0%, 100% { transform: translate(-50%, -50%) rotateX(90deg) scale(1); }
+            50% { transform: translate(-50%, -50%) rotateX(90deg) scale(1.15); }
+        }
+
+        @keyframes ring2 {
+            0%, 100% { transform: translate(-50%, -50%) rotateY(90deg) scale(1); }
+            50% { transform: translate(-50%, -50%) rotateY(90deg) scale(1.1); }
+        }
+
+        @keyframes ring3 {
+            0%, 100% { transform: translate(-50%, -50%) rotateZ(45deg) rotateX(45deg) scale(1); }
+            50% { transform: translate(-50%, -50%) rotateZ(45deg) rotateX(45deg) scale(1.08); }
+        }
+
+        /* Data Flow Particles */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #0bb1bb;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #0bb1bb;
+        }
+
+        /* Sector Nodes */
+        .sector-node {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: rgba(11, 177, 187, 0.1);
+            border: 1px solid rgba(11, 177, 187, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            /* Anti-magnetic field */
+            box-shadow: 0 0 0 rgba(11, 177, 187, 0);
+            z-index: 1;
+        }
+
+        .sector-node:hover {
+            background: rgba(11, 177, 187, 0.3);
+            transform: scale(1.2);
+            box-shadow: 0 0 30px rgba(11, 177, 187, 0.5);
+            /* Repulsion field on hover */
+            z-index: 100;
+        }
+
+        .sector-node.active {
+            width: 400px;
+            height: 300px;
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            border: 2px solid #0bb1bb;
+            box-shadow: 0 0 60px rgba(11, 177, 187, 0.8), 
+                        0 0 120px rgba(11, 177, 187, 0.3);
+            z-index: 1000;
+            font-size: 14px;
+            /* Strong repulsion field when active */
+            isolation: isolate;
+            transform-style: flat; /* Prevent 3D transform issues */
+            animation: gentlePulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes gentlePulse {
+            0%, 100% { 
+                border-color: #0bb1bb;
+                box-shadow: 0 0 60px rgba(11, 177, 187, 0.8), 
+                           0 0 120px rgba(11, 177, 187, 0.3);
+            }
+            50% { 
+                border-color: #5dc1b9;
+                box-shadow: 0 0 80px rgba(11, 177, 187, 1), 
+                           0 0 140px rgba(11, 177, 187, 0.5);
+            }
+        }
+
+        /* Interface Window Content */
+        .interface-content {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 2rem;
+            overflow-y: auto;
+            transform: rotateY(0deg); /* Fix backwards text */
+        }
+
+        .sector-node.active .interface-content {
+            display: block;
+            transform: rotateY(0deg); /* Ensure text faces forward */
+        }
+
+        .sector-label {
+            color: #0bb1bb;
+            font-size: 10px;
+            text-align: center;
+            pointer-events: none;
+        }
+        
+        .sector-node.active .sector-label {
+            display: none;
+        }
+
+        .interface-header {
+            font-size: 1.5rem;
+            color: #0bb1bb;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(11, 177, 187, 0.3);
+            padding-bottom: 0.5rem;
+        }
+
+        .interface-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-box {
+            background: rgba(11, 177, 187, 0.1);
+            border: 1px solid rgba(11, 177, 187, 0.2);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            color: #0bb1bb;
+            font-weight: 300;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 0.3rem;
+        }
+        
+        /* Ensure no text bleeds through */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0a0a0a;
+            background: radial-gradient(ellipse at center, #0f0f0f 0%, #050505 100%);
+            color: transparent; /* Hide any default text */
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Clean interface - removed panels */
+
+        /* Quantum Streams */
+        .quantum-stream {
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, #0bb1bb, transparent);
+            transform-origin: top center;
+            opacity: 0.6;
+        }
+
+        /* Floating Zero Badge */
+        .zero-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(11, 177, 187, 0.05);
+            border: 1px solid rgba(11, 177, 187, 0.15);
+            border-radius: 8px;
+            padding: 0.3rem 0.3rem;
+            backdrop-filter: blur(5px);
+            font-size: 0.5rem;
+            animation: floatBadge 6s ease-in-out infinite;
+            text-align: right;
+            line-height: 1.2;
+        }
+        
+        .zero-line {
+            color: #0bb1bb;
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            display: block;
+            margin: 0.1rem 0;
+            opacity: 0.8;
+        }
+        
+        @keyframes floatBadge {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Floating Words */
+        .floating-word {
+            position: absolute;
+            color: rgba(11, 177, 187, 0.8);
+            font-size: 0.9rem;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            pointer-events: none;
+            opacity: 0;
+            transition: all 1s ease;
+            white-space: nowrap;
+            transform: scale(0.8) rotate(-5deg);
+        }
+
+        .floating-word.visible {
+            opacity: 1;
+            animation: floatUpMischief 8s ease-out forwards;
+        }
+
+        @keyframes floatUpMischief {
+            0% {
+                transform: translateY(0) scale(0.8) rotate(-5deg);
+                opacity: 0;
+            }
+            5% {
+                transform: translateY(-5px) scale(0.9) rotate(3deg);
+                opacity: 0.3;
+            }
+            15% {
+                transform: translateY(-10px) scale(1) rotate(-2deg);
+                opacity: 1;
+            }
+            25% {
+                transform: translateY(-15px) scale(1.05) rotate(1deg);
+            }
+            85% {
+                transform: translateY(-40px) scale(1) rotate(-1deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-60px) scale(0.9) rotate(2deg);
+                opacity: 0;
+            }
+        }
+
+        /* Quantum Core Hover Text */
+        .quantum-core:hover::after {
+            content: "QUANTUM READY";
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #fff;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            animation: fadeInOut 2s ease;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="diamond-core" id="diamondCore">
+            <!-- Quantum Core -->
+            <div class="quantum-core"></div>
+            
+            <!-- Gateway Rings -->
+            <div class="gateway-ring ring-1"></div>
+            <div class="gateway-ring ring-2"></div>
+            <div class="gateway-ring ring-3"></div>
+            
+            <!-- Sector Nodes will be added dynamically -->
+        </div>
+            
+        <!-- Floating Zero Badge -->
+        <div class="zero-badge">
+            <span class="zero-line">Zero Trust</span>
+            <span class="zero-line">Zero Touch</span>
+            <span class="zero-line">Zero Fail</span>
+        </div>
+    </div>
+
+    <script>
+        // Create sector nodes around the diamond
+        const diamondCore = document.getElementById('diamondCore');
+        const sectors = [
+            { name: 'Finance', roles: '45,230', agents: '2.3M' },
+            { name: 'Healthcare', roles: '38,950', agents: '1.9M' },
+            { name: 'Technology', roles: '52,100', agents: '2.6M' },
+            { name: 'Manufacturing', roles: '31,200', agents: '1.6M' },
+            { name: 'Retail', roles: '28,400', agents: '1.4M' },
+            { name: 'Education', roles: '24,500', agents: '1.2M' },
+            { name: 'Government', roles: '29,800', agents: '1.5M' },
+            { name: 'Legal', roles: '22,300', agents: '1.1M' },
+            { name: 'Transportation', roles: '19,700', agents: '980K' },
+            { name: 'Energy', roles: '27,820', agents: '1.4M' }
+        ];
+        
+        // Position sector nodes in 3D space
+        sectors.forEach((sector, index) => {
+            const angle = (index / sectors.length) * Math.PI * 2;
+            const radius = 250;
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+            
+            const node = document.createElement('div');
+            node.className = 'sector-node';
+            node.style.transform = `translate(-50%, -50%) translate3d(${x}px, ${y}px, 0)`;
+            node.style.left = '50%';
+            node.style.top = '50%';
+            
+            // Store original position for anti-magnetic behavior
+            node.dataset.originalX = x;
+            node.dataset.originalY = y;
+            
+            // Store original position for anti-magnetic behavior
+            node.dataset.originalX = x;
+            node.dataset.originalY = y;
+            
+            // Sector-specific impressive words
+            const sectorWords = {
+                'Finance': ['QUANTUM TRADING', 'RISK SYNTHESIS', 'NEURAL LEDGER'],
+                'Healthcare': ['BIOMETRIC AI', 'PREDICTIVE HEALING', 'GENOME MAPPING'],
+                'Technology': ['SILICON DREAMS', 'CODE SYMPHONY', 'DIGITAL EVOLUTION'],
+                'Manufacturing': ['PRECISION MATRIX', 'AUTONOMOUS FORGE', 'SMART ASSEMBLY'],
+                'Retail': ['CONSUMER NEURAL', 'PREDICTIVE COMMERCE', 'DESIRE ENGINE'],
+                'Education': ['KNOWLEDGE GRAPH', 'ADAPTIVE LEARNING', 'WISDOM PROTOCOL'],
+                'Government': ['CIVIC INTELLIGENCE', 'POLICY ENGINE', 'DEMOCRACY 3.0'],
+                'Legal': ['JUSTICE ALGORITHM', 'CONTRACT DNA', 'PRECEDENT AI'],
+                'Transportation': ['MOTION DYNAMICS', 'ROUTE QUANTUM', 'FLOW STATE'],
+                'Energy': ['POWER GRID AI', 'RENEWABLE MIND', 'ENERGY FUSION']
+            };
+            
+            // Add hover word effect (reduced frequency)
+            let lastHoverTime = 0;
+            node.addEventListener('mouseenter', function(e) {
+                const now = Date.now();
+                if (now - lastHoverTime > 2000) { // Only show words every 2 seconds per node
+                    lastHoverTime = now;
+                    const words = sectorWords[sector.name] || ['SYSTEM ACTIVE'];
+                    const word = words[Math.floor(Math.random() * words.length)];
+                    const rect = node.getBoundingClientRect();
+                    createFloatingWord(rect.left + rect.width/2, rect.top - 10, word);
+                }
+            });
+            
+            // Create label and interface content
+            const label = document.createElement('span');
+            label.className = 'sector-label';
+            label.textContent = sector.name;
+            node.appendChild(label);
+            
+            // Create interface content
+            const interfaceContent = document.createElement('div');
+            interfaceContent.className = 'interface-content';
+            interfaceContent.innerHTML = `
+                <div class="interface-header">${sector.name} Sector Control</div>
+                <div class="interface-stats">
+                    <div class="stat-box">
+                        <div class="stat-value">${sector.roles}</div>
+                        <div class="stat-label">Active Roles</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">${sector.agents}</div>
+                        <div class="stat-label">AI Agents</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">98.7%</div>
+                        <div class="stat-label">Uptime</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value">Q-RIX</div>
+                        <div class="stat-label">Processing</div>
+                    </div>
+                </div>
+                <div style="margin-top: 1.5rem; color: #666; font-size: 0.9rem;">
+                    Real-time monitoring and control for ${sector.name.toLowerCase()} sector operations. 
+                    Click anywhere outside to minimize.
+                </div>
+            `;
+            node.appendChild(interfaceContent);
+            
+            // Make node interactive with auto-close functionality
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                // Store original position for anti-magnetic behavior
+                node.dataset.originalX = x;
+                node.dataset.originalY = y;
+                
+                // AUTOMATIC CLOSE: Close any other active nodes
+                document.querySelectorAll('.sector-node.active').forEach(n => {
+                    if (n !== node) {
+                        n.classList.remove('active');
+                        // Return other nodes to their positions
+                        const origX = parseFloat(n.dataset.originalX);
+                        const origY = parseFloat(n.dataset.originalY);
+                        n.style.transform = `translate(-50%, -50%) translate3d(${origX}px, ${origY}px, 0)`;
+                        n.style.zIndex = 'auto';
+                    }
+                });
+                
+                // Toggle this node
+                node.classList.toggle('active');
+                
+                // Keep node in its orbital position when active
+                if (node.classList.contains('active')) {
+                    node.style.transition = 'all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+                    // Float up in place with a gentle lift
+                    node.style.transform = `translate(-50%, -50%) translate3d(${x}px, ${y}px, 100px) translateY(-20px)`;
+                    node.style.zIndex = '1000';
+                    
+                    // Add a subtle glow for celebration
+                    node.style.boxShadow = '0 10px 40px rgba(11, 177, 187, 0.6), 0 0 80px rgba(11, 177, 187, 0.4)';
+                } else {
+                    // Return to exact original position
+                    node.style.transform = `translate(-50%, -50%) translate3d(${x}px, ${y}px, 0)`;
+                    node.style.zIndex = 'auto';
+                    node.style.boxShadow = '0 0 0 rgba(11, 177, 187, 0)';
+                }
+            });
+            
+            diamondCore.appendChild(node);
+        });
+        
+        // Close interface windows when clicking outside
+        document.addEventListener('click', function() {
+            document.querySelectorAll('.sector-node.active').forEach(node => {
+                node.classList.remove('active');
+                // Return to stored original position
+                const origX = parseFloat(node.dataset.originalX) || 0;
+                const origY = parseFloat(node.dataset.originalY) || 0;
+                node.style.transform = `translate(-50%, -50%) translate3d(${origX}px, ${origY}px, 0)`;
+                node.style.zIndex = 'auto';
+            });
+        });
+        
+        // Create flowing particles with occasional words
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            // Random starting position on outer ring
+            const angle = Math.random() * Math.PI * 2;
+            const startRadius = 300;
+            const startX = Math.cos(angle) * startRadius + 300;
+            const startY = Math.sin(angle) * startRadius + 300;
+            
+            particle.style.left = startX + 'px';
+            particle.style.top = startY + 'px';
+            
+            diamondCore.appendChild(particle);
+            
+            // Animate particle towards center
+            let progress = 0;
+            const animate = () => {
+                progress += 0.02;
+                const currentRadius = startRadius * (1 - progress);
+                const x = Math.cos(angle) * currentRadius + 300;
+                const y = Math.sin(angle) * currentRadius + 300;
+                
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.opacity = 1 - progress * 0.5;
+                
+                // Occasionally spawn a word when particle reaches core
+                if (progress > 0.9 && Math.random() < 0.015) { // Reduced from 0.05 (70% reduction)
+                    const coreWords = ['DATA FUSION', 'NEURAL SYNC', 'PROCESSING'];
+                    const word = coreWords[Math.floor(Math.random() * coreWords.length)];
+                    createFloatingWord(
+                        window.innerWidth/2 + (Math.random() - 0.5) * 100,
+                        window.innerHeight/2,
+                        word
+                    );
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    particle.remove();
+                }
+            };
+            
+            requestAnimationFrame(animate);
+        }
+        
+        // Create quantum streams
+        function createQuantumStream() {
+            const stream = document.createElement('div');
+            stream.className = 'quantum-stream';
+            
+            const angle = Math.random() * Math.PI * 2;
+            const length = 100 + Math.random() * 200;
+            const x = 300 + Math.cos(angle) * 75;
+            const y = 300 + Math.sin(angle) * 75;
+            
+            stream.style.height = length + 'px';
+            stream.style.left = x + 'px';
+            stream.style.top = y + 'px';
+            stream.style.transform = `rotate(${angle + Math.PI/2}rad)`;
+            
+            diamondCore.appendChild(stream);
+            
+            // Fade in and out
+            stream.style.animation = 'fadeInOut 3s ease-in-out';
+            setTimeout(() => stream.remove(), 3000);
+        }
+        
+        // Animation loop
+        setInterval(createParticle, 200);
+        setInterval(createQuantumStream, 1000);
+        
+        // Ambient words that appear occasionally (70% fewer)
+        setInterval(() => {
+            if (Math.random() < 0.025) { // Reduced from 0.08 (roughly 70% reduction)
+                const ambientWords = [
+                    '16M AGENTS', '320K ROLES', 'Q-RIX ACTIVE',
+                    'TIER 1', 'ZERO FAIL', 'QUANTUM MESH'
+                ];
+                const word = ambientWords[Math.floor(Math.random() * ambientWords.length)];
+                const x = window.innerWidth * 0.2 + Math.random() * window.innerWidth * 0.6;
+                const y = window.innerHeight * 0.2 + Math.random() * window.innerHeight * 0.6;
+                createFloatingWord(x, y, word);
+            }
+        }, 15000); // Increased interval from 10000
+        
+        // Add fade animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; }
+                50% { opacity: 0.6; }
+                100% { opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Impressive words that appear on interaction
+        const quantumWords = [
+            'NEURAL SYNTHESIS', 'QUANTUM MESH', 'TIER 1 EXCLUSIVE',
+            'MULTI-AGENT ORCHESTRATION', 'SELF-HEALING PROTOCOL',
+            'ZERO TRUST VERIFIED', 'BLOCKCHAIN SECURED',
+            'AI SOVEREIGNTY', 'PREDICTIVE CASCADE', 'COGNITIVE FUSION'
+        ];
+        
+        // Add click interaction to quantum core (with cooldown)
+        let lastCoreClick = 0;
+        document.querySelector('.quantum-core').addEventListener('click', function(e) {
+            const now = Date.now();
+            if (now - lastCoreClick > 3000) { // 3 second cooldown
+                lastCoreClick = now;
+                const word = quantumWords[Math.floor(Math.random() * quantumWords.length)];
+                createFloatingWord(e.pageX, e.pageY, word);
+            }
+        });
+        
+        // Create floating word effect
+        function createFloatingWord(x, y, text) {
+            // Add random delay for mischievous timing
+            const delay = Math.random() * 500;
+            
+            setTimeout(() => {
+                const word = document.createElement('div');
+                word.className = 'floating-word';
+                word.textContent = text;
+                word.style.left = x + 'px';
+                word.style.top = y + 'px';
+                document.body.appendChild(word);
+                
+                // Trigger animation
+                setTimeout(() => word.classList.add('visible'), 10);
+                
+                // Remove after animation
+                setTimeout(() => word.remove(), 8000);
+            }, delay);
+        }
+        
+        // Add hover effects to rings
+        document.querySelectorAll('.gateway-ring').forEach((ring, index) => {
+            ring.style.cursor = 'pointer';
+            const ringWords = [
+                ['INTEGRATION GATEWAY', 'DATA SYNTHESIS'],
+                ['SECTOR ORCHESTRATION', 'NEURAL ROUTING'],
+                ['QUANTUM BOUNDARY', 'EDGE COMPUTING']
+            ];
+            
+            ring.addEventListener('click', function(e) {
+                const words = ringWords[index] || ['SYSTEM ACTIVE'];
+                const word = words[Math.floor(Math.random() * words.length)];
+                createFloatingWord(e.pageX, e.pageY, word);
+            });
+        });
+    </script>
+</body>
+</html>

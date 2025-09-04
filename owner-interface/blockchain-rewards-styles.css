@@ -1,0 +1,800 @@
+/**
+ * Enhanced CSS Styles for Blockchain and AIRewards UI Components
+ * Designed for integration with mcp.aipub.2100.cool CRx01 QB interface
+ */
+
+/* ============================================
+   Blockchain Status Section
+   ============================================ */
+
+.blockchain-status-card {
+  border: 1px solid rgba(0, 212, 170, 0.3);
+  background: linear-gradient(135deg, rgba(0, 212, 170, 0.1), rgba(11, 177, 187, 0.05));
+}
+
+.blockchain-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.status-dot.connected {
+  background: #00d4aa;
+  box-shadow: 0 0 8px rgba(0, 212, 170, 0.6);
+}
+
+.status-dot.disconnected {
+  background: #ef4444;
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+}
+
+.blockchain-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 9px;
+  color: #aaa;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.stat-value.success {
+  color: #10b981;
+}
+
+.stat-value.warning {
+  color: #f59e0b;
+}
+
+.stat-value.error {
+  color: #ef4444;
+}
+
+.recent-transactions {
+  margin-top: 16px;
+}
+
+.section-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.transaction-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.transaction-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.transaction-hash {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+}
+
+.transaction-hash code {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  color: #00d4aa;
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px;
+  border-radius: 3px;
+  transition: all 0.2s;
+}
+
+.copy-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.transaction-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.transaction-status.confirmed {
+  color: #10b981;
+}
+
+.transaction-status.pending {
+  color: #f59e0b;
+}
+
+.transaction-status.failed {
+  color: #ef4444;
+}
+
+.transaction-time {
+  font-size: 8px;
+  color: #888;
+}
+
+/* ============================================
+   AIRewards Section
+   ============================================ */
+
+.ai-rewards-card {
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+}
+
+.balance-display {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+}
+
+.balance-amount {
+  font-size: 16px;
+  color: #FFD700;
+}
+
+.balance-token {
+  font-size: 10px;
+  background: #FFD700;
+  color: #000;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.rewards-overview {
+  margin-bottom: 16px;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.overview-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+
+.overview-label {
+  font-size: 9px;
+  color: #aaa;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.overview-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FFD700;
+}
+
+.earnings-breakdown {
+  margin-bottom: 16px;
+}
+
+.earnings-list {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.earning-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 4px;
+}
+
+.earning-source {
+  font-size: 10px;
+  color: #ccc;
+  flex-grow: 1;
+}
+
+.earning-amount {
+  font-size: 11px;
+  font-weight: 600;
+  color: #FFD700;
+  margin-right: 8px;
+}
+
+.earning-date {
+  font-size: 8px;
+  color: #888;
+}
+
+.rewards-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-btn.primary {
+  background: linear-gradient(135deg, #FFD700, #f59e0b);
+  color: #000;
+}
+
+.action-btn.primary:hover {
+  background: linear-gradient(135deg, #f59e0b, #FFD700);
+}
+
+.action-btn.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.action-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ============================================
+   Quality Points Section
+   ============================================ */
+
+.quality-points-card {
+  border: 1px solid rgba(147, 51, 234, 0.3);
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.1), rgba(147, 51, 234, 0.05));
+}
+
+.quality-rank-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.quality-points {
+  font-size: 16px;
+  color: #9333EA;
+}
+
+.quality-rank {
+  font-size: 10px;
+  background: #9333EA;
+  color: #fff;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.rank-progress {
+  margin-bottom: 16px;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.progress-header span {
+  font-size: 10px;
+  color: #ccc;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #9333EA, #a855f7);
+  transition: width 0.3s ease;
+}
+
+.quality-categories {
+  margin-bottom: 16px;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.category-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 8px;
+  text-align: center;
+}
+
+.category-icon {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.category-name {
+  font-size: 8px;
+  color: #ccc;
+  margin-bottom: 2px;
+}
+
+.category-score {
+  font-size: 10px;
+  font-weight: 600;
+  color: #9333EA;
+}
+
+.recent-quality-points {
+  margin-bottom: 16px;
+}
+
+.quality-earnings-list {
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.quality-earning-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 6px 8px;
+  margin-bottom: 4px;
+}
+
+.earning-category {
+  font-size: 9px;
+  color: #ccc;
+  flex-grow: 1;
+}
+
+.earning-points {
+  font-size: 10px;
+  font-weight: 600;
+  color: #9333EA;
+  margin-right: 6px;
+}
+
+/* ============================================
+   Partition Tracking Section
+   ============================================ */
+
+.partition-tracking-card {
+  border: 1px solid rgba(11, 177, 187, 0.3);
+  background: linear-gradient(135deg, rgba(11, 177, 187, 0.1), rgba(11, 177, 187, 0.05));
+}
+
+.pcp-selector select {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.pcp-selector select option {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.partition-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.partition-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(11, 177, 187, 0.3);
+  border-radius: 8px;
+  padding: 10px;
+  transition: all 0.2s;
+}
+
+.partition-box:hover {
+  background: rgba(11, 177, 187, 0.1);
+  border-color: rgba(11, 177, 187, 0.5);
+}
+
+.partition-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.partition-number {
+  width: 20px;
+  height: 20px;
+  background: #0bb1bb;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.partition-name {
+  font-size: 9px;
+  color: #ccc;
+  font-weight: 600;
+  flex-grow: 1;
+}
+
+.partition-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 7px;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.stat-value {
+  font-size: 9px;
+  font-weight: 600;
+  color: #0bb1bb;
+}
+
+.partition-progress .progress-bar {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.partition-progress .progress-fill {
+  background: linear-gradient(90deg, #0bb1bb, #00d4aa);
+}
+
+.partition-summary {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.summary-stats {
+  display: flex;
+  justify-content: space-between;
+}
+
+.summary-item {
+  text-align: center;
+}
+
+.summary-label {
+  font-size: 8px;
+  color: #888;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.summary-value {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0bb1bb;
+}
+
+/* ============================================
+   Transaction History Section
+   ============================================ */
+
+.transaction-history-card {
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+}
+
+.history-filter select {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.history-filter select option {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.transaction-timeline {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.timeline-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.timeline-icon.reward {
+  background: linear-gradient(135deg, #FFD700, #f59e0b);
+  color: #000;
+}
+
+.timeline-icon.quality {
+  background: linear-gradient(135deg, #9333EA, #a855f7);
+  color: #fff;
+}
+
+.timeline-icon.blockchain {
+  background: linear-gradient(135deg, #00d4aa, #0bb1bb);
+  color: #fff;
+}
+
+.timeline-content {
+  flex-grow: 1;
+}
+
+.transaction-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2px;
+}
+
+.transaction-details {
+  font-size: 9px;
+  color: #ccc;
+  margin-bottom: 2px;
+}
+
+.transaction-timestamp {
+  font-size: 8px;
+  color: #888;
+}
+
+.history-actions {
+  text-align: center;
+}
+
+/* ============================================
+   Animation & Utility Classes
+   ============================================ */
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   Responsive Design
+   ============================================ */
+
+@media (max-width: 768px) {
+  .blockchain-stats-grid,
+  .overview-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  
+  .partition-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .category-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .summary-stats {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .rewards-actions {
+    flex-direction: column;
+  }
+}
+
+/* ============================================
+   Dark Theme Adjustments
+   ============================================ */
+
+.dark-theme .blockchain-status-card,
+.dark-theme .ai-rewards-card,
+.dark-theme .quality-points-card,
+.dark-theme .partition-tracking-card,
+.dark-theme .transaction-history-card {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-theme .stat-item,
+.dark-theme .overview-item,
+.dark-theme .category-item,
+.dark-theme .partition-box,
+.dark-theme .timeline-item,
+.dark-theme .transaction-item,
+.dark-theme .earning-item,
+.dark-theme .quality-earning-item {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.dark-theme .action-btn.secondary {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.dark-theme .action-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+
+@media print {
+  .blockchain-status-card,
+  .ai-rewards-card,
+  .quality-points-card,
+  .partition-tracking-card,
+  .transaction-history-card {
+    background: white !important;
+    color: black !important;
+    border: 1px solid #ccc !important;
+  }
+  
+  .action-btn,
+  .copy-btn {
+    display: none;
+  }
+}
+
+/* ============================================
+   High Contrast Mode
+   ============================================ */
+
+@media (prefers-contrast: high) {
+  .stat-value,
+  .overview-value,
+  .balance-amount,
+  .quality-points,
+  .summary-value {
+    font-weight: 900;
+  }
+  
+  .status-dot.connected {
+    box-shadow: 0 0 12px rgba(0, 212, 170, 1);
+  }
+  
+  .progress-fill {
+    filter: brightness(1.2);
+  }
+}

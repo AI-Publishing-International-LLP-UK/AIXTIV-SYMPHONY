@@ -1,0 +1,175 @@
+{
+  "timestamp": "2025-08-27T11:53:31.027Z",
+  "summary": {
+    "totalFiles": 27,
+    "fixedFiles": 26,
+    "skippedFiles": 1,
+    "errorFiles": 0
+  },
+  "fixedFiles": [
+    {
+      "file": ".workspace/staging-extras/r2-migration-staging/reports/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": ".workspace/staging-extras/r2-migration-staging/system-configs/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": ".workspace/staging-extras/vls/solutions/dr-memoria-anthology-launch/functions/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": ".workspace/staging-extras/vls/solutions/dr-memoria-anthology-launch/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": ".workspace/staging-extras/vls/solutions/solutions/dr. burby's s2do governance/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": ".workspace/staging-extras/vls/vision_lake/functions/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "academy/frontend/aixtiv-orchestra/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "aixtiv-project/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "aixtiv-project-new/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "aixtiv-symphony-gitbook/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "asoos-cli-works/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "core-protocols/admin-core/config/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "core-protocols/admin-core/dataconnect/js/default-connector/esm/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "core-protocols/admin-core/dataconnect/js/default-connector/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "core-protocols/admin-core/dataconnect/js/default-connector/react/esm/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "core-protocols/admin-core/dataconnect/js/default-connector/react/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "core-protocols/admin-core/frontend/orchestra/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "core-protocols/admin-core/frontend/src/aixtiv-orchestra/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "functions/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "functions.backup/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "oauth2-cli/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "src/middleware/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "vls/solutions/dr-memoria-anthology-launch/functions/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "vls/solutions/dr-memoria-anthology-launch/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "vls/solutions/solutions/dr. burby's s2do governance/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    },
+    {
+      "file": "workers/asoos-2100-cool-worker/asoos-2100-cool-worker/package.json",
+      "changes": [
+        "Added/updated Node.js engine specification"
+      ]
+    }
+  ],
+  "skippedFiles": [
+    {
+      "file": "\n/Users/as/asoos/opus/opus1_amplify/core/package.json",
+      "reason": "Empty file"
+    }
+  ],
+  "errors": [],
+  "targetNodeVersion": "24.0.0"
+}

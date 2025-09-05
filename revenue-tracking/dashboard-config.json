@@ -1,0 +1,20 @@
+{
+  "dashboard_timestamp": "2025-08-04T19:31:31Z",
+  "monitoring_endpoints": {
+    "real_time_revenue": "/api/revenue/realtime",
+    "agent_performance": "/api/agents/performance",
+    "sector_analytics": "/api/sectors/analytics",
+    "pipeline_health": "/api/pipeline/health"
+  },
+  "alert_thresholds": {
+    "low_conversion_rate": 0.02,
+    "pipeline_drop": 0.15,
+    "agent_underperformance": 0.70,
+    "revenue_shortfall": 0.80
+  },
+  "reporting_schedule": {
+    "daily_summary": "06:00 UTC",
+    "weekly_report": "Monday 08:00 UTC", 
+    "monthly_forecast": "1st of month 10:00 UTC"
+  }
+}

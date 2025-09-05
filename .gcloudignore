@@ -1,0 +1,99 @@
+# This file specifies files that are *not* uploaded to Google Cloud
+# using gcloud. It follows the same syntax as .gitignore, with the addition of
+# "#!include" directives (which insert the entries of the given .gitignore-style
+# file at that point).
+#
+# For more information, run:
+#   $ gcloud topic gcloudignore
+#
+.gcloudignore
+# If you would like to upload your .git directory, .gitignore file or files
+# from your .gitignore file, remove the corresponding line
+# below:
+.git
+.gitignore
+
+# Dependencies
+node_modules/
+
+# Development and build artifacts
+.workspace/
+.snapshots/
+.wrangler/
+build/
+dist/
+logs/
+tmp/
+*.log
+
+# Documentation and examples
+docs/
+reports/
+analysis/
+archives/
+backup/
+examples/
+didc_archives/
+venv*/
+
+# Test files
+tests/
+test/
+test-*.js
+*.test.js
+*.spec.js
+
+# Configuration and secrets
+.env*
+secrets.json
+*.pem
+*.key
+*.crt
+
+# Deployment scripts and configs
+scripts/
+deployment/
+deployments/
+cloudbuild*.yaml
+deploy*.sh
+*.exp
+
+# Backup and temporary files
+*.backup
+*.bak*
+*.swp
+*.tmp
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Additional exclusions
+vls/
+opus*/
+infrastructure/
+**/solutions/
+**/*step*.sh
+
+# Files with spaces in names
+*dr.*governance*
+*dr.*wish-vision*
+*dr.*suite*
+
+# Include only essential files for ASOOS Flyer
+!server.js
+!package*.json
+!app.yaml
+!Dockerfile
+!connectors/
+!lib/
+!middleware/
+!routes/
+!src/services/
+!src/config/
+!src/middleware/
+!functions/lib/functions/
+!functions/lib/integrations/
+!functions/lib/core/
+!bin/aixtiv.js

@@ -1,0 +1,209 @@
+{
+  "timestamp": "2025-07-03T03:37:27.576Z",
+  "config": {
+    "sallyport_base_url": "https://sallyport-cloudflare-auth-859242575175.us-west1.run.app",
+    "gcp_project": "api-for-warp-drive",
+    "node_version": "v24.2.0",
+    "platform": "darwin"
+  },
+  "tests": {
+    "DNS_RESOLUTION": {
+      "name": "DNS Resolution Test",
+      "status": "PASS",
+      "message": "DNS resolution successful for sallyport-cloudflare-auth-859242575175.us-west1.run.app",
+      "details": {
+        "hostname": "sallyport-cloudflare-auth-859242575175.us-west1.run.app",
+        "address": "34.143.74.2",
+        "family": 4,
+        "resolution_time_ms": 5
+      },
+      "duration": 5
+    },
+    "HTTP_CONNECTIVITY": {
+      "name": "HTTP Connectivity Test",
+      "status": "PASS",
+      "message": "HTTP connectivity test completed with status 200",
+      "details": {
+        "status_code": 200,
+        "status_text": "OK",
+        "headers": {
+          "x-powered-by": "Express",
+          "access-control-allow-origin": "*",
+          "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+          "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization, cf-ray, cf-ipcountry",
+          "access-control-expose-headers": "cf-ray, cf-ipcountry",
+          "content-type": "application/json; charset=utf-8",
+          "etag": "W/\"15e-tMuFqP3z3CdN2E7s2GBmEwZjwrw\"",
+          "x-cloud-trace-context": "30217e1be45ffa838c09bd30288355a9;o=1",
+          "date": "Thu, 03 Jul 2025 03:37:28 GMT",
+          "server": "Google Frontend",
+          "content-length": "350",
+          "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        },
+        "response_time_ms": 173
+      },
+      "duration": 173
+    },
+    "HTTPS_CERTIFICATE": {
+      "name": "HTTPS Certificate Test",
+      "status": "PASS",
+      "message": "HTTPS certificate is valid",
+      "details": {
+        "subject": {
+          "CN": "*.a.run.app"
+        },
+        "issuer": {
+          "C": "US",
+          "O": "Google Trust Services",
+          "CN": "WE2"
+        },
+        "valid_from": "Jun 17 20:01:34 2025 GMT",
+        "valid_to": "Sep  9 20:01:33 2025 GMT",
+        "fingerprint": "C8:09:15:B0:C3:6B:21:42:8D:B6:7D:99:AD:8D:A8:D3:B0:8B:13:8D"
+      },
+      "duration": 89
+    },
+    "API_ENDPOINT_CHECK": {
+      "name": "API Endpoint Availability",
+      "status": "PASS",
+      "message": "Found 5/5 available endpoints",
+      "details": {
+        "/health": {
+          "status": 200,
+          "available": true
+        },
+        "/status": {
+          "status": 404,
+          "available": true
+        },
+        "/api/health": {
+          "status": 404,
+          "available": true
+        },
+        "/session": {
+          "status": 404,
+          "available": true
+        },
+        "/auth/verify": {
+          "status": 404,
+          "available": true
+        }
+      },
+      "duration": 513
+    },
+    "AUTHENTICATION_TEST": {
+      "name": "Authentication Service Test",
+      "status": "FAIL",
+      "message": "Authentication service not responding properly (status: 404)",
+      "details": {
+        "status_code": 404,
+        "response_headers": {
+          "x-powered-by": "Express",
+          "access-control-allow-origin": "*",
+          "access-control-allow-methods": "GET, POST, PUT, DELETE, OPTIONS",
+          "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept, Authorization, cf-ray, cf-ipcountry",
+          "access-control-expose-headers": "cf-ray, cf-ipcountry",
+          "content-type": "application/json; charset=utf-8",
+          "etag": "W/\"7c-m3nCo+GfRU0P63fKn18ToVVXMgk\"",
+          "x-cloud-trace-context": "47fa51819cbd1c7425f9854ea69eeee6",
+          "date": "Thu, 03 Jul 2025 03:37:28 GMT",
+          "server": "Google Frontend",
+          "content-length": "124",
+          "alt-svc": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+        },
+        "response_data": {
+          "error": "not_found",
+          "message": "Endpoint not found",
+          "path": "/session",
+          "method": "GET",
+          "timestamp": "2025-07-03T03:37:28.760Z"
+        }
+      },
+      "duration": 82
+    },
+    "SECRET_MANAGER_ACCESS": {
+      "name": "Secret Manager Access Test",
+      "status": "PASS",
+      "message": "Secret Manager access successful",
+      "details": {
+        "available_secrets": 1
+      },
+      "duration": 799
+    },
+    "FIREWALL_RULES": {
+      "name": "Firewall/Network Rules Test",
+      "status": "PASS",
+      "message": "Port 443 is accessible on sallyport-cloudflare-auth-859242575175.us-west1.run.app",
+      "details": {
+        "hostname": "sallyport-cloudflare-auth-859242575175.us-west1.run.app",
+        "port": 443
+      },
+      "duration": 46
+    },
+    "SERVICE_DISCOVERY": {
+      "name": "Service Discovery Test",
+      "status": "PASS",
+      "message": "Found 2 alternative service endpoints",
+      "details": {
+        "alternative_services": {
+          "https://api.aixtiv.dev/sallyport/v1": {
+            "available": false,
+            "error": "ENOTFOUND"
+          },
+          "https://auth.aixtiv.dev/api/v1": {
+            "available": false,
+            "error": "ENOTFOUND"
+          },
+          "https://sallyport.2100.cool/api/v1": {
+            "available": false,
+            "error": "ERR_TLS_CERT_ALTNAME_INVALID"
+          },
+          "https://integration-gateway-sallyport-yutylytffa-uw.a.run.app": {
+            "status": 404,
+            "available": true,
+            "response_time": 453
+          },
+          "https://sallyport-auth-service-yutylytffa-uw.a.run.app": {
+            "status": 404,
+            "available": true,
+            "response_time": 619
+          }
+        },
+        "available_services": [
+          "https://integration-gateway-sallyport-yutylytffa-uw.a.run.app",
+          "https://sallyport-auth-service-yutylytffa-uw.a.run.app"
+        ]
+      },
+      "duration": 619
+    }
+  },
+  "summary": {
+    "total": 8,
+    "passed": 7,
+    "failed": 1,
+    "warnings": 0
+  },
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "category": "Service",
+      "issue": "Authentication Service Not Responding",
+      "solution": "The SallyPort authentication service is not responding.",
+      "action": "Deploy a working SallyPort service or use a mock service for development."
+    },
+    {
+      "priority": "MEDIUM",
+      "category": "Configuration",
+      "issue": "Alternative Services Available",
+      "solution": "Found alternative service endpoints that might work.",
+      "action": "Update SALLYPORT_BASE_URL to one of: https://integration-gateway-sallyport-yutylytffa-uw.a.run.app, https://sallyport-auth-service-yutylytffa-uw.a.run.app"
+    },
+    {
+      "priority": "IMMEDIATE",
+      "category": "Quick Fix",
+      "issue": "Service Unavailable",
+      "solution": "For immediate testing, deploy a mock SallyPort service.",
+      "action": "Use the provided mock service deployment or update configuration to bypass authentication temporarily."
+    }
+  ]
+}

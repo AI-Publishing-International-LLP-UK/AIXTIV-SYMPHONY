@@ -1,0 +1,571 @@
+name: Deployment Health Monitor & Rollback
+
+on:
+  workflow_run:
+    workflows: ["Deploy", "Aixtiv CLI Build & Deploy"]
+    types: [completed]
+  schedule:
+    # Check deployment health every 15 minutes
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+    inputs:
+      rollback_sha:
+        description: 'Git SHA to rollback to (optional)'
+        required: false
+        type: string
+      force_rollback:
+        description: 'Force rollback even if health checks pass'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  deployments: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    outputs:
+      health-status: ${{ steps.check.outputs.status }}
+      unhealthy-services: ${{ steps.check.outputs.unhealthy-services }}
+      last-known-good: ${{ steps.check.outputs.last-known-good }}
+      should-rollback: ${{ steps.check.outputs.should-rollback }}
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID || secrets.GCP_PROJECT }}
+
+      - name: Health Check Script
+        id: check
+        run: |
+          cat > health-check.js << 'EOF'
+          const https = require('https');
+          const http = require('http');
+          const { execSync } = require('child_process');
+
+          class HealthChecker {
+            constructor() {
+              this.services = [];
+              this.unhealthyServices = [];
+              this.healthScore = 100;
+            }
+
+            async checkCloudRunServices() {
+              console.log('🏥 Checking Cloud Run services...');
+              
+              try {
+                const result = execSync('gcloud run services list --format="json"', { encoding: 'utf8' });
+                const services = JSON.parse(result);
+                
+                for (const service of services) {
+                  const serviceName = service.metadata.name;
+                  const serviceUrl = service.status.url;
+                  
+                  if (serviceUrl) {
+                    const health = await this.checkServiceHealth(serviceName, serviceUrl);
+                    this.services.push(health);
+                    
+                    if (!health.healthy) {
+                      this.unhealthyServices.push(serviceName);
+                      this.healthScore -= 20;
+                    }
+                  }
+                }
+              } catch (error) {
+                console.error('Error checking Cloud Run services:', error.message);
+                this.healthScore -= 30;
+              }
+            }
+
+            async checkServiceHealth(serviceName, serviceUrl) {
+              console.log(`   Checking ${serviceName}...`);
+              
+              try {
+                const healthEndpoint = `${serviceUrl}/health`;
+                const response = await this.makeRequest(healthEndpoint);
+                
+                const health = {
+                  name: serviceName,
+                  url: serviceUrl,
+                  healthy: response.status === 200,
+                  responseTime: response.responseTime,
+                  status: response.status,
+                  timestamp: new Date().toISOString()
+                };
+
+                // Additional checks
+                if (response.responseTime > 5000) {
+                  health.warning = 'High response time';
+                  this.healthScore -= 5;
+                }
+
+                return health;
+              } catch (error) {
+                return {
+                  name: serviceName,
+                  url: serviceUrl,
+                  healthy: false,
+                  error: error.message,
+                  timestamp: new Date().toISOString()
+                };
+              }
+            }
+
+            async makeRequest(url, timeout = 10000) {
+              return new Promise((resolve, reject) => {
+                const startTime = Date.now();
+                const client = url.startsWith('https') ? https : http;
+                
+                const req = client.get(url, { timeout }, (res) => {
+                  const responseTime = Date.now() - startTime;
+                  let data = '';
+                  
+                  res.on('data', chunk => data += chunk);
+                  res.on('end', () => {
+                    resolve({
+                      status: res.statusCode,
+                      data: data,
+                      responseTime: responseTime
+                    });
+                  });
+                });
+
+                req.on('timeout', () => {
+                  req.destroy();
+                  reject(new Error('Request timeout'));
+                });
+
+                req.on('error', reject);
+              });
+            }
+
+            async checkNodeJSVersions() {
+              console.log('🔍 Checking Node.js versions in deployment...');
+              
+              try {
+                // Check if any services are reporting different Node.js versions
+                for (const service of this.services) {
+                  if (service.healthy && service.url) {
+                    try {
+                      const versionEndpoint = `${service.url}/version`;
+                      const response = await this.makeRequest(versionEndpoint);
+                      
+                      if (response.status === 200) {
+                        const versionInfo = JSON.parse(response.data);
+                        service.nodeVersion = versionInfo.node;
+                        
+                        // Check if Node.js version is outdated
+                        const majorVersion = parseInt(versionInfo.node.replace('v', '').split('.')[0]);
+                        if (majorVersion < 20) {
+                          service.warning = `Outdated Node.js version: ${versionInfo.node}`;
+                          this.healthScore -= 10;
+                        }
+                      }
+                    } catch (error) {
+                      // Version endpoint not available, skip
+                    }
+                  }
+                }
+              } catch (error) {
+                console.warn('Could not check Node.js versions:', error.message);
+              }
+            }
+
+            getLastKnownGoodDeployment() {
+              try {
+                // Get the last successful deployment SHA from git
+                const lastGoodSha = execSync('git log --format="%H" --grep="deployment-success" -n 1', { 
+                  encoding: 'utf8' 
+                }).trim();
+                
+                if (lastGoodSha) {
+                  return lastGoodSha;
+                }
+
+                // Fallback to HEAD~1 if no tagged deployment
+                return execSync('git rev-parse HEAD~1', { encoding: 'utf8' }).trim();
+              } catch (error) {
+                console.warn('Could not determine last known good deployment:', error.message);
+                return null;
+              }
+            }
+
+            shouldTriggerRollback() {
+              // Rollback criteria
+              const criticalFailure = this.unhealthyServices.length > 0;
+              const degradedPerformance = this.healthScore < 70;
+              const majorNodeJSIssues = this.services.some(s => s.warning && s.warning.includes('Outdated Node.js'));
+
+              return criticalFailure || (degradedPerformance && majorNodeJSIssues);
+            }
+
+            generateReport() {
+              return {
+                timestamp: new Date().toISOString(),
+                overallHealth: this.healthScore,
+                status: this.healthScore >= 80 ? 'healthy' : this.healthScore >= 60 ? 'degraded' : 'unhealthy',
+                services: this.services,
+                unhealthyServices: this.unhealthyServices,
+                shouldRollback: this.shouldTriggerRollback(),
+                lastKnownGood: this.getLastKnownGoodDeployment()
+              };
+            }
+
+            async run() {
+              console.log('🚀 Starting deployment health check...\n');
+              
+              await this.checkCloudRunServices();
+              await this.checkNodeJSVersions();
+              
+              const report = this.generateReport();
+              
+              // Output for GitHub Actions
+              console.log(`::set-output name=status::${report.status}`);
+              console.log(`::set-output name=unhealthy-services::${JSON.stringify(report.unhealthyServices)}`);
+              console.log(`::set-output name=last-known-good::${report.lastKnownGood}`);
+              console.log(`::set-output name=should-rollback::${report.shouldRollback}`);
+              
+              // Save report
+              require('fs').writeFileSync('health-report.json', JSON.stringify(report, null, 2));
+              
+              console.log('\n📊 Health Check Summary:');
+              console.log(`   Overall Health: ${report.overallHealth}/100`);
+              console.log(`   Status: ${report.status.toUpperCase()}`);
+              console.log(`   Services Checked: ${report.services.length}`);
+              console.log(`   Unhealthy Services: ${report.unhealthyServices.length}`);
+              
+              if (report.unhealthyServices.length > 0) {
+                console.log('   🚨 Unhealthy Services:', report.unhealthyServices.join(', '));
+              }
+              
+              process.exit(0);
+            }
+          }
+
+          const checker = new HealthChecker();
+          checker.run();
+          EOF
+
+          node health-check.js
+
+      - name: Upload health report
+        uses: actions/upload-artifact@v4
+        with:
+          name: health-report
+          path: health-report.json
+
+  rollback:
+    needs: health-check
+    if: needs.health-check.outputs.should-rollback == 'true' || github.event.inputs.force_rollback == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "Deployment Rollback Bot"
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID || secrets.GCP_PROJECT }}
+
+      - name: Determine rollback target
+        id: rollback-target
+        run: |
+          if [ -n "${{ github.event.inputs.rollback_sha }}" ]; then
+            TARGET_SHA="${{ github.event.inputs.rollback_sha }}"
+          else
+            TARGET_SHA="${{ needs.health-check.outputs.last-known-good }}"
+          fi
+          
+          if [ -z "$TARGET_SHA" ]; then
+            echo "❌ No rollback target determined"
+            exit 1
+          fi
+          
+          echo "🎯 Rollback target: $TARGET_SHA"
+          echo "target-sha=$TARGET_SHA" >> $GITHUB_OUTPUT
+          
+          # Verify the SHA exists
+          if ! git cat-file -e "$TARGET_SHA"; then
+            echo "❌ Rollback target SHA does not exist: $TARGET_SHA"
+            exit 1
+          fi
+
+      - name: Create rollback branch
+        run: |
+          ROLLBACK_BRANCH="rollback-$(date +%Y%m%d-%H%M%S)"
+          echo "rollback-branch=$ROLLBACK_BRANCH" >> $GITHUB_OUTPUT
+          
+          git checkout -b $ROLLBACK_BRANCH ${{ steps.rollback-target.outputs.target-sha }}
+          echo "📝 Created rollback branch: $ROLLBACK_BRANCH"
+
+      - name: Setup Node.js (from rollback commit)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24' # Use stable version for rollback process
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          if [ -f package.json ]; then
+            npm ci --silent
+          fi
+
+      - name: Deploy rollback
+        id: deploy-rollback
+        run: |
+          echo "🚀 Deploying rollback..."
+          
+          # Deploy to Cloud Run services
+          SERVICES_ROLLED_BACK=""
+          
+          # Check if there are any Dockerfiles to build
+          if [ -f "Dockerfile.fixed" ]; then
+            echo "🐳 Building and deploying Docker image..."
+            
+            # Build image with rollback tag
+            ROLLBACK_TAG="rollback-$(date +%Y%m%d-%H%M%S)"
+            gcloud builds submit . --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/integration-gateway:$ROLLBACK_TAG
+            
+            # Deploy to Cloud Run
+            gcloud run deploy integration-gateway \
+              --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/integration-gateway:$ROLLBACK_TAG \
+              --platform managed \
+              --region us-west1 \
+              --allow-unauthenticated
+              
+            SERVICES_ROLLED_BACK="$SERVICES_ROLLED_BACK integration-gateway"
+          fi
+          
+          # Check for other services
+          if [ -d "containers" ]; then
+            for dir in containers/*/; do
+              if [ -f "${dir}Dockerfile" ]; then
+                service_name=$(basename "$dir")
+                echo "🔄 Rolling back $service_name..."
+                
+                gcloud builds submit "$dir" --tag gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service_name:rollback
+                gcloud run deploy $service_name \
+                  --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/$service_name:rollback \
+                  --platform managed \
+                  --region us-west1 \
+                  --allow-unauthenticated
+                  
+                SERVICES_ROLLED_BACK="$SERVICES_ROLLED_BACK $service_name"
+              fi
+            done
+          fi
+          
+          echo "services-rolled-back=$SERVICES_ROLLED_BACK" >> $GITHUB_OUTPUT
+          echo "✅ Rollback deployment completed"
+
+      - name: Verify rollback health
+        id: verify-rollback
+        run: |
+          echo "🏥 Verifying rollback health..."
+          sleep 30  # Wait for services to start
+          
+          # Re-run health checks
+          node health-check.js || true
+          
+          if [ -f health-report.json ]; then
+            HEALTH_STATUS=$(jq -r '.status' health-report.json)
+            HEALTH_SCORE=$(jq -r '.overallHealth' health-report.json)
+            
+            echo "🩺 Post-rollback health: $HEALTH_STATUS ($HEALTH_SCORE/100)"
+            echo "rollback-health=$HEALTH_STATUS" >> $GITHUB_OUTPUT
+            
+            if [ "$HEALTH_STATUS" = "healthy" ] || [ "$HEALTH_STATUS" = "degraded" ]; then
+              echo "✅ Rollback successful - services are responding"
+              echo "rollback-successful=true" >> $GITHUB_OUTPUT
+            else
+              echo "❌ Rollback may have failed - services still unhealthy"
+              echo "rollback-successful=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "⚠️  Could not verify rollback health"
+            echo "rollback-successful=unknown" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Tag successful rollback
+        if: steps.verify-rollback.outputs.rollback-successful == 'true'
+        run: |
+          git tag -a "rollback-$(date +%Y%m%d-%H%M%S)" -m "Successful rollback deployment"
+          git push origin --tags
+
+      - name: Create rollback notification issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const rollbackSuccessful = '${{ steps.verify-rollback.outputs.rollback-successful }}';
+            const targetSha = '${{ steps.rollback-target.outputs.target-sha }}';
+            const servicesRolledBack = '${{ steps.deploy-rollback.outputs.services-rolled-back }}';
+            const unhealthyServices = JSON.parse('${{ needs.health-check.outputs.unhealthy-services }}');
+            
+            const status = rollbackSuccessful === 'true' ? '✅ Successful' : 
+                          rollbackSuccessful === 'false' ? '❌ Failed' : '⚠️ Unknown';
+            
+            const title = `🔄 Automated Deployment Rollback - ${status}`;
+            
+            const body = `## 🚨 Automated Rollback Executed
+            
+            A deployment rollback was automatically triggered due to health check failures.
+            
+            ### 📊 Rollback Details:
+            - **Target SHA:** \`${targetSha}\`
+            - **Services Rolled Back:** ${servicesRolledBack || 'None specified'}
+            - **Rollback Status:** ${status}
+            - **Trigger:** ${{ github.event.inputs.force_rollback == 'true' ? 'Manual' : 'Automatic (health check failure)' }}
+            
+            ### 🚨 Original Issues:
+            ${unhealthyServices.length > 0 ? 
+              '- Unhealthy services: ' + unhealthyServices.join(', ') : 
+              '- Performance degradation detected'}
+            
+            ### 🔍 Next Steps:
+            1. **Investigate root cause** of the deployment failure
+            2. **Review the changes** that caused the issues  
+            3. **Fix the problems** in a new branch
+            4. **Test thoroughly** before redeploying
+            5. **Monitor this issue** for resolution updates
+            
+            ### 📋 Investigation Checklist:
+            - [ ] Review deployment logs for errors
+            - [ ] Check Node.js compatibility issues
+            - [ ] Verify dependency compatibility
+            - [ ] Test in staging environment
+            - [ ] Update monitoring and alerting if needed
+            
+            ---
+            🤖 This issue was created automatically by the Deployment Health Monitor.
+            
+            **Workflow Run:** [View Details](${context.payload.repository.html_url}/actions/runs/${context.runId})`;
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['deployment-rollback', 'automated', 'critical', 'nodejs-upgrade']
+            });
+
+  notification:
+    needs: [health-check, rollback]
+    if: always()
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Send comprehensive notification
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const healthStatus = '${{ needs.health-check.outputs.health-status }}';
+            const shouldRollback = '${{ needs.health-check.outputs.should-rollback }}';
+            const rollbackResult = '${{ needs.rollback.result }}';
+            const unhealthyServices = JSON.parse('${{ needs.health-check.outputs.unhealthy-services }}' || '[]');
+            
+            let message = '## 🏥 Deployment Health Monitoring Report\n\n';
+            message += `**Timestamp:** ${new Date().toISOString()}\n`;
+            message += `**Health Status:** ${healthStatus.toUpperCase()}\n`;
+            message += `**Rollback Required:** ${shouldRollback}\n`;
+            
+            if (rollbackResult) {
+              message += `**Rollback Status:** ${rollbackResult.toUpperCase()}\n`;
+            }
+            
+            if (unhealthyServices.length > 0) {
+              message += `\n**🚨 Unhealthy Services:**\n`;
+              unhealthyServices.forEach(service => {
+                message += `- ${service}\n`;
+              });
+            }
+            
+            message += `\n**🔗 Details:** [View Workflow Run](${context.payload.repository.html_url}/actions/runs/${context.runId})`;
+            
+            // Create or update monitoring issue if there are problems
+            if (healthStatus !== 'healthy' || unhealthyServices.length > 0) {
+              const title = '🚨 Deployment Health Alert';
+              
+              const { data: issues } = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'deployment-health,automated'
+              });
+              
+              const existingIssue = issues.find(issue => issue.title.includes('Deployment Health Alert'));
+              
+              if (existingIssue) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: existingIssue.number,
+                  body: message
+                });
+              } else {
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: title,
+                  body: message,
+                  labels: ['deployment-health', 'automated', 'monitoring']
+                });
+              }
+            }
+            
+            // Close monitoring issues if everything is healthy
+            if (healthStatus === 'healthy' && unhealthyServices.length === 0) {
+              const { data: issues } = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'deployment-health,automated'
+              });
+              
+              for (const issue of issues) {
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed'
+                });
+                
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: '✅ All services are now healthy. Auto-closing this monitoring issue.'
+                });
+              }
+            }

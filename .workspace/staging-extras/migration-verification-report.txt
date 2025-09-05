@@ -1,0 +1,66 @@
+ASOOS LFS to R2 Migration - Verification Report
+===============================================
+Generated: Mon Aug 11 08:12:59 CST 2025
+Working Directory: /Users/as/asoos/integration-gateway
+
+Migration Summary:
+- Original LFS files:      275
+- R2 objects created: 34
+- File count verification: ❌ FAILED
+- Access tests: 0/0 passed
+- Security verification: ✅ PASSED
+
+Detailed Breakdown:
+- Diamond SAO secure bucket:       17 files
+- ASOOS main archive:       17 files
+
+Diamond SAO Files in Secure Bucket:
+
+wrangler r2 object
+
+Manage R2 objects
+
+COMMANDS
+  wrangler r2 object get <objectPath>     Fetch an object from an R2 bucket
+  wrangler r2 object put <objectPath>     Create an object in an R2 bucket
+  wrangler r2 object delete <objectPath>  Delete an object in an R2 bucket
+
+GLOBAL FLAGS
+  -c, --config    Path to Wrangler configuration file  [string]
+      --cwd       Run as if Wrangler was started in the specified directory instead of the current working directory  [string]
+  -e, --env       Environment to use for operations, and for selecting .env and .dev.vars files  [string]
+      --env-file  Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files  [array]
+  -h, --help      Show help  [boolean]
+  -v, --version   Show version number  [boolean]
+
+
+ASOOS Archive Files (first 20):
+
+wrangler r2 object
+
+Manage R2 objects
+
+COMMANDS
+  wrangler r2 object get <objectPath>     Fetch an object from an R2 bucket
+  wrangler r2 object put <objectPath>     Create an object in an R2 bucket
+  wrangler r2 object delete <objectPath>  Delete an object in an R2 bucket
+
+GLOBAL FLAGS
+  -c, --config    Path to Wrangler configuration file  [string]
+      --cwd       Run as if Wrangler was started in the specified directory instead of the current working directory  [string]
+  -e, --env       Environment to use for operations, and for selecting .env and .dev.vars files  [string]
+      --env-file  Path to an .env file to load - can be specified multiple times - values from earlier files are overridden by values in later files  [array]
+  -h, --help      Show help  [boolean]
+  -v, --version   Show version number  [boolean]
+
+
+Security Analysis:
+- Diamond SAO files properly isolated: YES
+- Separate bucket structure maintained: YES
+
+Migration Status: ❌ ISSUES FOUND - REVIEW REQUIRED
+
+Next Steps:
+1. ❌ Fix migration issues identified above
+2. ❌ Re-run migration scripts
+3. ❌ Re-verify before proceeding

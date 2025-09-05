@@ -1,0 +1,92 @@
+{
+  "quantumLeadership": {
+    "permissions": [
+      "READ",
+      "WRITE",
+      "DELETE",
+      "OVERRIDE",
+      "ORCHESTRATE"
+    ],
+    "agents": [
+      "qRIX_ALPHA",
+      "qRIX_BETA",
+      "qRIX_GAMMA",
+      "MAX_MAESTRO"
+    ]
+  },
+  "wfaSwarm": {
+    "permissions": [
+      "READ",
+      "WRITE",
+      "SUBMIT"
+    ],
+    "maxConcurrentAgents": 50000,
+    "batchAssignmentEnabled": true
+  },
+  "progressionLevels": {
+    "PA": {
+      "permissions": [
+        "READ",
+        "SUBMIT"
+      ],
+      "readinessThreshold": 75
+    },
+    "JO": {
+      "permissions": [
+        "READ",
+        "WRITE",
+        "SUBMIT"
+      ],
+      "readinessThreshold": 80
+    },
+    "O": {
+      "permissions": [
+        "READ",
+        "WRITE",
+        "SUBMIT",
+        "REVIEW"
+      ],
+      "readinessThreshold": 85
+    },
+    "RIX": {
+      "permissions": [
+        "READ",
+        "WRITE",
+        "SUBMIT",
+        "REVIEW",
+        "APPROVE"
+      ],
+      "readinessThreshold": 90
+    },
+    "CRX": {
+      "permissions": [
+        "READ",
+        "WRITE",
+        "SUBMIT",
+        "REVIEW",
+        "APPROVE",
+        "COORDINATE"
+      ],
+      "readinessThreshold": 95
+    },
+    "qRIX": {
+      "permissions": [
+        "READ",
+        "WRITE",
+        "SUBMIT",
+        "REVIEW",
+        "APPROVE",
+        "COORDINATE",
+        "QUANTUM_OVERRIDE"
+      ],
+      "readinessThreshold": 98
+    },
+    "MAX_MAESTRO": {
+      "permissions": [
+        "ALL_PERMISSIONS",
+        "STRATEGIC_ORCHESTRATION"
+      ],
+      "readinessThreshold": 99
+    }
+  }
+}

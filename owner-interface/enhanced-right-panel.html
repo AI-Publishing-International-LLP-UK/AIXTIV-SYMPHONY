@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Right Panel - Mocoa Owner Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f23;
+            color: #e6e6e6;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Enhanced Right Panel */
+        .right-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-left: 1px solid rgba(124, 58, 237, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Panel states */
+        .right-panel.collapsed {
+            width: 60px;
+        }
+
+        .right-panel.normal {
+            width: 320px;
+        }
+
+        .right-panel.expanded {
+            width: 480px;
+        }
+
+        .right-panel.hidden {
+            width: 0;
+            opacity: 0;
+        }
+
+        /* Panel Header */
+        .panel-header {
+            height: 50px;
+            background: rgba(124, 58, 237, 0.1);
+            border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            backdrop-filter: blur(5px);
+        }
+
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #a855f7;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        .right-panel.collapsed .panel-title {
+            opacity: 0;
+        }
+
+        /* Control Buttons */
+        .panel-controls {
+            display: flex;
+            gap: 4px;
+        }
+
+        .control-btn {
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: rgba(124, 58, 237, 0.2);
+            border-radius: 4px;
+            color: #a855f7;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .control-btn:hover {
+            background: rgba(124, 58, 237, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* Interface Tabs */
+        .interface-tabs {
+            background: rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+            padding: 8px;
+            display: flex;
+            gap: 4px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .interface-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .interface-tab {
+            min-width: 40px;
+            height: 32px;
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .interface-tab:hover {
+            background: rgba(124, 58, 237, 0.2);
+            border-color: rgba(124, 58, 237, 0.4);
+        }
+
+        .interface-tab.active {
+            background: rgba(124, 58, 237, 0.3);
+            border-color: rgba(124, 58, 237, 0.6);
+            box-shadow: 0 0 8px rgba(124, 58, 237, 0.3);
+        }
+
+        .interface-tab .tab-label {
+            font-size: 10px;
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+            font-weight: 500;
+        }
+
+        .right-panel.collapsed .interface-tab .tab-label {
+            opacity: 1;
+        }
+
+        /* Main Content Area */
+        .panel-content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Interface Views */
+        .interface-view {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .interface-view.active {
+            display: flex;
+        }
+
+        /* Pilot Interface (P) */
+        .pilot-interface {
+            padding: 16px;
+        }
+
+        .pilot-status {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .pilot-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #10b981;
+        }
+
+        .pilot-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Diamond CLI Interface (💎) */
+        .diamond-cli-interface {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .cli-output {
+            flex: 1;
+            padding: 12px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .cli-input-area {
+            padding: 8px;
+            border-top: 1px solid rgba(124, 58, 237, 0.2);
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cli-prompt {
+            color: #10b981;
+            font-family: monospace;
+            font-size: 11px;
+        }
+
+        .cli-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-family: monospace;
+            font-size: 11px;
+            outline: none;
+        }
+
+        .cli-execute {
+            width: 24px;
+            height: 24px;
+            background: rgba(124, 58, 237, 0.3);
+            border: none;
+            border-radius: 4px;
+            color: #a855f7;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Code Interface (</>) */
+        .code-interface {
+            padding: 16px;
+            font-family: monospace;
+        }
+
+        .code-editor {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 6px;
+            padding: 12px;
+            min-height: 200px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        /* Search Interface (🔍) */
+        .search-interface {
+            padding: 16px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 6px;
+            color: white;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .search-results {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            padding: 12px;
+            min-height: 150px;
+        }
+
+        /* Menu Interface (@) */
+        .menu-interface {
+            padding: 16px;
+        }
+
+        .menu-item {
+            padding: 8px 12px;
+            margin: 4px 0;
+            background: rgba(124, 58, 237, 0.1);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .menu-item:hover {
+            background: rgba(124, 58, 237, 0.2);
+        }
+
+        /* Image Upload Interface (📷) */
+        .image-interface {
+            padding: 16px;
+        }
+
+        .image-drop-zone {
+            border: 2px dashed rgba(124, 58, 237, 0.3);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .image-drop-zone:hover {
+            border-color: rgba(124, 58, 237, 0.6);
+            background: rgba(124, 58, 237, 0.05);
+        }
+
+        /* Information Interface (ℹ️) */
+        .info-interface {
+            padding: 16px;
+        }
+
+        .info-card {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 6px;
+            padding: 12px;
+            margin: 8px 0;
+        }
+
+        /* Plus/Minus Interface (±) */
+        .plus-minus-interface {
+            padding: 16px;
+        }
+
+        .toggle-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .toggle-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 4px;
+        }
+
+        /* Conversation Folders */
+        .conversation-folders {
+            padding: 8px;
+            border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        .folder-tab {
+            display: inline-block;
+            padding: 4px 8px;
+            margin: 2px;
+            background: rgba(124, 58, 237, 0.1);
+            border-radius: 4px;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .folder-tab:hover {
+            background: rgba(124, 58, 237, 0.2);
+        }
+
+        .folder-tab.active {
+            background: rgba(124, 58, 237, 0.3);
+        }
+
+        /* Resize Handle */
+        .resize-handle {
+            position: absolute;
+            left: -3px;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            cursor: col-resize;
+            background: transparent;
+        }
+
+        .resize-handle:hover {
+            background: rgba(124, 58, 237, 0.3);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .right-panel.normal {
+                width: 280px;
+            }
+            .right-panel.expanded {
+                width: 100vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="right-panel normal" id="rightPanel">
+        <!-- Resize Handle -->
+        <div class="resize-handle" id="resizeHandle"></div>
+        
+        <!-- Panel Header -->
+        <div class="panel-header">
+            <div class="panel-title">Interface Panel</div>
+            <div class="panel-controls">
+                <button class="control-btn" id="collapseBtn" title="Collapse Panel">‹</button>
+                <button class="control-btn" id="expandBtn" title="Expand Panel">›</button>
+                <button class="control-btn" id="hideBtn" title="Hide Panel">×</button>
+            </div>
+        </div>
+
+        <!-- Conversation Folders -->
+        <div class="conversation-folders">
+            <div class="folder-tab active">Main</div>
+            <div class="folder-tab">Project</div>
+            <div class="folder-tab">Code</div>
+            <div class="folder-tab">Research</div>
+        </div>
+
+        <!-- Interface Tabs -->
+        <div class="interface-tabs">
+            <div class="interface-tab active" data-interface="pilot">
+                P
+                <div class="tab-label">Pilot</div>
+            </div>
+            <div class="interface-tab" data-interface="diamond">
+                💎
+                <div class="tab-label">CLI</div>
+            </div>
+            <div class="interface-tab" data-interface="code">
+                &lt;/&gt;
+                <div class="tab-label">Code</div>
+            </div>
+            <div class="interface-tab" data-interface="search">
+                🔍
+                <div class="tab-label">Search</div>
+            </div>
+            <div class="interface-tab" data-interface="menu">
+                @
+                <div class="tab-label">Menu</div>
+            </div>
+            <div class="interface-tab" data-interface="image">
+                📷
+                <div class="tab-label">Image</div>
+            </div>
+            <div class="interface-tab" data-interface="info">
+                ℹ️
+                <div class="tab-label">Info</div>
+            </div>
+            <div class="interface-tab" data-interface="plus-minus">
+                ±
+                <div class="tab-label">Toggle</div>
+            </div>
+        </div>
+
+        <!-- Panel Content -->
+        <div class="panel-content">
+            <!-- Pilot Interface (P) -->
+            <div class="interface-view active" data-view="pilot">
+                <div class="pilot-interface">
+                    <div class="pilot-status">
+                        <div class="pilot-indicator">
+                            <div class="pilot-dot"></div>
+                            <span>Pilot Mode Active</span>
+                        </div>
+                        <div style="font-size: 12px; color: #94a3b8; margin-top: 4px;">
+                            Working with Dr. Claude
+                        </div>
+                    </div>
+                    
+                    <div class="menu-item" onclick="activatePilotCommand('status')">
+                        📊 System Status
+                    </div>
+                    <div class="menu-item" onclick="activatePilotCommand('deploy')">
+                        🚀 Deploy Mission
+                    </div>
+                    <div class="menu-item" onclick="activatePilotCommand('coordinate')">
+                        🎯 Coordinate Action
+                    </div>
+                    <div class="menu-item" onclick="activatePilotCommand('analyze')">
+                        🧠 Deep Analysis
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diamond CLI Interface (💎) -->
+            <div class="interface-view" data-view="diamond">
+                <div class="diamond-cli-interface">
+                    <div class="cli-output" id="diamondOutput">
+                        <div style="color: #a855f7;">💎 Diamond SAO CLI Ready</div>
+                        <div style="color: #10b981;">✅ All systems operational</div>
+                        <div style="color: #6b7280;">Type 'help' for commands</div>
+                    </div>
+                    <div class="cli-input-area">
+                        <span class="cli-prompt">diamond$</span>
+                        <input type="text" class="cli-input" id="diamondInput" placeholder="command">
+                        <button class="cli-execute" onclick="executeDiamondCommand()">⚡</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Code Interface (</>) -->
+            <div class="interface-view" data-view="code">
+                <div class="code-interface">
+                    <div class="code-editor" contenteditable="true">
+// Claude Code Interface
+console.log('Ready for code collaboration');
+
+function initializeSystem() {
+    return {
+        status: 'active',
+        mode: 'development'
+    };
+}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Interface (🔍) -->
+            <div class="interface-view" data-view="search">
+                <div class="search-interface">
+                    <input type="text" class="search-box" placeholder="Search or investigate...">
+                    <div class="search-results">
+                        <div style="color: #6b7280; text-align: center; padding: 20px;">
+                            Enter search terms to investigate
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu Interface (@) -->
+            <div class="interface-view" data-view="menu">
+                <div class="menu-interface">
+                    <div class="menu-item">📚 Documentation</div>
+                    <div class="menu-item">⚙️ Settings</div>
+                    <div class="menu-item">🛠️ Tools</div>
+                    <div class="menu-item">📊 Analytics</div>
+                    <div class="menu-item">🔐 Security</div>
+                    <div class="menu-item">❓ Help & Support</div>
+                </div>
+            </div>
+
+            <!-- Image Upload Interface (📷) -->
+            <div class="interface-view" data-view="image">
+                <div class="image-interface">
+                    <div class="image-drop-zone" onclick="document.getElementById('imageUpload').click()">
+                        <div>📷</div>
+                        <div>Click or drag images here</div>
+                        <div style="font-size: 11px; color: #6b7280; margin-top: 8px;">
+                            For viewing and analysis
+                        </div>
+                    </div>
+                    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+                </div>
+            </div>
+
+            <!-- Information Interface (ℹ️) -->
+            <div class="interface-view" data-view="info">
+                <div class="info-interface">
+                    <div class="info-card">
+                        <strong>Diamond SAO Status</strong><br>
+                        Version: 34.1<br>
+                        Launch Ready: 96.7%
+                    </div>
+                    <div class="info-card">
+                        <strong>WFA Swarm</strong><br>
+                        Agents: 30,000,000<br>
+                        Status: Quantum Entangled
+                    </div>
+                    <div class="info-card">
+                        <strong>Victory36</strong><br>
+                        Protection: Maximum<br>
+                        Threats: 0 detected
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plus/Minus Toggle Interface (±) -->
+            <div class="interface-view" data-view="plus-minus">
+                <div class="plus-minus-interface">
+                    <div class="toggle-controls">
+                        <div class="toggle-item">
+                            <span>Debug Mode</span>
+                            <button onclick="toggleDebug()">+</button>
+                        </div>
+                        <div class="toggle-item">
+                            <span>Verbose Output</span>
+                            <button onclick="toggleVerbose()">-</button>
+                        </div>
+                        <div class="toggle-item">
+                            <span>Auto-Deploy</span>
+                            <button onclick="toggleAutoDeploy()">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class EnhancedRightPanel {
+            constructor() {
+                this.panel = document.getElementById('rightPanel');
+                this.currentState = 'normal'; // collapsed, normal, expanded, hidden
+                this.currentInterface = 'pilot';
+                this.isResizing = false;
+                
+                this.init();
+            }
+            
+            init() {
+                this.setupControls();
+                this.setupTabs();
+                this.setupResize();
+                this.setupKeyboardShortcuts();
+            }
+            
+            setupControls() {
+                document.getElementById('collapseBtn').addEventListener('click', () => {
+                    if (this.currentState === 'normal') {
+                        this.setState('collapsed');
+                    } else if (this.currentState === 'expanded') {
+                        this.setState('normal');
+                    }
+                });
+                
+                document.getElementById('expandBtn').addEventListener('click', () => {
+                    if (this.currentState === 'collapsed') {
+                        this.setState('normal');
+                    } else if (this.currentState === 'normal') {
+                        this.setState('expanded');
+                    }
+                });
+                
+                document.getElementById('hideBtn').addEventListener('click', () => {
+                    if (this.currentState === 'hidden') {
+                        this.setState('normal');
+                    } else {
+                        this.setState('hidden');
+                    }
+                });
+            }
+            
+            setupTabs() {
+                const tabs = document.querySelectorAll('.interface-tab');
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        const interfaceName = tab.dataset.interface;
+                        this.switchInterface(interfaceName);
+                    });
+                });
+                
+                // Diamond CLI input handling
+                const diamondInput = document.getElementById('diamondInput');
+                if (diamondInput) {
+                    diamondInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            this.executeDiamondCommand();
+                        }
+                    });
+                }
+            }
+            
+            setupResize() {
+                const resizeHandle = document.getElementById('resizeHandle');
+                let startX, startWidth;
+                
+                resizeHandle.addEventListener('mousedown', (e) => {
+                    this.isResizing = true;
+                    startX = e.clientX;
+                    startWidth = parseInt(document.defaultView.getComputedStyle(this.panel).width, 10);
+                    
+                    document.addEventListener('mousemove', this.handleResize.bind(this));
+                    document.addEventListener('mouseup', this.stopResize.bind(this));
+                    
+                    e.preventDefault();
+                });
+            }
+            
+            handleResize(e) {
+                if (!this.isResizing) return;
+                
+                const diff = startX - e.clientX;
+                const newWidth = startWidth + diff;
+                
+                if (newWidth > 200 && newWidth < 600) {
+                    this.panel.style.width = newWidth + 'px';
+                }
+            }
+            
+            stopResize() {
+                this.isResizing = false;
+                document.removeEventListener('mousemove', this.handleResize);
+                document.removeEventListener('mouseup', this.stopResize);
+            }
+            
+            setupKeyboardShortcuts() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey || e.metaKey) {
+                        switch (e.key) {
+                            case 'p':
+                                e.preventDefault();
+                                this.switchInterface('pilot');
+                                break;
+                            case 'd':
+                                e.preventDefault();
+                                this.switchInterface('diamond');
+                                break;
+                            case '/':
+                                e.preventDefault();
+                                this.switchInterface('search');
+                                break;
+                        }
+                    }
+                });
+            }
+            
+            setState(newState) {
+                this.panel.className = `right-panel ${newState}`;
+                this.currentState = newState;
+                
+                // Emit event for other components
+                window.dispatchEvent(new CustomEvent('panel-state-changed', {
+                    detail: { state: newState }
+                }));
+            }
+            
+            switchInterface(interfaceName) {
+                // Update tabs
+                document.querySelectorAll('.interface-tab').forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.interface === interfaceName);
+                });
+                
+                // Update views
+                document.querySelectorAll('.interface-view').forEach(view => {
+                    view.classList.toggle('active', view.dataset.view === interfaceName);
+                });
+                
+                this.currentInterface = interfaceName;
+                
+                // Focus relevant inputs
+                if (interfaceName === 'diamond') {
+                    setTimeout(() => {
+                        const input = document.getElementById('diamondInput');
+                        if (input) input.focus();
+                    }, 100);
+                }
+            }
+            
+            executeDiamondCommand() {
+                const input = document.getElementById('diamondInput');
+                const output = document.getElementById('diamondOutput');
+                const command = input.value.trim();
+                
+                if (!command) return;
+                
+                // Add command to output
+                const commandLine = document.createElement('div');
+                commandLine.innerHTML = `<span style="color: #10b981;">diamond$</span> ${command}`;
+                output.appendChild(commandLine);
+                
+                // Process command
+                this.processDiamondCommand(command, output);
+                
+                // Clear input
+                input.value = '';
+                
+                // Scroll to bottom
+                output.scrollTop = output.scrollHeight;
+            }
+            
+            processDiamondCommand(command, output) {
+                setTimeout(() => {
+                    const responseLine = document.createElement('div');
+                    
+                    switch (command.toLowerCase()) {
+                        case 'help':
+                            responseLine.innerHTML = `
+                                <div style="color: #a855f7;">💎 Diamond CLI Commands:</div>
+                                <div style="color: #e6e6e6; margin-left: 16px;">
+                                    status - System status<br>
+                                    deploy - Deploy systems<br>
+                                    scan - Security scan<br>
+                                    help - Show this help
+                                </div>
+                            `;
+                            break;
+                        case 'status':
+                            responseLine.innerHTML = `
+                                <div style="color: #10b981;">✅ All systems operational</div>
+                                <div style="color: #10b981;">🌌 WFA Swarm: ACTIVE</div>
+                                <div style="color: #10b981;">🛡️ Victory36: PROTECTED</div>
+                            `;
+                            break;
+                        default:
+                            responseLine.innerHTML = `<div style="color: #f59e0b;">Command '${command}' executed</div>`;
+                    }
+                    
+                    output.appendChild(responseLine);
+                    output.scrollTop = output.scrollHeight;
+                }, 200);
+            }
+        }
+        
+        // Global functions for interface interactions
+        function activatePilotCommand(action) {
+            console.log('Pilot command:', action);
+            // Add your pilot command logic here
+        }
+        
+        function toggleDebug() {
+            console.log('Debug mode toggled');
+        }
+        
+        function toggleVerbose() {
+            console.log('Verbose mode toggled');
+        }
+        
+        function toggleAutoDeploy() {
+            console.log('Auto-deploy toggled');
+        }
+        
+        // Initialize the panel
+        document.addEventListener('DOMContentLoaded', () => {
+            window.rightPanel = new EnhancedRightPanel();
+        });
+    </script>
+</body>
+</html>

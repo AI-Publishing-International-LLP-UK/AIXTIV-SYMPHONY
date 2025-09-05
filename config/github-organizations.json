@@ -1,0 +1,90 @@
+{
+  "organizations": {
+    "aixtiv": {
+      "name": "Aixtiv Symphony",
+      "description": "Main Aixtiv organization with access to core repositories",
+      "allowedOwners": ["aixtiv", "coaching2100", "visionlake"],
+      "agentTypes": ["RIX", "CRX", "QRIX", "HQRIX", "PCP", "PILOT"],
+      "rateLimits": {
+        "RIX": 150,
+        "CRX": 250,
+        "QRIX": 400,
+        "HQRIX": 600,
+        "PCP": 1200,
+        "PILOT": 75
+      }
+    },
+    "coaching2100": {
+      "name": "Coaching 2100",
+      "description": "Coaching 2100 subsidiary organization",
+      "allowedOwners": ["coaching2100", "aixtiv-sub"],
+      "agentTypes": ["RIX", "CRX", "PILOT"],
+      "rateLimits": {
+        "RIX": 100,
+        "CRX": 200,
+        "PILOT": 50
+      }
+    },
+    "visionlake": {
+      "name": "Vision Lake Solutions",
+      "description": "Vision Lake Time and Space Center organization",
+      "allowedOwners": ["visionlake", "aixtiv-vision"],
+      "agentTypes": ["RIX", "CRX", "QRIX", "PILOT"],
+      "rateLimits": {
+        "RIX": 120,
+        "CRX": 220,
+        "QRIX": 350,
+        "PILOT": 60
+      }
+    },
+    "elite11": {
+      "name": "Elite 11 Council",
+      "description": "Elite 11 macro-level strategic oversight organization",
+      "allowedOwners": ["*"],
+      "agentTypes": ["RIX", "HQRIX"],
+      "rateLimits": {
+        "RIX": 500,
+        "HQRIX": 1000
+      }
+    },
+    "mastery33": {
+      "name": "Mastery 33 Distributed",
+      "description": "Mastery 33 comprehensive operational mastery organization",
+      "allowedOwners": ["*"],
+      "agentTypes": ["RIX", "CRX", "QRIX"],
+      "rateLimits": {
+        "RIX": 300,
+        "CRX": 400,
+        "QRIX": 500
+      }
+    },
+    "default": {
+      "name": "Default Organization",
+      "description": "Default access level for unspecified agents",
+      "allowedOwners": ["public"],
+      "agentTypes": ["PILOT"],
+      "rateLimits": {
+        "PILOT": 30
+      }
+    }
+  },
+  "globalSettings": {
+    "defaultRateLimit": 50,
+    "rateLimitWindowMs": 60000,
+    "enableBatchOptimization": true,
+    "maxRepositoriesPerRequest": 10,
+    "logLevel": "info"
+  },
+  "repositoryExceptions": {
+    "publicRepos": {
+      "owners": ["microsoft", "google", "facebook"],
+      "accessLevel": "public",
+      "description": "Publicly accessible repositories for learning and reference"
+    },
+    "restrictedRepos": {
+      "owners": ["internal-security", "confidential"],
+      "accessLevel": "elite11-only",
+      "description": "Highly restricted repositories requiring Elite 11 access"
+    }
+  }
+}

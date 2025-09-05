@@ -1,0 +1,91 @@
+{
+  "WFA_ORCHESTRATION_DIRECTIVE": "COMPREHENSIVE_AUTHENTICATION_SYSTEM_VERIFICATION",
+  "AUTHORIZATION_LEVEL": "WFA_SWARM_COORDINATOR",
+  "VICTORY36_COORDINATION": true,
+  "INTELLIGENCE_SWARM_INTEGRATION": true,
+  
+  "CRITICAL_TASKS": [
+    {
+      "TASK_ID": "SALLYPORT_SEAMLESS_AUTHENTICATION",
+      "PRIORITY": "CRITICAL",
+      "OBJECTIVE": "Configure Sally Port to eliminate intermediate authentication page",
+      "TARGET_SYSTEM": "sally-port.2100.cool",
+      "REQUIREMENTS": [
+        "Maintain all existing security protocols",
+        "Eliminate user-visible intermediate authentication steps", 
+        "Ensure direct redirect from authentication to owner interface",
+        "Preserve Victory36 protection and WFA swarm configurations"
+      ],
+      "EXPECTED_FLOW": "asoos.2100.cool/auth → OAuth Provider → Sally Port (background) → mcp.aipub.2100.cool (seamless redirect)",
+      "SUCCESS_CRITERIA": "User never sees Sally Port authentication page, lands directly on owner interface"
+    },
+    
+    {
+      "TASK_ID": "CONSOLE_FUNCTIONALITY_VERIFICATION",
+      "PRIORITY": "HIGH", 
+      "OBJECTIVE": "Verify all owner console features are available and working",
+      "TARGET_SYSTEM": "mocoa-owner-interface-859242575175.us-west1.run.app",
+      "COMPONENTS_TO_TEST": [
+        "AI Copilots (QB RIX, SH RIX, Q RIX, etc.) - Active Status",
+        "Dashboard Sections (Communication, Growth, ROI) - Operational",
+        "CLI Interface with Claude Models - Connectivity", 
+        "API Configurations - Live and Responsive"
+      ],
+      "VALIDATION_REQUIREMENTS": [
+        "All copilots show active status",
+        "Dashboard sections load and respond",
+        "CLI interface connects to backend services",
+        "API configurations are live and accessible"
+      ],
+      "SUCCESS_CRITERIA": "All features show as available and working in owner console"
+    },
+    
+    {
+      "TASK_ID": "FULL_STACK_INTEGRATION_TESTING",
+      "PRIORITY": "HIGH",
+      "OBJECTIVE": "Test complete flow-through: frontend, backend, CRMS integration",
+      "TEST_LAYERS": [
+        "Frontend UI - User interaction testing",
+        "Backend APIs - Response and processing testing", 
+        "CRMS Integration - Record creation and data flow testing"
+      ],
+      "TEST_OPERATIONS": [
+        "Simulate user authentication and interface interaction",
+        "Test API endpoints and data processing", 
+        "Create test records in CRMS",
+        "Verify data flows between all systems",
+        "Confirm integration points are functional"
+      ],
+      "SUCCESS_CRITERIA": "End-to-end functionality confirmed with successful record creation and data flow"
+    },
+    
+    {
+      "TASK_ID": "MCP_COMPANY_DATA_PROCESSING",
+      "PRIORITY": "HIGH",
+      "OBJECTIVE": "Test MCP company information extraction and processing",
+      "TEST_COMPANY": "AI Publishing International LLP",
+      "OPERATIONS": [
+        "Company Information Extraction - Test data gathering from company sources",
+        "Data Processing - Verify information processing and structuring",
+        "MCP Integration - Confirm routing to correct MCP endpoint (mcp.aipub.2100.cool)",
+        "Data Flow Verification - Ensure seamless information integration"
+      ],
+      "VERIFICATION_POINTS": [
+        "Company search functionality works ('AI Publishing International LLP')",
+        "Company data is extracted and processed correctly",
+        "MCP routing directs to proper endpoint", 
+        "Data integration flows seamlessly through system"
+      ],
+      "SUCCESS_CRITERIA": "Seamless company onboarding with complete data extraction and integration"
+    }
+  ],
+  
+  "COORDINATION_SYSTEMS": {
+    "WFA_SWARM": "Primary orchestration and coordination",
+    "VICTORY36": "Security and protection protocols",
+    "INTELLIGENCE_SWARM": "Data processing and ML coordination"
+  },
+  
+  "EXECUTION_PRIORITY": "IMMEDIATE",
+  "REPORTING": "Real-time status updates and completion confirmation"
+}

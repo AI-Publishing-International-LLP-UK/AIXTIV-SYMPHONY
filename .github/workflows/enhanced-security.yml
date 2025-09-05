@@ -1,0 +1,127 @@
+name: Enhanced Security Monitoring
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/10 * * * *'  # Run every 10 minutes
+  push:
+    branches: [ development, production ]
+
+permissions:
+  contents: write
+  security-events: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Security Tools
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.18.3
+          npm install -g snyk
+          pip install safety
+
+      - name: Run Trivy Vulnerability Scanner
+        continue-on-error: true
+        run: |
+          trivy fs --security-checks vuln,config,secret . --format json > trivy-results.json
+          echo "Trivy scan completed"
+
+      - name: Run Snyk Security Scan
+        continue-on-error: true
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: |
+          snyk test --json > snyk-results.json || true
+          echo "Snyk scan completed"
+
+      - name: Check Python Dependencies
+        continue-on-error: true
+        run: |
+          pip install -r requirements.txt
+          safety check --json > safety-results.json
+          echo "Safety check completed"
+
+      - name: Process Security Results
+        run: |
+          # Combine results
+          jq -s '.[0] * .[1]' trivy-results.json snyk-results.json > combined-results.json
+          
+          # Count critical issues
+          CRITICAL_COUNT=$(jq '.vulnerabilities[] | select(.severity=="CRITICAL") | length' combined-results.json)
+          
+          if [[ $CRITICAL_COUNT -gt 0 ]]; then
+            echo "::error::Found $CRITICAL_COUNT critical vulnerabilities"
+            
+            # Create auto-fix PR for critical issues
+            gh pr create \
+              --title "🔒 Security: Fix Critical Vulnerabilities" \
+              --body "Automated fix for critical security vulnerabilities" \
+              --base development
+          fi
+
+      - name: Dependency Updates
+        run: |
+          # Check for outdated dependencies
+          npm audit fix
+          npm update
+          
+          # Create PR if changes were made
+          if [[ -n $(git status --porcelain) ]]; then
+            git checkout -b security/dependency-updates
+            git add package*.json
+            git commit -m "chore(security): update dependencies"
+            
+            gh pr create \
+              --title "📦 Security: Update Dependencies" \
+              --body "Automated dependency updates for security" \
+              --base development
+          fi
+
+      - name: Monitor Access Patterns
+        run: |
+          # Check recent access logs
+          gh api repos/$GITHUB_REPOSITORY/traffic/views > traffic.json
+          gh api repos/$GITHUB_REPOSITORY/traffic/clones >> traffic.json
+          
+          # Analyze for suspicious patterns
+          SUSPICIOUS=$(jq '.[] | select(.count > 100) | length' traffic.json)
+          
+          if [[ $SUSPICIOUS -gt 0 ]]; then
+            gh issue create \
+              --title "🚨 Suspicious Access Patterns Detected" \
+              --body "High traffic detected - please review access patterns" \
+              --label "security,high-priority"
+          fi
+
+      - name: Check Branch Protection
+        run: |
+          # Verify branch protection rules
+          gh api repos/$GITHUB_REPOSITORY/branches/production/protection > protection.json
+          
+          REQUIRED_CHECKS=$(jq '.required_status_checks.contexts | length' protection.json)
+          REVIEW_COUNT=$(jq '.required_pull_request_reviews.required_approving_review_count' protection.json)
+          
+          if [[ $REQUIRED_CHECKS -lt 3 || $REVIEW_COUNT -lt 1 ]]; then
+            gh api -X PUT repos/$GITHUB_REPOSITORY/branches/production/protection \
+              -f required_status_checks='{"strict":true,"contexts":["security-scan","codeql","dependency-review"]}' \
+              -f required_pull_request_reviews='{"required_approving_review_count":1}'
+          fi
+
+      - name: Generate Security Report
+        if: always()
+        run: |
+          echo "### Security Scan Report 🛡️" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "#### Vulnerability Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Critical: $(jq '.vulnerabilities[] | select(.severity=="CRITICAL") | length' combined-results.json)" >> $GITHUB_STEP_SUMMARY
+          echo "- High: $(jq '.vulnerabilities[] | select(.severity=="HIGH") | length' combined-results.json)" >> $GITHUB_STEP_SUMMARY
+          echo "- Medium: $(jq '.vulnerabilities[] | select(.severity=="MEDIUM") | length' combined-results.json)" >> $GITHUB_STEP_SUMMARY
+          echo "- Low: $(jq '.vulnerabilities[] | select(.severity=="LOW") | length' combined-results.json)" >> $GITHUB_STEP_SUMMARY
+

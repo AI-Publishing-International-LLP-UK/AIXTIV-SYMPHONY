@@ -1,0 +1,20 @@
+{
+  "migration_date": "2025-08-25T18:11:54Z",
+  "total_files":      258,
+  "files": [
+    {
+      "file_path": "integration-gateway/package.json",
+      "r2_key": "package.json", 
+      "r2_url": "https://pub-assets.asoos.2100.cool/package.json",
+      "git_lfs_hash": "4ba224a850",
+      "status": "migrated"
+    },
+    {
+      "file_path": "integration-gateway/package-lock.json",
+      "r2_key": "package-lock.json", 
+      "r2_url": "https://pub-assets.asoos.2100.cool/package-lock.json",
+      "git_lfs_hash": "774fa4292f",
+      "status": "migrated"
+    },
+  ]
+}

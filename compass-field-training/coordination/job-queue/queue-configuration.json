@@ -1,0 +1,24 @@
+{
+  "queueStatus": "ACTIVE",
+  "totalJobs": 0,
+  "activeJobs": 0,
+  "completedJobs": 0,
+  "pendingJobs": 0,
+  "jobCategories": [
+    "compass-field-analysis",
+    "didc-integration-verification",
+    "collaborative-assessment",
+    "quantum-reasoning-validation",
+    "skill-verification-simulation"
+  ],
+  "agentAssignmentRules": {
+    "maxJobsPerAgent": 10,
+    "priorityLevels": [
+      "URGENT",
+      "HIGH",
+      "NORMAL",
+      "LOW"
+    ],
+    "distributionStrategy": "PROGRESSIVE_CAPABILITY_MATCHING"
+  }
+}

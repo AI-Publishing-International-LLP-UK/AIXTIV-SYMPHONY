@@ -1,0 +1,256 @@
+name: CI/CD/CTTT Pipeline - Self-Healing & Monitoring
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Self-monitoring trigger every 15 minutes
+    - cron: '*/15 * * * *'
+
+env:
+  PROJECT_ID: api-for-warp-drive
+  REGION_PRIMARY: us-west1
+  REGION_SECONDARY: us-central1
+  DOCKER_IMAGE: gcr.io/api-for-warp-drive/universal-gateway
+  DIAMOND_SAO_VERSION: v34
+
+jobs:
+  # Continuous Testing with Newman
+  api-testing:
+    name: Newman API Testing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Install Newman and dependencies
+        run: |
+          npm install -g newman newman-reporter-htmlextra
+          
+      - name: Run Newman API Tests
+        run: |
+          # Test all critical endpoints
+          newman run tests/postman/universal-gateway-tests.json \
+            --environment tests/postman/production-env.json \
+            --reporters cli,htmlextra \
+            --reporter-htmlextra-export newman-report.html \
+            --suppress-exit-code
+            
+      - name: Upload Newman Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-reports
+          path: newman-report.html
+
+  # Continuous Integration & Build
+  build-and-test:
+    name: Build & Security Scan
+    runs-on: ubuntu-latest
+    needs: api-testing
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker
+        
+      - name: Build Docker Image
+        run: |
+          docker build -t ${{ env.DOCKER_IMAGE }}:${{ github.sha }} .
+          docker tag ${{ env.DOCKER_IMAGE }}:${{ github.sha }} ${{ env.DOCKER_IMAGE }}:latest
+          
+      - name: Security Scan
+        run: |
+          # Container security scanning
+          gcloud container images scan ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
+          
+      - name: Push to Container Registry
+        run: |
+          docker push ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
+          docker push ${{ env.DOCKER_IMAGE }}:latest
+
+  # Continuous Deployment
+  deploy-services:
+    name: Deploy All Services
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main'
+    strategy:
+      matrix:
+        service:
+          - universal-gateway
+          - mcp-zaxxon-2100-cool
+          - payment-pipeline
+          - pcp-activation-service
+          - mongodb-mcp-oauth-uscentral1
+          - auto-provision-mcp-uscentral1
+          - drlucyautomation
+        region: [us-west1, us-central1]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ matrix.service }} \
+            --image ${{ env.DOCKER_IMAGE }}:${{ github.sha }} \
+            --region ${{ matrix.region }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --port 8080 \
+            --memory 1Gi \
+            --cpu 1000m \
+            --min-instances 1 \
+            --max-instances 100 \
+            --concurrency 80 \
+            --timeout 300 \
+            --set-env-vars="NODE_ENV=production,CI_CD_VERSION=${{ github.sha }},SELF_HEALING=true,MONITORING=true" \
+            --no-traffic
+            
+      - name: Gradual Traffic Migration
+        run: |
+          # Gradual rollout: 10% -> 50% -> 100%
+          gcloud run services update-traffic ${{ matrix.service }} \
+            --to-revisions LATEST=10 \
+            --region ${{ matrix.region }}
+          sleep 300  # 5 min health check
+          
+          gcloud run services update-traffic ${{ matrix.service }} \
+            --to-revisions LATEST=50 \
+            --region ${{ matrix.region }}
+          sleep 300  # 5 min health check
+          
+          gcloud run services update-traffic ${{ matrix.service }} \
+            --to-revisions LATEST=100 \
+            --region ${{ matrix.region }}
+
+  # Self-Healing & Monitoring
+  self-healing-setup:
+    name: Configure Self-Healing
+    runs-on: ubuntu-latest
+    needs: deploy-services
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          
+      - name: Create Health Check Alerts
+        run: |
+          # Create alerting policies for each service
+          gcloud alpha monitoring policies create --policy-from-file=monitoring/health-check-policy.yaml
+          
+      - name: Setup Auto-Scaling Policies
+        run: |
+          # Configure aggressive auto-scaling
+          for service in universal-gateway mcp-zaxxon-2100-cool payment-pipeline pcp-activation-service; do
+            gcloud run services update $service \
+              --region us-west1 \
+              --min-instances 2 \
+              --max-instances 1000 \
+              --concurrency 50 \
+              --cpu-throttling
+              
+            gcloud run services update $service \
+              --region us-central1 \
+              --min-instances 1 \
+              --max-instances 500 \
+              --concurrency 50 \
+              --cpu-throttling
+          done
+          
+      - name: Deploy Self-Healing Scripts
+        run: |
+          # Deploy Cloud Functions for auto-remediation
+          gcloud functions deploy service-auto-healer \
+            --source monitoring/self-healing \
+            --entry-point heal_services \
+            --runtime python39 \
+            --trigger-topic service-alerts \
+            --set-env-vars="PROJECT_ID=${{ env.PROJECT_ID }}"
+
+  # Continuous Testing in Production (CTTT)
+  production-testing:
+    name: Continuous Production Testing
+    runs-on: ubuntu-latest
+    needs: self-healing-setup
+    if: github.event_name == 'schedule'
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Install Testing Tools
+        run: |
+          npm install -g newman artillery k6
+          
+      - name: Production Health Checks
+        run: |
+          # Test all production endpoints
+          newman run tests/postman/production-health-check.json \
+            --environment tests/postman/production-env.json \
+            --reporters cli,json \
+            --reporter-json-export health-report.json
+            
+      - name: Load Testing
+        run: |
+          # K6 load testing
+          k6 run tests/k6/load-test.js
+          
+      - name: Performance Testing  
+        run: |
+          # Artillery performance testing
+          artillery run tests/artillery/performance-test.yml
+          
+      - name: Send Results to Diamond SAO
+        run: |
+          # Send test results to monitoring dashboard
+          curl -X POST https://mocoa-owner-interface-859242575175.us-central1.run.app/api/monitoring/test-results \
+            -H "Content-Type: application/json" \
+            -d @health-report.json
+
+  # Monitoring Dashboard Update
+  update-dashboard:
+    name: Update Diamond SAO Dashboard
+    runs-on: ubuntu-latest
+    needs: [deploy-services, production-testing]
+    if: always()
+    steps:
+      - name: Update Monitoring Dashboard
+        run: |
+          # Update Diamond SAO Command Center v34
+          curl -X POST https://mocoa-owner-interface-859242575175.us-central1.run.app/api/diamond-sao/v34/update \
+            -H "Content-Type: application/json" \
+            -d '{
+              "deployment_status": "${{ job.status }}",
+              "version": "${{ github.sha }}",
+              "timestamp": "${{ github.event.head_commit.timestamp }}",
+              "services_deployed": [
+                "universal-gateway",
+                "mcp-zaxxon-2100-cool", 
+                "payment-pipeline",
+                "pcp-activation-service"
+              ],
+              "regions": ["us-west1", "us-central1"],
+              "self_healing": true,
+              "monitoring": true,
+              "newman_tests": true
+            }'

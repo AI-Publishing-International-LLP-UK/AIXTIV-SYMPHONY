@@ -1,0 +1,210 @@
+{
+  "timestamp": "2025-07-03T03:40:42.021Z",
+  "tests": {
+    "Health Check": {
+      "status": "PASS",
+      "result": {
+        "status": "healthy",
+        "service": "sallyport-auth",
+        "timestamp": "2025-07-03T03:40:42.229Z",
+        "details": {
+          "status": "healthy",
+          "timestamp": "2025-07-03T03:40:42.531Z",
+          "version": "2.0.0-cloudflare-integration",
+          "sallyport": {
+            "enabled": true,
+            "cloudflare_bridge": true
+          },
+          "metrics": {
+            "totalRequests": 7,
+            "authenticatedRequests": 0,
+            "blockedRequests": 0,
+            "successRate": "0.00%"
+          }
+        }
+      },
+      "timestamp": "2025-07-03T03:40:42.229Z"
+    },
+    "Session Creation": {
+      "status": "PASS",
+      "result": {
+        "sessionToken": "a63f06a7c24836728b939b13a850a0f514ef2feb007f10161836358e668323f1",
+        "user": {
+          "uuid": "user-b3126e60748e",
+          "email": "authenticated@2100.cool",
+          "displayName": "Authenticated User",
+          "role": "user",
+          "permissions": ["read", "write"]
+        }
+      },
+      "timestamp": "2025-07-03T03:40:42.407Z"
+    },
+    "Session Verification": {
+      "status": "PASS",
+      "result": {
+        "valid": true,
+        "userUuid": "user-546784d34ce3",
+        "email": "authenticated@2100.cool",
+        "displayName": "Authenticated User",
+        "role": "user",
+        "permissions": ["read", "write"],
+        "sessionData": {
+          "message": "Admin panel accessed successfully",
+          "timestamp": "2025-07-03T03:40:42.971Z",
+          "adminData": {
+            "activeUsers": 125,
+            "securityAlerts": 0,
+            "systemHealth": "excellent",
+            "cloudflareStatus": "protected"
+          }
+        }
+      },
+      "timestamp": "2025-07-03T03:40:42.648Z"
+    },
+    "Invalid Session Handling": {
+      "status": "PASS",
+      "result": {
+        "valid": false,
+        "message": "Invalid token format",
+        "error": "invalid_format"
+      },
+      "timestamp": "2025-07-03T03:40:42.648Z"
+    },
+    "Role-Based Sessions": {
+      "status": "PASS",
+      "result": {
+        "user": {
+          "sessionToken": "be99add2761edfd958723c4d2b14729a0e5cd58580476740363b2ce01b7c322c",
+          "user": {
+            "uuid": "user-f9f323f532a1",
+            "email": "authenticated@2100.cool",
+            "displayName": "Authenticated User",
+            "role": "user",
+            "permissions": ["read", "write"]
+          }
+        },
+        "admin": {
+          "sessionToken": "8f692b6ce40f230cebef451b4ff746ecd3493181422094118523af1877f5875c",
+          "user": {
+            "uuid": "user-47980a023daa",
+            "email": "authenticated@2100.cool",
+            "displayName": "Authenticated User",
+            "role": "admin",
+            "permissions": ["read", "write", "admin"]
+          }
+        },
+        "owner": {
+          "sessionToken": "13098cd182cea866400d4e21b487807edf6848ac05f341bf043391eb8d530f48",
+          "user": {
+            "uuid": "user-51ec1f1ac4e0",
+            "email": "authenticated@2100.cool",
+            "displayName": "Authenticated User",
+            "role": "owner",
+            "permissions": ["read", "write", "admin", "owner"]
+          }
+        }
+      },
+      "timestamp": "2025-07-03T03:40:43.024Z"
+    },
+    "Authentication Flow": {
+      "status": "PASS",
+      "result": {
+        "success": true,
+        "sessionToken": "d567100bba0ebab2a32b46e908b15be68bd489b9535bb73c6a00211f2dd60d37",
+        "user": {
+          "uuid": "user-9836a7580605",
+          "email": "authenticated@2100.cool",
+          "displayName": "Authenticated User",
+          "role": "user",
+          "permissions": ["read", "write"]
+        }
+      },
+      "timestamp": "2025-07-03T03:40:43.216Z"
+    },
+    "Concurrent Sessions": {
+      "status": "PASS",
+      "result": [
+        {
+          "sessionToken": "cff99abb55ef82ab7f3197ce72df3e905730c1190e2e1345fafdfda258a6bdf5",
+          "user": {
+            "uuid": "user-dcd96bf7fa05",
+            "email": "authenticated@2100.cool",
+            "displayName": "Authenticated User",
+            "role": "user",
+            "permissions": ["read", "write"]
+          }
+        },
+        {
+          "sessionToken": "8072d0206fd5753f42ff91a0f79e9db479d2efbc66bf6a5d6d3aedb202dbff70",
+          "user": {
+            "uuid": "user-97bff9d2a3ab",
+            "email": "authenticated@2100.cool",
+            "displayName": "Authenticated User",
+            "role": "user",
+            "permissions": ["read", "write"]
+          }
+        },
+        {
+          "sessionToken": "a1a9da5f118632aaabc04735e4d4177dc62b7c9ae14b795289d000dfcbd65ceb",
+          "user": {
+            "uuid": "user-b128aeec904a",
+            "email": "authenticated@2100.cool",
+            "displayName": "Authenticated User",
+            "role": "user",
+            "permissions": ["read", "write"]
+          }
+        },
+        {
+          "sessionToken": "db0662b020420688e079cc0d91ddadcd9d60c7ecbf53af3023280476e96e0b8e",
+          "user": {
+            "uuid": "user-2f5580bb9df6",
+            "email": "authenticated@2100.cool",
+            "displayName": "Authenticated User",
+            "role": "user",
+            "permissions": ["read", "write"]
+          }
+        },
+        {
+          "sessionToken": "ca71c5d5ada5d1e48b61e30882839518b37c163e9b08a2cb6f268bd9c2182a2d",
+          "user": {
+            "uuid": "user-ef60d0ee3b11",
+            "email": "authenticated@2100.cool",
+            "displayName": "Authenticated User",
+            "role": "user",
+            "permissions": ["read", "write"]
+          }
+        }
+      ],
+      "timestamp": "2025-07-03T03:40:43.449Z"
+    },
+    "Failover Mechanism": {
+      "status": "PASS",
+      "result": {
+        "status": "healthy",
+        "service": "sallyport-auth",
+        "timestamp": "2025-07-03T03:40:49.882Z",
+        "details": {
+          "status": "healthy",
+          "timestamp": "2025-07-03T03:40:50.204Z",
+          "version": "2.0.0-cloudflare-integration",
+          "sallyport": {
+            "enabled": true,
+            "cloudflare_bridge": true
+          },
+          "metrics": {
+            "totalRequests": 19,
+            "authenticatedRequests": 0,
+            "blockedRequests": 0,
+            "successRate": "0.00%"
+          }
+        }
+      },
+      "timestamp": "2025-07-03T03:40:49.882Z"
+    }
+  },
+  "summary": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0
+  }
+}

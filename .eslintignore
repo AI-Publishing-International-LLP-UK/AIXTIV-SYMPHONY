@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.log
+.git/
+opus/
+coverage/
+build/
+tmp/
+.DS_Store

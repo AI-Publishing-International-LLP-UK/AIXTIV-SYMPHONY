@@ -1,0 +1,18 @@
+{
+  "sector_id": 20,
+  "sector_name": "Consulting",
+  "job_roles": 320000,
+  "deployment_timestamp": "2025-08-04T19:31:27Z",
+  "status": "ACTIVE",
+  "assigned_agents": 20000,
+  "career_clusters": [
+    "Planning_Coordination",
+    "Deploy", 
+    "Engage"
+  ],
+  "wing_assignments": {
+    "wing_1": 106666,
+    "wing_2": 106666, 
+    "wing_3": 106666
+  }
+}

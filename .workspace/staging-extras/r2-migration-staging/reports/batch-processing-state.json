@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-07-04T00:00:00.000Z",
+  "total": 8,
+  "completed": [],
+  "failed": [],
+  "pending": [
+    "RIX_Career",
+    "S2DO",
+    "QMM",
+    "Vision_Lake",
+    "TimeLiners",
+    "Credential_Ladder",
+    "LENS",
+    "FMS"
+  ],
+  "retrying": [],
+  "quotaExceeded": [],
+  "currentBatch": "security_patents_20250704",
+  "batchDetails": {
+    "id": "security_patents_20250704",
+    "environment": "sandbox",
+    "cost": 600,
+    "inventor": "Phillip Corey Roark",
+    "entityStatus": "SMALL"
+  }
+}

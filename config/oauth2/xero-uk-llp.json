@@ -1,0 +1,158 @@
+{
+  "provider": "xero",
+  "entity": "uk-llp",
+  "entityName": "AI Publishing International LLP (UK)",
+  "entityType": "llp",
+  "region": "uk",
+  "description": "Xero OAuth2 configuration for UK LLP entity - handles accounting integration for UK-based operations",
+  
+  "oauth2": {
+    "authorizationEndpoint": "https://login.xero.com/identity/connect/authorize",
+    "tokenEndpoint": "https://identity.xero.com/connect/token",
+    "revokeEndpoint": "https://identity.xero.com/connect/revocation",
+    "userInfoEndpoint": "https://api.xero.com/api.xro/2.0/Organisation",
+    "responseType": "code",
+    "grantType": "authorization_code"
+  },
+  
+  "client": {
+    "clientIdSecretName": "xero-uk-llp-client-id",
+    "clientSecretSecretName": "xero-uk-llp-client-secret",
+    "redirectUri": "https://integration-gateway-yutylytffa-uw.a.run.app/oauth2/callback/xero-uk-llp",
+    "postLogoutRedirectUri": "https://integration-gateway-yutylytffa-uw.a.run.app/oauth2/logout/xero-uk-llp"
+  },
+  
+  "scopes": [
+    "accounting.transactions",
+    "accounting.contacts",
+    "accounting.settings",
+    "accounting.journals.read",
+    "accounting.reports.read",
+    "accounting.attachments",
+    "payroll.employees",
+    "payroll.payitems",
+    "payroll.timesheets",
+    "offline_access"
+  ],
+  
+  "endpoints": {
+    "apiBase": "https://api.xero.com/api.xro/2.0",
+    "connectionsEndpoint": "https://api.xero.com/connections",
+    "organisationEndpoint": "https://api.xero.com/api.xro/2.0/Organisation",
+    "contactsEndpoint": "https://api.xero.com/api.xro/2.0/Contacts",
+    "invoicesEndpoint": "https://api.xero.com/api.xro/2.0/Invoices",
+    "paymentsEndpoint": "https://api.xero.com/api.xro/2.0/Payments",
+    "accountsEndpoint": "https://api.xero.com/api.xro/2.0/Accounts",
+    "reportsEndpoint": "https://api.xero.com/api.xro/2.0/Reports",
+    "payrollEndpoint": "https://api.xero.com/payroll.xro/1.0"
+  },
+  
+  "tokenManagement": {
+    "tokenRefreshThreshold": 300,
+    "maxRetries": 3,
+    "retryDelay": 1000,
+    "tokenStorageKey": "xero_uk_llp_tokens",
+    "stateStorageKey": "xero_uk_llp_state"
+  },
+  
+  "rateLimiting": {
+    "requestsPerMinute": 60,
+    "requestsPerDay": 5000,
+    "burstLimit": 10
+  },
+  
+  "security": {
+    "enforceHttps": true,
+    "validateState": true,
+    "validateNonce": false,
+    "pkceRequired": true,
+    "tokenEncryption": true
+  },
+  
+  "entitySpecific": {
+    "tenantId": null,
+    "baseCurrency": "GBP",
+    "countryCode": "GB",
+    "timeZone": "Europe/London",
+    "taxConfiguration": {
+      "defaultTaxType": "TAX001",
+      "vatEnabled": true,
+      "vatReporting": "quarterly",
+      "vatRegistrationNumber": null,
+      "makingTaxDigital": true
+    },
+    "complianceRequirements": [
+      "Companies House",
+      "HMRC",
+      "UK GAAP",
+      "Making Tax Digital",
+      "GDPR"
+    ]
+  },
+  
+  "integration": {
+    "webhooks": {
+      "enabled": true,
+      "endpoint": "https://integration-gateway-yutylytffa-uw.a.run.app/webhooks/xero-uk-llp",
+      "events": [
+        "CREATE",
+        "UPDATE",
+        "DELETE"
+      ]
+    },
+    "syncFrequency": "realtime",
+    "batchProcessing": {
+      "enabled": true,
+      "batchSize": 100,
+      "maxConcurrentBatches": 5
+    },
+    "makingTaxDigital": {
+      "enabled": true,
+      "submissionEndpoint": "https://api.service.hmrc.gov.uk/organisations/vat",
+      "testMode": false
+    }
+  },
+  
+  "monitoring": {
+    "healthCheckEndpoint": "/health/xero-uk-llp",
+    "metricsCollection": true,
+    "alerting": {
+      "tokenExpiration": 24,
+      "rateLimitWarning": 80,
+      "errorThreshold": 10,
+      "vatSubmissionDeadline": 72
+    }
+  },
+  
+  "localization": {
+    "dateFormat": "DD/MM/YYYY",
+    "numberFormat": "1,234.56",
+    "addressFormat": "UK",
+    "phoneFormat": "+44",
+    "language": "en-GB",
+    "reportingPeriods": {
+      "financialYearStart": "01/04",
+      "vatPeriods": [
+        "Q1: Jan-Mar",
+        "Q2: Apr-Jun", 
+        "Q3: Jul-Sep",
+        "Q4: Oct-Dec"
+      ]
+    }
+  },
+  
+  "metadata": {
+    "createdAt": "2025-01-30T04:00:00Z",
+    "version": "1.0.0",
+    "environment": "production",
+    "maintainer": "Integration Gateway Team",
+    "tags": [
+      "xero",
+      "accounting",
+      "uk-llp",
+      "oauth2",
+      "financial",
+      "making-tax-digital"
+    ]
+  }
+}

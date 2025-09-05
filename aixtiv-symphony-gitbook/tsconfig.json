@@ -1,0 +1,15 @@
+{
+    "extends": "@gitbook/tsconfig/integration.json",
+    "compilerOptions": {
+        "lib": ["ESNext", "WebWorker"],
+        "moduleResolution": "bundler",
+        "module": "ESNext",
+        "strict": false,
+        "skipLibCheck": true,
+        "noImplicitAny": false,
+        "types": ["@cloudflare/workers-types"]
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

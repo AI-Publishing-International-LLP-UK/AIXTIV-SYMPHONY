@@ -1,0 +1,15 @@
+{
+  "service": "sallyport-cloudflare-auth",
+  "version": "2.0.0-cloudflare-integration",
+  "cloudflare": {
+    "enabled": true,
+    "zone_id": "70147f4f5e47ec593c37a0cbb69754aa",
+    "account_id": "aef30d920913c188b9b6048cc7f42951"
+  },
+  "oauth2": {
+    "enabled": true,
+    "client_id": "aixtiv-integration-gateway",
+    "redirect_uri": "https://2100.cool/callback",
+    "scope": "read write admin"
+  }
+}

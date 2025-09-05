@@ -1,0 +1,557 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#", PREDICT MBTI AND RAISEC FROM HOLLAND TO HELP PCP ENGAGE AND SALE: GRAB THE LINKEDIN DATA TO BUILD THE FOUNDATIOAND HISTORY OF THE OWNER SUBSCRIBER THIS JUST THEIR PUBLIC MASK IT IS NOT THE PERSON.  IMPORTANT CLUES LIKE CONTENT IN CURRENT CAREER TRAJECTORY OR DEPTH AND BREADTH OF NETWORK ARE KEY INDICATORS OF PERSONALITY.
+     H : HOW IS THEIR CAREER ARC IN RESPECT TO AGE AND EXPERIENCE OF PEERS; V: VIN HOW INTEGRATED ARE THEY INTO THEIR NETWORK OR WITHOTHERS (SOCIAL PERSPECTIVES)'
+  "title": "HRAI-CRMS CE Scores Schema",
+  "description": "Comprehensive Employee/Agent CE (Comprehensive Evaluation) scoring with SERPEW integration",
+  "type": "object",
+  "required": [
+    "ce_score_id",
+    "entity_id", 
+    "entity_type",
+    "period",
+    "normalized_score",
+    "calculation_date"
+  ],
+  "properties": {
+    "ce_score_id": {
+      "type": "string",
+      "pattern": "^CE[0-9]{8}$",
+      "description": "Unique CE score identifier"
+    },
+    "entity_id": {
+      "type": "string",
+      "description": "Employee ID (HUM######) or Agent ID for scoring"
+    },
+    "entity_type": {
+      "type": "string",
+      "enum": ["HUMAN", "AI_AGENT"],
+      "description": "Type of entity being scored"
+    },
+    "period": {
+      "type": "object",
+      "required": ["start_date", "end_date", "period_type"],
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "format": "date",
+          "description": "Score period start date"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date", 
+          "description": "Score period end date"
+        },
+        "period_type": {
+          "type": "string",
+          "enum": ["monthly", "quarterly", "semi-annual", "annual"],
+          "description": "Scoring period type"
+        },
+        "fiscal_year": {
+          "type": "integer",
+          "description": "Fiscal year for the scoring period"
+        }
+      }
+    },
+    "normalized_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Final normalized CE score (0-100)"
+    },
+    "calculation_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When this score was calculated"
+    },
+
+    "score_breakdown": {
+      "type": "object",
+      "description": "Detailed breakdown of score components",
+      "properties": {
+        "serpew_component": {
+          "type": "object",
+          "description": "SERPEW data contribution to CE score",
+          "properties": {
+            "weight": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Weight of SERPEW component in final score"
+            },
+            "raw_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Raw SERPEW score before weighting"
+            },
+            "weighted_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Weighted SERPEW contribution"
+            },
+            "inputs": {
+              "type": "object",
+              "properties": {
+                "sector_standards_alignment": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "Alignment with sector standards (0.0-1.0)"
+                },
+                "job_role_compliance": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "Compliance with job definition standards"
+                },
+                "coaching_materials_engagement": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "Engagement with relevant coaching materials"
+                },
+                "industry_knowledge": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "Industry knowledge from RSS insights"
+                }
+              }
+            }
+          }
+        },
+        "performance_component": {
+          "type": "object",
+          "description": "Performance metrics contribution",
+          "properties": {
+            "weight": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "raw_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "weighted_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "inputs": {
+              "type": "object",
+              "properties": {
+                "goal_completion_rate": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "Goal completion percentage"
+                },
+                "review_scores": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "score": { "type": "number", "minimum": 1, "maximum": 5 },
+                      "review_date": { "type": "string", "format": "date" },
+                      "reviewer_id": { "type": "string" }
+                    }
+                  }
+                },
+                "productivity_metrics": {
+                  "type": "object",
+                  "description": "Role-specific productivity measurements"
+                },
+                "quality_metrics": {
+                  "type": "object", 
+                  "description": "Quality measurements for deliverables"
+                }
+              }
+            }
+          }
+        },
+        "communication_component": {
+          "type": "object",
+          "description": "Communication quality and volume",
+          "properties": {
+            "weight": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "raw_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "weighted_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "inputs": {
+              "type": "object",
+              "properties": {
+                "email_volume": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Number of emails sent/received"
+                },
+                "email_sentiment_score": {
+                  "type": "number",
+                  "minimum": -1,
+                  "maximum": 1,
+                  "description": "Average sentiment of email communications"
+                },
+                "meeting_participation": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "Meeting participation rate"
+                },
+                "response_time_avg": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Average response time in hours"
+                },
+                "collaboration_score": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100,
+                  "description": "Collaboration effectiveness score"
+                }
+              }
+            }
+          }
+        },
+        "pilot_signals_component": {
+          "type": "object",
+          "description": "AI pilot data signals (for AI agents)",
+          "properties": {
+            "weight": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "raw_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "weighted_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "inputs": {
+              "type": "object",
+              "properties": {
+                "pilot_lineage_score": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100,
+                  "description": "Score based on pilot lineage performance"
+                },
+                "agent_classification_bonus": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 20,
+                  "description": "Bonus points for agent classification level"
+                },
+                "capability_utilization": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1,
+                  "description": "How well agent utilizes its capabilities"
+                },
+                "learning_progression": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100,
+                  "description": "Learning and improvement over time"
+                }
+              }
+            }
+          }
+        },
+        "demographic_component": {
+          "type": "object",
+          "description": "Demographic factors (humans only)",
+          "properties": {
+            "weight": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "raw_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "weighted_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "inputs": {
+              "type": "object",
+              "properties": {
+                "tenure_factor": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 2,
+                  "description": "Tenure multiplier for experience"
+                },
+                "education_bonus": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 10,
+                  "description": "Education level bonus points"
+                },
+                "language_diversity_bonus": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 5,
+                  "description": "Bonus for multiple language proficiencies"
+                },
+                "location_adjustment": {
+                  "type": "number",
+                  "minimum": 0.8,
+                  "maximum": 1.2,
+                  "description": "Location-based cost of living adjustment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "contextual_factors": {
+      "type": "object",
+      "description": "Additional context affecting the score",
+      "properties": {
+        "org_unit_performance": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Performance of the organizational unit"
+        },
+        "peer_comparison": {
+          "type": "object",
+          "properties": {
+            "percentile_rank": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Percentile rank among peers"
+            },
+            "peer_group_size": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Size of comparison peer group"
+            },
+            "peer_avg_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Average score of peer group"
+            }
+          }
+        },
+        "market_conditions": {
+          "type": "object",
+          "properties": {
+            "sector_growth": {
+              "type": "number",
+              "description": "Sector growth rate affecting expectations"
+            },
+            "skill_demand": {
+              "type": "string",
+              "enum": ["low", "medium", "high", "critical"],
+              "description": "Market demand for the skills"
+            }
+          }
+        }
+      }
+    },
+
+    "score_history": {
+      "type": "array",
+      "description": "Historical scores for trend analysis",
+      "items": {
+        "type": "object",
+        "properties": {
+          "period": { "type": "string", "description": "Historical period" },
+          "score": { "type": "number", "minimum": 0, "maximum": 100 },
+          "change": { "type": "number", "description": "Change from previous period" },
+          "trend": { "type": "string", "enum": ["improving", "stable", "declining"] }
+        }
+      }
+    },
+
+    "recommendations": {
+      "type": "array",
+      "description": "AI-generated improvement recommendations",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["training", "coaching", "mentoring", "role-change", "skill-development", "process-improvement"]
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "description": {
+            "type": "string",
+            "description": "Detailed recommendation"
+          },
+          "expected_impact": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 20,
+            "description": "Expected score improvement points"
+          },
+          "resources_required": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Resources needed to implement"
+          }
+        }
+      }
+    },
+
+    "data_sources": {
+      "type": "object",
+      "description": "Sources of data used in score calculation",
+      "properties": {
+        "serpew_sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "source": { "type": "string" },
+              "last_updated": { "type": "string", "format": "date-time" },
+              "reliability": { "type": "number", "minimum": 0, "maximum": 1 }
+            }
+          }
+        },
+        "performance_sources": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Sources of performance data"
+        },
+        "communication_sources": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Sources of communication data"
+        }
+      }
+    },
+
+    "quality_indicators": {
+      "type": "object",
+      "description": "Data quality and confidence indicators",
+      "properties": {
+        "data_completeness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Percentage of required data available"
+        },
+        "confidence_level": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Confidence in the calculated score"
+        },
+        "staleness_factor": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "How recent the input data is"
+        },
+        "bias_indicators": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "bias_type": { "type": "string" },
+              "severity": { "type": "string", "enum": ["low", "medium", "high"] },
+              "mitigation": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+
+    "calculated_by": {
+      "type": "string",
+      "description": "System or process that calculated this score"
+    },
+    "approved_by": {
+      "type": "string",
+      "pattern": "^HUM[0-9]{6}$",
+      "description": "Employee ID who approved this score"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "pending_approval", "approved", "disputed", "archived"],
+      "default": "draft"
+    },
+    "next_calculation_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When the next score calculation is due"
+    }
+  },
+
+  "indexes": [
+    { "ce_score_id": 1 },
+    { "entity_id": 1, "period.start_date": -1 },
+    { "entity_type": 1, "normalized_score": -1 },
+    { "period.period_type": 1, "period.fiscal_year": 1 },
+    { "calculation_date": -1 },
+    { "status": 1 },
+    { "contextual_factors.peer_comparison.percentile_rank": -1 },
+    { "quality_indicators.confidence_level": -1 }
+  ],
+
+  "scoring_weights": {
+    "human_employee_weights": {
+      "performance_component": 0.4,
+      "communication_component": 0.25,
+      "serpew_component": 0.2,
+      "demographic_component": 0.15
+    },
+    "ai_agent_weights": {
+      "performance_component": 0.35,
+      "communication_component": 0.25,
+      "serpew_component": 0.2,
+      "pilot_signals_component": 0.2
+    }
+  },
+
+  "calculation_examples": {
+    "human_example": {
+      "entity_type": "HUMAN",
+      "performance_raw": 85,
+      "communication_raw": 78,
+      "serpew_raw": 82,
+      "demographic_raw": 75,
+      "final_score": "(85*0.4) + (78*0.25) + (82*0.2) + (75*0.15) = 80.75"
+    },
+    "ai_agent_example": {
+      "entity_type": "AI_AGENT",
+      "performance_raw": 92,
+      "communication_raw": 88,
+      "serpew_raw": 85,
+      "pilot_signals_raw": 90,
+      "final_score": "(92*0.35) + (88*0.25) + (85*0.2) + (90*0.2) = 89.2"
+    }
+  }
+}

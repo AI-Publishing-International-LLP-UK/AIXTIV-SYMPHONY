@@ -1,0 +1,9 @@
+{
+  "name": "opus1-amplify-core",
+  "version": "1.0.0",
+  "description": "Opus1 Amplify Core package",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "private": true
+}

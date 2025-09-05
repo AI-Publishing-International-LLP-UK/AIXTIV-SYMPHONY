@@ -1,0 +1,25 @@
+{
+  "filing_date": "2025-07-06T06:49:08Z",
+  "entity_status": "MICRO",
+  "patents": {
+    "SAO-00": {
+      "title": "Foundational AI Agent Communication Protocol",
+      "status": "ready_for_filing",
+      "fee": 60,
+      "priority": "CRITICAL"
+    },
+    "SAO-44": {
+      "title": "Safe Human-AI Collaboration Framework for Superintelligent Systems",
+      "status": "ready_for_filing",
+      "fee": 60,
+      "priority": "BREAKTHROUGH"
+    }
+  },
+  "total_patents": 45,
+  "total_investment": 2700,
+  "waiver_petition": {
+    "total_patents": 45,
+    "potential_savings": 253000,
+    "petition_fee": 890
+  }
+}

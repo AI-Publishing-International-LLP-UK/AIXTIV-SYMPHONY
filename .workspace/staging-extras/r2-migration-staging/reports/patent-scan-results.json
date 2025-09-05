@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "scanType": "patent_file_detection",
+    "scanCompletedAt": "2025-08-11T12:20:26.738Z",
+    "scanDuration": 4,
+    "totalFilesScanned": 8,
+    "detectionStatistics": {
+      "patentFilesFound": 0,
+      "diamondSAOFilesFound": 0,
+      "highPriorityMatches": 0,
+      "directoriesFound": 0,
+      "detectionRate": 0
+    }
+  },
+  "patentFiles": [],
+  "patentDirectories": [],
+  "patternsUsed": {
+    "primaryRegex": "(?i)(patent|provisional|filing|batch|status|diamond[_\\\\- ]sao|sao-\\\\d+|uspto|fee_waiver|vision[_\\\\- ]lake|aixtiv[_\\\\- ]patent|asoos[_\\\\- ]patent|symphony[_\\\\- ]patent|agi[_\\\\- ]patent|collaborative[_\\\\- ]intelligence|artificial[_\\\\- ]intelligence|machine[_\\\\- ]learning|neural[_\\\\- ]network|deep[_\\\\- ]learning|blockchain|quantum[_\\\\- ]computing|cloud[_\\\\- ]computing|business[_\\\\- ]method|software[_\\\\- ]patent|system[_\\\\- ]patent|method[_\\\\- ]patent|apparatus[_\\\\- ]patent|device[_\\\\- ]patent|invention|disclosure|claims|specification|priority|continuation|divisional|reissue|reexamination|wipo|epo|jpo|kipo|cnipa|cipo|ip[_\\\\-]office|patent[_\\\\-]office|intellectual[_\\\\-]property|maintenance[_\\\\-]fee|prosecution|allowance|rejection|office[_\\\\-]action|response|amendment|interview|examiner|attorney[_\\\\-]docket|publication|published|grant|issued|gazette|prior[_\\\\-]art|search[_\\\\-]report|examination[_\\\\-]report|infringement|validity|invalidity|opposition|appeal|interference|derivation|post[_\\\\-]grant|inter[_\\\\-]partes).*\\\\.(pdf|md|csv|json|txt|py|sh|doc|docx|xml|rtf|xlsx|xls|js|bat|ps1|html|htm|zip|rar|7z)",
+    "diamondSAORegex": "(?i)(diamond[_\\\\-\\\\s]*sao|sao[_\\\\-]\\\\d+|vision[_\\\\-\\\\s]*lake|aixtiv[_\\\\-\\\\s]*patent|asoos[_\\\\-\\\\s]*patent|symphony[_\\\\-\\\\s]*patent|agi[_\\\\-\\\\s]*patent|collaborative[_\\\\-\\\\s]*intelligence).*\\\\.(pdf|md|csv|json|txt|py|sh|doc|docx|xml)",
+    "directoryPatterns": 27,
+    "highPriorityKeywords": 25
+  }
+}

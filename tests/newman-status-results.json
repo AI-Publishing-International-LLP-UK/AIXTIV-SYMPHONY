@@ -1,0 +1,2190 @@
+{
+  "collection": {
+    "item": [
+      {
+        "id": "ea946418-b886-4a72-af58-6b417b58ebb1",
+        "name": "Service Health Check",
+        "request": {
+          "url": {
+            "path": [
+              "health"
+            ],
+            "host": [
+              "{{base_url}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "c01b5626-9526-4d7e-8587-51e135eef9cc",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('Service is running', function () {",
+                "    pm.response.to.have.status(200);",
+                "});",
+                "",
+                "pm.test('Has version info', function () {",
+                "    const responseJson = pm.response.json();",
+                "    pm.expect(responseJson).to.have.property('version');",
+                "});"
+              ],
+              "_lastExecutionId": "61598841-e0d8-4b11-89f4-498c386383a5"
+            }
+          }
+        ]
+      },
+      {
+        "id": "46536db7-6945-4472-8593-de2c644c11a7",
+        "name": "API Documentation Check",
+        "request": {
+          "url": {
+            "path": [
+              ""
+            ],
+            "host": [
+              "{{base_url}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "method": "GET"
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "39677d34-bc7c-4bb3-93fe-854142b4d3a9",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('API docs available', function () {",
+                "    pm.response.to.have.status(200);",
+                "});",
+                "",
+                "pm.test('Shows available endpoints', function () {",
+                "    const responseJson = pm.response.json();",
+                "    pm.expect(responseJson).to.have.property('endpoints');",
+                "    pm.expect(responseJson.endpoints).to.be.an('array');",
+                "});",
+                "",
+                "pm.test('Has auth verification endpoint', function () {",
+                "    const responseJson = pm.response.json();",
+                "    const authEndpoint = responseJson.endpoints.find(ep => ep.path === '/api/auth/verify');",
+                "    pm.expect(authEndpoint).to.exist;",
+                "});"
+              ],
+              "_lastExecutionId": "8166eb9d-5d07-4e91-9b81-e79f50f704e5"
+            }
+          }
+        ]
+      },
+      {
+        "id": "54076d35-a4f4-4b96-869d-2c4022a64e4b",
+        "name": "SallyPort Authentication Test",
+        "request": {
+          "url": {
+            "path": [
+              "api",
+              "auth",
+              "verify"
+            ],
+            "host": [
+              "{{base_url}}"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"email\": \"pr@coaching2100.com\",\n  \"agent\": \"001\"\n}"
+          }
+        },
+        "response": [],
+        "event": [
+          {
+            "listen": "test",
+            "script": {
+              "id": "53412222-ec4b-40d9-9fce-61047a90b93c",
+              "type": "text/javascript",
+              "exec": [
+                "pm.test('SallyPort auth endpoint responds', function () {",
+                "    // Accept any response that's not a generic 404",
+                "    const response = pm.response.json();",
+                "    pm.expect(pm.response.code).to.not.equal(404);",
+                "});",
+                "",
+                "pm.test('Returns structured response', function () {",
+                "    const responseJson = pm.response.json();",
+                "    pm.expect(responseJson).to.be.an('object');",
+                "});"
+              ],
+              "_lastExecutionId": "65c7d417-bbad-4bc1-9716-c02aea6977a0"
+            }
+          }
+        ]
+      }
+    ],
+    "event": [],
+    "variable": [
+      {
+        "type": "any",
+        "value": "https://integration-gateway-yutylytffa-uw.a.run.app",
+        "key": "base_url"
+      }
+    ],
+    "info": {
+      "_postman_id": "c370f8e3-2c3d-4435-a1bc-f2b53f660332",
+      "name": "SallyPort Status Tests",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      "description": {
+        "content": "Testing current SallyPort integration status",
+        "type": "text/plain"
+      }
+    }
+  },
+  "environment": {
+    "id": "d85d79a1-62ea-4bbb-8fb2-d563d3e4bad4",
+    "values": []
+  },
+  "globals": {
+    "id": "acd62e31-7fcf-4852-82dd-28b8b4e09908",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 3,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 3,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 3,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 3,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 3,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 7,
+        "pending": 0,
+        "failed": 4
+      },
+      "testScripts": {
+        "total": 3,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 0,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 140,
+      "responseMin": 93,
+      "responseMax": 198,
+      "responseSd": 43.56604182158393,
+      "dnsAverage": 0,
+      "dnsMin": 0,
+      "dnsMax": 0,
+      "dnsSd": 0,
+      "firstByteAverage": 0,
+      "firstByteMin": 0,
+      "firstByteMax": 0,
+      "firstByteSd": 0,
+      "started": 1753896553371,
+      "completed": 1753896553850
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 3,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "beb5b511-30d8-4599-a19b-a16e323ac1aa",
+          "httpRequestId": "10798d34-7901-454f-9119-0d2ab7210b2a"
+        },
+        "item": {
+          "id": "ea946418-b886-4a72-af58-6b417b58ebb1",
+          "name": "Service Health Check",
+          "request": {
+            "url": {
+              "path": [
+                "health"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "c01b5626-9526-4d7e-8587-51e135eef9cc",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Service is running', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Has version info', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('version');",
+                  "});"
+                ],
+                "_lastExecutionId": "61598841-e0d8-4b11-89f4-498c386383a5"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "health"
+            ],
+            "host": [
+              "integration-gateway-yutylytffa-uw",
+              "a",
+              "run",
+              "app"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "5996d36b-16a8-4e7e-befd-9dcee590000a",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "integration-gateway-yutylytffa-uw.a.run.app",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "251110c2-e7f9-480e-b845-c9e1a8467bc2",
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "key": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "etag",
+              "value": "W/\"ec-kf0R0LGseN0Hp4mKzV4CcwIxkeY\""
+            },
+            {
+              "key": "x-cloud-trace-context",
+              "value": "0131f73eff4cc658d68eb61232286708;o=1"
+            },
+            {
+              "key": "date",
+              "value": "Wed, 30 Jul 2025 17:29:13 GMT"
+            },
+            {
+              "key": "server",
+              "value": "Google Frontend"
+            },
+            {
+              "key": "Content-Length",
+              "value": "236"
+            },
+            {
+              "key": "Alt-Svc",
+              "value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              115,
+              116,
+              97,
+              116,
+              117,
+              115,
+              34,
+              58,
+              34,
+              104,
+              101,
+              97,
+              108,
+              116,
+              104,
+              121,
+              34,
+              44,
+              34,
+              118,
+              101,
+              114,
+              115,
+              105,
+              111,
+              110,
+              34,
+              58,
+              34,
+              50,
+              46,
+              48,
+              46,
+              48,
+              34,
+              44,
+              34,
+              116,
+              105,
+              109,
+              101,
+              115,
+              116,
+              97,
+              109,
+              112,
+              34,
+              58,
+              34,
+              50,
+              48,
+              50,
+              53,
+              45,
+              48,
+              55,
+              45,
+              51,
+              48,
+              84,
+              49,
+              55,
+              58,
+              50,
+              57,
+              58,
+              49,
+              51,
+              46,
+              54,
+              53,
+              51,
+              90,
+              34,
+              44,
+              34,
+              117,
+              112,
+              116,
+              105,
+              109,
+              101,
+              34,
+              58,
+              52,
+              48,
+              53,
+              54,
+              56,
+              57,
+              46,
+              48,
+              56,
+              50,
+              54,
+              57,
+              50,
+              57,
+              48,
+              50,
+              44,
+              34,
+              101,
+              110,
+              118,
+              105,
+              114,
+              111,
+              110,
+              109,
+              101,
+              110,
+              116,
+              34,
+              58,
+              34,
+              100,
+              101,
+              118,
+              101,
+              108,
+              111,
+              112,
+              109,
+              101,
+              110,
+              116,
+              34,
+              44,
+              34,
+              109,
+              101,
+              109,
+              111,
+              114,
+              121,
+              34,
+              58,
+              123,
+              34,
+              114,
+              115,
+              115,
+              34,
+              58,
+              53,
+              53,
+              51,
+              48,
+              52,
+              49,
+              57,
+              50,
+              44,
+              34,
+              104,
+              101,
+              97,
+              112,
+              84,
+              111,
+              116,
+              97,
+              108,
+              34,
+              58,
+              56,
+              51,
+              54,
+              52,
+              48,
+              51,
+              50,
+              44,
+              34,
+              104,
+              101,
+              97,
+              112,
+              85,
+              115,
+              101,
+              100,
+              34,
+              58,
+              55,
+              56,
+              49,
+              49,
+              53,
+              56,
+              52,
+              44,
+              34,
+              101,
+              120,
+              116,
+              101,
+              114,
+              110,
+              97,
+              108,
+              34,
+              58,
+              50,
+              48,
+              52,
+              55,
+              49,
+              57,
+              57,
+              44,
+              34,
+              97,
+              114,
+              114,
+              97,
+              121,
+              66,
+              117,
+              102,
+              102,
+              101,
+              114,
+              115,
+              34,
+              58,
+              49,
+              54,
+              56,
+              50,
+              54,
+              125,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 198,
+          "responseSize": 236
+        },
+        "id": "ea946418-b886-4a72-af58-6b417b58ebb1",
+        "assertions": [
+          {
+            "assertion": "Service is running",
+            "skipped": false
+          },
+          {
+            "assertion": "Has version info",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "8df801b6-7557-49ed-9b1d-9745d3f76b6d",
+          "length": 3,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "49af84b9-650b-4941-8d26-05f1dccf9b03"
+        },
+        "item": {
+          "id": "46536db7-6945-4472-8593-de2c644c11a7",
+          "name": "API Documentation Check",
+          "request": {
+            "url": {
+              "path": [
+                ""
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "39677d34-bc7c-4bb3-93fe-854142b4d3a9",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('API docs available', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Shows available endpoints', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('endpoints');",
+                  "    pm.expect(responseJson.endpoints).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Has auth verification endpoint', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    const authEndpoint = responseJson.endpoints.find(ep => ep.path === '/api/auth/verify');",
+                  "    pm.expect(authEndpoint).to.exist;",
+                  "});"
+                ],
+                "_lastExecutionId": "8166eb9d-5d07-4e91-9b81-e79f50f704e5"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              ""
+            ],
+            "host": [
+              "integration-gateway-yutylytffa-uw",
+              "a",
+              "run",
+              "app"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "62a5c4d2-1f7e-4d99-883c-8c20cab35421",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "integration-gateway-yutylytffa-uw.a.run.app",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            }
+          ],
+          "method": "GET"
+        },
+        "response": {
+          "id": "eabec2a2-9628-47b8-aa63-b4a1b88199fb",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "key": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "etag",
+              "value": "W/\"5e-R8sHdf9WQZadZOCd0ycvNgR4xeM\""
+            },
+            {
+              "key": "x-cloud-trace-context",
+              "value": "9447c4df0ddb39b7d68eb612322860db"
+            },
+            {
+              "key": "date",
+              "value": "Wed, 30 Jul 2025 17:29:13 GMT"
+            },
+            {
+              "key": "server",
+              "value": "Google Frontend"
+            },
+            {
+              "key": "Content-Length",
+              "value": "94"
+            },
+            {
+              "key": "Alt-Svc",
+              "value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              34,
+              58,
+              34,
+              78,
+              111,
+              116,
+              32,
+              102,
+              111,
+              117,
+              110,
+              100,
+              34,
+              44,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              82,
+              111,
+              117,
+              116,
+              101,
+              32,
+              71,
+              69,
+              84,
+              32,
+              47,
+              32,
+              110,
+              111,
+              116,
+              32,
+              102,
+              111,
+              117,
+              110,
+              100,
+              34,
+              44,
+              34,
+              116,
+              105,
+              109,
+              101,
+              115,
+              116,
+              97,
+              109,
+              112,
+              34,
+              58,
+              34,
+              50,
+              48,
+              50,
+              53,
+              45,
+              48,
+              55,
+              45,
+              51,
+              48,
+              84,
+              49,
+              55,
+              58,
+              50,
+              57,
+              58,
+              49,
+              51,
+              46,
+              55,
+              54,
+              55,
+              90,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 93,
+          "responseSize": 94
+        },
+        "id": "46536db7-6945-4472-8593-de2c644c11a7",
+        "assertions": [
+          {
+            "assertion": "API docs available",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "API docs available",
+              "message": "expected response to have status code 200 but got 404",
+              "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:2)"
+            }
+          },
+          {
+            "assertion": "Shows available endpoints",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 1,
+              "test": "Shows available endpoints",
+              "message": "expected { error: 'Not found', …(2) } to have property 'endpoints'",
+              "stack": "AssertionError: expected { error: 'Not found', …(2) } to have property 'endpoints'\n   at Object.eval sandbox-script.js:2:2)"
+            }
+          },
+          {
+            "assertion": "Has auth verification endpoint",
+            "skipped": false,
+            "error": {
+              "name": "TypeError",
+              "index": 2,
+              "test": "Has auth verification endpoint",
+              "message": "Cannot read properties of undefined (reading 'find')",
+              "stack": "TypeError: Cannot read properties of undefined (reading 'find')\n   at Object.eval sandbox-script.js:3:2)"
+            }
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "220c5c69-4435-40ec-810c-8a8f178b7ff0",
+          "length": 3,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "a19fba36-dfaf-45b5-802b-a9a1c4ff68b2"
+        },
+        "item": {
+          "id": "54076d35-a4f4-4b96-869d-2c4022a64e4b",
+          "name": "SallyPort Authentication Test",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "auth",
+                "verify"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"pr@coaching2100.com\",\n  \"agent\": \"001\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "53412222-ec4b-40d9-9fce-61047a90b93c",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('SallyPort auth endpoint responds', function () {",
+                  "    // Accept any response that's not a generic 404",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(pm.response.code).to.not.equal(404);",
+                  "});",
+                  "",
+                  "pm.test('Returns structured response', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "});"
+                ],
+                "_lastExecutionId": "65c7d417-bbad-4bc1-9716-c02aea6977a0"
+              }
+            }
+          ]
+        },
+        "request": {
+          "url": {
+            "protocol": "https",
+            "path": [
+              "api",
+              "auth",
+              "verify"
+            ],
+            "host": [
+              "integration-gateway-yutylytffa-uw",
+              "a",
+              "run",
+              "app"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "f3136a5a-f057-4210-bf3e-138c6c190c58",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "integration-gateway-yutylytffa-uw.a.run.app",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "54",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"email\": \"pr@coaching2100.com\",\n  \"agent\": \"001\"\n}"
+          }
+        },
+        "response": {
+          "id": "f9da0582-35a9-4e80-bc6d-c0e496b6b18d",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "x-powered-by",
+              "value": "Express"
+            },
+            {
+              "key": "access-control-allow-origin",
+              "value": "*"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json; charset=utf-8"
+            },
+            {
+              "key": "etag",
+              "value": "W/\"6e-28xPd1RGdbs51Cvqa41mwixLESw\""
+            },
+            {
+              "key": "x-cloud-trace-context",
+              "value": "2d49b709bd66a521d68eb61232286a2c"
+            },
+            {
+              "key": "date",
+              "value": "Wed, 30 Jul 2025 17:29:13 GMT"
+            },
+            {
+              "key": "server",
+              "value": "Google Frontend"
+            },
+            {
+              "key": "Content-Length",
+              "value": "110"
+            },
+            {
+              "key": "Alt-Svc",
+              "value": "h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              101,
+              114,
+              114,
+              111,
+              114,
+              34,
+              58,
+              34,
+              78,
+              111,
+              116,
+              32,
+              102,
+              111,
+              117,
+              110,
+              100,
+              34,
+              44,
+              34,
+              109,
+              101,
+              115,
+              115,
+              97,
+              103,
+              101,
+              34,
+              58,
+              34,
+              82,
+              111,
+              117,
+              116,
+              101,
+              32,
+              80,
+              79,
+              83,
+              84,
+              32,
+              47,
+              97,
+              112,
+              105,
+              47,
+              97,
+              117,
+              116,
+              104,
+              47,
+              118,
+              101,
+              114,
+              105,
+              102,
+              121,
+              32,
+              110,
+              111,
+              116,
+              32,
+              102,
+              111,
+              117,
+              110,
+              100,
+              34,
+              44,
+              34,
+              116,
+              105,
+              109,
+              101,
+              115,
+              116,
+              97,
+              109,
+              112,
+              34,
+              58,
+              34,
+              50,
+              48,
+              50,
+              53,
+              45,
+              48,
+              55,
+              45,
+              51,
+              48,
+              84,
+              49,
+              55,
+              58,
+              50,
+              57,
+              58,
+              49,
+              51,
+              46,
+              57,
+              50,
+              56,
+              90,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 129,
+          "responseSize": 110
+        },
+        "id": "54076d35-a4f4-4b96-869d-2c4022a64e4b",
+        "assertions": [
+          {
+            "assertion": "SallyPort auth endpoint responds",
+            "skipped": false,
+            "error": {
+              "name": "AssertionError",
+              "index": 0,
+              "test": "SallyPort auth endpoint responds",
+              "message": "expected 404 to not equal 404",
+              "stack": "AssertionError: expected 404 to not equal 404\n   at Object.eval sandbox-script.js:1:3)"
+            }
+          },
+          {
+            "assertion": "Returns structured response",
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "transfers": {
+      "responseTotal": 440
+    },
+    "failures": [
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "API docs available",
+          "message": "expected response to have status code 200 but got 404",
+          "stack": "AssertionError: expected response to have status code 200 but got 404\n   at Object.eval sandbox-script.js:1:2)",
+          "checksum": "6e4843054d698b36e422f05d5fbbc671",
+          "id": "e5a01e02-ef71-49d3-8a92-e070f8eadec1",
+          "timestamp": 1753896553700,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 2,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "46536db7-6945-4472-8593-de2c644c11a7",
+          "name": "API Documentation Check",
+          "request": {
+            "url": {
+              "path": [
+                ""
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "39677d34-bc7c-4bb3-93fe-854142b4d3a9",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('API docs available', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Shows available endpoints', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('endpoints');",
+                  "    pm.expect(responseJson.endpoints).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Has auth verification endpoint', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    const authEndpoint = responseJson.endpoints.find(ep => ep.path === '/api/auth/verify');",
+                  "    pm.expect(authEndpoint).to.exist;",
+                  "});"
+                ],
+                "_lastExecutionId": "8166eb9d-5d07-4e91-9b81-e79f50f704e5"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "item": [
+            {
+              "id": "ea946418-b886-4a72-af58-6b417b58ebb1",
+              "name": "Service Health Check",
+              "request": {
+                "url": {
+                  "path": [
+                    "health"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "c01b5626-9526-4d7e-8587-51e135eef9cc",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Service is running', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Has version info', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    pm.expect(responseJson).to.have.property('version');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "61598841-e0d8-4b11-89f4-498c386383a5"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "46536db7-6945-4472-8593-de2c644c11a7",
+              "name": "API Documentation Check",
+              "request": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "39677d34-bc7c-4bb3-93fe-854142b4d3a9",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('API docs available', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Shows available endpoints', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    pm.expect(responseJson).to.have.property('endpoints');",
+                      "    pm.expect(responseJson.endpoints).to.be.an('array');",
+                      "});",
+                      "",
+                      "pm.test('Has auth verification endpoint', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    const authEndpoint = responseJson.endpoints.find(ep => ep.path === '/api/auth/verify');",
+                      "    pm.expect(authEndpoint).to.exist;",
+                      "});"
+                    ],
+                    "_lastExecutionId": "8166eb9d-5d07-4e91-9b81-e79f50f704e5"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "54076d35-a4f4-4b96-869d-2c4022a64e4b",
+              "name": "SallyPort Authentication Test",
+              "request": {
+                "url": {
+                  "path": [
+                    "api",
+                    "auth",
+                    "verify"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"pr@coaching2100.com\",\n  \"agent\": \"001\"\n}"
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "53412222-ec4b-40d9-9fce-61047a90b93c",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('SallyPort auth endpoint responds', function () {",
+                      "    // Accept any response that's not a generic 404",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(pm.response.code).to.not.equal(404);",
+                      "});",
+                      "",
+                      "pm.test('Returns structured response', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    pm.expect(responseJson).to.be.an('object');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "65c7d417-bbad-4bc1-9716-c02aea6977a0"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": [],
+          "variable": [
+            {
+              "type": "any",
+              "value": "https://integration-gateway-yutylytffa-uw.a.run.app",
+              "key": "base_url"
+            }
+          ],
+          "info": {
+            "_postman_id": "c370f8e3-2c3d-4435-a1bc-f2b53f660332",
+            "name": "SallyPort Status Tests",
+            "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+            "description": {
+              "content": "Testing current SallyPort integration status",
+              "type": "text/plain"
+            }
+          }
+        },
+        "cursor": {
+          "ref": "8df801b6-7557-49ed-9b1d-9745d3f76b6d",
+          "length": 3,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "49af84b9-650b-4941-8d26-05f1dccf9b03",
+          "scriptId": "39677d34-bc7c-4bb3-93fe-854142b4d3a9",
+          "execution": "8166eb9d-5d07-4e91-9b81-e79f50f704e5"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 1,
+          "test": "Shows available endpoints",
+          "message": "expected { error: 'Not found', …(2) } to have property 'endpoints'",
+          "stack": "AssertionError: expected { error: 'Not found', …(2) } to have property 'endpoints'\n   at Object.eval sandbox-script.js:2:2)",
+          "checksum": "18c8ac9ba65e0e18b7cd7087cf86757a",
+          "id": "f37d795e-78c2-465d-a6be-fa9821215448",
+          "timestamp": 1753896553703,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 2,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 2,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:1 in test-script",
+        "source": {
+          "id": "46536db7-6945-4472-8593-de2c644c11a7",
+          "name": "API Documentation Check",
+          "request": {
+            "url": {
+              "path": [
+                ""
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "39677d34-bc7c-4bb3-93fe-854142b4d3a9",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('API docs available', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Shows available endpoints', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('endpoints');",
+                  "    pm.expect(responseJson.endpoints).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Has auth verification endpoint', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    const authEndpoint = responseJson.endpoints.find(ep => ep.path === '/api/auth/verify');",
+                  "    pm.expect(authEndpoint).to.exist;",
+                  "});"
+                ],
+                "_lastExecutionId": "8166eb9d-5d07-4e91-9b81-e79f50f704e5"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "item": [
+            {
+              "id": "ea946418-b886-4a72-af58-6b417b58ebb1",
+              "name": "Service Health Check",
+              "request": {
+                "url": {
+                  "path": [
+                    "health"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "c01b5626-9526-4d7e-8587-51e135eef9cc",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Service is running', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Has version info', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    pm.expect(responseJson).to.have.property('version');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "61598841-e0d8-4b11-89f4-498c386383a5"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "46536db7-6945-4472-8593-de2c644c11a7",
+              "name": "API Documentation Check",
+              "request": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "39677d34-bc7c-4bb3-93fe-854142b4d3a9",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('API docs available', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Shows available endpoints', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    pm.expect(responseJson).to.have.property('endpoints');",
+                      "    pm.expect(responseJson.endpoints).to.be.an('array');",
+                      "});",
+                      "",
+                      "pm.test('Has auth verification endpoint', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    const authEndpoint = responseJson.endpoints.find(ep => ep.path === '/api/auth/verify');",
+                      "    pm.expect(authEndpoint).to.exist;",
+                      "});"
+                    ],
+                    "_lastExecutionId": "8166eb9d-5d07-4e91-9b81-e79f50f704e5"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "54076d35-a4f4-4b96-869d-2c4022a64e4b",
+              "name": "SallyPort Authentication Test",
+              "request": {
+                "url": {
+                  "path": [
+                    "api",
+                    "auth",
+                    "verify"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"pr@coaching2100.com\",\n  \"agent\": \"001\"\n}"
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "53412222-ec4b-40d9-9fce-61047a90b93c",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('SallyPort auth endpoint responds', function () {",
+                      "    // Accept any response that's not a generic 404",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(pm.response.code).to.not.equal(404);",
+                      "});",
+                      "",
+                      "pm.test('Returns structured response', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    pm.expect(responseJson).to.be.an('object');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "65c7d417-bbad-4bc1-9716-c02aea6977a0"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": [],
+          "variable": [
+            {
+              "type": "any",
+              "value": "https://integration-gateway-yutylytffa-uw.a.run.app",
+              "key": "base_url"
+            }
+          ],
+          "info": {
+            "_postman_id": "c370f8e3-2c3d-4435-a1bc-f2b53f660332",
+            "name": "SallyPort Status Tests",
+            "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+            "description": {
+              "content": "Testing current SallyPort integration status",
+              "type": "text/plain"
+            }
+          }
+        },
+        "cursor": {
+          "ref": "8df801b6-7557-49ed-9b1d-9745d3f76b6d",
+          "length": 3,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "49af84b9-650b-4941-8d26-05f1dccf9b03",
+          "scriptId": "39677d34-bc7c-4bb3-93fe-854142b4d3a9",
+          "execution": "8166eb9d-5d07-4e91-9b81-e79f50f704e5"
+        }
+      },
+      {
+        "error": {
+          "name": "TypeError",
+          "index": 2,
+          "test": "Has auth verification endpoint",
+          "message": "Cannot read properties of undefined (reading 'find')",
+          "stack": "TypeError: Cannot read properties of undefined (reading 'find')\n   at Object.eval sandbox-script.js:3:2)",
+          "checksum": "e9fbf2883ea0c336736ab9d898a9d6b5",
+          "id": "d74e6c56-3649-43fd-9d7a-bebeb2253318",
+          "timestamp": 1753896553704,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 3,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 2,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:2 in test-script",
+        "source": {
+          "id": "46536db7-6945-4472-8593-de2c644c11a7",
+          "name": "API Documentation Check",
+          "request": {
+            "url": {
+              "path": [
+                ""
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "method": "GET"
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "39677d34-bc7c-4bb3-93fe-854142b4d3a9",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('API docs available', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Shows available endpoints', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('endpoints');",
+                  "    pm.expect(responseJson.endpoints).to.be.an('array');",
+                  "});",
+                  "",
+                  "pm.test('Has auth verification endpoint', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    const authEndpoint = responseJson.endpoints.find(ep => ep.path === '/api/auth/verify');",
+                  "    pm.expect(authEndpoint).to.exist;",
+                  "});"
+                ],
+                "_lastExecutionId": "8166eb9d-5d07-4e91-9b81-e79f50f704e5"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "item": [
+            {
+              "id": "ea946418-b886-4a72-af58-6b417b58ebb1",
+              "name": "Service Health Check",
+              "request": {
+                "url": {
+                  "path": [
+                    "health"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "c01b5626-9526-4d7e-8587-51e135eef9cc",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Service is running', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Has version info', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    pm.expect(responseJson).to.have.property('version');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "61598841-e0d8-4b11-89f4-498c386383a5"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "46536db7-6945-4472-8593-de2c644c11a7",
+              "name": "API Documentation Check",
+              "request": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "39677d34-bc7c-4bb3-93fe-854142b4d3a9",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('API docs available', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Shows available endpoints', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    pm.expect(responseJson).to.have.property('endpoints');",
+                      "    pm.expect(responseJson.endpoints).to.be.an('array');",
+                      "});",
+                      "",
+                      "pm.test('Has auth verification endpoint', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    const authEndpoint = responseJson.endpoints.find(ep => ep.path === '/api/auth/verify');",
+                      "    pm.expect(authEndpoint).to.exist;",
+                      "});"
+                    ],
+                    "_lastExecutionId": "8166eb9d-5d07-4e91-9b81-e79f50f704e5"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "54076d35-a4f4-4b96-869d-2c4022a64e4b",
+              "name": "SallyPort Authentication Test",
+              "request": {
+                "url": {
+                  "path": [
+                    "api",
+                    "auth",
+                    "verify"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"pr@coaching2100.com\",\n  \"agent\": \"001\"\n}"
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "53412222-ec4b-40d9-9fce-61047a90b93c",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('SallyPort auth endpoint responds', function () {",
+                      "    // Accept any response that's not a generic 404",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(pm.response.code).to.not.equal(404);",
+                      "});",
+                      "",
+                      "pm.test('Returns structured response', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    pm.expect(responseJson).to.be.an('object');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "65c7d417-bbad-4bc1-9716-c02aea6977a0"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": [],
+          "variable": [
+            {
+              "type": "any",
+              "value": "https://integration-gateway-yutylytffa-uw.a.run.app",
+              "key": "base_url"
+            }
+          ],
+          "info": {
+            "_postman_id": "c370f8e3-2c3d-4435-a1bc-f2b53f660332",
+            "name": "SallyPort Status Tests",
+            "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+            "description": {
+              "content": "Testing current SallyPort integration status",
+              "type": "text/plain"
+            }
+          }
+        },
+        "cursor": {
+          "ref": "8df801b6-7557-49ed-9b1d-9745d3f76b6d",
+          "length": 3,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "49af84b9-650b-4941-8d26-05f1dccf9b03",
+          "scriptId": "39677d34-bc7c-4bb3-93fe-854142b4d3a9",
+          "execution": "8166eb9d-5d07-4e91-9b81-e79f50f704e5"
+        }
+      },
+      {
+        "error": {
+          "name": "AssertionError",
+          "index": 0,
+          "test": "SallyPort auth endpoint responds",
+          "message": "expected 404 to not equal 404",
+          "stack": "AssertionError: expected 404 to not equal 404\n   at Object.eval sandbox-script.js:1:3)",
+          "checksum": "bb38e25f4a69f188f13afbba0f380a57",
+          "id": "7c700e62-cf18-4a5a-95ac-8947fd89f8de",
+          "timestamp": 1753896553846,
+          "stacktrace": [
+            {
+              "fileName": "sandbox-script.js",
+              "lineNumber": 1,
+              "functionName": "Object.eval",
+              "typeName": "Object",
+              "methodName": "eval",
+              "columnNumber": 3,
+              "native": false
+            }
+          ]
+        },
+        "at": "assertion:0 in test-script",
+        "source": {
+          "id": "54076d35-a4f4-4b96-869d-2c4022a64e4b",
+          "name": "SallyPort Authentication Test",
+          "request": {
+            "url": {
+              "path": [
+                "api",
+                "auth",
+                "verify"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"pr@coaching2100.com\",\n  \"agent\": \"001\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "53412222-ec4b-40d9-9fce-61047a90b93c",
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('SallyPort auth endpoint responds', function () {",
+                  "    // Accept any response that's not a generic 404",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(pm.response.code).to.not.equal(404);",
+                  "});",
+                  "",
+                  "pm.test('Returns structured response', function () {",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.be.an('object');",
+                  "});"
+                ],
+                "_lastExecutionId": "65c7d417-bbad-4bc1-9716-c02aea6977a0"
+              }
+            }
+          ]
+        },
+        "parent": {
+          "item": [
+            {
+              "id": "ea946418-b886-4a72-af58-6b417b58ebb1",
+              "name": "Service Health Check",
+              "request": {
+                "url": {
+                  "path": [
+                    "health"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "c01b5626-9526-4d7e-8587-51e135eef9cc",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('Service is running', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Has version info', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    pm.expect(responseJson).to.have.property('version');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "61598841-e0d8-4b11-89f4-498c386383a5"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "46536db7-6945-4472-8593-de2c644c11a7",
+              "name": "API Documentation Check",
+              "request": {
+                "url": {
+                  "path": [
+                    ""
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "method": "GET"
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "39677d34-bc7c-4bb3-93fe-854142b4d3a9",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('API docs available', function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Shows available endpoints', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    pm.expect(responseJson).to.have.property('endpoints');",
+                      "    pm.expect(responseJson.endpoints).to.be.an('array');",
+                      "});",
+                      "",
+                      "pm.test('Has auth verification endpoint', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    const authEndpoint = responseJson.endpoints.find(ep => ep.path === '/api/auth/verify');",
+                      "    pm.expect(authEndpoint).to.exist;",
+                      "});"
+                    ],
+                    "_lastExecutionId": "8166eb9d-5d07-4e91-9b81-e79f50f704e5"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "54076d35-a4f4-4b96-869d-2c4022a64e4b",
+              "name": "SallyPort Authentication Test",
+              "request": {
+                "url": {
+                  "path": [
+                    "api",
+                    "auth",
+                    "verify"
+                  ],
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"pr@coaching2100.com\",\n  \"agent\": \"001\"\n}"
+                }
+              },
+              "response": [],
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "53412222-ec4b-40d9-9fce-61047a90b93c",
+                    "type": "text/javascript",
+                    "exec": [
+                      "pm.test('SallyPort auth endpoint responds', function () {",
+                      "    // Accept any response that's not a generic 404",
+                      "    const response = pm.response.json();",
+                      "    pm.expect(pm.response.code).to.not.equal(404);",
+                      "});",
+                      "",
+                      "pm.test('Returns structured response', function () {",
+                      "    const responseJson = pm.response.json();",
+                      "    pm.expect(responseJson).to.be.an('object');",
+                      "});"
+                    ],
+                    "_lastExecutionId": "65c7d417-bbad-4bc1-9716-c02aea6977a0"
+                  }
+                }
+              ]
+            }
+          ],
+          "event": [],
+          "variable": [
+            {
+              "type": "any",
+              "value": "https://integration-gateway-yutylytffa-uw.a.run.app",
+              "key": "base_url"
+            }
+          ],
+          "info": {
+            "_postman_id": "c370f8e3-2c3d-4435-a1bc-f2b53f660332",
+            "name": "SallyPort Status Tests",
+            "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+            "description": {
+              "content": "Testing current SallyPort integration status",
+              "type": "text/plain"
+            }
+          }
+        },
+        "cursor": {
+          "ref": "220c5c69-4435-40ec-810c-8a8f178b7ff0",
+          "length": 3,
+          "cycles": 1,
+          "position": 2,
+          "iteration": 0,
+          "httpRequestId": "a19fba36-dfaf-45b5-802b-a9a1c4ff68b2",
+          "scriptId": "53412222-ec4b-40d9-9fce-61047a90b93c",
+          "execution": "65c7d417-bbad-4bc1-9716-c02aea6977a0"
+        }
+      }
+    ],
+    "error": null
+  }
+}

@@ -1,0 +1,157 @@
+name: Failure Tracking and Resolution
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["*"]
+    types: [completed]
+  schedule:
+    - cron: '*/5 * * * *'  # Check every 5 minutes
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  checks: write
+
+jobs:
+  track-failures:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.DR_CLAUDE_AUTOMATION_TOKEN }}
+
+      - name: Setup Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq moreutils
+
+      - name: Initialize Failure Database
+        run: |
+          mkdir -p .github/failure-tracking
+          touch .github/failure-tracking/known-issues.json
+          
+          if [ ! -s .github/failure-tracking/known-issues.json ]; then
+            echo '[]' > .github/failure-tracking/known-issues.json
+          fi
+
+      - name: Track Failed Workflows
+        run: |
+          # Get all failed workflows
+          gh run list --json status,name,databaseId,headSha --jq '.[] | select(.status=="failure")' > failed-runs.json
+          
+          # Process each failure
+          jq -c '.[]' failed-runs.json | while read -r run; do
+            run_id=$(echo $run | jq -r '.databaseId')
+            workflow_name=$(echo $run | jq -r '.name')
+            commit_sha=$(echo $run | jq -r '.headSha')
+            
+            # Get failure details
+            gh run view $run_id --json jobs > job-details.json
+            
+            # Extract error message
+            error_msg=$(jq -r '.jobs[].steps[] | select(.conclusion=="failure") | .name + ": " + .conclusion' job-details.json)
+            
+            # Record failure pattern
+            echo "{
+              \"run_id\": \"$run_id\",
+              \"workflow\": \"$workflow_name\",
+              \"commit\": \"$commit_sha\",
+              \"error\": \"$error_msg\",
+              \"timestamp\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\"
+            }" | jq '.' >> .github/failure-tracking/known-issues.json
+          done
+
+      - name: Analyze Failure Patterns
+        run: |
+          # Group similar failures
+          jq -s 'group_by(.error)[]' .github/failure-tracking/known-issues.json > failure-patterns.json
+          
+          # Create analysis report
+          echo "### Failure Analysis Report" > failure-report.md
+          echo "" >> failure-report.md
+          
+          jq -c '.[]' failure-patterns.json | while read -r pattern; do
+            count=$(echo $pattern | jq '. | length')
+            error=$(echo $pattern | jq -r '.[0].error')
+            
+            echo "#### Error Pattern ($count occurrences)" >> failure-report.md
+            echo "\`\`\`" >> failure-report.md
+            echo "$error" >> failure-report.md
+            echo "\`\`\`" >> failure-report.md
+            echo "" >> failure-report.md
+          done
+
+      - name: Auto-Resolution Attempt
+        run: |
+          # Process each failure pattern
+          jq -c '.[]' failure-patterns.json | while read -r pattern; do
+            error=$(echo $pattern | jq -r '.[0].error')
+            workflow=$(echo $pattern | jq -r '.[0].workflow')
+            
+            # Create fix branch
+            git checkout -b fix/automated-$(date +%s)
+            
+            case "$error" in
+              *"npm ERR!"*)
+                npm install
+                npm audit fix
+                ;;
+              *"Could not resolve"*)
+                rm -rf node_modules package-lock.json
+                npm install
+                ;;
+              *"permission denied"*)
+                chmod -R 755 .
+                ;;
+              *)
+                # Default fix attempt
+                npm audit fix
+                ;;
+            esac
+            
+            # If changes were made, create PR
+            if [[ -n $(git status --porcelain) ]]; then
+              git add .
+              git commit -m "fix: automated resolution attempt for $workflow"
+              git push origin HEAD
+              
+              gh pr create \
+                --title "🔧 Auto-fix: $workflow failure" \
+                --body "Automated fix attempt for recurring failure pattern" \
+                --base development
+            fi
+          done
+
+      - name: Update Issue Tracking
+        run: |
+          # Get current open issues
+          gh issue list --json number,title --jq '.[] | select(.title | contains("[Failure]"))' > open-issues.json
+          
+          # Create or update issues for each pattern
+          jq -c '.[]' failure-patterns.json | while read -r pattern; do
+            error=$(echo $pattern | jq -r '.[0].error')
+            count=$(echo $pattern | jq '. | length')
+            
+            # Check if issue exists
+            if ! grep -q "$error" open-issues.json; then
+              gh issue create \
+                --title "🔧 [Failure] Recurring Pattern: $error" \
+                --body "This failure has occurred $count times. Auto-resolution has been attempted." \
+                --label "automated-fix,high-priority"
+            fi
+          done
+
+      - name: Generate Summary Report
+        if: always()
+        run: |
+          echo "### Failure Tracking Summary 📈" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat failure-report.md >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "#### Auto-Resolution Status" >> $GITHUB_STEP_SUMMARY
+          echo "- Patterns Detected: $(jq '. | length' failure-patterns.json)" >> $GITHUB_STEP_SUMMARY
+          echo "- Resolution Attempts: $(git branch | grep 'fix/automated' | wc -l)" >> $GITHUB_STEP_SUMMARY
+

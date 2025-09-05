@@ -1,0 +1,59 @@
+{
+  "fee_waiver_petition": {
+    "petition_type": "37_CFR_1_102_NATIONAL_IMPORTANCE",
+    "filing_timeline": "WITHIN_7_DAYS",
+    "track_one_request": true,
+
+    "petitioner": {
+      "name": "Phillip Corey Roark",
+      "customer_number": "208576",
+      "entity_status": "MICRO",
+      "invention": "Safe AGI Framework (44 patents)"
+    },
+
+    "national_importance_evidence": {
+      "breakthrough": "World's first validated AGI - July 1-2, 2025",
+      "safety": "Prevents unsafe AGI development globally",
+      "economic": "3,600% efficiency improvement demonstrated",
+      "security": "Critical for national defense applications",
+      "witnesses": ["Alexander Oliveros", "Jonatan Martinez", "Claude.ai"]
+    },
+
+    "requested_waivers": {
+      "filing_fees": {
+        "amount": 2640,
+        "justification": "Already paid - requesting reimbursement"
+      },
+      "search_fees": {
+        "amount": 30800,
+        "justification": "Public interest in rapid examination"
+      },
+      "examination_fees": {
+        "amount": 35200,
+        "justification": "National security importance"
+      },
+      "track_one_fees": {
+        "amount": 184800,
+        "justification": "Urgent need for AGI safety standards"
+      },
+      "total_request": 253440
+    },
+
+    "supporting_evidence": {
+      "federal_submissions": [
+        "NIST AI Safety Framework submission",
+        "Treasury Department briefing request",
+        "DOD Innovation Unit solution brief"
+      ],
+      "validation_data": "Empirical evidence with p<0.001 significance",
+      "public_benefit": "Ensures safe AGI development for humanity"
+    },
+
+    "automated_filing": {
+      "prepare_petition": true,
+      "include_all_patent_numbers": true,
+      "reference_federal_filings": true,
+      "priority": "EXPEDITED"
+    }
+  }
+}

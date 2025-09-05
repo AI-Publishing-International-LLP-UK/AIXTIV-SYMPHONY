@@ -1,0 +1,8 @@
+{
+  "name": "dr-grant-auth",
+  "version": "1.0.0",
+  "main": "dr-grant-auth.js",
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.0.0"
+  }
+}

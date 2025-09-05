@@ -1,0 +1,50 @@
+name = "asoos-oauth2-auth"
+main = "workers/oauth2-auth-only-worker.js"
+compatibility_date = "2024-01-15"
+compatibility_flags = ["nodejs_compat"]
+
+# OAuth2 Authentication-Only Worker Configuration
+# NO API endpoints exposed - authentication only
+
+[vars]
+ENVIRONMENT = "production"
+SECURITY_LEVEL = "diamond_sao"
+API_ENDPOINTS_ALLOWED = 0
+JWT_EXPIRY_MINUTES = 30
+
+# Secrets (set via wrangler secret)
+# JWT_SECRET - for signing authentication tokens
+# SALLY_PORT_CLIENT_SECRET - for Sally Port integration
+
+# Routes - ONLY authentication endpoints
+[[routes]]
+pattern = "auth.asoos.2100.cool/auth/*"
+zone_name = "2100.cool"
+
+# KV namespaces for session storage (optional)
+# [[kv_namespaces]]
+# binding = "AUTH_SESSIONS"
+# id = "YOUR_KV_NAMESPACE_ID"
+# preview_id = "YOUR_PREVIEW_KV_NAMESPACE_ID"
+
+# D1 database for user sessions (optional)
+# [[d1_databases]]
+# binding = "AUTH_DB"
+# database_name = "oauth2-auth-only"
+# database_id = "YOUR_D1_DATABASE_ID"
+
+[build]
+command = ""
+cwd = ""
+watch_dir = ""
+
+# Security headers for authentication endpoints
+[env.production]
+name = "asoos-oauth2-auth"
+routes = [
+  { pattern = "auth.asoos.2100.cool/auth/*", zone_name = "2100.cool" }
+]
+
+[env.production.vars]
+ENVIRONMENT = "production"
+SECURITY_LEVEL = "diamond_sao"

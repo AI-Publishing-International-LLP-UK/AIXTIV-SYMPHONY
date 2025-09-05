@@ -1,0 +1,211 @@
+{
+  "providers": {
+    "cloudflare": {
+      "valid": {
+        "token": "cf_test_token_valid_12345",
+        "scope": ["zone:read", "zone:edit", "worker:edit"],
+        "expires_at": "2024-12-31T23:59:59Z",
+        "user_id": "cf_user_123",
+        "account_id": "aef30d920913c188b9b6048cc7f42951",
+        "zone_id": "70147f4f5e47ec593c37a0cbb69754aa"
+      },
+      "expired": {
+        "token": "cf_test_token_expired_12345",
+        "scope": ["zone:read"],
+        "expires_at": "2024-01-01T00:00:00Z",
+        "user_id": "cf_user_123"
+      },
+      "invalid_scope": {
+        "token": "cf_test_token_limited_12345",
+        "scope": ["zone:read"],
+        "expires_at": "2024-12-31T23:59:59Z",
+        "user_id": "cf_user_123"
+      },
+      "malformed": {
+        "token": "malformed.token.format",
+        "scope": [],
+        "expires_at": "invalid-date"
+      }
+    },
+    "sallyport": {
+      "valid": {
+        "token": "sp_test_token_valid_67890",
+        "scope": ["sallyport:access", "sallyport:admin"],
+        "expires_at": "2024-12-31T23:59:59Z",
+        "user_id": "sp_user_456",
+        "tenant": "asoos-main"
+      },
+      "expired": {
+        "token": "sp_test_token_expired_67890",
+        "scope": ["sallyport:access"],
+        "expires_at": "2024-01-01T00:00:00Z",
+        "user_id": "sp_user_456",
+        "tenant": "asoos-main"
+      },
+      "wrong_tenant": {
+        "token": "sp_test_token_wrong_tenant_67890",
+        "scope": ["sallyport:access"],
+        "expires_at": "2024-12-31T23:59:59Z",
+        "user_id": "sp_user_456",
+        "tenant": "different-tenant"
+      },
+      "missing_scope": {
+        "token": "sp_test_token_no_scope_67890",
+        "scope": [],
+        "expires_at": "2024-12-31T23:59:59Z",
+        "user_id": "sp_user_456",
+        "tenant": "asoos-main"
+      }
+    },
+    "google": {
+      "valid": {
+        "access_token": "ya29.test_google_token_valid_abcdef",
+        "scope": "https://www.googleapis.com/auth/cloud-platform https://www.googleapis.com/auth/userinfo.email",
+        "expires_at": "2024-12-31T23:59:59Z",
+        "token_type": "Bearer",
+        "user_id": "google_user_789",
+        "email": "// TODO: Replace with actual test email"
+      },
+      "service_account": {
+        "access_token": "ya29.test_service_account_token_ghijkl",
+        "scope": "https://www.googleapis.com/auth/cloud-platform",
+        "expires_at": "2024-12-31T23:59:59Z",
+        "token_type": "Bearer",
+        "service_account_email": "integration-gateway@asoos-project.iam.gserviceaccount.com"
+      },
+      "expired": {
+        "access_token": "ya29.test_google_token_expired_abcdef",
+        "scope": "https://www.googleapis.com/auth/userinfo.email",
+        "expires_at": "2024-01-01T00:00:00Z",
+        "token_type": "Bearer",
+        "user_id": "google_user_789"
+      },
+      "insufficient_scope": {
+        "access_token": "ya29.test_google_token_limited_abcdef",
+        "scope": "https://www.googleapis.com/auth/userinfo.email",
+        "expires_at": "2024-12-31T23:59:59Z",
+        "token_type": "Bearer",
+        "user_id": "google_user_789"
+      }
+    },
+    "github": {
+      "valid": {
+        "token": "ghp_test_github_token_valid_mnopqr",
+        "scope": ["repo", "user:email", "read:org"],
+        "expires_at": "2024-12-31T23:59:59Z",
+        "user_id": "github_user_101112",
+        "login": "asoos-test-user"
+      },
+      "expired": {
+        "token": "ghp_test_github_token_expired_mnopqr",
+        "scope": ["repo", "user:email"],
+        "expires_at": "2024-01-01T00:00:00Z",
+        "user_id": "github_user_101112",
+        "login": "asoos-test-user"
+      },
+      "insufficient_scope": {
+        "token": "ghp_test_github_token_limited_mnopqr",
+        "scope": ["user:email"],
+        "expires_at": "2024-12-31T23:59:59Z",
+        "user_id": "github_user_101112",
+        "login": "asoos-test-user"
+      },
+      "rate_limited": {
+        "token": "ghp_test_github_token_rate_limited_mnopqr",
+        "scope": ["repo", "user:email"],
+        "expires_at": "2024-12-31T23:59:59Z",
+        "user_id": "github_user_101112",
+        "login": "asoos-test-user",
+        "rate_limit_reset": "2024-12-01T12:00:00Z"
+      }
+    },
+    "internal": {
+      "valid": {
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbnRlcm5hbF91c2VyXzEyMyIsImlhdCI6MTcwMzUyOTYwMCwiZXhwIjoyMDE5MTg5NjAwLCJyb2xlcyI6WyJhZG1pbiIsInVzZXIiXSwiaXNzIjoiYXNvb3MtaW50ZWdyYXRpb24tZ2F0ZXdheSJ9.test_signature",
+        "user_id": "internal_user_123",
+        "roles": ["admin", "user"],
+        "expires_at": "2024-12-31T23:59:59Z",
+        "issuer": "asoos-integration-gateway"
+      },
+      "expired": {
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJpbnRlcm5hbF91c2VyXzEyMyIsImlhdCI6MTcwMzUyOTYwMCwiZXhwIjoxNzAzNTMzMjAwLCJyb2xlcyI6WyJ1c2VyIl0sImlzcyI6ImFzb29zLWludGVncmF0aW9uLWdhdGV3YXkifQ.expired_signature",
+        "user_id": "internal_user_123",
+        "roles": ["user"],
+        "expires_at": "2024-01-01T00:00:00Z",
+        "issuer": "asoos-integration-gateway"
+      },
+      "malformed": {
+        "token": "invalid.jwt.token.format.with.too.many.parts.that.should.fail",
+        "user_id": "invalid",
+        "roles": [],
+        "expires_at": "invalid"
+      }
+    }
+  },
+  "test_scenarios": {
+    "positive_auth": [
+      {
+        "provider": "cloudflare",
+        "token_type": "valid",
+        "expected_status": 200,
+        "expected_scopes": ["zone:read", "zone:edit", "worker:edit"]
+      },
+      {
+        "provider": "sallyport",
+        "token_type": "valid",
+        "expected_status": 200,
+        "expected_scopes": ["sallyport:access", "sallyport:admin"]
+      },
+      {
+        "provider": "google",
+        "token_type": "valid",
+        "expected_status": 200,
+        "expected_scopes": ["https://www.googleapis.com/auth/cloud-platform"]
+      },
+      {
+        "provider": "github",
+        "token_type": "valid",
+        "expected_status": 200,
+        "expected_scopes": ["repo", "user:email", "read:org"]
+      },
+      {
+        "provider": "internal",
+        "token_type": "valid",
+        "expected_status": 200,
+        "expected_roles": ["admin", "user"]
+      }
+    ],
+    "negative_auth": [
+      {
+        "provider": "cloudflare",
+        "token_type": "expired",
+        "expected_status": 401,
+        "expected_error": "token_expired"
+      },
+      {
+        "provider": "sallyport",
+        "token_type": "wrong_tenant",
+        "expected_status": 403,
+        "expected_error": "invalid_tenant"
+      },
+      {
+        "provider": "google",
+        "token_type": "insufficient_scope",
+        "expected_status": 403,
+        "expected_error": "insufficient_scope"
+      },
+      {
+        "provider": "github",
+        "token_type": "rate_limited",
+        "expected_status": 429,
+        "expected_error": "rate_limit_exceeded"
+      },
+      {
+        "provider": "internal",
+        "token_type": "malformed",
+        "expected_status": 401,
+        "expected_error": "invalid_token"
+      }
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+name = "sally-port-auth"
+main = "sally-port-auth.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+account_id = "aef30d920913c188b9b6048cc7f42951"
+
+# Sally Port Authentication Worker Configuration
+# Handles OAuth2 authentication for ASOOS Diamond SAO security system
+
+[vars]
+ENVIRONMENT = "production"
+SECURITY_LEVEL = "diamond_sao"
+JWT_EXPIRY_MINUTES = 30
+VICTORY36_PROTECTED = true
+
+# Secrets (set via wrangler secret)
+# JWT_SECRET - for signing authentication tokens
+# SALLY_PORT_CLIENT_SECRET - for Sally Port integration
+# OAUTH2_CLIENT_SECRET - for OAuth2 provider integration
+
+# Routes for authentication endpoints
+[[routes]]
+pattern = "auth.asoos.2100.cool/*"
+zone_name = "2100.cool"
+
+# KV namespaces for session storage
+# [[kv_namespaces]]
+# binding = "AUTH_SESSIONS"
+# id = "YOUR_KV_NAMESPACE_ID"
+# preview_id = "YOUR_PREVIEW_KV_NAMESPACE_ID"
+
+[build]
+command = ""
+cwd = ""
+watch_dir = ""
+
+# Production environment configuration
+[env.production]
+name = "sally-port-auth"
+routes = [
+  { pattern = "auth.asoos.2100.cool/*", zone_name = "2100.cool" }
+]
+
+[env.production.vars]
+ENVIRONMENT = "production"
+SECURITY_LEVEL = "diamond_sao"
+JWT_EXPIRY_MINUTES = 30
+VICTORY36_PROTECTED = true

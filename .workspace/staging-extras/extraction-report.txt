@@ -1,0 +1,22 @@
+ASOOS LFS to R2 Migration - Extraction Report
+=============================================
+Generated: Mon Aug 11 07:36:23 CST 2025
+Working Directory: /Users/as/asoos/integration-gateway
+
+File Categories:
+- Diamond SAO (Highest Security):        3 files
+- Agent Configurations:      125 files
+- System Configurations:       36 files
+- Reports & Others:       73 files
+
+Total Files Processed:      275
+
+Diamond SAO Files (require highest security):
+diamond_sao_fee_waiver.json
+Diamond_SAO_Filing_Manifest_20250621.json
+Diamond_SAO_Filing_Manifest_20250704.json
+
+Next Steps:
+1. Review file categorization
+2. Run upload-to-r2.sh to transfer files
+3. Verify migration with verify-r2-migration.sh

@@ -1,0 +1,10 @@
+# Default owners for everything in the repo
+* @C2100-PR
+
+# Specific ownership for critical paths
+/.github/ @C2100-PR
+/core-protocols/ @C2100-PR
+/wing/ @C2100-PR
+/vls/ @C2100-PR
+/integration-gateway/ @C2100-PR
+

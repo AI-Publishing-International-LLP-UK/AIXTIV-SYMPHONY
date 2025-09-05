@@ -1,0 +1,97 @@
+openapi: 3.0.3
+info:
+  title: "Aixtiv Symphony - Integration Gateway API"
+  description: "Master API specification for the Aixtiv Symphony Integration Gateway. This gateway manages authentication, routing, agent orchestration, and provides a unified interface to all VLS solutions."
+  version: "1.0.1"
+  contact:
+    name: "Aixtiv Team"
+    email: "pr@coaching2100.com"
+
+servers:
+  - url: "https://integration-gateway-mcp-yutylytffa-uw.a.run.app"
+    description: "Production Environment"
+  - url: "http://localhost:3000"
+    description: "Local Development"
+
+paths:
+  /auth/verify:
+    post:
+      summary: "Verify user authentication token"
+      description: "Validates a Cloudflare JWT and returns user context."
+      tags:
+        - "Authentication"
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: "Token is valid."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserContext'
+        '401':
+          description: "Unauthorized"
+
+  /agents/activate:
+    post:
+      summary: "Activate a specific AI agent"
+      tags:
+        - "Agents"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                agentId: 
+                  type: string
+      responses:
+        '200':
+          description: "Agent activated"
+
+  /agents/delegate:
+    post:
+      summary: "Delegate a task to an agent"
+      tags:
+        - "Agents"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentTask'
+      responses:
+        '200':
+          description: "Task delegated"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    UserContext:
+      type: object
+      properties:
+        userId:
+          type: string
+        email:
+          type: string
+        roles:
+          type: array
+          items:
+            type: string
+
+    AgentTask:
+      type: object
+      properties:
+        agentId:
+          type: string
+        taskName:
+          type: string
+        payload:
+          type: object
+

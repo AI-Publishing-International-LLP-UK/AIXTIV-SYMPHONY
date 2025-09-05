@@ -1,0 +1,31 @@
+name = "asoos-2100-cool-worker"
+main = "src/main.js"
+compatibility_date = "2025-08-19"
+
+# Routes for 2100.cool domains
+routes = [
+  { pattern = "2100.cool/diamond-sao-oauth2.js", zone_name = "2100.cool" },
+  { pattern = "2100.cool/api/*", zone_name = "2100.cool" },
+  { pattern = "2100.cool/interface/*", zone_name = "2100.cool" },
+  { pattern = "asoos.2100.cool/*", zone_name = "2100.cool" },
+  { pattern = "coach.2100.cool/*", zone_name = "2100.cool" }
+]
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"
+SERVICE_NAME = "ASOOS Landing Page"
+
+# Staging environment
+[env.staging]
+name = "asoos-2100-cool-worker-staging"
+routes = [
+  { pattern = "asoos-staging.2100.cool/*", zone_name = "2100.cool" }
+]
+vars = { ENVIRONMENT = "staging", SERVICE_NAME = "ASOOS Landing Page (Staging)" }
+
+# Development environment  
+[env.development]
+name = "asoos-2100-cool-worker-dev"
+routes = []
+vars = { ENVIRONMENT = "development", SERVICE_NAME = "ASOOS Landing Page (Dev)" }

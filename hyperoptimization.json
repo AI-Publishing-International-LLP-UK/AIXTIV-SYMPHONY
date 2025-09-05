@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-08-03T02:13:01.852Z",
+  "optimization": {
+    "temporal_compression": "15x",
+    "ag_timepress": "ENABLED",
+    "regions": [
+      "MOCOA",
+      "MOCORIX",
+      "MOCORIX2"
+    ],
+    "enhanced_agents": 300000000
+  }
+}

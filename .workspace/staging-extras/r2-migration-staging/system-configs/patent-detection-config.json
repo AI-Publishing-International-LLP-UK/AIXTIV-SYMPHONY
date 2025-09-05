@@ -1,0 +1,215 @@
+{
+  "patentDetectionPatterns": {
+    "primaryRegex": "(?i)(patent|provisional|filing|batch|status|diamond[_\\\\- ]sao|sao-\\\\d+|uspto|fee_waiver|vision[_\\\\- ]lake|aixtiv[_\\\\- ]patent|asoos[_\\\\- ]patent|symphony[_\\\\- ]patent|agi[_\\\\- ]patent|collaborative[_\\\\- ]intelligence|artificial[_\\\\- ]intelligence|machine[_\\\\- ]learning|neural[_\\\\- ]network|deep[_\\\\- ]learning|blockchain|quantum[_\\\\- ]computing|cloud[_\\\\- ]computing|business[_\\\\- ]method|software[_\\\\- ]patent|system[_\\\\- ]patent|method[_\\\\- ]patent|apparatus[_\\\\- ]patent|device[_\\\\- ]patent|invention|disclosure|claims|specification|priority|continuation|divisional|reissue|reexamination|wipo|epo|jpo|kipo|cnipa|cipo|ip[_\\\\-]office|patent[_\\\\-]office|intellectual[_\\\\-]property|maintenance[_\\\\-]fee|prosecution|allowance|rejection|office[_\\\\-]action|response|amendment|interview|examiner|attorney[_\\\\-]docket|publication|published|grant|issued|gazette|prior[_\\\\-]art|search[_\\\\-]report|examination[_\\\\-]report|infringement|validity|invalidity|opposition|appeal|interference|derivation|post[_\\\\-]grant|inter[_\\\\-]partes).*\\\\.(pdf|md|csv|json|txt|py|sh|doc|docx|xml|rtf|xlsx|xls|js|bat|ps1|html|htm|zip|rar|7z)",
+
+    "directoryPatterns": [
+      "/patents?/",
+      "/patent[_\\\\-]filing[_\\\\-]records?/",
+      "/patent[_\\\\-]applications?/",
+      "/patent[_\\\\-]documents?/",
+      "/patent[_\\\\-]files?/",
+      "/intellectual[_\\\\-]property/",
+      "/ip[_\\\\-]portfolio/",
+      "/legal[_\\\\-]documents?/",
+      "/diamond[_\\\\-]sao[_\\\\-]patents?/",
+      "/vision[_\\\\-]lake[_\\\\-]patents?/",
+      "/aixtiv[_\\\\-]patents?/",
+      "/asoos[_\\\\-]patents?/",
+      "/symphony[_\\\\-]patents?/",
+      "/agi[_\\\\-]patents?/",
+      "/patent[_\\\\-]filing[_\\\\-]records?/\\\\d{4}[_\\\\-]\\\\d{2}[_\\\\-]\\\\d{2}/",
+      "/patents?/\\\\d{4}/",
+      "/patents?/\\\\d{4}/\\\\d{2}/",
+      "/filing[_\\\\-]\\\\d{4}[_\\\\-]\\\\d{2}[_\\\\-]\\\\d{2}/",
+      "/provisional[_\\\\-]patents?/",
+      "/filed[_\\\\-]patents?/",
+      "/pending[_\\\\-]patents?/",
+      "/granted[_\\\\-]patents?/",
+      "/published[_\\\\-]patents?/",
+      "/uspto[_\\\\-]filings?/",
+      "/wipo[_\\\\-]filings?/",
+      "/epo[_\\\\-]filings?/",
+      "/pct[_\\\\-]filings?/"
+    ],
+
+    "diamondSAOSpecific": "(?i)(diamond[_\\\\-\\\\s]*sao|sao[_\\\\-]\\\\d+|vision[_\\\\-\\\\s]*lake|aixtiv[_\\\\-\\\\s]*patent|asoos[_\\\\-\\\\s]*patent|symphony[_\\\\-\\\\s]*patent|agi[_\\\\-\\\\s]*patent|collaborative[_\\\\-\\\\s]*intelligence).*\\\\.(pdf|md|csv|json|txt|py|sh|doc|docx|xml)",
+
+    "patentNumberPatterns": [
+      "\\\\b\\\\d{2}/\\\\d{3},\\\\d{3}\\\\b",
+      "\\\\bUS\\\\d{7,8}\\\\b",
+      "\\\\bUS\\\\d{4}/\\\\d{7}\\\\b",
+      "\\\\bPCT/US\\\\d{4}/\\\\d{6}\\\\b",
+      "\\\\bWO\\\\d{4}/\\\\d{6}\\\\b",
+      "\\\\bEP\\\\d{8}\\\\b",
+      "\\\\bEP\\\\d{7}\\\\b",
+      "\\\\b[A-Z]{2}\\\\d{6,10}\\\\b",
+      "\\\\bApp\\\\d{8,12}\\\\b",
+      "\\\\bPat\\\\d{6,10}\\\\b"
+    ],
+
+    "contentMetadataPatterns": [
+      "inventor[s]?[\\\\s]*:",
+      "assignee[s]?[\\\\s]*:",
+      "filing[\\\\s]*date[\\\\s]*:",
+      "priority[\\\\s]*date[\\\\s]*:",
+      "publication[\\\\s]*date[\\\\s]*:",
+      "patent[\\\\s]*number[\\\\s]*:",
+      "application[\\\\s]*number[\\\\s]*:",
+      "classification[\\\\s]*:",
+      "field[\\\\s]*of[\\\\s]*invention[\\\\s]*:",
+      "background[\\\\s]*of[\\\\s]*invention[\\\\s]*:",
+      "summary[\\\\s]*of[\\\\s]*invention[\\\\s]*:",
+      "brief[\\\\s]*description[\\\\s]*:",
+      "detailed[\\\\s]*description[\\\\s]*:",
+      "claims[\\\\s]*:",
+      "abstract[\\\\s]*:"
+    ]
+  },
+
+  "highPriorityKeywords": [
+    "diamond_sao",
+    "diamond-sao",
+    "diamondsao",
+    "sao-001",
+    "sao-002",
+    "sao-003",
+    "sao-044",
+    "vision_lake",
+    "vision-lake",
+    "visionlake",
+    "aixtiv_patent",
+    "aixtiv-patent",
+    "aixtivpatent",
+    "asoos_patent",
+    "asoos-patent",
+    "asoospatent",
+    "symphony_patent",
+    "symphony-patent",
+    "symphonypatent",
+    "agi_patent",
+    "agi-patent",
+    "agipatent",
+    "collaborative_intelligence",
+    "collaborative-intelligence",
+    "collaborativeintelligence"
+  ],
+
+  "commonFilenamePrefixes": [
+    "patent_",
+    "patent-",
+    "provisional_",
+    "provisional-",
+    "filing_",
+    "filing-",
+    "application_",
+    "application-",
+    "disclosure_",
+    "disclosure-",
+    "invention_",
+    "invention-",
+    "ip_",
+    "ip-",
+    "uspto_",
+    "uspto-",
+    "wipo_",
+    "wipo-",
+    "epo_",
+    "epo-"
+  ],
+
+  "commonFilenameSuffixes": [
+    "_patent",
+    "-patent",
+    "_provisional",
+    "-provisional",
+    "_filing",
+    "-filing",
+    "_application",
+    "-application",
+    "_disclosure",
+    "-disclosure",
+    "_invention",
+    "-invention",
+    "_claims",
+    "-claims",
+    "_specification",
+    "-specification"
+  ],
+
+  "excludePatterns": [
+    "test[_\\\\-]patent",
+    "demo[_\\\\-]patent",
+    "example[_\\\\-]patent",
+    "sample[_\\\\-]patent",
+    "mock[_\\\\-]patent",
+    "fake[_\\\\-]patent",
+    "dummy[_\\\\-]patent"
+  ],
+
+  "fileExtensionPriority": {
+    "high": ["pdf", "docx", "doc"],
+    "medium": ["md", "txt", "rtf", "xml"],
+    "low": ["json", "csv", "xlsx", "xls"],
+    "code": ["py", "js", "sh", "bat", "ps1"],
+    "archive": ["zip", "rar", "7z"],
+    "web": ["html", "htm"]
+  },
+
+  "examples": {
+    "validPatentFiles": [
+      "/Users/as/asoos/integration-gateway/patent-filing-records/2025-07-04/diamond-sao-agi-collaborative-intelligence-patent.pdf",
+      "/Users/as/asoos/patents/vision-lake-ai-orchestration-system.md",
+      "/Users/as/asoos/ip-portfolio/aixtiv-symphony-provisional-filing.docx",
+      "/Users/as/asoos/legal-documents/sao-044-quantum-intelligence-patent.txt",
+      "/Users/as/asoos/patent-applications/asoos-collaborative-ai-method-patent.csv",
+      "/Users/as/asoos/diamond-sao-patents/vision-lake-time-space-center-invention.json",
+      "/Users/as/asoos/uspto-filings/artificial-intelligence-partnership-patent.py",
+      "/Users/as/asoos/patent-filing-records/2024-12-17/machine-learning-collaboration-system.sh"
+    ],
+
+    "validDirectoryPaths": [
+      "/Users/as/asoos/integration-gateway/patent-filing-records/",
+      "/Users/as/asoos/patents/",
+      "/Users/as/asoos/patent-applications/",
+      "/Users/as/asoos/intellectual-property/",
+      "/Users/as/asoos/diamond-sao-patents/",
+      "/Users/as/asoos/vision-lake-patents/",
+      "/Users/as/asoos/aixtiv-patents/",
+      "/Users/as/asoos/legal-documents/patents/",
+      "/Users/as/asoos/ip-portfolio/filed/",
+      "/Users/as/asoos/uspto-filings/2025/"
+    ],
+
+    "diamondSAOExamples": [
+      "diamond_sao_agi_framework.pdf",
+      "diamond-sao-collaborative-intelligence.md",
+      "sao-044-quantum-processing-method.docx",
+      "vision_lake_time_travel_patent.txt",
+      "vision-lake-ai-orchestration.json",
+      "aixtiv_symphony_patent_application.py",
+      "asoos_intelligent_operating_system.csv",
+      "collaborative_intelligence_method_patent.sh"
+    ]
+  },
+
+  "detectionRules": {
+    "mustContainKeyword": true,
+    "mustHaveValidExtension": true,
+    "allowDirectoryBasedDetection": true,
+    "requireContentValidation": false,
+    "prioritizeDiamondSAO": true,
+    "excludeTestFiles": true,
+    "caseSensitive": false
+  },
+
+  "confidentialityLevels": {
+    "diamond_sao": "HIGHEST",
+    "vision_lake": "HIGH",
+    "aixtiv_patent": "HIGH",
+    "asoos_patent": "HIGH",
+    "symphony_patent": "HIGH",
+    "agi_patent": "HIGH",
+    "collaborative_intelligence": "HIGH",
+    "general_patent": "MEDIUM"
+  }
+}

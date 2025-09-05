@@ -1,0 +1,122 @@
+{
+  "appName": "ASOOS Mobile",
+  "version": "1.0.0",
+  "platforms": [
+    "iOS",
+    "Android"
+  ],
+  "setupDate": "2025-08-30T20:27:48.611Z",
+  "coreFeatures": [
+    {
+      "category": "Infrastructure Management",
+      "features": [
+        "Diamond SAO CLI v34 Integration - Full CLI access via natural language",
+        "DNS Management - Update domains and routing with simple commands",
+        "Cloudflare Workers - Deploy and manage edge computing functions",
+        "MongoDB Operations - Database management and monitoring",
+        "GCP Secrets - Secure credential and configuration management",
+        "Application Scaling - Horizontal and vertical scaling controls",
+        "Real-time Monitoring - Live dashboards and performance metrics"
+      ]
+    },
+    {
+      "category": "Mobile Experience",
+      "features": [
+        "Biometric Authentication - TouchID, FaceID, Fingerprint unlock",
+        "Voice Commands - Speak commands to Diamond SAO CLI",
+        "Touch Gestures - Swipe shortcuts for common operations",
+        "Offline Command Queuing - Execute commands when back online",
+        "Push Notifications - Infrastructure alerts and completion status",
+        "Responsive UI - Optimized for both phone and tablet"
+      ]
+    },
+    {
+      "category": "Security & Compliance",
+      "features": [
+        "End-to-end Encryption - All communications secured with AES-256",
+        "Multi-factor Authentication - SMS, authenticator app, biometric",
+        "Secure Token Storage - Credentials stored in device keychain",
+        "Certificate Pinning - Prevent man-in-the-middle attacks",
+        "Jailbreak/Root Detection - Security monitoring for compromised devices",
+        "Audit Logging - Complete audit trail of all actions"
+      ]
+    },
+    {
+      "category": "Productivity & Automation",
+      "features": [
+        "Command History - Quick access to recent commands",
+        "Favorites & Shortcuts - Save frequently used operations",
+        "Smart Suggestions - AI-powered command recommendations",
+        "Batch Operations - Execute multiple commands sequentially",
+        "Scheduled Tasks - Automate routine infrastructure tasks",
+        "Team Collaboration - Share commands and results with team members"
+      ]
+    },
+    {
+      "category": "Advanced AI Features",
+      "features": [
+        "Predictive Scaling - AI recommends optimal resource allocation",
+        "Anomaly Detection - Automatic identification of unusual patterns",
+        "Incident Response - Automated alerts and suggested remediation",
+        "Cost Optimization - Recommendations to reduce infrastructure costs",
+        "Performance Analytics - Detailed insights into system performance",
+        "Capacity Planning - Forecast future resource requirements"
+      ]
+    }
+  ],
+  "technicalSpecs": {
+    "authentication": {
+      "primary": "SallyPort + Google OAuth 2.0",
+      "biometric": "TouchID, FaceID, Fingerprint",
+      "mfa": "SMS, TOTP, Hardware tokens"
+    },
+    "security": {
+      "encryption": "AES-256-GCM end-to-end",
+      "certificatePinning": "Enabled",
+      "jailbreakDetection": "Enabled",
+      "tokenStorage": "Device keychain"
+    },
+    "offline": {
+      "storage": "IndexedDB + Service Worker",
+      "caching": "Intelligent API response caching",
+      "sync": "Background queue processing"
+    },
+    "notifications": {
+      "provider": "Firebase Cloud Messaging",
+      "types": "Infrastructure alerts, Command status, Security events",
+      "scheduling": "Quiet hours, Priority filtering"
+    }
+  },
+  "appStoreInfo": {
+    "ios": {
+      "bundleId": "com.asoos.mobile.ios",
+      "category": "Developer Tools",
+      "rating": "4+",
+      "languages": [
+        "English"
+      ],
+      "deviceSupport": [
+        "iPhone",
+        "iPad"
+      ],
+      "features": [
+        "Biometric authentication",
+        "Voice commands",
+        "Push notifications"
+      ]
+    },
+    "android": {
+      "packageName": "com.asoos.mobile.android",
+      "category": "Tools",
+      "rating": "Everyone",
+      "minSdk": 24,
+      "targetSdk": 34,
+      "permissions": [
+        "Internet",
+        "Biometric",
+        "Microphone",
+        "Vibrate"
+      ]
+    }
+  }
+}

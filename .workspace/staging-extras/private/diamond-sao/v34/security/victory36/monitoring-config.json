@@ -1,0 +1,21 @@
+{
+  "service": "victory36-diamond-sao",
+  "healthEndpoint": "/victory36/health",
+  "metricsEndpoint": "/victory36/metrics",
+  "alerting": {
+    "enabled": true,
+    "channels": [
+      "diamond-sao-alerts"
+    ],
+    "conditions": [
+      "victory36_status_down",
+      "victory36_integration_error",
+      "diamond_sao_connection_lost"
+    ]
+  },
+  "dashboards": {
+    "Victory36 Status": "victory36-status-dashboard",
+    "Diamond SAO Integration": "diamond-sao-integration-dashboard",
+    "Security Metrics": "victory36-security-metrics"
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "scopeToTierMatrix": {
+    "DIAMOND_SAO": {
+      "tier": "DIAMOND",
+      "level": 1,
+      "requiredScopes": [
+        "admin:read",
+        "admin:write",
+        "admin:delete",
+        "system:control",
+        "agents:manage",
+        "security:override",
+        "billing:manage",
+        "analytics:access"
+      ],
+      "permissions": {
+        "canAccessAll": true,
+        "canDeleteSystem": true,
+        "canManageUsers": true,
+        "canViewFinancials": true,
+        "maxApiCalls": -1,
+        "sessionTimeout": 28800
+      }
+    },
+    "EMERALD_SAO": {
+      "tier": "EMERALD",
+      "level": 2,
+      "requiredScopes": ["admin:read", "admin:write", "agents:manage", "users:manage", "analytics:access"],
+      "permissions": {
+        "canAccessAll": false,
+        "canDeleteSystem": false,
+        "canManageUsers": true,
+        "canViewFinancials": true,
+        "maxApiCalls": 10000,
+        "sessionTimeout": 14400
+      },
+      "restrictions": {
+        "cannotModifyAbove": ["DIAMOND_SAO"],
+        "cannotDeleteProjects": true
+      }
+    },
+    "RUBY": {
+      "tier": "RUBY",
+      "level": 3,
+      "requiredScopes": ["user:read", "user:write", "content:read", "content:write", "agents:interact"],
+      "permissions": {
+        "canAccessAll": false,
+        "canDeleteSystem": false,
+        "canManageUsers": false,
+        "canViewFinancials": false,
+        "maxApiCalls": 5000,
+        "sessionTimeout": 7200
+      }
+    },
+    "SAPPHIRE": {
+      "tier": "SAPPHIRE",
+      "level": 4,
+      "requiredScopes": ["user:read", "content:read", "agents:basic"],
+      "permissions": {
+        "canAccessAll": false,
+        "canDeleteSystem": false,
+        "canManageUsers": false,
+        "canViewFinancials": false,
+        "maxApiCalls": 1000,
+        "sessionTimeout": 3600
+      }
+    },
+    "OPAL": {
+      "tier": "OPAL",
+      "level": 5,
+      "requiredScopes": ["pilot:basic", "content:read"],
+      "permissions": {
+        "canAccessAll": false,
+        "canDeleteSystem": false,
+        "canManageUsers": false,
+        "canViewFinancials": false,
+        "maxApiCalls": 500,
+        "sessionTimeout": 1800
+      }
+    },
+    "ONYX": {
+      "tier": "ONYX",
+      "level": 6,
+      "requiredScopes": ["basic:read"],
+      "permissions": {
+        "canAccessAll": false,
+        "canDeleteSystem": false,
+        "canManageUsers": false,
+        "canViewFinancials": false,
+        "maxApiCalls": 100,
+        "sessionTimeout": 900
+      },
+      "restrictions": {
+        "limitedAccess": ["workforce", "gsuite"],
+        "cannotAccess": ["gcp", "admin"]
+      }
+    }
+  },
+  "scopeHierarchy": {
+    "admin:delete": ["admin:write", "admin:read"],
+    "admin:write": ["admin:read"],
+    "system:control": ["admin:delete", "admin:write", "admin:read"],
+    "agents:manage": ["agents:interact", "agents:basic"],
+    "users:manage": ["user:write", "user:read"],
+    "user:write": ["user:read"],
+    "content:write": ["content:read"],
+    "security:override": ["admin:delete", "admin:write", "admin:read"],
+    "billing:manage": ["analytics:access"],
+    "analytics:access": ["user:read", "content:read"]
+  },
+  "specialCases": {
+    "fabriziosassano.com": {
+      "tier": "ONYX",
+      "isolationRules": {
+        "cannotAccess": ["phillip", "mr.proark", "pr@*"],
+        "limitedTo": ["fs@fabriziosassano.com", "ms@fabriziosassano.com"],
+        "superAdmin": "pr@fabriziosassano.com",
+        "invisible": ["pr@fabriziosassano.com"]
+      }
+    }
+  }
+}

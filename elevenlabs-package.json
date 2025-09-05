@@ -1,0 +1,164 @@
+{
+  "name": "unified-elevenlabs-agent-system",
+  "version": "4.0.0-unified-enterprise",
+  "description": "Single-Source ElevenLabs Voice & Interactive Agent System - Diamond SAO Command Center",
+  "type": "module",
+  "main": "unified-elevenlabs-agent-system.js",
+  "author": "Victory36 + Diamond SAO Operational Center",
+  "license": "PROPRIETARY",
+  "classification": "DIAMOND_SAO_COMMAND_CENTER",
+  "authority": "Mr. Phillip Corey Roark (0000001)",
+  "keywords": [
+    "elevenlabs",
+    "voice-synthesis",
+    "interactive-agents",
+    "diamond-sao",
+    "oauth2",
+    "multilingual",
+    "computationalist-agents",
+    "enterprise-security",
+    "real-time-streaming",
+    "speech-to-text",
+    "voice-changer",
+    "quantum-business-intelligence"
+  ],
+  "scripts": {
+    "start": "node unified-elevenlabs-agent-system.js",
+    "dev": "node --watch unified-elevenlabs-agent-system.js",
+    "test": "node --test test/*.test.js",
+    "lint": "eslint *.js",
+    "format": "prettier --write *.js",
+    "docker:build": "docker build -t unified-elevenlabs-system .",
+    "docker:run": "docker run -p 8080:8080 unified-elevenlabs-system",
+    "gcp:deploy": "gcloud run deploy unified-elevenlabs-system --source . --platform managed --region us-west1",
+    "health-check": "curl -f http://localhost:8080/health || exit 1",
+    "status-check": "curl -f http://localhost:8080/api/status || exit 1"
+  },
+  "dependencies": {
+    "elevenlabs": "^0.8.1",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "ws": "^8.14.2",
+    "jsonwebtoken": "^9.0.2",
+    "crypto": "^1.0.1",
+    "@google-cloud/secret-manager": "^5.0.1",
+    "winston": "^3.10.0",
+    "axios": "^1.6.0",
+    "multer": "^1.4.5-lts.1",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "prettier": "^3.0.3",
+    "nodemon": "^3.0.1",
+    "@types/node": "^20.8.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AI-Publishing-International-LLP-UK/AIXTIV-SYMPHONY.git",
+    "directory": "vls/solutions/voice-synthesis"
+  },
+  "homepage": "https://mocoa.api-for-warp-drive.com",
+  "bugs": {
+    "url": "https://github.com/AI-Publishing-International-LLP-UK/AIXTIV-SYMPHONY/issues"
+  },
+  "config": {
+    "port": 8080,
+    "gcp_project": "api-for-warp-drive",
+    "oauth2_scopes": [
+      "elevenlabs:tts",
+      "elevenlabs:voice_changer",
+      "elevenlabs:sound_effects", 
+      "elevenlabs:speech_to_text",
+      "elevenlabs:studio",
+      "elevenlabs:music",
+      "elevenlabs:dubbing",
+      "elevenlabs:streaming",
+      "elevenlabs:agents",
+      "mocoa:voice_interface",
+      "diamond_sao:maximum_authority"
+    ]
+  },
+  "capabilities": {
+    "voice_synthesis": {
+      "models": ["eleven_multilingual_v2", "eleven_multilingual_v1"],
+      "languages": ["en", "es", "pt", "fr", "de", "it", "ja", "ko", "zh", "hi", "ar"],
+      "voice_profiles": 5,
+      "real_time_streaming": true
+    },
+    "speech_processing": {
+      "speech_to_text": true,
+      "voice_changer": true,
+      "sound_effects": true,
+      "music_generation": true,
+      "dubbing": true,
+      "transcription": true
+    },
+    "interactive_agents": {
+      "dr_lucy": "Quantum Business Computationalist",
+      "dr_claude": "Strategic Hybrid Reasoning",
+      "victory36": "Security Analytics & Threat Modeling"
+    },
+    "enterprise_integrations": {
+      "oauth2_security": true,
+      "gcp_secret_manager": true,
+      "diamond_sao_authority": true,
+      "roark_authorship_model": true,
+      "universal_gateway": true
+    }
+  },
+  "voice_profiles": {
+    "diamondSAO": {
+      "voiceId": "VR6AewLTigWG4xSOukaG",
+      "name": "Josh",
+      "description": "Diamond SAO Command Center Authority Voice"
+    },
+    "ownerInterface": {
+      "voiceId": "pNInz6obpgDQGcFmaJgB", 
+      "name": "Adam",
+      "description": "Owner Interface Professional Voice"
+    },
+    "mocaInterface": {
+      "voiceId": "ErXwobaYiN019PkySvjV",
+      "name": "Antoni", 
+      "description": "MOCOA Warm and Engaging Voice"
+    },
+    "default": {
+      "voiceId": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Bella",
+      "description": "Default Professional Voice"
+    }
+  },
+  "security": {
+    "oauth2": {
+      "required_scopes": ["elevenlabs:tts", "mocoa:voice_interface"],
+      "token_expiry": "24h",
+      "refresh_token_rotation": true
+    },
+    "gcp_integration": {
+      "secret_manager": true,
+      "project_id": "api-for-warp-drive",
+      "service_account": "unified-elevenlabs-system@api-for-warp-drive.iam.gserviceaccount.com"
+    },
+    "rate_limiting": {
+      "requests_per_minute": 100,
+      "voice_synthesis_per_hour": 1000,
+      "websocket_connections": 50
+    }
+  },
+  "deployment": {
+    "platforms": ["Google Cloud Run", "Docker", "Kubernetes"],
+    "regions": ["us-west1", "us-central1", "eu-west1"],
+    "scaling": {
+      "min_instances": 1,
+      "max_instances": 10,
+      "cpu": "2",
+      "memory": "4Gi"
+    }
+  }
+}

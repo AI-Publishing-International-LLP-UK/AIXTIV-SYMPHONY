@@ -1,0 +1,46 @@
+ASOOS LFS to R2 Migration - Upload Report
+=========================================
+Generated: Mon Aug 11 08:12:56 CST 2025
+Working Directory: /Users/as/asoos/integration-gateway
+
+Upload Results:
+- Diamond SAO files (diamond-sao-secure bucket): 3 files
+- Agent configurations (asoos-lfs-archive/agent-configs/): 125 files
+- System configurations (asoos-lfs-archive/system-configs/): 34 files
+- Reports & others (asoos-lfs-archive/reports/): 72 files
+
+Total Files Uploaded: 234
+
+R2 Bucket Structure:
+- diamond-sao-secure/
+  
+wrangler r2 object
+
+Manage R2 objects
+
+COMMANDS
+  wrangler r2 object get <objectPath>     Fetch an object from an R2 bucket
+  wrangler r2 object put <objectPath>     Create an object in an R2 bucket
+  wrangler r2 object delete <objectPath>  Delete an object in an R2 bucket
+  
+- asoos-lfs-archive/
+  
+wrangler r2 object
+
+Manage R2 objects
+
+COMMANDS
+  wrangler r2 object get <objectPath>     Fetch an object from an R2 bucket
+  wrangler r2 object put <objectPath>     Create an object in an R2 bucket
+  wrangler r2 object delete <objectPath>  Delete an object in an R2 bucket
+
+Security Notes:
+- Diamond SAO files are stored in separate secure bucket
+- All files maintain original naming for traceability
+- Access patterns should be updated in application code
+
+Next Steps:
+1. Verify uploads with verify-r2-migration.sh
+2. Update application code to use R2 instead of LFS
+3. Test file access in staging environment
+4. Clean up Git LFS after verification

@@ -1,0 +1,10 @@
+name = "oauth2-auth-only"
+main = "oauth2-auth-clean.js"
+compatibility_date = "2023-12-01"
+account_id = "aef30d920913c188b9b6048cc7f42951"
+
+[vars]
+ENVIRONMENT = "production"
+SECURITY_LEVEL = "diamond_sao"
+SERVICE_NAME = "oauth2-auth-only"
+API_ACCESS_ENABLED = "false"

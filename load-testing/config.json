@@ -1,0 +1,60 @@
+{
+  "loadTest": {
+    "name": "Voice Assignment Scale Test for 20M+ Pilots",
+    "totalPilots": 20000000,
+    "concurrentUsers": 50000,
+    "testDuration": "10m",
+    "rampUpTime": "2m",
+    "scenarios": {
+      "voiceAssignment": {
+        "weight": 40,
+        "endpoint": "/api/voice/assign",
+        "method": "POST"
+      },
+      "voiceSynthesis": {
+        "weight": 30,
+        "endpoint": "/api/voice/synthesize",
+        "method": "POST"
+      },
+      "batchAssignment": {
+        "weight": 20,
+        "endpoint": "/api/voice/batch-assign",
+        "method": "POST"
+      },
+      "statusCheck": {
+        "weight": 10,
+        "endpoint": "/api/voice/pilot/{pilotId}/status",
+        "method": "GET"
+      }
+    },
+    "thresholds": {
+      "httpReqDuration": ["p(95)<2000"],
+      "httpReqFailed": ["rate<0.01"],
+      "httpReqs": ["rate>10000"]
+    },
+    "mongodb": {
+      "connectionString": "${MONGODB_CONNECTION_STRING}",
+      "database": "aixtiv_symphony",
+      "collections": {
+        "pilots": "pilots",
+        "voiceAssignments": "voice_assignments",
+        "batchOperations": "batch_operations"
+      },
+      "batchSize": 1000,
+      "maxConcurrentOps": 100
+    },
+    "fallback": {
+      "enabled": true,
+      "providers": ["openai", "anthropic", "elevenlabs"],
+      "retryAttempts": 3,
+      "circuitBreakerThreshold": 5,
+      "fallbackDelay": 1000
+    },
+    "monitoring": {
+      "metricsInterval": "10s",
+      "dashboardPort": 8080,
+      "logLevel": "info",
+      "exportMetrics": true
+    }
+  }
+}

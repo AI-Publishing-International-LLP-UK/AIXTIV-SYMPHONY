@@ -1,0 +1,32 @@
+{
+  "name": "mocoa-owner-interface-fixed",
+  "version": "1.0.3",
+  "description": "MOCOA Owner Interface with stable server - CommonJS compatible",
+  "main": "simple-server.cjs",
+  "scripts": {
+    "start": "node simple-server.cjs",
+    "dev": "NODE_ENV=development node simple-server.cjs",
+    "test-voice": "node simple-server.cjs",
+    "health-check": "curl -f http://127.0.0.1:8080/health || exit 1"
+  },
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cookie-parser": "^1.4.6",
+    "node-fetch": "^2.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "mocoa",
+    "ai",
+    "interface",
+    "gcp",
+    "voice",
+    "stable"
+  ],
+  "author": "ASOOS",
+  "license": "MIT"
+}

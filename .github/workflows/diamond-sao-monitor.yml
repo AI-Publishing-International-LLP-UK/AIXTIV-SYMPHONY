@@ -1,0 +1,190 @@
+name: Diamond SAO Health Monitor
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'  # Every 5 minutes
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  security-events: write
+  actions: write
+  administration: write
+
+jobs:
+  monitor-diamond-sao:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: |
+          npm install typescript ts-node @types/node
+
+      - name: Verify SAO Configuration
+        run: |
+          # Check core SAO configuration
+          cat > verify-sao.ts << 'EOL'
+          import { DiamondSAOConfig } from './core-protocols/admin-core/frontend/src/constants/diamond-sao-config';
+          import { saoDashboard } from './core-protocols/admin-core/frontend/src/constants/sao-dashboard';
+
+          const validateConfig = () => {
+            // Verify core security settings
+            if (!DiamondSAOConfig.security.doubleKeywordChain.primaryValidation.physicalVaultIntegration) {
+              throw new Error('Physical vault integration not configured');
+            }
+
+            // Verify recovery settings
+            if (DiamondSAOConfig.recovery.lastChanceMachine.type !== 'air-gapped') {
+              throw new Error('Last chance machine not properly air-gapped');
+            }
+
+            // Verify ownership protection
+            if (!DiamondSAOConfig.ownership.systemIntegrity.auditTrail) {
+              throw new Error('Audit trail not enabled');
+            }
+
+            // Verify dashboard configuration
+            if (!saoDashboard.features.system.enabled) {
+              throw new Error('System features not enabled in dashboard');
+            }
+
+            console.log('SAO configuration verified successfully');
+            return true;
+          };
+
+          validateConfig();
+          EOL
+
+          npx ts-node verify-sao.ts
+
+      - name: Check Heir Permissions
+        run: |
+          # Verify heir access levels
+          cat > verify-heirs.ts << 'EOL'
+          import { DiamondSAOConfig } from './core-protocols/admin-core/frontend/src/constants/diamond-sao-config';
+
+          const validateHeirs = () => {
+            const { heirDesignation } = DiamondSAOConfig.ownership;
+            
+            if (heirDesignation.maxHeirs !== 3) {
+              throw new Error('Invalid heir configuration');
+            }
+
+            if (!heirDesignation.accessLevels.includes('full')) {
+              throw new Error('Missing full access level for heirs');
+            }
+
+            console.log('Heir permissions verified successfully');
+            return true;
+          };
+
+          validateHeirs();
+          EOL
+
+          npx ts-node verify-heirs.ts
+
+      - name: Monitor Override Controls
+        run: |
+          # Check override mechanisms
+          cat > verify-overrides.ts << 'EOL'
+          import { DiamondSAOConfig } from './core-protocols/admin-core/frontend/src/constants/diamond-sao-config';
+
+          const validateOverrides = () => {
+            const { superAdminOverride } = DiamondSAOConfig;
+            
+            if (!superAdminOverride.activationMethods.primary === 'physical-key-vault') {
+              throw new Error('Invalid primary override method');
+            }
+
+            if (superAdminOverride.validationChain.keywordPairs < 2) {
+              throw new Error('Insufficient keyword pairs for validation');
+            }
+
+            console.log('Override controls verified successfully');
+            return true;
+          };
+
+          validateOverrides();
+          EOL
+
+          npx ts-node verify-overrides.ts
+
+      - name: Verify Security Integrations
+        run: |
+          # Check security configurations
+          cat > verify-security.ts << 'EOL'
+          import { DiamondSAOConfig } from './core-protocols/admin-core/frontend/src/constants/diamond-sao-config';
+          import { saoDashboard } from './core-protocols/admin-core/frontend/src/constants/sao-dashboard';
+
+          const validateSecurity = () => {
+            // Check security features
+            const { security } = DiamondSAOConfig;
+            const dashboardSecurity = saoDashboard.features.base.security;
+
+            if (!security.doubleKeywordChain.secondaryValidation.multiFactorAuth) {
+              throw new Error('Multi-factor authentication not enabled');
+            }
+
+            if (!dashboardSecurity.dataProtection.dataEncryption) {
+              throw new Error('Data encryption not enabled');
+            }
+
+            console.log('Security integrations verified successfully');
+            return true;
+          };
+
+          validateSecurity();
+          EOL
+
+          npx ts-node verify-security.ts
+
+      - name: Generate Health Report
+        if: always()
+        run: |
+          echo "# Diamond SAO Health Report 💎" > sao_report.md
+          echo "Generated at $(date -u)" >> sao_report.md
+          echo "" >> sao_report.md
+
+          echo "## Core Configuration Status" >> sao_report.md
+          echo "- Security Validation: ${{ job.steps.Verify\ SAO\ Configuration.outcome }}" >> sao_report.md
+          echo "- Heir Permissions: ${{ job.steps.Check\ Heir\ Permissions.outcome }}" >> sao_report.md
+          echo "- Override Controls: ${{ job.steps.Monitor\ Override\ Controls.outcome }}" >> sao_report.md
+          echo "- Security Integrations: ${{ job.steps.Verify\ Security\ Integrations.outcome }}" >> sao_report.md
+
+          # Create or update health report issue
+          if gh issue list --label "diamond-sao-health" --json number | jq -e '.[0]' > /dev/null; then
+            issue_number=$(gh issue list --label "diamond-sao-health" --json number | jq -r '.[0].number')
+            gh issue edit $issue_number --body-file sao_report.md
+          else
+            gh issue create \
+              --title "💎 Diamond SAO Health Report" \
+              --body-file sao_report.md \
+              --label "diamond-sao-health"
+          fi
+
+      - name: Alert on Configuration Issues
+        if: failure()
+        run: |
+          gh issue create \
+            --title "🚨 Diamond SAO Configuration Alert" \
+            --body "Critical issues detected in Diamond SAO configuration. Immediate attention required." \
+            --label "critical,diamond-sao-alert"
+
+      - name: Update Dashboard
+        run: |
+          echo "### Diamond SAO Monitor Summary 💎" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          cat sao_report.md >> $GITHUB_STEP_SUMMARY
+

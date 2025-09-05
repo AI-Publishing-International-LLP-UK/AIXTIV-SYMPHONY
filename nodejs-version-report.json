@@ -1,0 +1,181 @@
+{
+  "timestamp": "2025-08-27T11:51:16.045Z",
+  "currentVersions": {
+    "package.json": {
+      "type": "package.json",
+      "version": ">=24.0.0",
+      "raw": ">=24.0.0"
+    },
+    ".github/workflows/deploy.yml": {
+      "type": "github-actions",
+      "version": "24.x",
+      "raw": "node-version: 24.x"
+    },
+    ".github/workflows/build.yml": {
+      "type": "github-actions",
+      "version": "24",
+      "raw": "node-version: '24'"
+    },
+    ".github/workflows/build-test.yml": {
+      "type": "github-actions",
+      "version": "${{",
+      "raw": "node-version: ${{"
+    },
+    "Dockerfile.fixed": {
+      "type": "dockerfile",
+      "version": "24-alpine",
+      "raw": "FROM node:24-alpine"
+    },
+    "functions.backup/Dockerfile.mock-sallyport": {
+      "type": "dockerfile",
+      "version": "24-slim",
+      "raw": "FROM node:24-slim"
+    },
+    "app.yaml": {
+      "type": "app-engine",
+      "version": "22",
+      "raw": "runtime: nodejs22"
+    },
+    "cloud-functions/dr-claude/package.json": {
+      "type": "package.json",
+      "version": ">=24.0.0",
+      "raw": ">=24.0.0"
+    },
+    "asoos-deploy/functions/package.json": {
+      "type": "package.json",
+      "version": "24",
+      "raw": "24"
+    }
+  },
+  "latestVersions": {
+    "current-lts": {
+      "version": "v22.18.0",
+      "lts": "Jod",
+      "date": "2025-07-31",
+      "security": false
+    },
+    "latest": {
+      "version": "v24.6.0",
+      "lts": false,
+      "date": "2025-08-14",
+      "security": false
+    },
+    "all-lts": [
+      {
+        "version": "v22.18.0",
+        "date": "2025-07-31",
+        "files": [
+          "aix-ppc64",
+          "headers",
+          "linux-arm64",
+          "linux-armv7l",
+          "linux-ppc64le",
+          "linux-s390x",
+          "linux-x64",
+          "osx-arm64-tar",
+          "osx-x64-pkg",
+          "osx-x64-tar",
+          "src",
+          "win-arm64-7z",
+          "win-arm64-zip",
+          "win-x64-7z",
+          "win-x64-exe",
+          "win-x64-msi",
+          "win-x64-zip",
+          "win-x86-7z",
+          "win-x86-exe",
+          "win-x86-msi",
+          "win-x86-zip"
+        ],
+        "npm": "10.9.3",
+        "v8": "12.4.254.21",
+        "uv": "1.51.0",
+        "zlib": "1.3.1",
+        "openssl": "3.0.16",
+        "modules": "127",
+        "lts": "Jod",
+        "security": false
+      },
+      {
+        "version": "v22.17.1",
+        "date": "2025-07-15",
+        "files": [
+          "aix-ppc64",
+          "headers",
+          "linux-arm64",
+          "linux-armv7l",
+          "linux-ppc64le",
+          "linux-s390x",
+          "linux-x64",
+          "osx-arm64-tar",
+          "osx-x64-pkg",
+          "osx-x64-tar",
+          "src",
+          "win-arm64-7z",
+          "win-arm64-zip",
+          "win-x64-7z",
+          "win-x64-exe",
+          "win-x64-msi",
+          "win-x64-zip",
+          "win-x86-7z",
+          "win-x86-exe",
+          "win-x86-msi",
+          "win-x86-zip"
+        ],
+        "npm": "10.9.2",
+        "v8": "12.4.254.21",
+        "uv": "1.51.0",
+        "zlib": "1.3.0.1-motley",
+        "openssl": "3.0.16",
+        "modules": "127",
+        "lts": "Jod",
+        "security": true
+      },
+      {
+        "version": "v22.17.0",
+        "date": "2025-06-24",
+        "files": [
+          "aix-ppc64",
+          "headers",
+          "linux-arm64",
+          "linux-armv7l",
+          "linux-ppc64le",
+          "linux-s390x",
+          "linux-x64",
+          "osx-arm64-tar",
+          "osx-x64-pkg",
+          "osx-x64-tar",
+          "src",
+          "win-arm64-7z",
+          "win-arm64-zip",
+          "win-x64-7z",
+          "win-x64-exe",
+          "win-x64-msi",
+          "win-x64-zip",
+          "win-x86-7z",
+          "win-x86-exe",
+          "win-x86-msi",
+          "win-x86-zip"
+        ],
+        "npm": "10.9.2",
+        "v8": "12.4.254.21",
+        "uv": "1.51.0",
+        "zlib": "1.3.0.1-motley",
+        "openssl": "3.0.16",
+        "modules": "127",
+        "lts": "Jod",
+        "security": false
+      }
+    ]
+  },
+  "warnings": [
+    "Could not parse version in .github/workflows/build-test.yml: ${{"
+  ],
+  "recommendations": [],
+  "summary": {
+    "filesScanned": 9,
+    "upgradesRecommended": 0,
+    "criticalWarnings": 1,
+    "overallStatus": "critical"
+  }
+}

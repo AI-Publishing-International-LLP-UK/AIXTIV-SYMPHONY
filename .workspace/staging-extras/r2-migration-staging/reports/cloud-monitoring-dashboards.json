@@ -1,0 +1,741 @@
+{
+  "asoos_authentication_dashboard": {
+    "displayName": "ASOOS Authentication Monitoring Dashboard",
+    "mosaicLayout": {
+      "columns": 12,
+      "tiles": [
+        {
+          "width": 6,
+          "height": 4,
+          "widget": {
+            "title": "Authentication Success/Failure Rate",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND resource.labels.function_name=\"integration-gateway\" AND metric.type=\"logging.googleapis.com/user/auth_success_rate\"",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_RATE",
+                        "crossSeriesReducer": "REDUCE_MEAN",
+                        "groupByFields": ["resource.labels.function_name"]
+                      }
+                    }
+                  },
+                  "plotType": "LINE",
+                  "displayName": "Success Rate %"
+                },
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND resource.labels.function_name=\"integration-gateway\" AND metric.type=\"logging.googleapis.com/user/auth_failure_rate\"",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_RATE",
+                        "crossSeriesReducer": "REDUCE_MEAN",
+                        "groupByFields": ["resource.labels.function_name"]
+                      }
+                    }
+                  },
+                  "plotType": "LINE",
+                  "displayName": "Failure Rate %"
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "Percentage",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "xPos": 0,
+          "yPos": 0
+        },
+        {
+          "width": 6,
+          "height": 4,
+          "widget": {
+            "title": "Authentication Response Times",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"authentication\" AND jsonPayload.responseTime!=null",
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_PERCENTILE_95",
+                        "crossSeriesReducer": "REDUCE_MEAN"
+                      }
+                    }
+                  },
+                  "plotType": "LINE",
+                  "displayName": "95th Percentile Response Time"
+                },
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"authentication\" AND jsonPayload.responseTime!=null",
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_PERCENTILE_50",
+                        "crossSeriesReducer": "REDUCE_MEAN"
+                      }
+                    }
+                  },
+                  "plotType": "LINE",
+                  "displayName": "Median Response Time"
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "Milliseconds",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "xPos": 6,
+          "yPos": 0
+        },
+        {
+          "width": 6,
+          "height": 4,
+          "widget": {
+            "title": "Authentication Methods Distribution",
+            "pieChart": {
+              "chartOptions": {
+                "mode": "STATS"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"authentication\"",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_COUNT",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": ["jsonPayload.authMethod"]
+                      }
+                    }
+                  },
+                  "plotType": "PIE"
+                }
+              ]
+            }
+          },
+          "xPos": 0,
+          "yPos": 4
+        },
+        {
+          "width": 6,
+          "height": 4,
+          "widget": {
+            "title": "Agent Authentication Activity",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"authentication\" AND jsonPayload.agentId!=null",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_COUNT",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": ["jsonPayload.pilotRank"]
+                      }
+                    }
+                  },
+                  "plotType": "STACKED_BAR",
+                  "displayName": "Authentication by Pilot Rank"
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "Count",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "xPos": 6,
+          "yPos": 4
+        }
+      ]
+    },
+    "labels": {
+      "service": "asoos-integration-gateway",
+      "dashboard_type": "authentication"
+    }
+  },
+
+  "asoos_risk_score_dashboard": {
+    "displayName": "ASOOS Risk Score Monitoring Dashboard",
+    "mosaicLayout": {
+      "columns": 12,
+      "tiles": [
+        {
+          "width": 6,
+          "height": 4,
+          "widget": {
+            "title": "Risk Score Distribution",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"risk-assessment\"",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_MEAN",
+                        "crossSeriesReducer": "REDUCE_MEAN"
+                      }
+                    }
+                  },
+                  "plotType": "LINE",
+                  "displayName": "Average Risk Score"
+                },
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"risk-assessment\"",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_MAX",
+                        "crossSeriesReducer": "REDUCE_MAX"
+                      }
+                    }
+                  },
+                  "plotType": "LINE",
+                  "displayName": "Maximum Risk Score"
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "Risk Score",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "xPos": 0,
+          "yPos": 0
+        },
+        {
+          "width": 6,
+          "height": 4,
+          "widget": {
+            "title": "High-Risk Requests Blocked",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"security\" AND jsonPayload.securityEvent=\"high_risk_request_blocked\"",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_COUNT",
+                        "crossSeriesReducer": "REDUCE_SUM"
+                      }
+                    }
+                  },
+                  "plotType": "LINE",
+                  "displayName": "Blocked Requests"
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "Count",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "xPos": 6,
+          "yPos": 0
+        },
+        {
+          "width": 12,
+          "height": 4,
+          "widget": {
+            "title": "Risk Factors Breakdown",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"risk-assessment\" AND jsonPayload.riskFactors.ipReputation!=null",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_MEAN",
+                        "crossSeriesReducer": "REDUCE_MEAN"
+                      }
+                    }
+                  },
+                  "plotType": "LINE",
+                  "displayName": "IP Reputation Risk"
+                },
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"risk-assessment\" AND jsonPayload.riskFactors.requestFrequency!=null",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_MEAN",
+                        "crossSeriesReducer": "REDUCE_MEAN"
+                      }
+                    }
+                  },
+                  "plotType": "LINE",
+                  "displayName": "Request Frequency Risk"
+                },
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"risk-assessment\" AND jsonPayload.riskFactors.geolocation!=null",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_MEAN",
+                        "crossSeriesReducer": "REDUCE_MEAN"
+                      }
+                    }
+                  },
+                  "plotType": "LINE",
+                  "displayName": "Geolocation Risk"
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "Risk Factor Score",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "xPos": 0,
+          "yPos": 4
+        },
+        {
+          "width": 6,
+          "height": 3,
+          "widget": {
+            "title": "Risk Level Distribution",
+            "pieChart": {
+              "chartOptions": {
+                "mode": "STATS"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"risk-assessment\"",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_COUNT",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": ["jsonPayload.securityLevel"]
+                      }
+                    }
+                  },
+                  "plotType": "PIE"
+                }
+              ]
+            }
+          },
+          "xPos": 0,
+          "yPos": 8
+        },
+        {
+          "width": 6,
+          "height": 3,
+          "widget": {
+            "title": "Current Risk Score (Single Value)",
+            "singleValueChart": {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"risk-assessment\"",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_MEAN",
+                    "crossSeriesReducer": "REDUCE_MEAN"
+                  }
+                }
+              },
+              "sparkChartView": {
+                "sparkChartType": "SPARK_LINE"
+              }
+            }
+          },
+          "xPos": 6,
+          "yPos": 8
+        }
+      ]
+    },
+    "labels": {
+      "service": "asoos-integration-gateway",
+      "dashboard_type": "risk-assessment"
+    }
+  },
+
+  "asoos_rate_limiting_dashboard": {
+    "displayName": "ASOOS Rate Limiting Monitoring Dashboard",
+    "mosaicLayout": {
+      "columns": 12,
+      "tiles": [
+        {
+          "width": 6,
+          "height": 4,
+          "widget": {
+            "title": "Rate Limit Violations",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"rate-limiting\" AND jsonPayload.currentCount>jsonPayload.limit",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_COUNT",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": ["jsonPayload.endpoint"]
+                      }
+                    }
+                  },
+                  "plotType": "STACKED_BAR",
+                  "displayName": "Rate Limit Hits by Endpoint"
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "Violations Count",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "xPos": 0,
+          "yPos": 0
+        },
+        {
+          "width": 6,
+          "height": 4,
+          "widget": {
+            "title": "Request Count vs Limits",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"rate-limiting\" AND jsonPayload.currentCount!=null",
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_MEAN",
+                        "crossSeriesReducer": "REDUCE_MEAN",
+                        "groupByFields": ["jsonPayload.endpoint"]
+                      }
+                    }
+                  },
+                  "plotType": "LINE",
+                  "displayName": "Current Request Count"
+                },
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"rate-limiting\" AND jsonPayload.limit!=null",
+                      "aggregation": {
+                        "alignmentPeriod": "60s",
+                        "perSeriesAligner": "ALIGN_MEAN",
+                        "crossSeriesReducer": "REDUCE_MEAN",
+                        "groupByFields": ["jsonPayload.endpoint"]
+                      }
+                    }
+                  },
+                  "plotType": "LINE",
+                  "displayName": "Rate Limit Threshold"
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "Requests per Minute",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "xPos": 6,
+          "yPos": 0
+        },
+        {
+          "width": 12,
+          "height": 4,
+          "widget": {
+            "title": "Rate Limiting by User Type",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"rate-limiting\" AND jsonPayload.userId!=null",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_COUNT",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": ["jsonPayload.pilotRank"]
+                      }
+                    }
+                  },
+                  "plotType": "STACKED_AREA",
+                  "displayName": "Rate Limit Checks by Pilot Rank"
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "Request Count",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "xPos": 0,
+          "yPos": 4
+        },
+        {
+          "width": 6,
+          "height": 3,
+          "widget": {
+            "title": "Top Rate Limited Endpoints",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"rate-limiting\" AND jsonPayload.violationType=\"endpoint_rate_limit\"",
+                      "aggregation": {
+                        "alignmentPeriod": "3600s",
+                        "perSeriesAligner": "ALIGN_COUNT",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": ["jsonPayload.endpoint"]
+                      }
+                    }
+                  },
+                  "plotType": "STACKED_BAR",
+                  "displayName": "Violations per Hour"
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "Violations",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "xPos": 0,
+          "yPos": 8
+        },
+        {
+          "width": 6,
+          "height": 3,
+          "widget": {
+            "title": "Current Rate Limit Usage",
+            "singleValueChart": {
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"rate-limiting\" AND jsonPayload.currentCount!=null AND jsonPayload.limit!=null",
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_MEAN",
+                    "crossSeriesReducer": "REDUCE_MEAN"
+                  }
+                }
+              },
+              "sparkChartView": {
+                "sparkChartType": "SPARK_BAR"
+              }
+            }
+          },
+          "xPos": 6,
+          "yPos": 8
+        }
+      ]
+    },
+    "labels": {
+      "service": "asoos-integration-gateway",
+      "dashboard_type": "rate-limiting"
+    }
+  },
+
+  "asoos_agent_orchestration_dashboard": {
+    "displayName": "ASOOS Agent Orchestration Dashboard",
+    "mosaicLayout": {
+      "columns": 12,
+      "tiles": [
+        {
+          "width": 6,
+          "height": 4,
+          "widget": {
+            "title": "Agent Activity by Squadron",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"agent-orchestration\"",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_COUNT",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": ["jsonPayload.squadronId"]
+                      }
+                    }
+                  },
+                  "plotType": "STACKED_AREA",
+                  "displayName": "Activities by Squadron"
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "Activity Count",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "xPos": 0,
+          "yPos": 0
+        },
+        {
+          "width": 6,
+          "height": 4,
+          "widget": {
+            "title": "Agent Performance Metrics",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"agent-orchestration\" AND jsonPayload.duration!=null",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_PERCENTILE_95",
+                        "crossSeriesReducer": "REDUCE_MEAN",
+                        "groupByFields": ["jsonPayload.pilotRank"]
+                      }
+                    }
+                  },
+                  "plotType": "LINE",
+                  "displayName": "95th Percentile Task Duration"
+                },
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"agent-orchestration\" AND jsonPayload.performance.responseTime!=null",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_MEAN",
+                        "crossSeriesReducer": "REDUCE_MEAN",
+                        "groupByFields": ["jsonPayload.pilotRank"]
+                      }
+                    }
+                  },
+                  "plotType": "LINE",
+                  "displayName": "Average Response Time"
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "Milliseconds",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "xPos": 6,
+          "yPos": 0
+        },
+        {
+          "width": 12,
+          "height": 4,
+          "widget": {
+            "title": "Agent Success Rate by Pilot Rank",
+            "xyChart": {
+              "chartOptions": {
+                "mode": "COLOR"
+              },
+              "dataSets": [
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"agent-orchestration\" AND jsonPayload.status=\"success\"",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_COUNT",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": ["jsonPayload.pilotRank"]
+                      }
+                    }
+                  },
+                  "plotType": "STACKED_BAR",
+                  "displayName": "Successful Tasks"
+                },
+                {
+                  "timeSeriesQuery": {
+                    "timeSeriesFilter": {
+                      "filter": "resource.type=\"cloud_function\" AND jsonPayload.operationType=\"agent-orchestration\" AND jsonPayload.status=\"error\"",
+                      "aggregation": {
+                        "alignmentPeriod": "300s",
+                        "perSeriesAligner": "ALIGN_COUNT",
+                        "crossSeriesReducer": "REDUCE_SUM",
+                        "groupByFields": ["jsonPayload.pilotRank"]
+                      }
+                    }
+                  },
+                  "plotType": "STACKED_BAR",
+                  "displayName": "Failed Tasks"
+                }
+              ],
+              "timeshiftDuration": "0s",
+              "yAxis": {
+                "label": "Task Count",
+                "scale": "LINEAR"
+              }
+            }
+          },
+          "xPos": 0,
+          "yPos": 4
+        }
+      ]
+    },
+    "labels": {
+      "service": "asoos-integration-gateway",
+      "dashboard_type": "agent-orchestration"
+    }
+  }
+}

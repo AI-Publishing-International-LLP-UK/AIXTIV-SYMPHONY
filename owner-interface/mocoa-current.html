@@ -6995,13 +6995,6 @@ ${planItems.join('\n')}
       // Wrapper function for Victory36 activation
       return activateRIX(rixType, name);
     }
-    function toggleScanToApprove(button) {
-      button.style.transform = 'scale(0.95)';
-      setTimeout(() => {
-        button.style.transform = 'scale(1)';
-        showNotification('Scan to Approve activated - Processing workflow items', 'success');
-      }, 100);
-    }
     // Remove duplicate function definitions - keeping only the first set which are already defined earlier
     // Make ALL functions globally available BEFORE DOM loads
     window.startVoiceInput = startVoiceInput;

@@ -1,0 +1,68 @@
+{
+  "project": {
+    "projectId": "asoos-mobile-infrastructure",
+    "messagingSenderId": "123456789012",
+    "apiKey": "AIzaSyD...",
+    "appId": "com.asoos.mobile"
+  },
+  "notifications": {
+    "types": [
+      {
+        "type": "infrastructure_alert",
+        "priority": "high",
+        "sound": "alert.wav",
+        "vibration": [
+          0,
+          300,
+          100,
+          300
+        ],
+        "examples": [
+          "DNS propagation completed for mcp.aipub.2100.cool",
+          "Worker deployment failed - integration-gateway-worker",
+          "Database connection restored - user_profiles",
+          "Application scaled to 5 replicas - owner-interface"
+        ]
+      },
+      {
+        "type": "command_completion",
+        "priority": "normal",
+        "sound": "success.wav",
+        "examples": [
+          "Secret retrieved successfully",
+          "DNS update completed",
+          "Worker deployed to Cloudflare edge"
+        ]
+      },
+      {
+        "type": "security_alert",
+        "priority": "high",
+        "sound": "security.wav",
+        "vibration": [
+          0,
+          500,
+          100,
+          500,
+          100,
+          500
+        ],
+        "examples": [
+          "New device login detected",
+          "Biometric authentication failed (3 attempts)",
+          "Suspicious API activity detected"
+        ]
+      }
+    ],
+    "scheduling": {
+      "quietHours": {
+        "start": "22:00",
+        "end": "07:00"
+      },
+      "workingHours": {
+        "start": "09:00",
+        "end": "18:00"
+      },
+      "timezone": "auto"
+    }
+  }
+}

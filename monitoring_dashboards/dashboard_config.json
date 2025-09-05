@@ -1,0 +1,25 @@
+{
+  "dashboards": {
+    "system_health": {
+      "url": "https://monitor.aixtiv-symphony.com/health",
+      "refresh_rate": "1s",
+      "metrics": ["agents", "latency", "throughput", "errors"]
+    },
+    "agent_activity": {
+      "url": "https://monitor.aixtiv-symphony.com/agents",
+      "agents_monitored": 20000000,
+      "regions": ["MOCOA", "MOCORIX", "MOCORIX2"]
+    },
+    "client_analytics": {
+      "url": "https://monitor.aixtiv-symphony.com/clients",
+      "kpis": ["usage", "satisfaction", "roi", "performance"]
+    },
+    "financial_metrics": {
+      "url": "https://monitor.aixtiv-symphony.com/finance",
+      "stripe_integrated": true,
+      "real_time_revenue": true
+    }
+  },
+  "status": "LIVE",
+  "readiness_impact": 0.5
+}

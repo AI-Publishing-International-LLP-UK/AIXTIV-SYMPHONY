@@ -1,0 +1,43 @@
+{
+  "name": "integration-gateway",
+  "version": "1.0.0",
+  "main": "server-cloud.js",
+  "scripts": {
+    "start": "node server-cloud.js",
+    "dev": "node server-cloud.js",
+    "build": "echo 'Build complete - using Node.js source directly'"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.0.0",
+    "@google-cloud/secret-manager": "^5.6.0",
+    "apify-client": "^2.16.0",
+    "axios": "^1.11.0",
+    "body-parser": "^1.20.2",
+    "cheerio": "^1.1.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
+    "helmet": "^7.0.0",
+    "joi": "^18.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "lodash": "^4.17.21",
+    "morgan": "^1.10.0",
+    "node-cron": "^4.2.1",
+    "playwright": "^1.55.0",
+    "puppeteer": "^24.17.0",
+    "rate-limiter-flexible": "^7.2.0",
+    "uuid": "^11.1.0",
+    "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "overrides": {
+    "cloudevents": "^8.0.3"
+  }
+}

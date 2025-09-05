@@ -1,0 +1,23 @@
+{
+  "name": "mcp-aipub-proxy",
+  "version": "1.0.0",
+  "description": "Proxy service for routing mcp.aipub.2100.cool to MOCOA owner interface",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "http-proxy-middleware": "^2.0.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": ["proxy", "mcp", "asoos", "routing"],
+  "author": "ASOOS System",
+  "license": "MIT"
+}

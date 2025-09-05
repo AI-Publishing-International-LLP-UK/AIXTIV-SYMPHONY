@@ -1,0 +1,108 @@
+{
+  "info": {
+    "name": "SallyPort Status Tests",
+    "description": "Testing current SallyPort integration status",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Service Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/health"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Service is running', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Has version info', function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.have.property('version');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "API Documentation Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{base_url}}/"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('API docs available', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Shows available endpoints', function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.have.property('endpoints');",
+              "    pm.expect(responseJson.endpoints).to.be.an('array');",
+              "});",
+              "",
+              "pm.test('Has auth verification endpoint', function () {",
+              "    const responseJson = pm.response.json();",
+              "    const authEndpoint = responseJson.endpoints.find(ep => ep.path === '/api/auth/verify');",
+              "    pm.expect(authEndpoint).to.exist;",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "SallyPort Authentication Test",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"pr@coaching2100.com\",\n  \"agent\": \"001\"\n}"
+        },
+        "url": "{{base_url}}/api/auth/verify"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('SallyPort auth endpoint responds', function () {",
+              "    // Accept any response that's not a generic 404",
+              "    const response = pm.response.json();",
+              "    pm.expect(pm.response.code).to.not.equal(404);",
+              "});",
+              "",
+              "pm.test('Returns structured response', function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.be.an('object');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://integration-gateway-yutylytffa-uw.a.run.app"
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "id": "asoos-production-environment",
+  "name": "ASOOS Production Environment",
+  "values": [
+    {
+      "key": "UNIVERSAL_GATEWAY_URL",
+      "value": "https://universal-gateway-859242575175.us-west1.run.app",
+      "enabled": true
+    },
+    {
+      "key": "MCP_ZAXXON_URL", 
+      "value": "https://mcp-zaxxon-2100-cool-859242575175.us-west1.run.app",
+      "enabled": true
+    },
+    {
+      "key": "PAYMENT_PIPELINE_URL",
+      "value": "https://payment-pipeline-859242575175.us-west1.run.app", 
+      "enabled": true
+    },
+    {
+      "key": "PCP_ACTIVATION_URL",
+      "value": "https://pcp-activation-service-859242575175.us-west1.run.app",
+      "enabled": true
+    },
+    {
+      "key": "MONGODB_MCP_URL",
+      "value": "https://mongodb-mcp-oauth-uscentral1-859242575175.us-central1.run.app",
+      "enabled": true
+    },
+    {
+      "key": "AUTO_PROVISION_URL",
+      "value": "https://auto-provision-mcp-uscentral1-859242575175.us-central1.run.app",
+      "enabled": true
+    },
+    {
+      "key": "DRLUCY_URL",
+      "value": "https://drlucyautomation-859242575175.us-central1.run.app",
+      "enabled": true
+    },
+    {
+      "key": "DIAMOND_SAO_URL",
+      "value": "https://mocoa-owner-interface-859242575175.us-central1.run.app",
+      "enabled": true
+    },
+    {
+      "key": "PROJECT_ID",
+      "value": "api-for-warp-drive",
+      "enabled": true
+    },
+    {
+      "key": "REGION_PRIMARY",
+      "value": "us-west1",
+      "enabled": true
+    },
+    {
+      "key": "REGION_SECONDARY", 
+      "value": "us-central1",
+      "enabled": true
+    },
+    {
+      "key": "DIAMOND_SAO_VERSION",
+      "value": "v34",
+      "enabled": true
+    },
+    {
+      "key": "ZENA_PCP_TYPE",
+      "value": "CRX01",
+      "enabled": true
+    },
+    {
+      "key": "ZENA_SECTOR",
+      "value": "construction",
+      "enabled": true
+    },
+    {
+      "key": "ZENA_REGIONS",
+      "value": "AR,TN,MS,LA",
+      "enabled": true
+    }
+  ]
+}

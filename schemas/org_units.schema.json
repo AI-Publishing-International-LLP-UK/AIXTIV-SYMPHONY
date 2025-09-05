@@ -1,0 +1,428 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HRAI-CRMS Organizational Units Schema",
+  "description": "Hierarchical org structure with materialized paths for flexible reporting",
+  "type": "object",
+  "required": [
+    "org_unit_id",
+    "name",
+    "type",
+    "level",
+    "path"
+  ],
+  "properties": {
+    "org_unit_id": {
+      "type": "string",
+      "pattern": "^ORG[0-9]{6}$",
+      "description": "Unique organizational unit identifier"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "description": "Display name of the organizational unit"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "company",
+        "division", 
+        "department",
+        "team",
+        "squad",
+        "cost-center",
+        "project-group",
+        "geographical-region",
+        "business-unit"
+      ],
+      "description": "Type of organizational unit"
+    },
+    "level": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10,
+      "description": "Hierarchy level (0 = company root, 1 = division, etc.)"
+    },
+    "parent_id": {
+      "type": "string",
+      "pattern": "^ORG[0-9]{6}$",
+      "description": "Parent organizational unit ID (null for root)"
+    },
+    "path": {
+      "type": "string",
+      "description": "Materialized path for fast queries (e.g., /ORG000001/ORG000002/ORG000003)"
+    },
+    "hierarchy": {
+      "type": "object",
+      "properties": {
+        "ancestors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^ORG[0-9]{6}$"
+          },
+          "description": "Array of ancestor org unit IDs for fast rollup queries"
+        },
+        "descendants_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total count of descendant units"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^ORG[0-9]{6}$"
+          },
+          "description": "Direct children org unit IDs"
+        }
+      }
+    },
+    
+    "details": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Short code/abbreviation for the unit"
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of the unit's purpose"
+        },
+        "mission": {
+          "type": "string",
+          "description": "Mission statement or purpose"
+        },
+        "objectives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Key objectives and goals"
+        }
+      }
+    },
+
+    "financial": {
+      "type": "object",
+      "properties": {
+        "cost_center": {
+          "type": "string",
+          "description": "Cost center code for financial reporting"
+        },
+        "budget_owner": {
+          "type": "string",
+          "pattern": "^HUM[0-9]{6}$",
+          "description": "Employee ID of budget owner"
+        },
+        "budget_annual": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Annual budget amount"
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$",
+          "default": "USD",
+          "description": "ISO 4217 currency code"
+        }
+      }
+    },
+
+    "management": {
+      "type": "object",
+      "properties": {
+        "head_of_unit": {
+          "type": "string",
+          "pattern": "^HUM[0-9]{6}$",
+          "description": "Employee ID of unit head/manager"
+        },
+        "deputy_head": {
+          "type": "string",
+          "pattern": "^HUM[0-9]{6}$",
+          "description": "Employee ID of deputy/backup manager"
+        },
+        "hr_partner": {
+          "type": "string",
+          "pattern": "^HUM[0-9]{6}$",
+          "description": "Employee ID of assigned HR business partner"
+        }
+      }
+    },
+
+    "geography": {
+      "type": "object",
+      "properties": {
+        "primary_location": {
+          "type": "object",
+          "properties": {
+            "country": {
+              "type": "string",
+              "pattern": "^[A-Z]{2}$",
+              "description": "ISO 3166-1 alpha-2 country code"
+            },
+            "region": {
+              "type": "string",
+              "description": "State, province, or region"
+            },
+            "city": {
+              "type": "string"
+            },
+            "timezone": {
+              "type": "string",
+              "description": "IANA timezone"
+            }
+          }
+        },
+        "additional_locations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "country": { "type": "string", "pattern": "^[A-Z]{2}$" },
+              "region": { "type": "string" },
+              "city": { "type": "string" },
+              "employee_count": { "type": "integer", "minimum": 0 }
+            }
+          }
+        },
+        "remote_work_policy": {
+          "type": "string",
+          "enum": ["fully_remote", "hybrid", "on_site", "flexible"],
+          "default": "hybrid"
+        }
+      }
+    },
+
+    "metrics": {
+      "type": "object",
+      "description": "Key metrics for reporting and CE scoring",
+      "properties": {
+        "employee_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total employees in this unit and all descendants"
+        },
+        "direct_employee_count": {
+          "type": "integer", 
+          "minimum": 0,
+          "description": "Employees directly assigned to this unit"
+        },
+        "avg_tenure_months": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Average employee tenure in months"
+        },
+        "diversity_metrics": {
+          "type": "object",
+          "properties": {
+            "gender_distribution": {
+              "type": "object",
+              "properties": {
+                "male": { "type": "number", "minimum": 0, "maximum": 1 },
+                "female": { "type": "number", "minimum": 0, "maximum": 1 },
+                "non_binary": { "type": "number", "minimum": 0, "maximum": 1 },
+                "prefer_not_to_say": { "type": "number", "minimum": 0, "maximum": 1 }
+              }
+            },
+            "ethnicity_distribution": {
+              "type": "object",
+              "description": "Percentage distribution by ethnicity"
+            },
+            "age_distribution": {
+              "type": "object",
+              "properties": {
+                "18_24": { "type": "number", "minimum": 0, "maximum": 1 },
+                "25_34": { "type": "number", "minimum": 0, "maximum": 1 },
+                "35_44": { "type": "number", "minimum": 0, "maximum": 1 },
+                "45_54": { "type": "number", "minimum": 0, "maximum": 1 },
+                "55_64": { "type": "number", "minimum": 0, "maximum": 1 },
+                "65_plus": { "type": "number", "minimum": 0, "maximum": 1 }
+              }
+            }
+          }
+        },
+        "performance_metrics": {
+          "type": "object",
+          "properties": {
+            "avg_performance_score": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 5,
+              "description": "Average performance review score"
+            },
+            "avg_ce_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "description": "Average CE score for the unit"
+            },
+            "promotion_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Annual promotion rate"
+            },
+            "retention_rate": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Annual retention rate"
+            }
+          }
+        }
+      }
+    },
+
+    "capabilities": {
+      "type": "object",
+      "properties": {
+        "primary_functions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "engineering",
+              "product-development",
+              "design",
+              "data-science", 
+              "research",
+              "marketing",
+              "sales",
+              "customer-success",
+              "operations",
+              "finance",
+              "legal",
+              "hr",
+              "executive",
+              "consulting",
+              "support"
+            ]
+          },
+          "description": "Primary business functions of this unit"
+        },
+        "key_skills": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Key skills and competencies in this unit"
+        },
+        "technologies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Primary technologies and tools used"
+        }
+      }
+    },
+
+    "compliance": {
+      "type": "object",
+      "properties": {
+        "regulatory_requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Regulatory requirements applicable to this unit"
+        },
+        "certifications": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "issuer": { "type": "string" },
+              "expires": { "type": "string", "format": "date" },
+              "scope": { "type": "string" }
+            }
+          }
+        },
+        "audit_requirements": {
+          "type": "object",
+          "properties": {
+            "frequency": {
+              "type": "string",
+              "enum": ["annual", "semi-annual", "quarterly", "monthly"]
+            },
+            "last_audit": {
+              "type": "string",
+              "format": "date"
+            },
+            "next_audit": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      }
+    },
+
+    "status": {
+      "type": "string",
+      "enum": ["active", "inactive", "planned", "sunset"],
+      "default": "active"
+    },
+
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Employee ID who created this unit"
+    },
+
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Tags for categorization and filtering"
+        },
+        "custom_fields": {
+          "type": "object",
+          "description": "Custom fields for organization-specific data"
+        }
+      }
+    }
+  },
+
+  "indexes": [
+    { "org_unit_id": 1 },
+    { "parent_id": 1 },
+    { "level": 1, "type": 1 },
+    { "path": 1 },
+    { "hierarchy.ancestors": 1 },
+    { "management.head_of_unit": 1 },
+    { "financial.cost_center": 1 },
+    { "geography.primary_location.country": 1, "geography.primary_location.region": 1 },
+    { "capabilities.primary_functions": 1 },
+    { "status": 1 },
+    { "created_at": -1 }
+  ],
+
+  "materialized_path_examples": {
+    "company_root": "/ORG000001",
+    "engineering_division": "/ORG000001/ORG000002", 
+    "backend_team": "/ORG000001/ORG000002/ORG000003",
+    "platform_squad": "/ORG000001/ORG000002/ORG000003/ORG000004"
+  },
+
+  "query_patterns": {
+    "find_all_descendants": "{ path: { $regex: '^/ORG000001/ORG000002/' } }",
+    "find_direct_children": "{ parent_id: 'ORG000002' }",
+    "find_by_level": "{ level: 2, status: 'active' }",
+    "rollup_metrics": "Use $graphLookup on ancestors array for aggregation"
+  }
+}

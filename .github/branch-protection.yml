@@ -1,0 +1,31 @@
+name: Branch Protection Rules
+
+on:
+  push:
+    branches: [ production, development ]
+
+jobs:
+  protect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Protect Production Branch
+        if: github.ref == 'refs/heads/production'
+        uses: github/branch-protection-rules@v1
+        with:
+          branch: production
+          required_status_checks: true
+          enforce_admins: true
+          required_pull_request_reviews: true
+          required_approving_review_count: 2
+          dismiss_stale_reviews: true
+          
+      - name: Protect Development Branch
+        if: github.ref == 'refs/heads/development'
+        uses: github/branch-protection-rules@v1
+        with:
+          branch: development
+          required_status_checks: true
+          required_pull_request_reviews: true
+          required_approving_review_count: 1

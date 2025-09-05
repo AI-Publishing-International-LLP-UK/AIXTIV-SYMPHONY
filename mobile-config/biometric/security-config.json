@@ -1,0 +1,37 @@
+{
+  "biometric": {
+    "methods": [
+      "TouchID",
+      "FaceID",
+      "Fingerprint",
+      "WebAuthn"
+    ],
+    "fallback": "PIN",
+    "maxAttempts": 3,
+    "lockoutDuration": 300000,
+    "requirements": {
+      "ios": {
+        "minimumVersion": "8.0",
+        "requiredCapabilities": [
+          "biometrics"
+        ]
+      },
+      "android": {
+        "minimumSdk": 23,
+        "requiredPermissions": [
+          "USE_BIOMETRIC",
+          "USE_FINGERPRINT"
+        ]
+      }
+    }
+  },
+  "security": {
+    "certificatePinning": true,
+    "jailbreakDetection": true,
+    "rootDetection": true,
+    "debuggerDetection": true,
+    "encryptionAlgorithm": "AES-256-GCM",
+    "keyDerivation": "PBKDF2",
+    "tokenStorage": "keychain"
+  }
+}

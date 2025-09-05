@@ -1,0 +1,49 @@
+name: Version Scaling Check
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'  # Every 30 minutes
+  workflow_dispatch:
+
+jobs:
+  check-scaling:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install yq
+        run: |
+          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+
+      - name: Check Version Scaling
+        run: |
+          max_versions=$(yq e '.scaling.max_versions' config/scaling.yaml)
+          if [ "$max_versions" -lt 9000 ]; then
+            echo "::error::Maximum versions must be at least 9000 (current: $max_versions)"
+            exit 1
+          fi
+          echo "Version scaling correctly configured for $max_versions versions"
+
+      - name: Verify Agent Scaling
+        run: |
+          max_agents=$(yq e '.agents.horizontal_scaling.max_agents' config/scaling.yaml)
+          if [ "$max_agents" -lt 9000 ]; then
+            echo "::error::Maximum agents must be at least 9000 (current: $max_agents)"
+            exit 1
+          fi
+          echo "Agent scaling correctly configured for $max_agents agents"
+
+      - name: Create Status Issue
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '⚠️ Version Scaling Configuration Alert',
+              body: 'Version or agent scaling configuration does not meet minimum requirements. Please review config/scaling.yaml.',
+              labels: ['scaling', 'high-priority']
+            })
+

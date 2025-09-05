@@ -1,0 +1,23 @@
+{
+  "name": "CIVILIZATION-AI",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "publish": "gitbook publish ."
+  },
+  "dependencies": {
+    "@gitbook/runtime": "*"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "*",
+    "@gitbook/cli": "^0.25.0",
+    "@gitbook/tsconfig": "*",
+    "esbuild": "^0.25.5"
+  },
+  "overrides": {
+    "esbuild": "^0.25.5"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}

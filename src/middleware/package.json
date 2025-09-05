@@ -1,0 +1,47 @@
+{
+  "name": "@asoos/cloudflare-jwt-middleware",
+  "version": "1.0.0",
+  "description": "Cloudflare JWT middleware for Express, Next.js, and Cloudflare Workers",
+  "main": "cloudflare-jwt-middleware.js",
+  "types": "cloudflare-jwt-middleware.d.ts",
+  "keywords": [
+    "cloudflare",
+    "jwt",
+    "middleware",
+    "express",
+    "nextjs",
+    "workers",
+    "authentication",
+    "security"
+  ],
+  "author": "ASOOS Integration Gateway Team",
+  "license": "MIT",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.1.0"
+  },
+  "peerDependencies": {
+    "express": "^4.18.0",
+    "cookie-parser": "^1.4.6",
+    "next": "^14.0.0"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.3",
+    "@types/express": "^4.17.17",
+    "@types/cookie-parser": "^1.4.4",
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "lint": "eslint . --ext .ts,.js"
+  },
+  "files": [
+    "dist/",
+    "README-cloudflare-jwt.md",
+    "*.d.ts"
+  ],
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}

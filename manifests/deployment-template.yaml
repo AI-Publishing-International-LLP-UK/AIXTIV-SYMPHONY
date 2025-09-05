@@ -1,0 +1,99 @@
+# Kubernetes Deployment template for Aixtiv Symphony Opus VLS solutions
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{VLS_NAME}}
+  labels:
+    app: {{VLS_NAME}}
+    part-of: aixtiv-symphony-opus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{VLS_NAME}}
+  template:
+    metadata:
+      labels:
+        app: {{VLS_NAME}}
+    spec:
+      containers:
+      - name: {{VLS_NAME}}
+        image: gcr.io/{{PROJECT_ID}}/{{VLS_NAME}}:{{VERSION}}
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "3000"
+        # Add additional environment variables as needed
+        # - name: ENV_VAR_NAME
+        #   value: "env_var_value"
+        
+        # Use secrets for sensitive information
+        # - name: API_KEY
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: {{VLS_NAME}}-secrets
+        #       key: api-key
+        
+        # Mount a config map for configuration
+        # volumeMounts:
+        # - name: config-volume
+        #   mountPath: /app/config
+      
+      # Configure config map volumes
+      # volumes:
+      # - name: config-volume
+      #   configMap:
+      #     name: {{VLS_NAME}}-config
+
+---
+# Service to expose the deployment
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{VLS_NAME}}
+  labels:
+    app: {{VLS_NAME}}
+    part-of: aixtiv-symphony-opus
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 3000
+    protocol: TCP
+    name: http
+  selector:
+    app: {{VLS_NAME}}
+
+---
+# Horizontal Pod Autoscaler for scaling
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{VLS_NAME}}
+  labels:
+    app: {{VLS_NAME}}
+    part-of: aixtiv-symphony-opus
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{VLS_NAME}}
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80

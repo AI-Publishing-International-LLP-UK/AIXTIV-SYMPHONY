@@ -1,0 +1,416 @@
+name: Node.js Auto-Upgrade Monitor
+
+on:
+  schedule:
+    # Run every Monday at 9 AM UTC to check for new versions
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+    inputs:
+      force_upgrade:
+        description: 'Force upgrade even if no new version detected'
+        required: false
+        default: false
+        type: boolean
+      target_version:
+        description: 'Specific Node.js version to upgrade to (optional)'
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+
+jobs:
+  check-nodejs-versions:
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.version-check.outputs.status }}
+      upgrades-needed: ${{ steps.version-check.outputs.upgrades-needed }}
+      current-lts: ${{ steps.version-check.outputs.current-lts }}
+      upgrade-required: ${{ steps.version-check.outputs.upgrade-required }}
+      
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies for monitoring script
+        run: npm ci --silent
+
+      - name: Run Node.js version monitoring
+        id: version-check
+        run: |
+          cd ${{ github.workspace }}
+          node scripts/nodejs-version-monitor.js > version-report.txt
+          
+          # Parse output for GitHub Actions
+          if [ -f nodejs-version-report.json ]; then
+            STATUS=$(jq -r '.summary.overallStatus' nodejs-version-report.json)
+            UPGRADES=$(jq -r '.summary.upgradesRecommended' nodejs-version-report.json)
+            CURRENT_LTS=$(jq -r '.latestVersions["current-lts"].version' nodejs-version-report.json | sed 's/^v//')
+            
+            echo "status=$STATUS" >> $GITHUB_OUTPUT
+            echo "upgrades-needed=$UPGRADES" >> $GITHUB_OUTPUT
+            echo "current-lts=$CURRENT_LTS" >> $GITHUB_OUTPUT
+            echo "upgrade-required=$([ "$STATUS" = "upgrade-required" ] && echo "true" || echo "false")" >> $GITHUB_OUTPUT
+            
+            # Upload report as artifact
+            echo "📊 Uploading version report..."
+          fi
+
+      - name: Upload version report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nodejs-version-report
+          path: |
+            nodejs-version-report.json
+            version-report.txt
+
+  auto-upgrade:
+    needs: check-nodejs-versions
+    if: needs.check-nodejs-versions.outputs.upgrade-required == 'true' || github.event.inputs.force_upgrade == 'true'
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "Node.js Auto-Upgrade Bot"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Download version report
+        uses: actions/download-artifact@v4
+        with:
+          name: nodejs-version-report
+
+      - name: Create upgrade script
+        run: |
+          cat > upgrade-nodejs.js << 'EOF'
+          const fs = require('fs').promises;
+          const path = require('path');
+
+          class NodeJSUpgrader {
+            constructor(targetVersion) {
+              this.targetVersion = targetVersion || process.env.TARGET_VERSION;
+              this.upgradedFiles = [];
+              this.errors = [];
+            }
+
+            async upgradeFile(filePath, currentVersion, targetVersion) {
+              try {
+                const content = await fs.readFile(filePath, 'utf8');
+                let newContent = content;
+                let updated = false;
+
+                if (filePath.includes('package.json')) {
+                  // Update package.json engines
+                  const pkg = JSON.parse(content);
+                  if (pkg.engines && pkg.engines.node) {
+                    const oldEngine = pkg.engines.node;
+                    pkg.engines.node = `>=${targetVersion}.0.0`;
+                    newContent = JSON.stringify(pkg, null, 2) + '\n';
+                    updated = true;
+                    console.log(`📦 ${filePath}: ${oldEngine} → >=${targetVersion}.0.0`);
+                  }
+                }
+
+                else if (filePath.includes('.yml')) {
+                  // Update GitHub Actions workflows
+                  newContent = content.replace(
+                    /node-version:\s*['"]?[\d.x]+['"]?/g,
+                    `node-version: '${targetVersion}'`
+                  );
+                  if (newContent !== content) {
+                    updated = true;
+                    console.log(`🔧 ${filePath}: Updated to Node.js ${targetVersion}`);
+                  }
+                }
+
+                else if (filePath.includes('Dockerfile')) {
+                  // Update Dockerfiles
+                  newContent = content.replace(
+                    /FROM\s+node:[\d.]+-?(alpine|slim)?/g,
+                    (match) => {
+                      const suffix = match.includes('-alpine') ? '-alpine' : 
+                                   match.includes('-slim') ? '-slim' : '';
+                      return `FROM node:${targetVersion}${suffix}`;
+                    }
+                  );
+                  if (newContent !== content) {
+                    updated = true;
+                    console.log(`🐳 ${filePath}: Updated to Node.js ${targetVersion}`);
+                  }
+                }
+
+                else if (filePath === 'app.yaml') {
+                  // Note: App Engine runtime updates need manual verification
+                  // as not all Node.js versions are immediately available
+                  console.log(`⚠️  ${filePath}: App Engine runtime requires manual update when nodejs${targetVersion} becomes available`);
+                }
+
+                if (updated) {
+                  await fs.writeFile(filePath, newContent, 'utf8');
+                  this.upgradedFiles.push(filePath);
+                }
+
+              } catch (error) {
+                console.error(`❌ Error upgrading ${filePath}: ${error.message}`);
+                this.errors.push({ file: filePath, error: error.message });
+              }
+            }
+
+            async run() {
+              try {
+                const reportPath = path.join(process.cwd(), 'nodejs-version-report.json');
+                const report = JSON.parse(await fs.readFile(reportPath, 'utf8'));
+                
+                const targetVersion = this.targetVersion || 
+                  report.latestVersions['current-lts'].version.replace('v', '').split('.')[0];
+
+                console.log(`🚀 Starting Node.js upgrade to version ${targetVersion}...`);
+                console.log(`📋 Found ${report.recommendations.length} files to upgrade\n`);
+
+                for (const rec of report.recommendations) {
+                  await this.upgradeFile(rec.file, rec.current, targetVersion);
+                }
+
+                console.log(`\n✅ Upgrade completed!`);
+                console.log(`📁 Files updated: ${this.upgradedFiles.length}`);
+                console.log(`❌ Errors: ${this.errors.length}`);
+
+                if (this.errors.length > 0) {
+                  console.log('\n⚠️  Errors encountered:');
+                  this.errors.forEach(err => console.log(`   ${err.file}: ${err.error}`));
+                }
+
+                // Save upgrade summary
+                const summary = {
+                  timestamp: new Date().toISOString(),
+                  targetVersion,
+                  upgradedFiles: this.upgradedFiles,
+                  errors: this.errors,
+                  success: this.errors.length === 0
+                };
+
+                await fs.writeFile('upgrade-summary.json', JSON.stringify(summary, null, 2));
+
+                process.exit(this.errors.length > 0 ? 1 : 0);
+
+              } catch (error) {
+                console.error('💥 Fatal error during upgrade:', error.message);
+                process.exit(1);
+              }
+            }
+          }
+
+          const upgrader = new NodeJSUpgrader(process.argv[2]);
+          upgrader.run();
+          EOF
+
+      - name: Run upgrade
+        env:
+          TARGET_VERSION: ${{ github.event.inputs.target_version || needs.check-nodejs-versions.outputs.current-lts }}
+        run: |
+          node upgrade-nodejs.js $TARGET_VERSION
+
+      - name: Validate upgrades
+        run: |
+          echo "🔍 Validating package.json files..."
+          
+          # Check if package.json files are valid JSON
+          find . -name "package.json" -not -path "./node_modules/*" | while read file; do
+            if ! jq empty "$file" 2>/dev/null; then
+              echo "❌ Invalid JSON in $file"
+              exit 1
+            else
+              echo "✅ $file is valid"
+            fi
+          done
+
+      - name: Run dependency compatibility check
+        id: compat-check
+        run: |
+          echo "🧪 Testing dependency compatibility..."
+          
+          # Try to install dependencies with new Node.js requirements
+          if npm ci --silent; then
+            echo "✅ Dependencies are compatible"
+            echo "compatible=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Dependency compatibility issues detected"
+            echo "compatible=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.compat-check.outputs.compatible == 'true'
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: |
+            🔄 Auto-upgrade Node.js to v${{ env.TARGET_VERSION }}
+            
+            - Updated GitHub Actions workflows
+            - Updated Dockerfiles  
+            - Updated package.json engines
+            - Validated dependency compatibility
+            
+            This is an automated upgrade based on Node.js version monitoring.
+            
+          title: "🔄 Auto-upgrade Node.js to v${{ env.TARGET_VERSION }}"
+          body: |
+            ## 🚀 Automated Node.js Version Upgrade
+            
+            This PR automatically upgrades Node.js across the project to version **${{ env.TARGET_VERSION }}**.
+            
+            ### 📊 Changes Made:
+            - ✅ GitHub Actions workflows updated
+            - ✅ Docker images updated  
+            - ✅ Package.json engines updated
+            - ✅ Dependency compatibility validated
+            
+            ### 🔍 Files Modified:
+            ```
+            ${{ steps.upgrade-summary.outputs.files || 'See commit for details' }}
+            ```
+            
+            ### ⚠️ Manual Review Required:
+            - [ ] Review Google Cloud Functions runtime (may need manual update when available)
+            - [ ] Review App Engine runtime configuration
+            - [ ] Test deployment in staging environment
+            - [ ] Verify all CI/CD pipelines pass
+            
+            ### 📋 Next Steps:
+            1. Review the changes in this PR
+            2. Test in staging environment
+            3. Merge when ready
+            4. Monitor deployment health
+            
+            ---
+            🤖 This PR was created automatically by the Node.js Auto-Upgrade workflow.
+            
+          branch: nodejs-auto-upgrade-v${{ env.TARGET_VERSION }}
+          delete-branch: true
+          draft: false
+          labels: |
+            nodejs-upgrade
+            automated
+            dependencies
+
+      - name: Create Issue if Compatibility Failed
+        if: steps.compat-check.outputs.compatible == 'false'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '🚨 Node.js Upgrade Compatibility Issue Detected',
+              body: `## ⚠️ Node.js Upgrade Blocked Due to Compatibility Issues
+              
+              An automated Node.js upgrade to version **${{ env.TARGET_VERSION }}** was attempted but failed due to dependency compatibility issues.
+              
+              ### 🔍 Issue Details:
+              - Target Version: ${{ env.TARGET_VERSION }}
+              - Current Status: Compatibility check failed
+              - Dependencies: Some packages are not compatible with the new Node.js version
+              
+              ### 🛠️ Recommended Actions:
+              1. Review the compatibility check logs in the workflow run
+              2. Update incompatible dependencies manually
+              3. Consider upgrading or replacing problematic packages
+              4. Re-run the upgrade workflow after fixes
+              
+              ### 📋 Manual Investigation Required:
+              - Check \`npm ci\` output for specific compatibility errors
+              - Review package-lock.json for outdated dependencies
+              - Consider using \`npm audit\` to identify security issues
+              
+              This issue was automatically created by the Node.js Auto-Upgrade monitoring system.`,
+              labels: ['nodejs-upgrade', 'compatibility-issue', 'blocked', 'automated']
+            });
+
+      - name: Upload upgrade artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nodejs-upgrade-results
+          path: |
+            upgrade-summary.json
+            upgrade-nodejs.js
+            nodejs-version-report.json
+
+  notification:
+    needs: [check-nodejs-versions, auto-upgrade]
+    if: always()
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Send notification
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const status = '${{ needs.check-nodejs-versions.outputs.status }}';
+            const upgradesNeeded = '${{ needs.check-nodejs-versions.outputs.upgrades-needed }}';
+            const upgradeJob = '${{ needs.auto-upgrade.result }}';
+            
+            let message = '## 🔍 Node.js Version Monitoring Report\n\n';
+            message += `**Status:** ${status.toUpperCase()}\n`;
+            message += `**Upgrades Needed:** ${upgradesNeeded}\n`;
+            
+            if (upgradeJob) {
+              message += `**Auto-Upgrade:** ${upgradeJob}\n`;
+            }
+            
+            message += `\n**Run Details:** [View Workflow](${context.payload.repository.html_url}/actions/runs/${context.runId})`;
+            
+            if (status === 'critical' || parseInt(upgradesNeeded) > 0) {
+              // Create or update monitoring issue
+              const title = '🔄 Node.js Version Monitoring Alert';
+              
+              const { data: issues } = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'nodejs-monitoring,automated'
+              });
+              
+              const existingIssue = issues.find(issue => issue.title.includes('Node.js Version Monitoring'));
+              
+              if (existingIssue) {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: existingIssue.number,
+                  body: message
+                });
+              } else {
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: title,
+                  body: message,
+                  labels: ['nodejs-monitoring', 'automated', 'maintenance']
+                });
+              }
+            }

@@ -1,0 +1,205 @@
+{
+  "info": {
+    "name": "SallyPort Authentication Tests",
+    "description": "Testing SallyPort authentication endpoints for ASOOS integration",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "SallyPort Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Health check returns 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response contains status', function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.have.property('status');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "SallyPort Authentication",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"uuid\": \"00001\",\n  \"name\": \"Mr. Phillip Corey Roark\",\n  \"role\": \"CEO / Principal\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/auth/sallyport",
+          "host": ["{{base_url}}"],
+          "path": ["api", "auth", "sallyport"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Authentication successful', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Returns authentication token', function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.have.property('token');",
+              "    pm.globals.set('auth_token', responseJson.token);",
+              "});",
+              "",
+              "pm.test('Returns user information', function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.have.property('user');",
+              "    pm.expect(responseJson.user).to.have.property('uuid');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Token Verification",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"pr@coaching2100.com\",\n  \"agent\": \"001\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/auth/verify",
+          "host": ["{{base_url}}"],
+          "path": ["api", "auth", "verify"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Token verification successful', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Token is valid', function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.have.property('valid', true);",
+              "});",
+              "",
+              "pm.test('Returns user context', function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.have.property('user');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "ASOOS Symphony Access",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/symphony/status",
+          "host": ["{{base_url}}"],
+          "path": ["api", "symphony", "status"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Symphony access authorized', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Symphony status available', function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.have.property('components');",
+              "});",
+              "",
+              "pm.test('One-click authentication flow complete', function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.have.property('status', 'active');",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Agent Access Test",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{auth_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/agents/status",
+          "host": ["{{base_url}}"],
+          "path": ["api", "agents", "status"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Agent access authorized', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Agent status available', function () {",
+              "    const responseJson = pm.response.json();",
+              "    pm.expect(responseJson).to.have.property('agents');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://integration-gateway-yutylytffa-uw.a.run.app"
+    }
+  ]
+}

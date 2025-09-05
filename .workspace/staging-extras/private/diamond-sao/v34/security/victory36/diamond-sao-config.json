@@ -1,0 +1,18 @@
+{
+  "serviceName": "victory36-diamond-sao",
+  "version": "V36.DSO.2025.09.05",
+  "classification": "APEX_SECURITY",
+  "diamondSaoVersion": "v34",
+  "integrationPaths": {
+    "repository": "/Users/as/asoos/victory36-repository",
+    "integration": "/Users/as/asoos/integration-gateway/.workspace/staging-extras/private/diamond-sao/v34/security/victory36",
+    "service": "victory36-diamond-sao.service"
+  },
+  "securityLevel": "MAXIMUM",
+  "accessGuarantee": "ABSOLUTE",
+  "monitoring": {
+    "enabled": true,
+    "healthCheckInterval": 30000,
+    "alertThreshold": "IMMEDIATE"
+  }
+}

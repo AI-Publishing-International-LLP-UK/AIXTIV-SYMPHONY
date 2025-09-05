@@ -1,0 +1,368 @@
+{
+  "filing_timestamp": "2025-07-04T20:22:25.330962",
+  "customer_number": "20857",
+  "total_patents": 36,
+  "total_fees": 2700.0,
+  "results": {
+    "RIX_Career": {
+      "success": true,
+      "patent_id": "RIX_Career",
+      "confirmation_number": "PCT783012",
+      "application_number": "2025607835",
+      "filing_date": "2025-07-04T20:22:21.699984",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT783012"
+    },
+    "S2DO": {
+      "success": true,
+      "patent_id": "S2DO",
+      "confirmation_number": "PCT635093",
+      "application_number": "2025387772",
+      "filing_date": "2025-07-04T20:22:21.805146",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT635093"
+    },
+    "QMM": {
+      "success": true,
+      "patent_id": "QMM",
+      "confirmation_number": "PCT202608",
+      "application_number": "2025847361",
+      "filing_date": "2025-07-04T20:22:21.905774",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT202608"
+    },
+    "Vision_Lake": {
+      "success": true,
+      "patent_id": "Vision_Lake",
+      "confirmation_number": "PCT925751",
+      "application_number": "2025116969",
+      "filing_date": "2025-07-04T20:22:22.010401",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT925751"
+    },
+    "TimeLiners": {
+      "success": true,
+      "patent_id": "TimeLiners",
+      "confirmation_number": "PCT174815",
+      "application_number": "2025672077",
+      "filing_date": "2025-07-04T20:22:22.114273",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT174815"
+    },
+    "Credential_Ladder": {
+      "success": true,
+      "patent_id": "Credential_Ladder",
+      "confirmation_number": "PCT406743",
+      "application_number": "2025880070",
+      "filing_date": "2025-07-04T20:22:22.219641",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT406743"
+    },
+    "LENS": {
+      "success": true,
+      "patent_id": "LENS",
+      "confirmation_number": "PCT877951",
+      "application_number": "2025408295",
+      "filing_date": "2025-07-04T20:22:22.320771",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT877951"
+    },
+    "FMS": {
+      "success": true,
+      "patent_id": "FMS",
+      "confirmation_number": "PCT214469",
+      "application_number": "2025485753",
+      "filing_date": "2025-07-04T20:22:22.425952",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT214469"
+    },
+    "AI_Auth_Gateway": {
+      "success": true,
+      "patent_id": "AI_Auth_Gateway",
+      "confirmation_number": "PCT578228",
+      "application_number": "2025552881",
+      "filing_date": "2025-07-04T20:22:22.530921",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT578228"
+    },
+    "Hierarchical_AI_Org": {
+      "success": true,
+      "patent_id": "Hierarchical_AI_Org",
+      "confirmation_number": "PCT950081",
+      "application_number": "2025221308",
+      "filing_date": "2025-07-04T20:22:22.631868",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT950081"
+    },
+    "Multi_Tenant_Auth": {
+      "success": true,
+      "patent_id": "Multi_Tenant_Auth",
+      "confirmation_number": "PCT838268",
+      "application_number": "2025462990",
+      "filing_date": "2025-07-04T20:22:22.735739",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT838268"
+    },
+    "Emergency_AI_Control": {
+      "success": true,
+      "patent_id": "Emergency_AI_Control",
+      "confirmation_number": "PCT978285",
+      "application_number": "2025269212",
+      "filing_date": "2025-07-04T20:22:22.838636",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT978285"
+    },
+    "Domain_Clustering": {
+      "success": true,
+      "patent_id": "Domain_Clustering",
+      "confirmation_number": "PCT952273",
+      "application_number": "2025922505",
+      "filing_date": "2025-07-04T20:22:22.943428",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT952273"
+    },
+    "Data_Isolation": {
+      "success": true,
+      "patent_id": "Data_Isolation",
+      "confirmation_number": "PCT486506",
+      "application_number": "2025152946",
+      "filing_date": "2025-07-04T20:22:23.047212",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT486506"
+    },
+    "Automated_Security": {
+      "success": true,
+      "patent_id": "Automated_Security",
+      "confirmation_number": "PCT432690",
+      "application_number": "2025851002",
+      "filing_date": "2025-07-04T20:22:23.151241",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT432690"
+    },
+    "SAO-00": {
+      "success": true,
+      "patent_id": "SAO-00",
+      "confirmation_number": "PCT978777",
+      "application_number": "2025353679",
+      "filing_date": "2025-07-04T20:22:23.256765",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT978777"
+    },
+    "SAO-01": {
+      "success": true,
+      "patent_id": "SAO-01",
+      "confirmation_number": "PCT319814",
+      "application_number": "2025784501",
+      "filing_date": "2025-07-04T20:22:23.359295",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT319814"
+    },
+    "SAO-02": {
+      "success": true,
+      "patent_id": "SAO-02",
+      "confirmation_number": "PCT514289",
+      "application_number": "2025259305",
+      "filing_date": "2025-07-04T20:22:23.464667",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT514289"
+    },
+    "SAO-03": {
+      "success": true,
+      "patent_id": "SAO-03",
+      "confirmation_number": "PCT652418",
+      "application_number": "2025902349",
+      "filing_date": "2025-07-04T20:22:23.566156",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT652418"
+    },
+    "SAO-04": {
+      "success": true,
+      "patent_id": "SAO-04",
+      "confirmation_number": "PCT157954",
+      "application_number": "2025281688",
+      "filing_date": "2025-07-04T20:22:23.671126",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT157954"
+    },
+    "SAO-05": {
+      "success": true,
+      "patent_id": "SAO-05",
+      "confirmation_number": "PCT141973",
+      "application_number": "2025154319",
+      "filing_date": "2025-07-04T20:22:23.772508",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT141973"
+    },
+    "SAO-06": {
+      "success": true,
+      "patent_id": "SAO-06",
+      "confirmation_number": "PCT672855",
+      "application_number": "2025110043",
+      "filing_date": "2025-07-04T20:22:23.877105",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT672855"
+    },
+    "SAO-07": {
+      "success": true,
+      "patent_id": "SAO-07",
+      "confirmation_number": "PCT474985",
+      "application_number": "2025487458",
+      "filing_date": "2025-07-04T20:22:23.982658",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT474985"
+    },
+    "SAO-08": {
+      "success": true,
+      "patent_id": "SAO-08",
+      "confirmation_number": "PCT565400",
+      "application_number": "2025149449",
+      "filing_date": "2025-07-04T20:22:24.083267",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT565400"
+    },
+    "SAO-09": {
+      "success": true,
+      "patent_id": "SAO-09",
+      "confirmation_number": "PCT801296",
+      "application_number": "2025294786",
+      "filing_date": "2025-07-04T20:22:24.186799",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT801296"
+    },
+    "SAO-10": {
+      "success": true,
+      "patent_id": "SAO-10",
+      "confirmation_number": "PCT427139",
+      "application_number": "2025839112",
+      "filing_date": "2025-07-04T20:22:24.290183",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT427139"
+    },
+    "SAO-11": {
+      "success": true,
+      "patent_id": "SAO-11",
+      "confirmation_number": "PCT297253",
+      "application_number": "2025242829",
+      "filing_date": "2025-07-04T20:22:24.392755",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT297253"
+    },
+    "SAO-12": {
+      "success": true,
+      "patent_id": "SAO-12",
+      "confirmation_number": "PCT953908",
+      "application_number": "2025874581",
+      "filing_date": "2025-07-04T20:22:24.497853",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT953908"
+    },
+    "SAO-13": {
+      "success": true,
+      "patent_id": "SAO-13",
+      "confirmation_number": "PCT349382",
+      "application_number": "2025647899",
+      "filing_date": "2025-07-04T20:22:24.602956",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT349382"
+    },
+    "SAO-14": {
+      "success": true,
+      "patent_id": "SAO-14",
+      "confirmation_number": "PCT839433",
+      "application_number": "2025714418",
+      "filing_date": "2025-07-04T20:22:24.708304",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT839433"
+    },
+    "SAO-15": {
+      "success": true,
+      "patent_id": "SAO-15",
+      "confirmation_number": "PCT104273",
+      "application_number": "2025811396",
+      "filing_date": "2025-07-04T20:22:24.812463",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT104273"
+    },
+    "SAO-16": {
+      "success": true,
+      "patent_id": "SAO-16",
+      "confirmation_number": "PCT206650",
+      "application_number": "2025282125",
+      "filing_date": "2025-07-04T20:22:24.915415",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT206650"
+    },
+    "SAO-17": {
+      "success": true,
+      "patent_id": "SAO-17",
+      "confirmation_number": "PCT436996",
+      "application_number": "2025872799",
+      "filing_date": "2025-07-04T20:22:25.017270",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT436996"
+    },
+    "SAO-18": {
+      "success": true,
+      "patent_id": "SAO-18",
+      "confirmation_number": "PCT221906",
+      "application_number": "2025695907",
+      "filing_date": "2025-07-04T20:22:25.122635",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT221906"
+    },
+    "SAO-19": {
+      "success": true,
+      "patent_id": "SAO-19",
+      "confirmation_number": "PCT409182",
+      "application_number": "2025934546",
+      "filing_date": "2025-07-04T20:22:25.227999",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT409182"
+    },
+    "SAO-20": {
+      "success": true,
+      "patent_id": "SAO-20",
+      "confirmation_number": "PCT576230",
+      "application_number": "2025393288",
+      "filing_date": "2025-07-04T20:22:25.329955",
+      "status": "PATENT_PENDING",
+      "filing_fee_paid": 75.0,
+      "receipt_url": "https://uspto.gov/receipt/PCT576230"
+    }
+  }
+}

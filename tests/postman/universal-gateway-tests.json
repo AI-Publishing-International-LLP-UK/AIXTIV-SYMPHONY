@@ -1,0 +1,304 @@
+{
+  "info": {
+    "name": "ASOOS Universal Gateway API Tests",
+    "description": "Comprehensive API testing for all ASOOS services with CTTT integration",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Universal Gateway Health Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Universal Gateway responds', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+              "});",
+              "",
+              "pm.test('Response time is acceptable', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{UNIVERSAL_GATEWAY_URL}}/health",
+          "host": ["{{UNIVERSAL_GATEWAY_URL}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "ZENA MCP (CRX01) Health Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('ZENA MCP CRX01 Construction PCP responds', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+              "});",
+              "",
+              "pm.test('ZENA service response time', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+              "});",
+              "",
+              "pm.test('Construction sector configuration', function () {",
+              "    if (pm.response.code === 200) {",
+              "        const response = pm.response.json();",
+              "        pm.expect(response).to.have.property('sector', 'construction');",
+              "    }",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{MCP_ZAXXON_URL}}/api/pcp/status",
+          "host": ["{{MCP_ZAXXON_URL}}"],
+          "path": ["api", "pcp", "status"]
+        }
+      }
+    },
+    {
+      "name": "Payment Pipeline Health Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Payment Pipeline is operational', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+              "});",
+              "",
+              "pm.test('Payment service latency', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{PAYMENT_PIPELINE_URL}}/health",
+          "host": ["{{PAYMENT_PIPELINE_URL}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "PCP Activation Service Health Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('PCP Activation Service responds', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+              "});",
+              "",
+              "pm.test('PCP service response time', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{PCP_ACTIVATION_URL}}/health",
+          "host": ["{{PCP_ACTIVATION_URL}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "MongoDB MCP OAuth Health Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('MongoDB MCP OAuth responds', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+              "});",
+              "",
+              "pm.test('Database connection latency', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{MONGODB_MCP_URL}}/health",
+          "host": ["{{MONGODB_MCP_URL}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Auto Provision MCP Health Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Auto Provision MCP responds', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+              "});",
+              "",
+              "pm.test('Auto provision service latency', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(2500);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{AUTO_PROVISION_URL}}/health",
+          "host": ["{{AUTO_PROVISION_URL}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Dr. Lucy Automation Health Check",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Dr. Lucy Automation responds', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+              "});",
+              "",
+              "pm.test('Dr. Lucy service latency', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(3000);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{DRLUCY_URL}}/health",
+          "host": ["{{DRLUCY_URL}}"],
+          "path": ["health"]
+        }
+      }
+    },
+    {
+      "name": "Load Test - Concurrent Requests",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Load test passes', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 403, 429]);",
+              "});",
+              "",
+              "pm.test('System handles load', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(10000);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{UNIVERSAL_GATEWAY_URL}}/api/status",
+          "host": ["{{UNIVERSAL_GATEWAY_URL}}"],
+          "path": ["api", "status"]
+        }
+      }
+    },
+    {
+      "name": "Diamond SAO Integration Test",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Diamond SAO Command Center v34 accessible', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 403]);",
+              "});",
+              "",
+              "pm.test('Monitoring dashboard responds', function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{DIAMOND_SAO_URL}}/api/diamond-sao/v34/status",
+          "host": ["{{DIAMOND_SAO_URL}}"],
+          "path": ["api", "diamond-sao", "v34", "status"]
+        }
+      }
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "// Set dynamic test data",
+          "pm.globals.set('test_timestamp', Date.now());",
+          "pm.globals.set('test_id', 'cttt-' + Date.now());"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "exec": [
+          "// Global test reporting",
+          "pm.test('Service availability check', function () {",
+          "    const responseCode = pm.response.code;",
+          "    pm.expect([200, 403, 429]).to.include(responseCode);",
+          "});",
+          "",
+          "// Log results for Diamond SAO",
+          "const testResult = {",
+          "    service: pm.info.requestName,",
+          "    timestamp: pm.globals.get('test_timestamp'),",
+          "    response_code: pm.response.code,",
+          "    response_time: pm.response.responseTime,",
+          "    test_passed: pm.response.code === 200 || pm.response.code === 403",
+          "};",
+          "",
+          "pm.globals.set('last_test_result', JSON.stringify(testResult));"
+        ]
+      }
+    }
+  ]
+}

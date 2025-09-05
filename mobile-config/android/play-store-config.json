@@ -1,0 +1,24 @@
+{
+  "packageName": "com.asoos.mobile.android",
+  "title": "ASOOS Mobile",
+  "shortDescription": "Professional infrastructure management with Diamond SAO CLI",
+  "fullDescription": "Revolutionize your infrastructure management with ASOOS Mobile - the first mobile app to bring enterprise-grade DevOps tools to your Android device.\n\nFeatures:\n🏗️ Diamond SAO CLI Integration - Manage your entire infrastructure with natural language\n🔐 Biometric Security - Secure access with fingerprint and face unlock  \n⚡ Real-time Monitoring - Live dashboards and instant alerts\n🌐 DNS Management - Update domains and routing with simple commands\n☁️ Cloud Operations - Deploy workers, scale apps, manage secrets\n📱 Mobile-First Design - Optimized for touch with voice command support\n🔄 Offline Sync - Queue commands when offline, sync when connected\n\nPerfect for:\n• DevOps Engineers and SREs\n• Infrastructure Teams  \n• CTOs and Technical Leaders\n• Anyone managing cloud infrastructure\n\nSupported Platforms:\n• Cloudflare Workers\n• Google Cloud Platform\n• MongoDB Atlas\n• DNS Providers\n• Container Orchestration",
+  "category": "TOOLS",
+  "contentRating": "Everyone",
+  "targetAudience": "DEVELOPERS",
+  "tags": [
+    "devops",
+    "infrastructure",
+    "cli",
+    "cloud",
+    "deployment"
+  ],
+  "screenshots": [
+    "screenshot-1.jpg",
+    "screenshot-2.jpg",
+    "screenshot-3.jpg"
+  ],
+  "featureGraphic": "feature-graphic.jpg",
+  "privacyPolicyUrl": "https://asoos.2100.cool/privacy",
+  "website": "https://asoos.2100.cool"
+}

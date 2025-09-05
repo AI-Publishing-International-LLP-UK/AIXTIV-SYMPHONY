@@ -1,0 +1,119 @@
+{
+  "timestamp": "2025-08-27T12:01:54.123Z",
+  "targetNodeVersion": "24",
+  "summary": {
+    "packageFilesChecked": 30,
+    "compatibilityIssues": 0,
+    "warnings": 13,
+    "recommendations": 0,
+    "overallCompatibility": "warnings-only"
+  },
+  "issues": [],
+  "warnings": [
+    {
+      "type": "no-lock-file",
+      "file": "\n/Users/as/asoos/opus/opus1_amplify/core/package.json",
+      "message": "No lock file found - dependency versions may vary"
+    },
+    {
+      "type": "no-lock-file",
+      "file": ".workspace/staging-extras/r2-migration-staging/reports/package.json",
+      "message": "No lock file found - dependency versions may vary"
+    },
+    {
+      "type": "no-lock-file",
+      "file": ".workspace/staging-extras/vls/solutions/dr-memoria-anthology-launch/package.json",
+      "message": "No lock file found - dependency versions may vary"
+    },
+    {
+      "type": "no-lock-file",
+      "file": ".workspace/staging-extras/vls/vision_lake/functions/package.json",
+      "message": "No lock file found - dependency versions may vary"
+    },
+    {
+      "type": "no-lock-file",
+      "file": "academy/frontend/aixtiv-orchestra/package.json",
+      "message": "No lock file found - dependency versions may vary"
+    },
+    {
+      "type": "no-lock-file",
+      "file": "core-protocols/admin-core/dataconnect/js/default-connector/esm/package.json",
+      "message": "No lock file found - dependency versions may vary"
+    },
+    {
+      "type": "no-lock-file",
+      "file": "core-protocols/admin-core/dataconnect/js/default-connector/package.json",
+      "message": "No lock file found - dependency versions may vary"
+    },
+    {
+      "type": "no-lock-file",
+      "file": "core-protocols/admin-core/dataconnect/js/default-connector/react/esm/package.json",
+      "message": "No lock file found - dependency versions may vary"
+    },
+    {
+      "type": "no-lock-file",
+      "file": "core-protocols/admin-core/frontend/orchestra/package.json",
+      "message": "No lock file found - dependency versions may vary"
+    },
+    {
+      "type": "no-lock-file",
+      "file": "core-protocols/admin-core/frontend/src/aixtiv-orchestra/package.json",
+      "message": "No lock file found - dependency versions may vary"
+    },
+    {
+      "type": "dependency-issues",
+      "file": "functions.backup/package.json",
+      "message": "Found 47 dependency issues",
+      "details": [
+        "extraneous: @fastify/busboy@3.1.1 /Users/as/asoos/integration-gateway/functions.backup/node_modules/@fastify/busboy",
+        "extraneous: @google-cloud/firestore@7.11.3 /Users/as/asoos/integration-gateway/functions.backup/node_modules/@google-cloud/firestore",
+        "extraneous: @google-cloud/storage@7.16.0 /Users/as/asoos/integration-gateway/functions.backup/node_modules/@google-cloud/storage",
+        "extraneous: @types/body-parser@1.19.6 /Users/as/asoos/integration-gateway/functions.backup/node_modules/@types/body-parser",
+        "extraneous: @types/connect@3.4.38 /Users/as/asoos/integration-gateway/functions.backup/node_modules/@types/connect"
+      ]
+    },
+    {
+      "type": "no-lock-file",
+      "file": "vls/solutions/dr-memoria-anthology-launch/functions/package.json",
+      "message": "No lock file found - dependency versions may vary"
+    },
+    {
+      "type": "no-lock-file",
+      "file": "vls/solutions/dr-memoria-anthology-launch/package.json",
+      "message": "No lock file found - dependency versions may vary"
+    }
+  ],
+  "recommendations": [],
+  "packageFiles": [
+    "\n/Users/as/asoos/opus/opus1_amplify/core/package.json",
+    ".workspace/staging-extras/r2-migration-staging/reports/package.json",
+    ".workspace/staging-extras/r2-migration-staging/system-configs/package.json",
+    ".workspace/staging-extras/vls/solutions/dr-memoria-anthology-launch/functions/package.json",
+    ".workspace/staging-extras/vls/solutions/dr-memoria-anthology-launch/package.json",
+    ".workspace/staging-extras/vls/solutions/solutions/dr. burby's s2do governance/package.json",
+    ".workspace/staging-extras/vls/vision_lake/functions/package.json",
+    "academy/frontend/aixtiv-orchestra/package.json",
+    "aixtiv-project/package.json",
+    "aixtiv-project-new/package.json",
+    "aixtiv-symphony-gitbook/package.json",
+    "asoos-cli-works/package.json",
+    "asoos-deploy/functions/package.json",
+    "cloud-functions/dr-claude/package.json",
+    "core-protocols/admin-core/config/package.json",
+    "core-protocols/admin-core/dataconnect/js/default-connector/esm/package.json",
+    "core-protocols/admin-core/dataconnect/js/default-connector/package.json",
+    "core-protocols/admin-core/dataconnect/js/default-connector/react/esm/package.json",
+    "core-protocols/admin-core/dataconnect/js/default-connector/react/package.json",
+    "core-protocols/admin-core/frontend/orchestra/package.json",
+    "core-protocols/admin-core/frontend/src/aixtiv-orchestra/package.json",
+    "functions/package.json",
+    "functions.backup/package.json",
+    "oauth2-cli/package.json",
+    "package.json",
+    "src/middleware/package.json",
+    "vls/solutions/dr-memoria-anthology-launch/functions/package.json",
+    "vls/solutions/dr-memoria-anthology-launch/package.json",
+    "vls/solutions/solutions/dr. burby's s2do governance/package.json",
+    "workers/asoos-2100-cool-worker/asoos-2100-cool-worker/package.json"
+  ]
+}

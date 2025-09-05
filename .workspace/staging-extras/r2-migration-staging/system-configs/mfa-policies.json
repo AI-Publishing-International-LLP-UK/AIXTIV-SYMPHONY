@@ -1,0 +1,292 @@
+{
+  "mfaPolicies": {
+    "DIAMOND_SAO": {
+      "tier": "DIAMOND_SAO",
+      "enforcementLevel": "strict",
+      "requireMFA": true,
+      "minimumMethods": 2,
+      "allowedMethods": ["totp", "webauthn"],
+      "forbiddenMethods": ["sms", "email"],
+      "sessionTimeout": 3600,
+      "challengeTimeout": 300,
+      "maxAttempts": 3,
+      "requireReauth": {
+        "highRiskActions": true,
+        "adminActions": true,
+        "financialActions": true
+      },
+      "riskAdjustments": {
+        "newDevice": {
+          "action": "require_all_methods",
+          "multiplier": 2.0
+        },
+        "suspiciousLocation": {
+          "action": "block_access",
+          "multiplier": 3.0
+        },
+        "offHours": {
+          "action": "require_additional_verification",
+          "multiplier": 1.5
+        }
+      }
+    },
+
+    "EMERALD_SAO": {
+      "tier": "EMERALD_SAO",
+      "enforcementLevel": "strict",
+      "requireMFA": true,
+      "minimumMethods": 2,
+      "allowedMethods": ["totp", "webauthn", "sms"],
+      "preferredMethods": ["totp", "webauthn"],
+      "sessionTimeout": 7200,
+      "challengeTimeout": 300,
+      "maxAttempts": 3,
+      "requireReauth": {
+        "highRiskActions": true,
+        "adminActions": true,
+        "financialActions": false
+      },
+      "riskAdjustments": {
+        "newDevice": {
+          "action": "require_totp_plus_one",
+          "multiplier": 1.8
+        },
+        "suspiciousLocation": {
+          "action": "require_all_methods",
+          "multiplier": 2.5
+        },
+        "offHours": {
+          "action": "require_totp",
+          "multiplier": 1.3
+        }
+      }
+    },
+
+    "RUBY": {
+      "tier": "RUBY",
+      "enforcementLevel": "required",
+      "requireMFA": true,
+      "minimumMethods": 1,
+      "allowedMethods": ["totp", "sms", "email"],
+      "preferredMethods": ["totp", "sms"],
+      "sessionTimeout": 14400,
+      "challengeTimeout": 300,
+      "maxAttempts": 3,
+      "requireReauth": {
+        "highRiskActions": true,
+        "adminActions": false,
+        "financialActions": false
+      },
+      "riskAdjustments": {
+        "newDevice": {
+          "action": "require_mfa",
+          "multiplier": 1.5
+        },
+        "suspiciousLocation": {
+          "action": "require_totp_preferred",
+          "multiplier": 2.0
+        },
+        "offHours": {
+          "action": "require_mfa",
+          "multiplier": 1.2
+        }
+      }
+    },
+
+    "SAPPHIRE": {
+      "tier": "SAPPHIRE",
+      "enforcementLevel": "adaptive",
+      "requireMFA": false,
+      "minimumMethods": 1,
+      "allowedMethods": ["email", "sms", "totp"],
+      "preferredMethods": ["email", "sms"],
+      "sessionTimeout": 28800,
+      "challengeTimeout": 300,
+      "maxAttempts": 3,
+      "requireReauth": {
+        "highRiskActions": true,
+        "adminActions": false,
+        "financialActions": false
+      },
+      "riskAdjustments": {
+        "newDevice": {
+          "action": "require_otp",
+          "multiplier": 1.3
+        },
+        "suspiciousLocation": {
+          "action": "require_mfa",
+          "multiplier": 1.8
+        },
+        "offHours": {
+          "action": "recommend_mfa",
+          "multiplier": 1.1
+        }
+      }
+    },
+
+    "OPAL": {
+      "tier": "OPAL",
+      "enforcementLevel": "optional",
+      "requireMFA": false,
+      "minimumMethods": 1,
+      "allowedMethods": ["email"],
+      "preferredMethods": ["email"],
+      "sessionTimeout": 43200,
+      "challengeTimeout": 600,
+      "maxAttempts": 5,
+      "requireReauth": {
+        "highRiskActions": true,
+        "adminActions": false,
+        "financialActions": false
+      },
+      "riskAdjustments": {
+        "newDevice": {
+          "action": "recommend_mfa",
+          "multiplier": 1.2
+        },
+        "suspiciousLocation": {
+          "action": "require_email_otp",
+          "multiplier": 1.5
+        },
+        "offHours": {
+          "action": "optional_mfa",
+          "multiplier": 1.0
+        }
+      }
+    },
+
+    "ONYX": {
+      "tier": "ONYX",
+      "enforcementLevel": "minimal",
+      "requireMFA": false,
+      "minimumMethods": 1,
+      "allowedMethods": ["email"],
+      "preferredMethods": ["email"],
+      "sessionTimeout": 86400,
+      "challengeTimeout": 600,
+      "maxAttempts": 5,
+      "requireReauth": {
+        "highRiskActions": true,
+        "adminActions": false,
+        "financialActions": false
+      },
+      "restrictions": {
+        "timeRestrictions": {
+          "allowedHours": {
+            "start": 6,
+            "end": 22
+          },
+          "blockedHours": {
+            "start": 22,
+            "end": 6
+          }
+        },
+        "locationRestrictions": {
+          "allowInternalOnly": true,
+          "blockSuspiciousIPs": true
+        }
+      },
+      "riskAdjustments": {
+        "newDevice": {
+          "action": "block_access",
+          "multiplier": 2.0
+        },
+        "suspiciousLocation": {
+          "action": "block_access",
+          "multiplier": 3.0
+        },
+        "offHours": {
+          "action": "block_access",
+          "multiplier": 2.0
+        }
+      }
+    }
+  },
+
+  "riskThresholds": {
+    "low": 0.0,
+    "medium": 0.3,
+    "high": 0.6,
+    "critical": 0.8
+  },
+
+  "actionMappings": {
+    "require_all_methods": {
+      "description": "Require all available MFA methods for the tier",
+      "minimumMethods": 2
+    },
+    "require_totp_plus_one": {
+      "description": "Require TOTP plus one additional method",
+      "requiredMethods": ["totp"],
+      "additionalMethods": 1
+    },
+    "require_totp_preferred": {
+      "description": "Require TOTP if available, otherwise any MFA",
+      "preferredMethods": ["totp"]
+    },
+    "require_mfa": {
+      "description": "Require at least one MFA method",
+      "minimumMethods": 1
+    },
+    "require_otp": {
+      "description": "Require OTP via SMS or Email",
+      "allowedMethods": ["sms", "email"]
+    },
+    "require_email_otp": {
+      "description": "Require Email OTP specifically",
+      "requiredMethods": ["email"]
+    },
+    "recommend_mfa": {
+      "description": "Recommend but don't require MFA",
+      "enforcement": "optional"
+    },
+    "optional_mfa": {
+      "description": "MFA is completely optional",
+      "enforcement": "none"
+    },
+    "block_access": {
+      "description": "Block access entirely",
+      "enforcement": "block"
+    },
+    "require_additional_verification": {
+      "description": "Require additional identity verification",
+      "additionalVerification": true
+    }
+  },
+
+  "pathBasedPolicies": {
+    "/admin/**": {
+      "minimumTier": "EMERALD_SAO",
+      "requireMFA": true,
+      "minimumMethods": 2
+    },
+    "/api/v1/delete/**": {
+      "minimumTier": "RUBY",
+      "requireMFA": true,
+      "minimumMethods": 1
+    },
+    "/api/v1/transfer/**": {
+      "minimumTier": "RUBY",
+      "requireMFA": true,
+      "requiredMethods": ["totp"]
+    },
+    "/settings/security/**": {
+      "requireMFA": true,
+      "minimumMethods": 1
+    },
+    "/billing/**": {
+      "minimumTier": "SAPPHIRE",
+      "requireMFA": true,
+      "minimumMethods": 1
+    }
+  },
+
+  "defaultSettings": {
+    "challengeExpiry": 300,
+    "sessionTimeout": 3600,
+    "maxAttempts": 3,
+    "cooldownPeriod": 60,
+    "rateLimitWindow": 3600,
+    "maxChallengesPerHour": 10
+  }
+}

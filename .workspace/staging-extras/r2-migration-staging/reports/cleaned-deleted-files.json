@@ -1,0 +1,25 @@
+{
+  "metadata": {
+    "extractedAt": "2025-08-11T11:58:37.853Z",
+    "totalFiles": 8,
+    "sourceType": "deployment_log",
+    "processingSteps": [
+      "Extract \"Changes not staged for commit\" block",
+      "Filter deleted files only",
+      "Strip leading \"deleted:\" markers",
+      "Remove escaped characters (\\n, quotes)",
+      "Remove trailing backslashes",
+      "Normalize paths"
+    ]
+  },
+  "deletedFiles": [
+    "dist/academy/index.html",
+    "dist/agents/AgentManager.js",
+    "dist/config.js",
+    "dist/giftshop/index.html",
+    "dist/index.html",
+    "dist/index.html.backup",
+    "dist/marketplace/index.html",
+    "dist/middleware/auth.js"
+  ]
+}

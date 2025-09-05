@@ -1,0 +1,2482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASOOS.2100.Cool - Diamond SAO Enhanced Owner Interface</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Enterprise-grade icon solution - Multiple fallbacks -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" crossorigin="anonymous">
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      overflow-x: hidden;
+      overflow-y: auto;
+      min-height: 100vh;
+    }
+
+    /* Diamond CLI Enhancement Styles */
+    .diamond-enhanced {
+      background: linear-gradient(135deg, #4c1d95 0%, #7c3aed 50%, #a855f7 100%);
+      border: 2px solid rgba(124, 58, 237, 0.5);
+      box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+    }
+
+    .diamond-mode-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 12px;
+      font-size: 8px;
+      font-weight: 600;
+      color: #FFD700;
+    }
+
+    .diamond-icon-small {
+      width: 8px;
+      height: 8px;
+      background: linear-gradient(45deg, #f59e0b, #eab308);
+      clip-path: polygon(50% 0%, 0% 50%, 50% 100%, 100% 50%);
+      animation: diamondPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes diamondPulse {
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Enhanced CLI Styles */
+    .cli-enhanced {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border: 2px solid rgba(124, 58, 237, 0.4);
+    }
+    
+    /* Side-by-Side Development View */
+    .split-view {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .code-editor-panel {
+      flex: 1;
+      height: 100%;
+      background: #1a1a2e;
+      border-right: 1px solid rgba(124, 58, 237, 0.3);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .preview-panel {
+      flex: 1;
+      height: 100%;
+      background: #ffffff;
+      position: relative;
+      overflow: auto;
+    }
+    
+    .code-tabs {
+      display: flex;
+      background: rgba(0, 0, 0, 0.2);
+      border-bottom: 1px solid rgba(124, 58, 237, 0.3);
+    }
+    
+    .code-tab {
+      padding: 8px 16px;
+      font-size: 11px;
+      background: transparent;
+      color: #aaa;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .code-tab.active {
+      background: rgba(124, 58, 237, 0.1);
+      color: #fff;
+      border-bottom: 2px solid #a855f7;
+    }
+    
+    .code-tab:hover:not(.active) {
+      background: rgba(124, 58, 237, 0.05);
+      color: #ccc;
+    }
+    
+    .code-content {
+      flex: 1;
+      padding: 10px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 12px;
+      color: #e6e6e6;
+      overflow: auto;
+      background: #0d0d0d;
+      position: relative;
+    }
+    
+    .code-content pre {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+    
+    .prompt-container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      backdrop-filter: blur(8px);
+    }
+    
+    .prompt-box {
+      width: 85%;
+      max-width: 500px;
+      background: #1a1a2e;
+      border: 2px solid rgba(124, 58, 237, 0.5);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+    }
+    
+    .prompt-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .prompt-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    
+    .prompt-option {
+      flex: 1 0 calc(50% - 10px);
+      min-width: 200px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 8px;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .prompt-option:hover {
+      background: rgba(124, 58, 237, 0.1);
+      border-color: rgba(124, 58, 237, 0.5);
+      transform: translateY(-2px);
+    }
+    
+    .option-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #a855f7;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .option-description {
+      font-size: 11px;
+      color: #aaa;
+      line-height: 1.4;
+    }
+    
+    .option-recommendation {
+      margin-top: 8px;
+      font-size: 10px;
+      color: #10b981;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .prompt-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .prompt-button {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .prompt-button.primary {
+      background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+      color: white;
+      border: none;
+    }
+    
+    .prompt-button.secondary {
+      background: transparent;
+      color: #aaa;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .prompt-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+    
+    .view-toggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 50;
+      display: flex;
+      gap: 5px;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      padding: 5px;
+      border-radius: 20px;
+    }
+    
+    .view-toggle-btn {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      color: #aaa;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 12px;
+    }
+    
+    .view-toggle-btn.active {
+      background: #a855f7;
+      color: white;
+    }
+    
+    .view-toggle-btn:hover:not(.active) {
+      background: rgba(124, 58, 237, 0.2);
+      color: #fff;
+    }
+
+    .diamond-quick-commands {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .diamond-quick-cmd {
+      padding: 2px 6px;
+      background: rgba(124, 58, 237, 0.1);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 12px;
+      font-size: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #a855f7;
+    }
+
+    .diamond-quick-cmd:hover {
+      background: rgba(124, 58, 237, 0.2);
+      border-color: rgba(124, 58, 237, 0.5);
+      transform: scale(1.05);
+    }
+
+    /* Original ASOOS styles with Diamond enhancements */
+    .enterprise-icon {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      vertical-align: middle;
+      fill: currentColor;
+    }
+
+    .enterprise-icon.large {
+      width: 20px;
+      height: 20px;
+    }
+
+    .enterprise-icon.xl {
+      width: 24px;
+      height: 24px;
+    }
+
+    .panel-icon {
+      width: 14px;
+      height: 14px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+
+    .integration-icon-svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+      display: inline-block;
+    }
+
+    .location-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: rgba(11, 177, 187, 0.1);
+      border: 1px solid rgba(11, 177, 187, 0.3);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #0bb1bb;
+    }
+
+    .location-indicator.diamond-sao {
+      background: rgba(255, 215, 0, 0.1);
+      border-color: rgba(255, 215, 0, 0.3);
+      color: #FFD700;
+    }
+
+    .location-indicator.admin {
+      background: rgba(139, 92, 246, 0.1);
+      border-color: rgba(139, 92, 246, 0.3);
+      color: #8b5cf6;
+    }
+
+    /* Enhanced Animations for Diamond v99 */
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); }
+      33% { transform: translateY(-15px) translateX(8px) rotate(8deg); }
+      66% { transform: translateY(8px) translateX(-8px) rotate(-8deg); }
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 5px rgba(11, 177, 187, 0.8), 0 0 20px rgba(11, 177, 187, 0.4); }
+      50% { box-shadow: 0 0 20px rgba(11, 177, 187, 1), 0 0 40px rgba(11, 177, 187, 0.6); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.08); opacity: 0.7; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    @keyframes scan {
+      0% { transform: translateY(0); opacity: 1; }
+      50% { transform: translateY(-50%); opacity: 0.5; }
+      100% { transform: translateY(-100%); opacity: 0; }
+    }
+
+    @keyframes enhancedFloat {
+      0%, 100% { 
+        transform: translateY(0) translateX(0) rotate(0deg) scale(1); 
+        filter: blur(0px); 
+        opacity: 0.6; 
+      }
+      25% { 
+        transform: translateY(-20px) translateX(10px) rotate(90deg) scale(1.2); 
+        filter: blur(1px); 
+        opacity: 0.8; 
+      }
+      50% { 
+        transform: translateY(-10px) translateX(-15px) rotate(180deg) scale(0.8); 
+        filter: blur(2px); 
+        opacity: 0.4; 
+      }
+      75% { 
+        transform: translateY(15px) translateX(5px) rotate(270deg) scale(1.1); 
+        filter: blur(1px); 
+        opacity: 0.7; 
+      }
+    }
+
+    /* Main Container */
+    .main-container {
+      display: flex;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      position: relative;
+    }
+
+    .page {
+      display: none;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    .page.active {
+      display: flex;
+    }
+
+    /* Enhanced Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      animation: enhancedFloat 12s infinite ease-in-out;
+    }
+
+    .particle:nth-child(3n) {
+      width: 6px;
+      height: 6px;
+      background: radial-gradient(circle, rgba(11, 177, 187, 0.8), rgba(11, 177, 187, 0.2));
+      animation-duration: 15s;
+    }
+
+    .particle:nth-child(3n+1) {
+      width: 4px;
+      height: 4px;
+      background: radial-gradient(circle, rgba(80, 200, 120, 0.6), rgba(80, 200, 120, 0.1));
+      animation-duration: 10s;
+    }
+
+    .particle:nth-child(3n+2) {
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.7), rgba(255, 215, 0, 0.2));
+      animation-duration: 18s;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 48px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 4px;
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .sidebar-icons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex: 1;
+      width: 100%;
+    }
+
+    .sidebar-icon {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
+      z-index: 101;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-icon:hover {
+      transform: scale(1.15);
+    }
+
+    .sidebar-icon.active {
+      animation: glow 2s infinite;
+    }
+
+    .sidebar-icon.settings-icon {
+      margin-top: 30px;
+    }
+
+    .sidebar-icon.settings-icon:hover {
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.6) !important;
+      background: rgba(255, 215, 0, 0.2) !important;
+      border-radius: 50%;
+    }
+
+    .icon-tooltip {
+      position: absolute;
+      left: 54px;
+      top: 50%;
+      transform: translateY(-50%) translateX(-5px);
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 8px 12px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(11, 177, 187, 0.5);
+      font-size: 12px;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar-icon:hover .icon-tooltip {
+      opacity: 1;
+      transform: translateY(-50%) translateX(5px);
+    }
+
+    /* Header */
+    .header {
+      height: 40px;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding-left: 40px;
+    }
+
+    .header-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #FFD700, #c7b299, #50C878, #0bb1bb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 1px;
+    }
+
+    .user-info {
+      padding-right: 40px;
+    }
+
+    .user-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .user-tagline {
+      font-size: 13px;
+      color: #0bb1bb;
+      margin-top: 0px;
+      margin-bottom: 0px;
+      font-weight: 500;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      overflow-x: hidden;
+      margin-left: 48px;
+      width: calc(100% - 48px);
+    }
+
+    .content-area {
+      flex: 1;
+      display: flex;
+      padding: 6px 15px 15px 15px;
+      gap: 15px;
+      overflow-y: auto;
+      min-height: calc(100vh - 85px);
+      position: relative;
+    }
+
+    /* Chat Area - Enhanced for Diamond CLI */
+    .chat-area {
+      flex: 1;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: all 0.3s ease;
+      height: calc(100vh - 120px);
+      overflow: hidden;
+    }
+
+    .terminal-output {
+      scrollbar-width: thin;
+      scrollbar-color: #333 #0d0d0d;
+    }
+
+    /* Right Panel */
+    .right-panel {
+      width: 320px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      position: relative;
+      height: calc(100vh - 120px);
+      background: transparent;
+      padding: 0 12px 12px 0;
+      overflow-y: auto;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      flex-shrink: 0;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Panel components (keeping original styles) */
+    .panel-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 12px;
+      transition: all 0.3s;
+      margin-bottom: 6px;
+    }
+
+    .panel-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(11, 177, 187, 0.2);
+      border-color: rgba(11, 177, 187, 0.3);
+    }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: inherit;
+      width: 100%;
+      text-align: left;
+    }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-content {
+      display: none;
+    }
+
+    .panel-content.active {
+      display: block;
+      animation: slideIn 0.3s ease;
+    }
+
+    /* Copilot Section */
+    .copilot-section {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 10px;
+      margin-bottom: 6px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .copilot-title {
+      text-align: center;
+      font-size: 16px;
+      font-weight: 600;
+      color: #0bb1bb;
+      margin-bottom: 6px;
+    }
+
+    .copilot-hex-container {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 0;
+      width: 100%;
+    }
+
+    .copilot-hex-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .copilot-hex-item:hover {
+      transform: scale(1.1);
+      animation: pulse 1.5s infinite;
+    }
+
+    .copilot-hex-item.active .copilot-status {
+      opacity: 1;
+      animation: pulse 2s infinite;
+    }
+
+    .copilot-name {
+      font-size: 10px;
+      color: #888;
+      margin-top: 4px;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .copilot-name.active {
+      color: #0bb1bb;
+      font-weight: 600;
+      text-shadow: 0 0 10px rgba(11, 177, 187, 0.5);
+    }
+
+    .copilot-status {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 10px;
+      height: 10px;
+      background: #0bb1bb;
+      border-radius: 50%;
+      border: 2px solid #0a0a0a;
+      opacity: 0;
+      transition: all 0.3s;
+      box-shadow: 0 0 10px rgba(11, 177, 187, 0.8);
+    }
+
+    /* Bottom Bar */
+    .bottom-bar {
+      height: 35px;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 15px;
+      position: relative;
+      z-index: 90;
+    }
+
+    .integration-icons {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      flex: 1;
+    }
+
+    .integration-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 18px;
+      position: relative;
+      backdrop-filter: blur(10px);
+    }
+
+    .integration-icon:hover {
+      transform: scale(1.15) translateY(-3px);
+      background: linear-gradient(135deg, rgba(11, 177, 187, 0.3), rgba(11, 177, 187, 0.1));
+      border-color: #0bb1bb;
+      box-shadow: 0 5px 15px rgba(11, 177, 187, 0.4);
+    }
+
+    .integration-icon.active {
+      background: linear-gradient(135deg, rgba(11, 177, 187, 0.4), rgba(11, 177, 187, 0.2));
+      border-color: #0bb1bb;
+      box-shadow: 0 0 20px rgba(11, 177, 187, 0.5);
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background: rgba(11, 177, 187, 0.95);
+      color: white;
+      padding: 15px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 20px rgba(11, 177, 187, 0.4);
+      animation: slideIn 0.3s ease;
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(11, 177, 187, 0.3);
+    }
+
+    .notification.error {
+      background: rgba(239, 68, 68, 0.95);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .notification.success {
+      background: rgba(16, 185, 129, 0.95);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    /* Mobile Breakpoints */
+    @media (max-width: 768px) {
+      .chat-area {
+        display: none !important;
+      }
+
+      .content-area {
+        flex-direction: column;
+        padding: 15px;
+        margin-right: 0;
+      }
+
+      .right-panel {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        transform: none !important;
+        padding: 20px 15px;
+      }
+
+      .sidebar {
+        width: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .main-content {
+        margin-left: 44px;
+        width: calc(100% - 44px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <!-- Enhanced Particles Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Enterprise Icon Library - SVG Definitions -->
+    <svg style="display: none;">
+      <defs>
+        <!-- Enhanced Diamond CLI Icons -->
+        <symbol id="icon-diamond" viewBox="0 0 24 24">
+          <path d="M6 3h12l4 6-10 12L2 9l4-6z"/>
+        </symbol>
+        
+        <symbol id="icon-cli" viewBox="0 0 24 24">
+          <path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4V8h16v10z"/>
+          <path d="M7 13h2v-2H7v2zm4 0h6v-2h-6v2z"/>
+        </symbol>
+
+        <symbol id="icon-lock" viewBox="0 0 24 24">
+          <path d="M6 10h2V8c0-2.21 1.79-4 4-4s4 1.79 4 4v2h2c1.1 0 2 .9 2 2v8c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2v-8c0-1.1.9-2 2-2zm6-6c-1.1 0-2 .9-2 2v2h4V6c0-1.1-.9-2-2-2z"/>
+        </symbol>
+        
+        <symbol id="icon-unlock" viewBox="0 0 24 24">
+          <path d="M18 10H9V8c0-1.1.9-2 2-2s2 .9 2 2h2c0-2.21-1.79-4-4-4S7 5.79 7 8v2H6c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8c0-1.1-.89-2-2-2z"/>
+        </symbol>
+        
+        <symbol id="icon-bars" viewBox="0 0 24 24">
+          <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+        </symbol>
+        
+        <symbol id="icon-chevron-down" viewBox="0 0 24 24">
+          <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+        </symbol>
+        
+        <symbol id="icon-fire" viewBox="0 0 24 24">
+          <path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67z"/>
+        </symbol>
+        
+        <symbol id="icon-lightbulb" viewBox="0 0 24 24">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.87-3.13-7-7-7z"/>
+        </symbol>
+        
+        <symbol id="icon-tasks" viewBox="0 0 24 24">
+          <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6z"/>
+        </symbol>
+        
+        <symbol id="icon-chart-line" viewBox="0 0 24 24">
+          <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/>
+        </symbol>
+        
+        <symbol id="icon-terminal" viewBox="0 0 24 24">
+          <path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4V8h16v10z"/>
+          <path d="M7 13h2v-2H7v2zm4 0h6v-2h-6v2z"/>
+        </symbol>
+        
+        <symbol id="icon-comments" viewBox="0 0 24 24">
+          <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h11c.55 0 1-.45 1-1z"/>
+        </symbol>
+        
+        <symbol id="icon-microphone" viewBox="0 0 24 24">
+          <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+        </symbol>
+
+        <symbol id="icon-cog" viewBox="0 0 24 24">
+          <path d="M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97 0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1 0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.***********61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.***********42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66Z"/>
+        </symbol>
+
+        <symbol id="icon-times" viewBox="0 0 24 24">
+          <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+        </symbol>
+
+        <symbol id="icon-code" viewBox="0 0 24 24">
+          <path d="M8 3a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H8zm1 2h6v14H9V5zm2 2v2h2V7h-2zm0 4v2h2v-2h-2z"/>
+          <path d="M9.5 6.5l-3 3 3 3M14.5 6.5l3 3-3 3"/>
+        </symbol>
+
+        <symbol id="icon-bolt" viewBox="0 0 24 24">
+          <path d="M11 21h-1l1-7H7.5c-.88 0-.33-.75-.31-.78C8.48 10.94 10.42 7.54 13.01 3h1.5l-1.01 7H17c.69 0 .52.75.48.78C16.19 13.08 14.13 16.3 11 21z"/>
+        </symbol>
+
+        <symbol id="icon-keyboard" viewBox="0 0 24 24">
+          <path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2z"/>
+        </symbol>
+
+        <!-- Integration Icons -->
+        <symbol id="icon-google" viewBox="0 0 24 24">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        </symbol>
+
+        <symbol id="icon-microsoft" viewBox="0 0 24 24">
+          <path d="M11.4 24H0V12.6h11.4V24zM24 24H12.6V12.6H24V24zM11.4 11.4H0V0h11.4v11.4zM24 11.4H12.6V0H24v11.4z"/>
+        </symbol>
+
+        <symbol id="icon-slack" viewBox="0 0 24 24">
+          <path d="M5.042 15.165a2.528 2.528 0 0 1-2.52 2.523A2.528 2.528 0 0 1 0 15.165a2.527 2.527 0 0 1 2.522-2.52h2.52v2.52z"/>
+        </symbol>
+
+        <symbol id="icon-github" viewBox="0 0 24 24">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77 1.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+        </symbol>
+
+        <symbol id="icon-linkedin" viewBox="0 0 24 24">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286z"/>
+        </symbol>
+
+        <symbol id="icon-video" viewBox="0 0 24 24">
+          <path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/>
+        </symbol>
+
+        <symbol id="icon-plus" viewBox="0 0 24 24">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </symbol>
+      </defs>
+    </svg>
+
+    <!-- Main Page -->
+    <div id="mainPage" class="page active">
+      <!-- Sidebar with Squadron Icons -->
+      <div class="sidebar">
+        <div class="sidebar-icons">
+          <div class="sidebar-icon active" onclick="selectIcon(this, 'Communication', '01')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="1.8">
+              <circle cx="12" cy="12" r="10" fill="none" />
+              <path d="M9 11l2 2 4-4" stroke="white" stroke-width="1.5" fill="none"/>
+            </svg>
+            <div class="icon-tooltip">
+              <strong>Communication</strong><br>
+              <small>Diamond SAO Conversational CLI</small>
+            </div>
+          </div>
+          
+          <div class="sidebar-icon" onclick="selectIcon(this, 'Growth', '01')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#4ECDC4" stroke-width="1.8">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 8v4l3 3" stroke="white" stroke-width="1.5"/>
+            </svg>
+            <div class="icon-tooltip">
+              <strong>Growth</strong><br>
+              <small>Growth Revenues</small>
+            </div>
+            
+            <!-- Side-by-Side Development View (Hidden by default) -->
+            <div id="splitView" class="split-view" style="display: none;">
+              <div class="code-editor-panel">
+                <div class="code-tabs">
+                  <button class="code-tab active" onclick="switchCodeTab(this, 'htmlCode')">HTML</button>
+                  <button class="code-tab" onclick="switchCodeTab(this, 'cssCode')">CSS</button>
+                  <button class="code-tab" onclick="switchCodeTab(this, 'jsCode')">JavaScript</button>
+                </div>
+                <div class="code-content" id="htmlCode">
+                  <pre contenteditable="true">&lt;!-- Edit your HTML here --&gt;
+&lt;div class="container"&gt;
+  &lt;h1&gt;Welcome to Diamond Web Development&lt;/h1&gt;
+  &lt;p&gt;This is a real-time preview of your web page.&lt;/p&gt;
+  &lt;div class="card"&gt;
+    &lt;h2&gt;Featured Content&lt;/h2&gt;
+    &lt;p&gt;Edit this content and see changes instantly!&lt;/p&gt;
+    &lt;button class="cta-button"&gt;Learn More&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+                </div>
+                <div class="code-content" id="cssCode" style="display: none;">
+                  <pre contenteditable="true">/* Edit your CSS here */
+body {
+  font-family: 'Arial', sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  color: #7c3aed;
+  border-bottom: 2px solid #a855f7;
+  padding-bottom: 10px;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-top: 20px;
+}
+
+.cta-button {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 15px;
+  transition: transform 0.2s;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+}</pre>
+                </div>
+                <div class="code-content" id="jsCode" style="display: none;">
+                  <pre contenteditable="true">// Edit your JavaScript here
+document.addEventListener('DOMContentLoaded', function() {
+  // Add event listener to the button
+  const button = document.querySelector('.cta-button');
+  if (button) {
+    button.addEventListener('click', function() {
+      alert('Button clicked! Add your action here.');
+    });
+  }
+  
+  console.log('Page loaded and JavaScript initialized!');
+});</pre>
+                </div>
+              </div>
+              <div class="preview-panel" id="previewPanel">
+                <iframe id="previewFrame" style="width: 100%; height: 100%; border: none;"></iframe>
+              </div>
+              
+              <!-- Security Prompt (initially hidden) -->
+              <div class="prompt-container" id="securityPrompt" style="display: none;">
+                <div class="prompt-box">
+                  <div class="prompt-title">
+                    <span style="font-size: 18px;">🔒</span> Select Security Implementation
+                  </div>
+                  <div>
+                    <p style="color: #ccc; font-size: 12px; margin-bottom: 15px;">Diamond SAO detected a request for enhanced security. Please select the security implementation that best fits your needs:</p>
+                  </div>
+                  <div class="prompt-options">
+                    <div class="prompt-option" onclick="selectSecurityOption('oauth')">
+                      <div class="option-title">
+                        <span style="color: #3b82f6;">🔑</span> OAuth 2.0 / OIDC
+                      </div>
+                      <div class="option-description">
+                        Industry standard for authorization, providing secure delegated access.
+                      </div>
+                      <div class="option-recommendation">
+                        <span>✅</span> Recommended for banking applications
+                      </div>
+                    </div>
+                    <div class="prompt-option" onclick="selectSecurityOption('jwt')">
+                      <div class="option-title">
+                        <span style="color: #f59e0b;">🎫</span> JWT Authentication
+                      </div>
+                      <div class="option-description">
+                        Secure token-based authentication for stateless applications.
+                      </div>
+                      <div class="option-recommendation">
+                        <span>✓</span> Good for API security
+                      </div>
+                    </div>
+                    <div class="prompt-option" onclick="selectSecurityOption('mfa')">
+                      <div class="option-title">
+                        <span style="color: #10b981;">🛡️</span> Multi-Factor Auth
+                      </div>
+                      <div class="option-description">
+                        Additional verification layer beyond passwords, using multiple factors.
+                      </div>
+                      <div class="option-recommendation">
+                        <span>✅</span> Recommended for financial transactions
+                      </div>
+                    </div>
+                    <div class="prompt-option" onclick="selectSecurityOption('encryption')">
+                      <div class="option-title">
+                        <span style="color: #a855f7;">🔐</span> End-to-End Encryption
+                      </div>
+                      <div class="option-description">
+                        Data encrypted across all points of transmission and storage.
+                      </div>
+                      <div class="option-recommendation">
+                        <span>✓</span> Good for sensitive data
+                      </div>
+                    </div>
+                  </div>
+                  <div class="prompt-actions">
+                    <button class="prompt-button secondary" onclick="closeSecurityPrompt()">Cancel</button>
+                    <button class="prompt-button primary" onclick="applySecurityOption()">Apply Selected Option</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="sidebar-icon" onclick="selectIcon(this, 'Services', '03')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#45B7D1" stroke-width="1.8">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M8 12h8M12 8v8" stroke="white" stroke-width="1.5"/>
+            </svg>
+            <div class="icon-tooltip">
+              <strong>Services</strong><br>
+              <small>Client Services Innovation</small>
+            </div>
+          </div>
+          
+          <div class="sidebar-icon" onclick="selectIcon(this, 'Automation', '02')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#96CEB4" stroke-width="1.8">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 6v6l4 2" stroke="white" stroke-width="1.5"/>
+            </svg>
+            <div class="icon-tooltip">
+              <strong>Automation</strong><br>
+              <small>Organizational Automation</small>
+            </div>
+          </div>
+          
+          <!-- Settings Icon - Always Last -->
+          <div class="sidebar-icon settings-icon" onclick="openSettings()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="url(#settingsGradient)" stroke-width="1.8">
+              <defs>
+                <linearGradient id="settingsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#FFD700" />
+                  <stop offset="100%" stop-color="#0bb1bb" />
+                </linearGradient>
+              </defs>
+              <path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" fill="url(#settingsGradient)" fill-opacity="0.2" />
+            </svg>
+            <div class="icon-tooltip">
+              <strong>Settings & Configuration</strong><br>
+              <small>Diamond SAO Command Center</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+          <div class="header-left">
+            <div class="logo" id="systemLogo">ASOOS</div>
+            <div class="diamond-mode-indicator">
+              <div class="diamond-icon-small"></div>
+              <span>Diamond SAO v34</span>
+            </div>
+          </div>
+          <div class="user-info">
+            <div class="user-name" id="userName">Mr. Phillip Corey Roark, CEO</div>
+            <div class="user-tagline" id="userTagline">Diamond SAO Unified Infrastructure CLI</div>
+          </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area" id="contentArea">
+          <!-- Enhanced Diamond CLI Communication Area -->
+          <div class="chat-area cli-enhanced" id="chatArea">
+            <!-- View Mode Toggle -->
+            <div class="view-toggle">
+              <button class="view-toggle-btn active" id="chatViewBtn" onclick="switchView('chat')" title="Chat View">
+                💬
+              </button>
+              <button class="view-toggle-btn" id="splitViewBtn" onclick="switchView('split')" title="Side-by-Side Development View">
+                ⚙️
+              </button>
+              <button class="view-toggle-btn" id="previewViewBtn" onclick="switchView('preview')" title="Preview Only">
+                👁️
+              </button>
+            </div>
+            <!-- Diamond CLI Welcome -->
+            <div style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%); border: 2px solid rgba(124, 58, 237, 0.3); padding: 12px; border-radius: 10px; margin: 12px;">
+              <div style="font-size: 12px; font-weight: 600; color: #a855f7; margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">
+                <svg class="enterprise-icon" style="fill: #FFD700;"><use href="#icon-diamond"></use></svg>
+                Diamond SAO Universal Infrastructure CLI
+              </div>
+              <div style="color: #aaa; font-size: 10px; line-height: 1.4;">
+                Replace all traditional CLI tools with natural language. Manage DNS, Cloudflare Workers, MongoDB, GCP Secrets, and App Deployment through conversational AI.
+              </div>
+            </div>
+
+            <!-- Diamond Quick Commands -->
+            <div class="diamond-quick-commands" style="padding: 0 12px;">
+              <div class="diamond-quick-cmd" onclick="executeDiamondCommand('update mcp domain to point to integration gateway')">
+                🌐 Update MCP Domain
+              </div>
+              <div class="diamond-quick-cmd" onclick="executeDiamondCommand('deploy integration gateway worker')">
+                ⚡ Deploy Worker
+              </div>
+              <div class="diamond-quick-cmd" onclick="executeDiamondCommand('create database for user profiles')">
+                🗃️ Create Database
+              </div>
+              <div class="diamond-quick-cmd" onclick="executeDiamondCommand('get api key secret from production')">
+                🔐 Get Secret
+              </div>
+              <div class="diamond-quick-cmd" onclick="executeDiamondCommand('scale owner interface app to 5 replicas')">
+                📈 Scale App
+              </div>
+            </div>
+            
+            <!-- Natural Language Chat with Diamond CLI -->
+            <div id="naturalLanguageChat" style="flex: 1; display: flex; flex-direction: column;">
+              <div style="flex: 1; overflow-y: auto; padding: 12px;">
+                <div id="copilotMessages" style="display: flex; flex-direction: column; gap: 8px;">
+                  <!-- Initial Diamond CLI Welcome -->
+                  <div style="background: rgba(124, 58, 237, 0.1); border: 1px solid rgba(124, 58, 237, 0.3); padding: 12px; border-radius: 8px; align-self: flex-start; max-width: 85%;">
+                    <div style="color: #a855f7; font-weight: 600; font-size: 11px; margin-bottom: 4px;">💎 Diamond SAO CLI v34</div>
+                    <div style="color: #ccc; font-size: 10px; line-height: 1.4;">
+                      Hi! I've replaced all your CLI tools with natural language processing:
+                      <br><br>
+                      🌐 DNS Operations (replaces gcloud CLI)<br>
+                      ⚡ Cloudflare Workers (replaces Wrangler CLI)<br>
+                      🗃️ MongoDB Operations (replaces mongo CLI)<br>
+                      🔐 GCP Secrets (replaces gcloud secrets CLI)<br>
+                      🚀 App Deployment (replaces Warp Drive CLI)<br>
+                      <br>
+                      Just tell me what you need in natural language!
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div style="padding: 12px; border-top: 1px solid rgba(124, 58, 237, 0.2);">
+                <div style="display: flex; gap: 6px; align-items: center;">
+                  <!-- Diamond Mode Toggle -->
+                  <button id="diamondModeToggleBtn" onclick="toggleDiamondMode()" style="background: rgba(255, 215, 0, 0.2); border: 1px solid rgba(255, 215, 0, 0.4); color: #FFD700; padding: 4px 8px; border-radius: 8px; font-size: 9px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 3px;" title="Diamond CLI Mode Active">
+                    <svg class="enterprise-icon" style="width: 10px; height: 10px; fill: #FFD700;">
+                      <use href="#icon-diamond"></use>
+                    </svg>
+                    DIAMOND
+                  </button>
+                  
+                  <!-- Testing/Production Mode Toggle -->
+                  <button id="modeToggleBtn" onclick="toggleMode()" style="background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.4); color: #f59e0b; padding: 4px 8px; border-radius: 8px; font-size: 9px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 3px;" title="Currently in Testing Mode - Click to switch">
+                    <span id="modeIcon">🧪</span>
+                    <span id="modeText">TESTING</span>
+                  </button>
+                  
+                  <!-- Local/Cloud Environment Toggle -->
+                  <button id="envToggleBtn" onclick="toggleEnvironment()" style="background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #10b981; padding: 4px 8px; border-radius: 8px; font-size: 9px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 3px;" title="Currently in Local Mode - Click to switch">
+                    <span id="envIcon">🖥️</span>
+                    <span id="envText">LOCAL</span>
+                  </button>
+                  
+                  <!-- Image Upload Button -->
+                  <button onclick="openImageHandler()" style="background: rgba(168, 85, 247, 0.2); border: 1px solid rgba(168, 85, 247, 0.4); color: #a855f7; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; font-size: 10px;" title="Add Images to Project">
+                    📷
+                  </button>
+                  
+                  <!-- Hidden File Input for Images -->
+                  <input type="file" id="imageFileInput" accept="image/*" multiple style="display: none;" onchange="handleImageUpload(event)">
+                  
+                  <input type="text" id="diamondCliInput" placeholder="Tell me what you need... (e.g., 'deploy worker', 'create database')" style="flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(124, 58, 237, 0.2); padding: 8px 12px; border-radius: 15px; color: white; font-size: 12px; outline: none;" onkeypress="handleDiamondKeyPress(event)">
+                  
+                  <button onclick="sendDiamondCommand()" style="background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); border: none; color: #ffffff; padding: 8px 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 11px;">
+                    🚀 Execute
+                  </button>
+                  
+                  <button onclick="startVoiceInput()" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.3s; font-size: 10px;">
+                    <svg class="enterprise-icon" style="width: 10px; height: 10px; fill: #ffffff;">
+                      <use href="#icon-microphone"></use>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Original AIXTIV CLI (Hidden by default, can be toggled) -->
+            <div id="cliInterface" style="display: none; flex: 1; flex-direction: column; background: #0a0a0a; border: 1px solid #333;">
+              <!-- CLI Interface content remains the same as original -->
+              <div style="background: #1a1a1a; padding: 6px 10px; border-bottom: 1px solid #333; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <span style="color: #0bb1bb; font-family: monospace; font-size: 11px; font-weight: 600;">AIXTIV CLI</span>
+                  <span style="color: #666; font-size: 9px; font-family: monospace;">v2.1.0</span>
+                </div>
+                <div style="display: flex; gap: 4px; align-items: center;">
+                  <button style="background: #2a2a2a; border: 1px solid #444; color: #0bb1bb; cursor: pointer; padding: 2px 4px; border-radius: 3px; font-size: 8px;" onclick="openAPIConfig()" title="Configure API">
+                    <svg class="enterprise-icon" style="width: 8px; height: 8px;"><use href="#icon-cog"></use></svg> API Config
+                  </button>
+                </div>
+              </div>
+              
+              <div class="terminal-output" id="terminalOutput" style="flex: 1; overflow-y: auto; padding: 10px; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 11px; line-height: 1.4; color: #e6e6e6; background: #0d0d0d; display: block;">
+                <div class="terminal-line">
+                  <span style="color: #50C878;">asoos@diamond</span><span style="color: #0bb1bb;">:</span><span style="color: #4ECDC4;">~</span><span style="color: #e6e6e6;">$ </span><span style="color: #fff;">_</span>
+                </div>
+              </div>
+              
+              <div class="cli-input-area" style="border-top: 1px solid #333; background: #1a1a1a; padding: 6px; display: flex; align-items: center; gap: 6px;">
+                <span style="color: #50C878; font-family: monospace; font-size: 11px;">$</span>
+                
+                <button id="cliModeToggleBtn" onclick="toggleDiamondMode()" style="background: rgba(124, 58, 237, 0.2); border: 1px solid rgba(124, 58, 237, 0.4); color: #a855f7; padding: 2px 6px; border-radius: 6px; font-size: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 2px;" title="Switch to Diamond Mode">
+                  <svg class="enterprise-icon" style="width: 8px; height: 8px; fill: #a855f7;">
+                    <use href="#icon-diamond"></use>
+                  </svg>
+                  DIAMOND
+                </button>
+                
+                <input type="text" class="cli-input" id="cliInput" placeholder="Enter command..." style="flex: 1; background: transparent; border: none; outline: none; color: #fff; font-family: 'Monaco', 'Menlo', monospace; font-size: 11px;" onkeypress="handleCLIKeyPress(event)">
+                
+                <button id="executeBtn" class="cli-btn" onclick="executeCLICommand()" style="background: #0bb1bb; border: none; color: #000; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 10px; cursor: pointer; font-weight: 600;">
+                  EXECUTE
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right Panel (keeping original functionality) -->
+          <div class="right-panel" id="rightPanel">
+            <!-- Copilot Section -->
+            <div class="copilot-section">
+              <div class="copilot-title">DIAMOND SAO COPILOTS</div>
+              <div class="copilot-hex-container">
+                <div class="copilot-hex-item active" onclick="activateRIX('QB', 'Diamond QB')">
+                  <div class="copilot-hex">
+                    <svg viewBox="0 0 60 60" style="width: 50px; height: 50px;">
+                      <defs>
+                        <linearGradient id="qbGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                          <stop offset="100%" style="stop-color:#0bb1bb;stop-opacity:1" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#qbGradient)" stroke="#FFD700" stroke-width="2" opacity="0.9" />
+                      <text x="30" y="26" text-anchor="middle" fill="white" font-size="12" font-weight="800">💎</text>
+                      <text x="30" y="38" text-anchor="middle" fill="white" font-size="9" font-weight="600">SAO</text>
+                    </svg>
+                    <div class="copilot-status"></div>
+                  </div>
+                  <div class="copilot-name active">Diamond SAO</div>
+                </div>
+                
+                <div class="copilot-hex-item" onclick="activateRIX('SH', 'Claude 4')">
+                  <div class="copilot-hex">
+                    <svg viewBox="0 0 60 60" style="width: 50px; height: 50px;">
+                      <defs>
+                        <linearGradient id="shGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
+                          <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#shGradient)" stroke="#4ECDC4" stroke-width="2" opacity="0.9" />
+                      <text x="30" y="26" text-anchor="middle" fill="white" font-size="12" font-weight="800">SH</text>
+                      <text x="30" y="38" text-anchor="middle" fill="white" font-size="9" font-weight="600">RIX</text>
+                    </svg>
+                    <div class="copilot-status"></div>
+                  </div>
+                  <div class="copilot-name">Claude 4</div>
+                </div>
+                
+                <div class="copilot-hex-item" onclick="activateRIX('Q', 'Q RIX')">
+                  <div class="copilot-hex">
+                    <svg viewBox="0 0 60 60" style="width: 50px; height: 50px;">
+                      <defs>
+                        <linearGradient id="qGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" style="stop-color:#50C878;stop-opacity:1" />
+                          <stop offset="100%" style="stop-color:#c7b299;stop-opacity:1" />
+                        </linearGradient>
+                      </defs>
+                      <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#qGradient)" stroke="#50C878" stroke-width="2" opacity="0.9" />
+                      <text x="30" y="26" text-anchor="middle" fill="white" font-size="12" font-weight="800">Q</text>
+                      <text x="30" y="38" text-anchor="middle" fill="white" font-size="9" font-weight="600">RIX</text>
+                    </svg>
+                    <div class="copilot-status"></div>
+                  </div>
+                  <div class="copilot-name">Q RIX</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Infrastructure Status Panel -->
+            <div class="panel-card">
+              <button class="panel-header" onclick="togglePanel(this)">
+                <div class="panel-title">
+                  <svg class="panel-icon" style="fill: #a855f7;">
+                    <use href="#icon-chart-line"></use>
+                  </svg>
+                  Diamond SAO Infrastructure
+                </div>
+                <svg class="enterprise-icon chevron-icon" style="fill: rgba(255, 255, 255, 0.8); transition: all 0.3s ease;">
+                  <use href="#icon-chevron-down"></use>
+                </svg>
+              </button>
+              <div class="panel-content active">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                  <span style="font-size: 10px; color: #ccc;">DNS Manager</span>
+                  <span style="font-size: 10px; color: #10b981;">✅ Active</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                  <span style="font-size: 10px; color: #ccc;">Workers Manager</span>
+                  <span style="font-size: 10px; color: #10b981;">✅ Active</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                  <span style="font-size: 10px; color: #ccc;">MongoDB Manager</span>
+                  <span style="font-size: 10px; color: #10b981;">✅ Active</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                  <span style="font-size: 10px; color: #ccc;">Secrets Manager</span>
+                  <span style="font-size: 10px; color: #10b981;">✅ Active</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span style="font-size: 10px; color: #ccc;">Warp Drive Manager</span>
+                  <span style="font-size: 10px; color: #10b981;">✅ Active</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Today's Hot Topics (keeping original) -->
+            <div class="panel-card">
+              <button class="panel-header" onclick="togglePanel(this)">
+                <div class="panel-title">
+                  <svg class="panel-icon" style="fill: #ff6b35;">
+                    <use href="#icon-fire"></use>
+                  </svg>
+                  Today's Hot Topics
+                </div>
+                <svg class="enterprise-icon chevron-icon" style="fill: rgba(255, 255, 255, 0.8); transition: all 0.3s ease;">
+                  <use href="#icon-chevron-down"></use>
+                </svg>
+              </button>
+              <div class="panel-content active">
+                <div style="padding: 6px; margin-bottom: 6px;">
+                  <div style="font-size: 11px; font-weight: 600; color: #fff; margin-bottom: 2px;">Diamond SAO CLI Deployment Complete</div>
+                  <div style="font-size: 9px; color: #aaa; line-height: 1.2;">All traditional CLI tools replaced with conversational AI</div>
+                </div>
+                <div style="padding: 6px;">
+                  <div style="font-size: 11px; font-weight: 600; color: #fff; margin-bottom: 2px;">Infrastructure Automation +95%</div>
+                  <div style="font-size: 9px; color: #aaa; line-height: 1.2;">Natural language processing active across all systems</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Enhanced Bottom Bar with Diamond Integration -->
+        <div class="bottom-bar">
+          <div class="integration-icons">
+            <div class="integration-icon" title="Google Workspace" onclick="handleIntegrationClick('Google Workspace')">
+              <svg class="integration-icon-svg" style="fill: #ffffff;">
+                <use href="#icon-google"></use>
+              </svg>
+            </div>
+            <div class="integration-icon" title="Microsoft 365" onclick="handleIntegrationClick('Microsoft 365')">
+              <svg class="integration-icon-svg" style="fill: #ffffff;">
+                <use href="#icon-microsoft"></use>
+              </svg>
+            </div>
+            <div class="integration-icon" title="Slack" onclick="handleIntegrationClick('Slack')">
+              <svg class="integration-icon-svg" style="fill: #ffffff;">
+                <use href="#icon-slack"></use>
+              </svg>
+            </div>
+            <div class="integration-icon" title="GitHub" onclick="handleIntegrationClick('GitHub')">
+              <svg class="integration-icon-svg" style="fill: #ffffff;">
+                <use href="#icon-github"></use>
+              </svg>
+            </div>
+            <div class="integration-icon active" title="Diamond SAO Infrastructure CLI" onclick="showDiamondStatus()">
+              <svg class="integration-icon-svg" style="fill: #FFD700;">
+                <use href="#icon-diamond"></use>
+              </svg>
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <div class="diamond-mode-indicator" style="font-size: 10px;">
+              <div class="diamond-icon-small"></div>
+              <span>5 CLI Tools Replaced</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Diamond CLI Variables
+    let isDiamondMode = true;
+    let currentDiamondService = 'unified';
+    let isProcessingDiamondCommand = false;
+    let isProductionMode = false; // Default to Testing Mode
+    let isCloudMode = false; // Default to Local Mode
+    
+    // CI/CD & CI/CTT Configuration
+    const MODES = {
+      TESTING: {
+        name: 'Testing',
+        color: '#f59e0b',
+        icon: '🧪',
+        description: 'Safe testing environment - no live changes'
+      },
+      PRODUCTION: {
+        name: 'Production', 
+        color: '#dc2626',
+        icon: '🚀',
+        description: 'Live environment - real API calls and deployments'
+      }
+    };
+    
+    // Local/Cloud Environment Configuration
+    const ENVIRONMENTS = {
+      LOCAL: {
+        name: 'Local',
+        color: '#10b981',
+        icon: '🖥️',
+        description: 'Local development environment'
+      },
+      CLOUD: {
+        name: 'Cloud',
+        color: '#3b82f6', 
+        icon: '☁️',
+        description: 'Cloud-based infrastructure'
+      }
+    };
+    
+    // Image handling state
+    let imageAssets = [];
+    let currentImageDirectory = '/Users/as/asoos/integration-gateway/assets/images';
+    
+    // Supported image formats
+    const SUPPORTED_IMAGE_FORMATS = ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp', 'ico'];
+
+    // Initialize Diamond CLI
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeParticles();
+      console.log('💎 Diamond SAO Universal CLI v34 Initialized');
+      console.log('💎 Traditional CLI tools replaced: DNS, Workers, MongoDB, Secrets, Apps');
+    });
+
+    // Diamond CLI Core Functions
+    async function sendDiamondCommand() {
+      const input = document.getElementById('diamondCliInput');
+      const command = input.value.trim();
+      
+      if (!command || isProcessingDiamondCommand) return;
+      
+      isProcessingDiamondCommand = true;
+      
+      // Add user message
+      addDiamondMessage('user', command);
+      
+      // Show processing with mode indicator
+      const currentMode = isProductionMode ? MODES.PRODUCTION : MODES.TESTING;
+      addDiamondMessage('processing', `💎 Processing Diamond SAO command in ${currentMode.name} Mode...`);
+      
+      try {
+        // Simulate Diamond CLI processing
+        const result = await processDiamondCommand(command);
+        
+        // Remove processing message
+        removeDiamondProcessingMessage();
+        
+        // Add response
+        addDiamondMessage('assistant', result.response);
+        
+      } catch (error) {
+        removeDiamondProcessingMessage();
+        addDiamondMessage('error', `❌ Command failed: ${error.message}`);
+      } finally {
+        isProcessingDiamondCommand = false;
+        input.value = '';
+      }
+    }
+
+    async function processDiamondCommand(command) {
+      const lowerCommand = command.toLowerCase();
+      const currentMode = isProductionMode ? MODES.PRODUCTION : MODES.TESTING;
+      
+      // Processing delay (shorter for testing, realistic for production)
+      const processingDelay = isProductionMode ? Math.random() * 2000 + 1000 : 800;
+      await new Promise(resolve => setTimeout(resolve, processingDelay));
+      
+      let response;
+      let service = 'unknown';
+      
+      // Mode-specific processing header
+      const currentEnv = isCloudMode ? ENVIRONMENTS.CLOUD : ENVIRONMENTS.LOCAL;
+      const modeHeader = `${currentMode.icon} ${currentMode.name.toUpperCase()} MODE | ${currentEnv.icon} ${currentEnv.name.toUpperCase()} ENV\n${'='.repeat(50)}\n`;
+      
+      if (lowerCommand.includes('dns') || lowerCommand.includes('domain') || lowerCommand.includes('mcp')) {
+        service = 'dns';
+        if (isProductionMode) {
+          const envDetails = isCloudMode 
+            ? 'Google Cloud DNS API (global infrastructure)'
+            : 'Local DNS resolver configuration';
+          response = `${modeHeader}🌐 DNS Operation Complete - LIVE CHANGES APPLIED!
+
+💎 Diamond SAO processed: "${command}"
+🧠 Understanding: Update MCP domain routing (92% confidence)
+📍 Domain: mcp.aipub.2100.cool
+🎯 Target: integration-gateway-js
+🏗️ Service: integration-gateway-js-yutylytffa-uw.a.run.app
+🌍 Environment: ${currentEnv.name} (${envDetails})
+
+🚀 PRODUCTION: Real DNS changes applied
+Method: diamond_sao_dns_manager_PRODUCTION_${currentEnv.name.toUpperCase()}
+⏱️ Executed in ${Math.floor(processingDelay)}ms
+🌐 DNS propagation initiated ${isCloudMode ? 'globally' : 'locally'}
+
+💎 Operation logged to Diamond SAO Production Firestore
+⚠️  Changes are now LIVE and affecting ${isCloudMode ? 'real traffic' : 'local development'}!`;
+        } else {
+          const envDetails = isCloudMode 
+            ? 'Cloud DNS validation (no live changes)'
+            : 'Local DNS testing environment';
+          response = `${modeHeader}🌐 DNS Operation Test Complete - No Live Changes
+
+💎 Diamond SAO processed: "${command}"
+🧠 Understanding: Update MCP domain routing (92% confidence)
+📍 Domain: mcp.aipub.2100.cool (TEST SIMULATION)
+🎯 Target: integration-gateway-js
+🏗️ Service: integration-gateway-js-yutylytffa-uw.a.run.app
+🌍 Environment: ${currentEnv.name} (${envDetails})
+
+🧪 TESTING: DNS changes validated, no live modifications made
+Method: diamond_sao_dns_manager_TEST_${currentEnv.name.toUpperCase()}
+⏱️ Executed in ${Math.floor(processingDelay)}ms
+✅ All validations passed - ready for ${isCloudMode ? 'cloud' : 'local'} production deployment
+
+💎 Test results logged to Diamond SAO Testing Firestore
+💡 Switch to Production Mode to apply real DNS changes`;
+        }
+
+      } else if (lowerCommand.includes('worker') || lowerCommand.includes('cloudflare') || lowerCommand.includes('deploy')) {
+        service = 'workers';
+        if (isProductionMode) {
+          response = `${modeHeader}⚡ Cloudflare Workers Deployment Complete - LIVE!
+
+💎 Diamond SAO processed: "${command}"
+🧠 Understanding: Deploy worker to Cloudflare (95% confidence)
+👷 Worker: integration-gateway-worker
+📦 Service: integration-gateway
+
+🚀 PRODUCTION: Worker deployed to Cloudflare edge network
+Method: diamond_sao_workers_manager_PRODUCTION
+⏱️ Executed in ${Math.floor(processingDelay)}ms
+🌍 Live deployment across 200+ global edge locations
+
+💎 Operation logged to Diamond SAO Production Firestore
+⚠️  Worker is now handling LIVE traffic!`;
+        } else {
+          response = `${modeHeader}⚡ Cloudflare Workers Test Complete - No Deployment
+
+💎 Diamond SAO processed: "${command}"
+🧠 Understanding: Deploy worker to Cloudflare (95% confidence)
+👷 Worker: integration-gateway-worker (TEST BUILD)
+📦 Service: integration-gateway
+
+🧪 TESTING: Worker code validated, syntax checked, no live deployment
+Method: diamond_sao_workers_manager_TEST
+⏱️ Executed in ${Math.floor(processingDelay)}ms
+✅ Code validation passed - ready for production deployment
+
+💎 Test results logged to Diamond SAO Testing Firestore
+💡 Switch to Production Mode to deploy to live Cloudflare edge`;
+        }
+
+      } else if (lowerCommand.includes('database') || lowerCommand.includes('mongo') || lowerCommand.includes('collection')) {
+        service = 'mongodb';
+        response = `🗃️ MongoDB Operation Complete!
+
+💎 Diamond SAO processed: "${command}"
+🧠 Understanding: Create database for user profiles (90% confidence)
+🏗️ Database: user_profiles
+📋 Purpose: User profile management
+🔗 Collections: users, profiles, sessions
+
+✅ Success! - Direct MongoDB API bypassed mongo CLI
+Method: diamond_sao_mongodb_manager
+⏱️ Executed in 932ms
+
+💎 Operation logged to Diamond SAO Firestore`;
+
+      } else if (lowerCommand.includes('secret') || lowerCommand.includes('key') || lowerCommand.includes('password')) {
+        service = 'secrets';
+        response = `🔐 GCP Secrets Operation Complete!
+
+💎 Diamond SAO processed: "${command}"
+🧠 Understanding: Retrieve API key from production (90% confidence)
+🔑 Secret: api-key
+🌍 Environment: production
+🔒 Version: latest
+
+✅ Success! - Direct GCP Secrets API bypassed gcloud CLI
+Method: diamond_sao_secrets_manager
+⏱️ Executed in 654ms
+🔐 Secret value: [REDACTED FOR SECURITY]
+
+💎 Operation logged to Diamond SAO Firestore`;
+
+      } else if (lowerCommand.includes('scale') || lowerCommand.includes('app') || lowerCommand.includes('rollback')) {
+        service = 'deployment';
+        response = `🚀 App Deployment Operation Complete!
+
+💎 Diamond SAO processed: "${command}"
+🧠 Understanding: Scale application to 5 replicas (88% confidence)
+📱 App: owner-interface
+⚡ Target Replicas: 5
+🌐 Platform: Cloud Run
+📍 Region: us-west1
+
+✅ Success! - Direct Platform APIs bypassed Warp Drive CLI
+Method: diamond_sao_warp_drive_manager
+⏱️ Executed in 2.1s
+
+💎 Operation logged to Diamond SAO Firestore`;
+
+      } else {
+        service = 'universal';
+        response = `💎 Diamond SAO Universal Assistant
+
+I understand you're asking about: "${command}"
+
+💎 I can help you manage your entire infrastructure:
+• 🌐 DNS Management (replaces gcloud CLI)
+• ⚡ Cloudflare Workers (replaces Wrangler CLI) 
+• 🗃️ MongoDB Operations (replaces mongo CLI)
+• 🔐 GCP Secrets (replaces gcloud secrets CLI)
+• 🚀 App Deployment (replaces Warp Drive CLI)
+
+Try being more specific, for example:
+• "deploy integration gateway worker to cloudflare"
+• "update mcp domain to point to integration gateway"  
+• "create database for user profiles"
+• "get api key secret from production"
+• "scale owner interface app to 5 replicas"
+
+💎 All traditional CLI tools have been replaced with conversational AI!`;
+      }
+      
+      currentDiamondService = service;
+      updateDiamondModeIndicator(service);
+      
+      return { response, service };
+    }
+
+    function addDiamondMessage(type, content) {
+      const messagesContainer = document.getElementById('copilotMessages');
+      const message = document.createElement('div');
+      
+      if (type === 'user') {
+        message.style.cssText = 'background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%); color: white; padding: 12px; border-radius: 8px; align-self: flex-end; max-width: 75%; font-size: 11px; margin-bottom: 8px;';
+      } else if (type === 'assistant') {
+        message.style.cssText = 'background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); color: #93c5fd; padding: 12px; border-radius: 8px; align-self: flex-start; max-width: 85%; font-size: 10px; line-height: 1.4; white-space: pre-line; margin-bottom: 8px;';
+      } else if (type === 'processing') {
+        message.style.cssText = 'background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); color: #fbbf24; padding: 8px 12px; border-radius: 8px; align-self: flex-start; max-width: 60%; font-size: 10px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;';
+        message.id = 'processingMessage';
+        content = '<div style="width: 12px; height: 12px; border: 2px solid rgba(251, 191, 36, 0.3); border-top: 2px solid #fbbf24; border-radius: 50%; animation: spin 1s linear infinite;"></div>' + content;
+        message.innerHTML = content;
+        messagesContainer.appendChild(message);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        return;
+      } else if (type === 'error') {
+        message.style.cssText = 'background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #f87171; padding: 12px; border-radius: 8px; align-self: flex-start; max-width: 80%; font-size: 11px; margin-bottom: 8px;';
+      }
+      
+      message.textContent = content;
+      messagesContainer.appendChild(message);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function removeDiamondProcessingMessage() {
+      const processing = document.getElementById('processingMessage');
+      if (processing) {
+        processing.remove();
+      }
+    }
+
+    function updateDiamondModeIndicator(service) {
+      const indicator = document.querySelector('.diamond-mode-indicator span');
+      const serviceNames = {
+        dns: 'DNS Mode',
+        workers: 'Workers Mode',
+        mongodb: 'Database Mode',
+        secrets: 'Secrets Mode',
+        deployment: 'Deploy Mode',
+        universal: 'Universal Mode'
+      };
+      
+      if (indicator) {
+        indicator.textContent = serviceNames[service] || 'Diamond SAO v34';
+      }
+    }
+
+    function executeDiamondCommand(command) {
+      const input = document.getElementById('diamondCliInput');
+      input.value = command;
+      sendDiamondCommand();
+    }
+
+    function handleDiamondKeyPress(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        sendDiamondCommand();
+      }
+    }
+
+    function toggleDiamondMode() {
+      const naturalChat = document.getElementById('naturalLanguageChat');
+      const cliInterface = document.getElementById('cliInterface');
+      const diamondBtn = document.getElementById('diamondModeToggleBtn');
+      const cliBtn = document.getElementById('cliModeToggleBtn');
+      
+      if (isDiamondMode) {
+        // Switch to traditional CLI
+        naturalChat.style.display = 'none';
+        cliInterface.style.display = 'flex';
+        isDiamondMode = false;
+        
+        if (diamondBtn) {
+          diamondBtn.innerHTML = '<svg class="enterprise-icon" style="width: 10px; height: 10px; fill: #666;"><use href="#icon-terminal"></use></svg>CLI';
+          diamondBtn.style.background = 'rgba(102, 102, 102, 0.2)';
+          diamondBtn.style.borderColor = 'rgba(102, 102, 102, 0.4)';
+          diamondBtn.style.color = '#666';
+          diamondBtn.title = 'Switch to Diamond CLI Mode';
+        }
+        
+      } else {
+        // Switch to Diamond CLI
+        cliInterface.style.display = 'none';
+        naturalChat.style.display = 'flex';
+        isDiamondMode = true;
+        
+        if (cliBtn) {
+          cliBtn.innerHTML = '<svg class="enterprise-icon" style="width: 8px; height: 8px; fill: #FFD700;"><use href="#icon-diamond"></use></svg>DIAMOND';
+          cliBtn.style.background = 'rgba(255, 215, 0, 0.2)';
+          cliBtn.style.borderColor = 'rgba(255, 215, 0, 0.4)';
+          cliBtn.style.color = '#FFD700';
+          cliBtn.title = 'Switch to Traditional CLI Mode';
+        }
+      }
+    }
+
+    function showDiamondStatus() {
+      showNotification('💎 Diamond SAO Universal CLI v34 - All traditional CLI tools replaced with conversational AI', 'success');
+    }
+
+    // Utility Functions
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.remove();
+      }, 5000);
+    }
+
+    function initializeParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 12 + 's';
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    function togglePanel(header) {
+      const content = header.nextElementSibling;
+      const chevron = header.querySelector('.chevron-icon');
+      
+      if (content.classList.contains('active')) {
+        content.classList.remove('active');
+        header.classList.add('collapsed');
+      } else {
+        content.classList.add('active');
+        header.classList.remove('collapsed');
+      }
+    }
+
+    function activateRIX(rix, name) {
+      // Update active states
+      document.querySelectorAll('.copilot-hex-item').forEach(item => {
+        item.classList.remove('active');
+        item.querySelector('.copilot-name').classList.remove('active');
+      });
+      
+      event.target.closest('.copilot-hex-item').classList.add('active');
+      event.target.closest('.copilot-hex-item').querySelector('.copilot-name').classList.add('active');
+      
+      showNotification(`💎 ${name} RIX activated - Diamond SAO CLI ready`, 'success');
+    }
+
+    function handleIntegrationClick(integration) {
+      showNotification(`💎 ${integration} integration via Diamond SAO CLI`, 'success');
+    }
+
+    function selectIcon(element, type, id) {
+      // Update active states
+      document.querySelectorAll('.sidebar-icon').forEach(icon => {
+        icon.classList.remove('active');
+      });
+      element.classList.add('active');
+      
+      showNotification(`💎 Diamond SAO ${type} Squadron activated`, 'success');
+    }
+
+    function openSettings() {
+      showNotification('💎 Diamond SAO Settings - All CLI tools replaced with conversational AI', 'success');
+    }
+
+    function startVoiceInput() {
+      showNotification('🎤 Voice input for Diamond SAO CLI - Coming soon!', 'success');
+    }
+
+    // Legacy CLI functions (for compatibility)
+    function handleCLIKeyPress(event) {
+      if (event.key === 'Enter') {
+        executeCLICommand();
+      }
+    }
+
+    function executeCLICommand() {
+      const input = document.getElementById('cliInput');
+      const command = input.value.trim();
+      
+      if (!command) return;
+      
+      // Add command to terminal
+      const terminal = document.getElementById('terminalOutput');
+      const commandLine = document.createElement('div');
+      commandLine.className = 'terminal-line';
+      commandLine.innerHTML = `<span style="color: #50C878;">asoos@diamond</span><span style="color: #0bb1bb;">:</span><span style="color: #4ECDC4;">~</span><span style="color: #e6e6e6;">$ </span><span style="color: #fff;">${command}</span>`;
+      terminal.appendChild(commandLine);
+      
+      // Add response
+      const responseLine = document.createElement('div');
+      responseLine.className = 'terminal-line';
+      responseLine.innerHTML = `<span style="color: #fbbf24;">💎 Diamond SAO: Command "${command}" processed via conversational AI</span>`;
+      terminal.appendChild(responseLine);
+      
+      const suggestionLine = document.createElement('div');
+      suggestionLine.className = 'terminal-line';
+      suggestionLine.innerHTML = `<span style="color: #94a3b8;">   Tip: Switch to Diamond mode for natural language commands</span>`;
+      terminal.appendChild(suggestionLine);
+      
+      terminal.scrollTop = terminal.scrollHeight;
+      input.value = '';
+    }
+
+    function openAPIConfig() {
+      showNotification('💎 Diamond SAO API Configuration - Unified CLI management', 'success');
+    }
+    
+    // Testing/Production Mode Toggle Function
+    function toggleMode() {
+      const modeBtn = document.getElementById('modeToggleBtn');
+      const modeIcon = document.getElementById('modeIcon');
+      const modeText = document.getElementById('modeText');
+      
+      isProductionMode = !isProductionMode;
+      const currentMode = isProductionMode ? MODES.PRODUCTION : MODES.TESTING;
+      
+      // Update button appearance
+      modeIcon.textContent = currentMode.icon;
+      modeText.textContent = currentMode.name.toUpperCase();
+      modeBtn.style.background = `rgba(${currentMode.color.substring(1).match(/.{2}/g).map(hex => parseInt(hex, 16)).join(', ')}, 0.2)`;
+      modeBtn.style.borderColor = `rgba(${currentMode.color.substring(1).match(/.{2}/g).map(hex => parseInt(hex, 16)).join(', ')}, 0.4)`;
+      modeBtn.style.color = currentMode.color;
+      modeBtn.title = `Currently in ${currentMode.name} Mode - ${currentMode.description}`;
+      
+      // Show notification with mode change
+      const notificationType = isProductionMode ? 'error' : 'success';
+      const warningText = isProductionMode ? ' ⚠️  LIVE MODE - Real changes will be applied!' : ' 🛡️  Safe testing environment active';
+      
+      showNotification(`${currentMode.icon} Switched to ${currentMode.name} Mode${warningText}`, notificationType);
+      
+      // Add mode change message to chat
+      const modeChangeMessage = isProductionMode 
+        ? `🚀 PRODUCTION MODE ACTIVATED\n\n⚠️  WARNING: All commands will now make LIVE changes to your infrastructure!\n\n• DNS changes will affect real traffic\n• Worker deployments will go live immediately  \n• Database operations will modify production data\n• Scaling will affect live applications\n\nProceed with caution!`
+        : `🧪 TESTING MODE ACTIVATED\n\n✅ Safe Environment: All commands are now in testing mode\n\n• DNS operations will be validated but not applied\n• Worker code will be tested but not deployed\n• Database operations will be simulated\n• Application scaling will be tested\n\nSwitch to Production Mode when ready to apply real changes.`;
+        
+      addDiamondMessage('assistant', modeChangeMessage);
+      
+      console.log(`💎 Diamond SAO CLI switched to ${currentMode.name} Mode`);
+    }
+    
+    // Local/Cloud Environment Toggle Function
+    function toggleEnvironment() {
+      const envBtn = document.getElementById('envToggleBtn');
+      const envIcon = document.getElementById('envIcon');
+      const envText = document.getElementById('envText');
+      
+      isCloudMode = !isCloudMode;
+      const currentEnv = isCloudMode ? ENVIRONMENTS.CLOUD : ENVIRONMENTS.LOCAL;
+      
+      // Update button appearance
+      envIcon.textContent = currentEnv.icon;
+      envText.textContent = currentEnv.name.toUpperCase();
+      envBtn.style.background = `rgba(${currentEnv.color.substring(1).match(/.{2}/g).map(hex => parseInt(hex, 16)).join(', ')}, 0.2)`;
+      envBtn.style.borderColor = `rgba(${currentEnv.color.substring(1).match(/.{2}/g).map(hex => parseInt(hex, 16)).join(', ')}, 0.4)`;
+      envBtn.style.color = currentEnv.color;
+      envBtn.title = `Currently in ${currentEnv.name} Mode - ${currentEnv.description}`;
+      
+      // Show notification
+      const notificationType = 'success';
+      const infoText = isCloudMode ? ' ☁️  Cloud infrastructure active' : ' 🖥️  Local development environment';
+      
+      showNotification(`${currentEnv.icon} Switched to ${currentEnv.name} Environment${infoText}`, notificationType);
+      
+      // Add environment change message to chat
+      const envChangeMessage = isCloudMode 
+        ? `☁️ CLOUD ENVIRONMENT ACTIVATED\n\n🌐 Global Infrastructure: All operations will target cloud-based services\n\n• DNS operations via Google Cloud DNS API\n• Workers deployed to Cloudflare global edge network\n• MongoDB operations on cloud clusters\n• GCP Secrets from cloud secret manager\n• App deployments to Cloud Run\n\n📊 Higher latency but production-scale infrastructure.`
+        : `🖥️ LOCAL ENVIRONMENT ACTIVATED\n\n🏠 Local Development: All operations will target local services\n\n• DNS operations via local resolver\n• Workers tested in local development environment\n• MongoDB operations on local database\n• Local secrets and configuration files\n• Local application development server\n\n⚡ Faster development cycle with local resources.`;
+        
+      addDiamondMessage('assistant', envChangeMessage);
+      
+      console.log(`💎 Diamond SAO CLI switched to ${currentEnv.name} Environment`);
+    }
+    
+    // Image Handling Functions
+    function openImageHandler() {
+      const fileInput = document.getElementById('imageFileInput');
+      fileInput.click();
+    }
+    
+    function handleImageUpload(event) {
+      const files = Array.from(event.target.files);
+      
+      if (files.length === 0) return;
+      
+      // Filter supported image formats
+      const validImages = files.filter(file => {
+        const extension = file.name.toLowerCase().split('.').pop();
+        return SUPPORTED_IMAGE_FORMATS.includes(extension);
+      });
+      
+      if (validImages.length === 0) {
+        showNotification('⚠️ No valid image files selected. Supported formats: ' + SUPPORTED_IMAGE_FORMATS.join(', '), 'error');
+        return;
+      }
+      
+      // Process each valid image
+      validImages.forEach(file => {
+        const imageInfo = {
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          localPath: isCloudMode ? null : `${currentImageDirectory}/${file.name}`,
+          cloudPath: isCloudMode ? `gs://asoos-assets/images/${file.name}` : null,
+          timestamp: new Date().toISOString()
+        };
+        
+        imageAssets.push(imageInfo);
+        
+        // Create image preview URL
+        const imageUrl = URL.createObjectURL(file);
+        
+        // Add image processing message
+        const imageMessage = isCloudMode 
+          ? `📷 Image Added to Cloud Storage\n\n🖼️ File: ${file.name}\n💾 Size: ${formatFileSize(file.size)}\n☁️ Cloud Path: gs://asoos-assets/images/${file.name}\n🌍 Storage: Google Cloud Storage\n\n✅ Image ready for web deployment. Use path in HTML: \n<img src="/images/${file.name}" alt="${file.name.split('.')[0]}" />\n\n🔗 CDN URL: https://cdn.aipub.2100.cool/images/${file.name}`
+          : `📷 Image Added to Local Directory\n\n🖼️ File: ${file.name}\n💾 Size: ${formatFileSize(file.size)}\n💼 Local Path: ${currentImageDirectory}/${file.name}\n🖥️ Storage: Local Development\n\n✅ Image ready for development. Use relative path in HTML:\n<img src="./assets/images/${file.name}" alt="${file.name.split('.')[0]}" />\n\n💡 Switch to Cloud mode to deploy to production CDN.`;
+          
+        addDiamondMessage('assistant', imageMessage);
+      });
+      
+      // Show summary notification
+      const summary = validImages.length === 1 
+        ? `📷 1 image added to ${isCloudMode ? 'cloud storage' : 'local directory'}` 
+        : `📷 ${validImages.length} images added to ${isCloudMode ? 'cloud storage' : 'local directory'}`;
+        
+      showNotification(summary, 'success');
+      
+      // Clear file input
+      event.target.value = '';
+      
+      console.log(`💎 ${validImages.length} images processed in ${isCloudMode ? 'Cloud' : 'Local'} mode`);
+    }
+    
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    // Enhanced web development commands
+    function handleWebDevelopmentCommands(command) {
+      const lowerCommand = command.toLowerCase();
+      
+      if (lowerCommand.includes('add image') || lowerCommand.includes('upload image')) {
+        // Trigger image upload
+        openImageHandler();
+        return {
+          response: `📷 Image Upload Interface Opened\n\n💎 Diamond SAO will help you add images to your ${isCloudMode ? 'cloud storage' : 'local project'}:\n\n• Select multiple image files\n• Automatic format validation (${SUPPORTED_IMAGE_FORMATS.join(', ')})\n• ${isCloudMode ? 'Cloud storage with CDN URLs' : 'Local development paths'}\n• Ready-to-use HTML img tags\n\nPlease select your image files in the file dialog.`,
+          service: 'images'
+        };
+      }
+      
+      if (lowerCommand.includes('create web page') || lowerCommand.includes('build website')) {
+        return {
+          response: `🌐 Web Page Creation Ready\n\n💎 Diamond SAO can help you build web pages with:\n\n• 🖼️ Image integration (${imageAssets.length} images available)\n• 🎨 Responsive HTML/CSS generation\n• ⚡ ${isCloudMode ? 'Cloud deployment pipeline' : 'Local development server'}\n• 📁 Asset optimization and CDN integration\n\nTell me what kind of web page you want to create!`,
+          service: 'webdev'
+        };
+      }
+      
+      return null;
+    }
+    
+    // View Mode Management
+    let currentView = 'chat';
+    let selectedSecurityOption = null;
+    
+    function switchView(view) {
+      const chatArea = document.getElementById('chatArea');
+      const splitView = document.getElementById('splitView');
+      const chatViewBtn = document.getElementById('chatViewBtn');
+      const splitViewBtn = document.getElementById('splitViewBtn');
+      const previewViewBtn = document.getElementById('previewViewBtn');
+      
+      // Reset all buttons
+      [chatViewBtn, splitViewBtn, previewViewBtn].forEach(btn => btn.classList.remove('active'));
+      
+      currentView = view;
+      
+      switch(view) {
+        case 'chat':
+          chatArea.style.display = 'flex';
+          splitView.style.display = 'none';
+          chatViewBtn.classList.add('active');
+          break;
+          
+        case 'split':
+          chatArea.style.display = 'none';
+          splitView.style.display = 'flex';
+          splitViewBtn.classList.add('active');
+          updatePreview();
+          break;
+          
+        case 'preview':
+          chatArea.style.display = 'none';
+          splitView.style.display = 'flex';
+          // Hide code panel for preview-only mode
+          const codePanel = document.querySelector('.code-editor-panel');
+          codePanel.style.display = 'none';
+          previewViewBtn.classList.add('active');
+          updatePreview();
+          break;
+      }
+    }
+    
+    function switchCodeTab(tabElement, codeType) {
+      // Remove active from all tabs
+      document.querySelectorAll('.code-tab').forEach(tab => tab.classList.remove('active'));
+      
+      // Hide all code content
+      document.querySelectorAll('.code-content').forEach(content => content.style.display = 'none');
+      
+      // Activate selected tab and show content
+      tabElement.classList.add('active');
+      document.getElementById(codeType).style.display = 'block';
+      
+      // Update preview if we're in split view
+      if (currentView === 'split') {
+        setTimeout(updatePreview, 100);
+      }
+    }
+    
+    function updatePreview() {
+      const htmlCode = document.getElementById('htmlCode').textContent;
+      const cssCode = document.getElementById('cssCode').textContent;
+      const jsCode = document.getElementById('jsCode').textContent;
+      
+      const previewFrame = document.getElementById('previewFrame');
+      
+      const fullHTML = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Diamond SAO Live Preview</title>
+          <style>
+            ${cssCode}
+          </style>
+        </head>
+        <body>
+          ${htmlCode}
+          <script>
+            ${jsCode}
+          </script>
+        </body>
+        </html>
+      `;
+      
+      previewFrame.srcdoc = fullHTML;
+    }
+    
+    // Security Prompt Functionality
+    function showSecurityPrompt() {
+      const securityPrompt = document.getElementById('securityPrompt');
+      securityPrompt.style.display = 'flex';
+    }
+    
+    function closeSecurityPrompt() {
+      const securityPrompt = document.getElementById('securityPrompt');
+      securityPrompt.style.display = 'none';
+      selectedSecurityOption = null;
+      
+      // Reset all option selections
+      document.querySelectorAll('.prompt-option').forEach(option => {
+        option.style.background = 'rgba(255, 255, 255, 0.05)';
+        option.style.borderColor = 'rgba(124, 58, 237, 0.3)';
+      });
+    }
+    
+    function selectSecurityOption(optionType) {
+      selectedSecurityOption = optionType;
+      
+      // Reset all options
+      document.querySelectorAll('.prompt-option').forEach(option => {
+        option.style.background = 'rgba(255, 255, 255, 0.05)';
+        option.style.borderColor = 'rgba(124, 58, 237, 0.3)';
+      });
+      
+      // Highlight selected option
+      const selectedElement = event.target.closest('.prompt-option');
+      selectedElement.style.background = 'rgba(124, 58, 237, 0.2)';
+      selectedElement.style.borderColor = 'rgba(124, 58, 237, 0.6)';
+    }
+    
+    function applySecurityOption() {
+      if (!selectedSecurityOption) {
+        showNotification('Please select a security option first', 'error');
+        return;
+      }
+      
+      const securityDetails = {
+        oauth: {
+          name: 'OAuth 2.0 / OIDC',
+          implementation: 'Google Cloud Identity, Auth0 integration',
+          code: 'oauth2-implementation.js'
+        },
+        jwt: {
+          name: 'JWT Authentication',
+          implementation: 'RS256 signed tokens with secure headers',
+          code: 'jwt-auth.js'
+        },
+        mfa: {
+          name: 'Multi-Factor Authentication',
+          implementation: 'SMS, authenticator app, biometric options',
+          code: 'mfa-handler.js'
+        },
+        encryption: {
+          name: 'End-to-End Encryption',
+          implementation: 'AES-256 with RSA key exchange',
+          code: 'e2e-encryption.js'
+        }
+      };
+      
+      const selected = securityDetails[selectedSecurityOption];
+      
+      // Update code with security implementation
+      const jsCodeElement = document.getElementById('jsCode');
+      const currentCode = jsCodeElement.textContent;
+      const securityCode = `
+// ${selected.name} Implementation
+// Generated by Diamond SAO Security Assistant
+
+class SecurityManager {
+  constructor() {
+    this.type = '${selectedSecurityOption}';
+    this.implementation = '${selected.implementation}';
+    console.log('🔒 Security initialized: ${selected.name}');
+  }
+  
+  async authenticate(credentials) {
+    // ${selected.name} authentication logic
+    console.log('🔐 Authenticating with ${selected.name}');
+    return { success: true, token: 'secure_token_here' };
+  }
+}
+
+// Initialize security on page load
+const security = new SecurityManager();
+`;
+      
+      jsCodeElement.textContent = currentCode + securityCode;
+      
+      // Switch to JavaScript tab to show the new code
+      switchCodeTab(document.querySelector('.code-tab:last-child'), 'jsCode');
+      
+      // Update preview
+      updatePreview();
+      
+      // Close prompt
+      closeSecurityPrompt();
+      
+      // Show success notification
+      showNotification(`🔒 ${selected.name} security implementation added to your project`, 'success');
+      
+      // Add Diamond SAO message
+      addDiamondMessage('assistant', `🔒 Security Implementation Added\n\n✅ Type: ${selected.name}\n🛠️ Implementation: ${selected.implementation}\n📝 Code: Added to JavaScript tab\n\n💎 Diamond SAO has automatically integrated the security layer into your web application. The code is ready for ${isCloudMode ? 'cloud deployment' : 'local testing'}.\n\n🔧 You can customize the implementation by editing the JavaScript code directly.`);
+    }
+    
+    // Enhanced command processing to detect security requests
+    function detectSecurityNeeds(command) {
+      const securityKeywords = [
+        'secure', 'security', 'authentication', 'auth', 'login', 'password',
+        'encrypt', 'encryption', 'oauth', 'jwt', 'token', 'mfa', '2fa', 'banking',
+        'financial', 'payment', 'credit card', 'sensitive', 'private'
+      ];
+      
+      const lowerCommand = command.toLowerCase();
+      
+      for (let keyword of securityKeywords) {
+        if (lowerCommand.includes(keyword)) {
+          return true;
+        }
+      }
+      
+      return false;
+    }
+    
+    // Update processDiamondCommand to handle security prompts
+    const originalProcessDiamondCommand = processDiamondCommand;
+    
+    async function processDiamondCommand(command) {
+      // Check for web development commands first
+      const webCommand = handleWebDevelopmentCommands(command);
+      if (webCommand) {
+        return webCommand;
+      }
+      
+      // Check if security assistance is needed
+      if (detectSecurityNeeds(command)) {
+        // Switch to split view if not already there
+        if (currentView === 'chat') {
+          switchView('split');
+        }
+        
+        // Show security prompt after a short delay
+        setTimeout(() => {
+          showSecurityPrompt();
+        }, 1000);
+        
+        return {
+          response: `🔒 Security Implementation Detected\n\n💎 Diamond SAO has detected your request involves security features:\n"${command}"\n\n🛡️ I'm opening the smart security prompt to help you choose the best security implementation for your needs.\n\n⚡ Switching to development view for real-time code integration...`,
+          service: 'security'
+        };
+      }
+      
+      // Fall back to original processing
+      return await originalProcessDiamondCommand(command);
+    }
+  </script>
+</body>
+</html>

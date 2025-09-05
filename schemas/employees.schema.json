@@ -1,0 +1,346 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HRAI-CRMS Employee Schema (Humans Only)",
+  "description": "Complete human demographics and employee data schema for CE scoring and reporting",
+  "type": "object",
+  "required": [
+    "employee_id",
+    "entity_type",
+    "first_name", 
+    "last_name",
+    "email",
+    "hire_date",
+    "demographics"
+  ],
+  "properties": {
+    "employee_id": {
+      "type": "string",
+      "pattern": "^HUM[0-9]{6}$",
+      "description": "Human employee identifier (HUM + 6 digits)"
+    },
+    "entity_type": {
+      "type": "string",
+      "enum": ["HUMAN"],
+      "description": "Must be HUMAN - only humans have demographics in this schema"
+    },
+    "first_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "last_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Primary business email address"
+    },
+    "hire_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Employee hire date (YYYY-MM-DD)"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "inactive", "on_leave", "terminated"],
+      "default": "active"
+    },
+    
+    "demographics": {
+      "type": "object",
+      "required": ["age_band", "gender", "ethnicity", "nationality", "location"],
+      "properties": {
+        "age_band": {
+          "type": "string",
+          "enum": ["18-24", "25-34", "35-44", "45-54", "55-64", "65+"],
+          "description": "Age band for demographic reporting and CE scoring"
+        },
+        "gender": {
+          "type": "string",
+          "enum": ["male", "female", "non-binary", "prefer-not-to-say"],
+          "description": "Gender identity for diversity reporting"
+        },
+        "ethnicity": {
+          "type": "string",
+          "enum": [
+            "american-indian-alaska-native",
+            "asian",
+            "black-african-american", 
+            "hispanic-latino",
+            "middle-eastern-north-african",
+            "native-hawaiian-pacific-islander",
+            "white-caucasian",
+            "mixed-heritage",
+            "other",
+            "prefer-not-to-say"
+          ],
+          "description": "Ethnicity for diversity and inclusion reporting"
+        },
+        "nationality": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "description": "ISO 3166-1 alpha-2 country code (e.g., US, GB, CA)"
+        },
+        "location": {
+          "type": "object",
+          "required": ["country", "region"],
+          "properties": {
+            "country": {
+              "type": "string",
+              "pattern": "^[A-Z]{2}$",
+              "description": "ISO 3166-1 alpha-2 country code"
+            },
+            "region": {
+              "type": "string",
+              "description": "State, province, or region"
+            },
+            "city": {
+              "type": "string",
+              "description": "City of residence"
+            },
+            "timezone": {
+              "type": "string",
+              "description": "IANA timezone (e.g., America/New_York)"
+            },
+            "remote_status": {
+              "type": "string",
+              "enum": ["fully_remote", "hybrid", "on_site"],
+              "default": "on_site"
+            }
+          }
+        },
+        "education_level": {
+          "type": "string",
+          "enum": [
+            "high-school",
+            "associate",
+            "bachelor", 
+            "master",
+            "doctorate",
+            "professional-certification"
+          ],
+          "description": "Highest education level for CE scoring"
+        },
+        "languages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "language": {
+                "type": "string",
+                "description": "ISO 639-1 language code (e.g., en, es, fr)"
+              },
+              "proficiency": {
+                "type": "string",
+                "enum": ["basic", "intermediate", "advanced", "native"]
+              }
+            }
+          },
+          "description": "Languages spoken and proficiency levels"
+        },
+        "accessibility_needs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Accessibility accommodations and needs"
+        }
+      }
+    },
+
+    "employment": {
+      "type": "object",
+      "required": ["job_title", "department", "seniority", "tenure_months"],
+      "properties": {
+        "job_title": {
+          "type": "string",
+          "description": "Current job title"
+        },
+        "department": {
+          "type": "string",
+          "description": "Department name"
+        },
+        "job_family": {
+          "type": "string",
+          "enum": [
+            "engineering",
+            "product",
+            "design", 
+            "data-science",
+            "marketing",
+            "sales",
+            "customer-success",
+            "operations",
+            "finance",
+            "legal",
+            "hr",
+            "executive",
+            "other"
+          ],
+          "description": "Job family classification for CE scoring"
+        },
+        "seniority": {
+          "type": "string",
+          "enum": [
+            "entry-level",
+            "mid-level", 
+            "senior-level",
+            "staff-level",
+            "principal-level",
+            "director-level",
+            "vp-level",
+            "c-level"
+          ],
+          "description": "Seniority level for CE scoring and reporting"
+        },
+        "tenure_months": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total months of tenure at company"
+        },
+        "employment_type": {
+          "type": "string",
+          "enum": ["full-time", "part-time", "contractor", "intern"],
+          "default": "full-time"
+        },
+        "manager_id": {
+          "type": "string",
+          "pattern": "^HUM[0-9]{6}$",
+          "description": "Manager's employee ID for org hierarchy"
+        },
+        "org_unit_id": {
+          "type": "string",
+          "description": "Organizational unit ID for hierarchy and reporting"
+        }
+      }
+    },
+
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "skill_name": {
+            "type": "string"
+          },
+          "proficiency": {
+            "type": "string",
+            "enum": ["beginner", "intermediate", "advanced", "expert"]
+          },
+          "certified": {
+            "type": "boolean",
+            "default": false
+          },
+          "last_assessed": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "description": "Technical and soft skills for CE scoring"
+    },
+
+    "ai_publications_llp_status": {
+      "type": "object",
+      "description": "AI Publications LLP membership status for CRM linking",
+      "properties": {
+        "status_code": {
+          "type": "string",
+          "enum": [
+            "hr1_member_contract",
+            "hr2_member_ee", 
+            "hr3_member_no_contract_employee",
+            "hr4_non_member_contract_employee"
+          ],
+          "description": "LLP team status for linking HR and CRM records"
+        },
+        "member_since": {
+          "type": "string",
+          "format": "date"
+        },
+        "equity_percentage": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "voting_rights": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+
+    "compensation": {
+      "type": "object",
+      "properties": {
+        "salary_band": {
+          "type": "string",
+          "enum": ["band-1", "band-2", "band-3", "band-4", "band-5", "executive"],
+          "description": "Salary band for CE scoring (not actual amounts)"
+        },
+        "bonus_eligible": {
+          "type": "boolean",
+          "default": false
+        },
+        "equity_eligible": {
+          "type": "boolean", 
+          "default": false
+        }
+      }
+    },
+
+    "performance": {
+      "type": "object",
+      "properties": {
+        "latest_review_score": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Latest performance review score (1-5 scale)"
+        },
+        "review_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "goals_completion_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Percentage of goals completed (0.0-1.0)"
+        },
+        "promotion_eligible": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string", 
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "System or user that created this record"
+    }
+  },
+
+  "indexes": [
+    { "employee_id": 1 },
+    { "entity_type": 1, "status": 1 },
+    { "employment.manager_id": 1 },
+    { "employment.org_unit_id": 1 },
+    { "demographics.age_band": 1, "demographics.gender": 1, "demographics.ethnicity": 1 },
+    { "employment.department": 1, "employment.job_family": 1 },
+    { "employment.seniority": 1, "employment.tenure_months": 1 },
+    { "ai_publications_llp_status.status_code": 1 },
+    { "created_at": -1 }
+  ]
+}

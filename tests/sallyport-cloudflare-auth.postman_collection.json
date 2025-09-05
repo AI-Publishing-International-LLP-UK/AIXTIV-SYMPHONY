@@ -1,0 +1,87 @@
+{
+  "info": {
+    "name": "SallyPort Cloudflare Authentication Tests",
+    "description": "Updated collection for Cloudflare Workers endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "OAuth2 Authorization",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://integration-gateway.pr-aef.workers.dev/oauth2/authorize?client_id=vision-lake&response_type=code&redirect_uri=https://2100.cool/callback",
+          "protocol": "https",
+          "host": ["integration-gateway", "pr-aef", "workers", "dev"],
+          "path": ["oauth2", "authorize"],
+          "query": [
+            {
+              "key": "client_id",
+              "value": "vision-lake"
+            },
+            {
+              "key": "response_type",
+              "value": "code"
+            },
+            {
+              "key": "redirect_uri",
+              "value": "https://2100.cool/callback"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "OAuth2 Token Exchange",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"grant_type\":\"authorization_code\",\"code\":\"test_code\",\"client_id\":\"vision-lake\",\"client_secret\":\"test_secret\"}"
+        },
+        "url": {
+          "raw": "https://integration-gateway.pr-aef.workers.dev/oauth2/token",
+          "protocol": "https",
+          "host": ["integration-gateway", "pr-aef", "workers", "dev"],
+          "path": ["oauth2", "token"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Health Check - Main Domain",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Service is running\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://2100.cool/health",
+          "protocol": "https",
+          "host": ["2100", "cool"],
+          "path": ["health"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

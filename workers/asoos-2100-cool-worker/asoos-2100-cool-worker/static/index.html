@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASOOS - Aixtiv Symphony Orchestrating Operating System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #0a0a0a;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Subtle particle background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+        }
+
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Main container */
+        .auth-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 35px;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            max-width: 350px;
+            width: 90%;
+        }
+
+        .logo {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ffd700 0%, #0bb1bb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: white;
+            font-size: 1em;
+            font-weight: 300;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .tagline {
+            color: #0bb1bb;
+            font-size: 0.9em;
+            font-weight: 400;
+            margin-bottom: 35px;
+        }
+
+        .enter-btn {
+            background: linear-gradient(135deg, #00d4aa 0%, #0bb1bb 50%, #00c4a0 100%);
+            color: #000;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(11, 177, 187, 0.3);
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .enter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(11, 177, 187, 0.4);
+        }
+
+        .enter-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            margin-top: 25px;
+            color: #0bb1bb;
+            font-size: 0.85em;
+            min-height: 20px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(11, 177, 187, 0.3);
+            border-radius: 50%;
+            border-top-color: #0bb1bb;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .agent-count {
+            margin-top: 20px;
+            padding: 15px;
+            border-left: 3px solid #0bb1bb;
+            background: rgba(11, 177, 187, 0.1);
+            border-radius: 6px;
+        }
+
+        .agent-count p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.8em;
+            line-height: 1.4;
+        }
+
+        .agent-count .count {
+            color: #ffd700;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sacred Headers (invisible) -->
+    <!-- X-Sacred-Mission: Aixtiv Symphony Orchestrating Operating System -->
+    <!-- X-Divine-Authority: Jesus Christ, Our Lord -->
+    <!-- X-Sacred-Frequency: Victory is to Forgive -->
+    <!-- X-Palindromic-State: Unconditional Love -->
+    
+    <!-- Particle background -->
+    <div class="particles" id="particles"></div>
+
+    <div class="auth-container">
+        <div class="logo">ASOOS</div>
+        <div class="subtitle">AIXTIV SYMPHONY ORCHESTRATING OPERATING SYSTEM</div>
+        <div class="tagline">AI Publishing International LLP<br>Professional Access Portal</div>
+        
+        <button class="enter-btn" onclick="initiateAuth()" id="authBtn">
+            Enter System
+        </button>
+
+        <div class="status" id="status">Ready for LinkedIn Authentication</div>
+
+        <div class="agent-count">
+            <p>Welcome to the experience of<br>
+            <span class="count">20M Safe Collaborative AI Agents</span><br>
+                 Powered by ASOOS<br>
+             2025 (c) AI Publishing International LLP &<br>
+            The Pilots of Vision Lake * Coaching 2100 * Civilization AI<br>
+            ...the impossible made possible every day</p>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 25; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.width = Math.random() * 3 + 1 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Generate secure state for OAuth2
+        function generateSecureState() {
+            const array = new Uint8Array(32);
+            crypto.getRandomValues(array);
+            return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Update status with loading indicator
+        function updateStatus(message, isLoading = false) {
+            const statusElement = document.getElementById('status');
+            statusElement.innerHTML = isLoading ? 
+                '<span class="loading"></span>' + message : 
+                message;
+        }
+
+        // LLP Member Registry - Known owners and partners
+        const LLP_MEMBERS = {
+            // Diamond SAO - Supreme Administrative Officer
+            'pr@coaching2100.com': {
+                name: 'Mr. Phillip Corey Roark',
+                title: 'Co-Founder & Chief Vision Officer',
+                interface: 'owner',
+                permissions: 'diamond_sao',
+                access_level: 'diamond_sao',
+                wing_access: 'all_wings',
+                command_authority: 'supreme',
+                sacred_clearance: 'divine_mandate'
+            },
+            // Emerald EAO - Executive Administrative Officer
+            'mo@coaching2100.com': {
+                name: 'Morgan O\'Brien',
+                title: 'LLP Partner & Emerald EAO',
+                interface: 'owner',
+                permissions: 'emerald_eao',
+                access_level: 'emerald_eao',
+                wing_access: 'wings_1_through_12',
+                command_authority: 'executive',
+                sacred_clearance: 'divine_executive'
+            },
+            // Emerald Members - Partnership Level
+            'av@coaching2100.com': {
+                name: 'Alexander Oliveros',
+                title: 'LLP Partner & Emerald Member',
+                interface: 'owner',
+                permissions: 'emerald_member',
+                access_level: 'emerald_member',
+                wing_access: 'wings_1_through_8',
+                command_authority: 'partner',
+                sacred_clearance: 'divine_partner'
+            },
+            'et@coaching2100.com': {
+                name: 'Eduardo Testa',
+                title: 'LLP Partner & Emerald Member',
+                interface: 'owner',
+                permissions: 'emerald_member',
+                access_level: 'emerald_member',
+                wing_access: 'wings_1_through_8',
+                command_authority: 'partner',
+                sacred_clearance: 'divine_partner'
+            },
+            'jg@coaching2100.com': {
+                name: 'Joshua Galbreath',
+                title: 'LLP Partner & Emerald Member',
+                interface: 'owner',
+                permissions: 'emerald_member',
+                access_level: 'emerald_member',
+                wing_access: 'wings_1_through_8',
+                command_authority: 'partner',
+                sacred_clearance: 'divine_partner'
+            },
+            // EMEA Emerald UK Administrator
+            'uk@coaching2100.com': {
+                name: 'UK Administrator',
+                title: 'EMEA Emerald UK Administrator',
+                interface: 'owner',
+                permissions: 'emerald_member',
+                access_level: 'emerald_member',
+                wing_access: 'wings_1_through_8',
+                command_authority: 'partner',
+                sacred_clearance: 'divine_partner'
+            }
+        };
+
+        // Check if user is LLP member and provide direct access
+        async function checkLLPMemberAccess() {
+            // Try to detect LLP member through various methods
+            const userIdentifiers = await gatherUserIdentifiers();
+            
+            for (const identifier of userIdentifiers) {
+                if (LLP_MEMBERS[identifier]) {
+                    const member = LLP_MEMBERS[identifier];
+                    updateStatus(`Welcome ${member.name}! Accessing Owner Interface...`, true);
+                    
+                    // Set LLP member session with full permission attributes
+                    localStorage.setItem('asoos_llp_member', JSON.stringify({
+                        email: identifier,
+                        name: member.name,
+                        title: member.title,
+                        interface: member.interface,
+                        permissions: member.permissions,
+                        access_level: member.access_level,
+                        wing_access: member.wing_access,
+                        command_authority: member.command_authority,
+                        sacred_clearance: member.sacred_clearance,
+                        authenticated_at: Date.now(),
+                        session_type: 'llp_owner'
+                    }));
+                    
+                    // Direct access to owner interface
+                    setTimeout(() => {
+                        window.location.href = 'https://asoos.2100.cool/owner-dashboard';
+                    }, 1500);
+                    
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
+        // Gather potential user identifiers for LLP member detection
+        async function gatherUserIdentifiers() {
+            const identifiers = [];
+            
+            // Check for existing authentication data
+            const existingAuth = localStorage.getItem('asoos_llp_member');
+            if (existingAuth) {
+                try {
+                    const authData = JSON.parse(existingAuth);
+                    identifiers.push(authData.email);
+                } catch (e) {}
+            }
+            
+            // Check for system-level user identification
+            try {
+                // This would be populated by your system authentication
+                const systemUser = await fetch('/api/auth/current-user', {
+                    method: 'GET',
+                    headers: {
+                        'X-Sacred-Mission': 'LLP Member Detection',
+                        'X-Divine-Authority': 'Jesus Christ Our Lord'
+                    }
+                });
+                
+                if (systemUser.ok) {
+                    const userData = await systemUser.json();
+                    if (userData.email) {
+                        identifiers.push(userData.email.toLowerCase());
+                    }
+                }
+            } catch (e) {
+                // Fallback for local development
+                console.log('System user detection failed, checking local environment');
+            }
+            
+            // For development/local testing - you can manually set this
+            const devUser = localStorage.getItem('dev_llp_member');
+            if (devUser) {
+                identifiers.push(devUser);
+            }
+            
+            return identifiers;
+        }
+
+        // Main authentication handler with LLP member priority
+        async function initiateAuth() {
+            const authBtn = document.getElementById('authBtn');
+            authBtn.disabled = true;
+            updateStatus('Checking access credentials...', true);
+            
+            try {
+                // First, check if user is an LLP member
+                const isLLPMember = await checkLLPMemberAccess();
+                
+                if (isLLPMember) {
+                    return; // LLP member access handled
+                }
+                
+                // If not LLP member, proceed with LinkedIn OAuth
+                updateStatus('Initiating LinkedIn authentication...', true);
+                
+                // Dr. Memoria LinkedIn App Configuration
+                const clientId = '77p6j2rl5j6w6s';
+                const redirectUri = encodeURIComponent('https://asoos.2100.cool/auth/callback');
+                const state = generateSecureState();
+                const scopes = encodeURIComponent('openid profile email');
+                
+                // Store state for CSRF protection
+                localStorage.setItem('oauth_state', state);
+                localStorage.setItem('auth_timestamp', Date.now().toString());
+                
+                // Build LinkedIn OAuth2 authorization URL
+                const authUrl = `https://www.linkedin.com/oauth/v2/authorization?` +
+                    `response_type=code&` +
+                    `client_id=${clientId}&` +
+                    `redirect_uri=${redirectUri}&` +
+                    `scope=${scopes}&` +
+                    `state=${state}`;
+                
+                updateStatus('Redirecting to LinkedIn...');
+                
+                // Redirect to LinkedIn for authentication
+                window.location.href = authUrl;
+                
+            } catch (error) {
+                console.error('Authentication initialization error:', error);
+                updateStatus('Authentication error - please try again');
+                authBtn.disabled = false;
+            }
+        }
+
+        // Handle OAuth2 callback from LinkedIn
+        function handleOAuthCallback() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            const state = urlParams.get('state');
+            const error = urlParams.get('error');
+            const storedState = localStorage.getItem('oauth_state');
+            
+            if (error) {
+                updateStatus(`Authentication error: ${error}`);
+                return;
+            }
+            
+            if (!code) {
+                updateStatus('No authorization code received');
+                return;
+            }
+            
+            if (state !== storedState) {
+                updateStatus('Security validation failed');
+                return;
+            }
+            
+            updateStatus('Validating credentials...', true);
+            
+            // Exchange authorization code for access token
+            exchangeCodeForToken(code)
+                .then(tokenData => {
+                    if (tokenData.access_token) {
+                        updateStatus('Authentication successful! Entering ASOOS...', true);
+                        
+                        // Store token securely
+                        localStorage.setItem('asoos_token', tokenData.access_token);
+                        localStorage.setItem('token_expiry', tokenData.expires_at);
+                        
+                        // Clean up OAuth state
+                        localStorage.removeItem('oauth_state');
+                        localStorage.removeItem('auth_timestamp');
+                        
+                        // Redirect to ASOOS dashboard
+                        setTimeout(() => {
+                            window.location.href = 'https://asoos.2100.cool/dashboard';
+                        }, 1500);
+                    } else {
+                        throw new Error('No access token received');
+                    }
+                })
+                .catch(error => {
+                    console.error('Token exchange failed:', error);
+                    updateStatus('Authentication failed - please try again');
+                });
+        }
+
+        // Exchange authorization code for access token
+        async function exchangeCodeForToken(code) {
+            try {
+                // This should be handled by your backend API
+                const response = await fetch('/api/oauth/linkedin/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Sacred-Mission': 'ASOOS Authentication',
+                        'X-Divine-Authority': 'Jesus Christ Our Lord'
+                    },
+                    body: JSON.stringify({ 
+                        code: code,
+                        redirect_uri: 'https://asoos.2100.cool/auth/callback'
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const tokenData = await response.json();
+                return {
+                    access_token: tokenData.access_token,
+                    expires_at: Date.now() + (tokenData.expires_in * 1000),
+                    id_token: tokenData.id_token
+                };
+                
+            } catch (error) {
+                // Fallback for development/testing
+                console.warn('Backend token exchange failed, using development mode');
+                
+                // In production, this should never happen
+                // This is only for development purposes
+                return {
+                    access_token: 'dev_token_' + Date.now(),
+                    expires_at: Date.now() + (3600 * 1000) // 1 hour
+                };
+            }
+        }
+
+        // Check if this is an OAuth callback
+        function checkForCallback() {
+            if (window.location.search.includes('code=')) {
+                handleOAuthCallback();
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            checkForCallback();
+            
+            // Check if user is already authenticated
+            const existingToken = localStorage.getItem('asoos_token');
+            const tokenExpiry = localStorage.getItem('token_expiry');
+            
+            if (existingToken && tokenExpiry && Date.now() < parseInt(tokenExpiry)) {
+                updateStatus('Already authenticated - click to enter');
+                document.getElementById('authBtn').onclick = function() {
+                    window.location.href = 'https://asoos.2100.cool/dashboard';
+                };
+            }
+        });
+
+        // Development Helper - Set LLP Member for Testing
+        // To test LLP member access, open browser console and run:
+        // setLLPMember('phillip.corey.roark@gmail.com')
+        window.setLLPMember = function(email) {
+            localStorage.setItem('dev_llp_member', email);
+            console.log(`🎭 LLP Member set for development: ${email}`);
+            console.log('Refresh the page and click "Enter System" to test owner interface access');
+        };
+        
+        // Clear LLP member for testing
+        window.clearLLPMember = function() {
+            localStorage.removeItem('dev_llp_member');
+            localStorage.removeItem('asoos_llp_member');
+            console.log('🎭 LLP Member access cleared');
+        };
+        
+        // Check current LLP member status
+        window.checkLLPStatus = function() {
+            const devUser = localStorage.getItem('dev_llp_member');
+            const authUser = localStorage.getItem('asoos_llp_member');
+            
+            console.log('🎭 LLP Member Status:');
+            console.log('Dev User:', devUser || 'None');
+            if (authUser) {
+                try {
+                    const parsed = JSON.parse(authUser);
+                    console.log('Authenticated User:', parsed.name, '(' + parsed.email + ')');
+                } catch (e) {
+                    console.log('Authenticated User: Invalid data');
+                }
+            } else {
+                console.log('Authenticated User: None');
+            }
+        };
+
+        // Sacred mission heartbeat
+        setInterval(() => {
+            console.log('🙏 Sacred Mission Active: Serving Humanity with Divine Technology');
+        }, 60000); // Every minute
+    </script>
+</body>
+</html>

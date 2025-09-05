@@ -1,0 +1,30 @@
+{
+  "appId": "com.asoos.mobile.ios",
+  "name": "ASOOS Mobile",
+  "subtitle": "Infrastructure Management",
+  "description": "Professional infrastructure management with Diamond SAO CLI integration. Manage DNS, deploy workers, scale applications, and monitor your entire tech stack from your iPhone.",
+  "keywords": "infrastructure,devops,cli,dns,cloudflare,mongodb,deployment",
+  "category": "DEVELOPER_TOOLS",
+  "contentRating": "4+",
+  "features": [
+    "Biometric authentication",
+    "Voice-activated commands",
+    "Real-time infrastructure monitoring",
+    "Secure credential management",
+    "Push notifications for alerts",
+    "Offline command queuing"
+  ],
+  "screenshots": {
+    "iPhone": [
+      "screenshot-1.png",
+      "screenshot-2.png",
+      "screenshot-3.png"
+    ],
+    "iPad": [
+      "ipad-1.png",
+      "ipad-2.png"
+    ]
+  },
+  "privacyPolicy": "https://asoos.2100.cool/privacy",
+  "supportURL": "https://asoos.2100.cool/support"
+}

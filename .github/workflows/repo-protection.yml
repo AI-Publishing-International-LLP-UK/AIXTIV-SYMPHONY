@@ -1,0 +1,63 @@
+name: Repository Protection Checks
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  check-large-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Count changed files
+        id: count-files
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            COUNT=$(git diff --name-only origin/${{ github.base_ref }}..HEAD | wc -l)
+          else
+            COUNT=$(git diff --name-only HEAD^ HEAD | wc -l)
+          fi
+          echo "Changed files: $COUNT"
+          echo "count=$COUNT" >> $GITHUB_OUTPUT
+          if [ $COUNT -gt 500 ]; then
+            echo "::warning::Large change detected - $COUNT files modified"
+          fi
+
+      - name: Check for LFS objects
+        run: |
+          if grep -r 'version https://git-lfs.github.com/spec/v1' .; then
+            echo "::error::Git LFS objects detected. Please remove LFS tracking."
+            exit 1
+          fi
+
+      - name: Verify branch protection
+        if: github.ref == 'refs/heads/production'
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            echo "::error::Direct push to production branch is not allowed"
+            exit 1
+          fi
+
+      - name: Create notification
+        if: steps.count-files.outputs.count > 500
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: '⚠️ Large change detected',
+              body: `A change with ${process.env.COUNT} files was detected.
+Commit: ${context.sha}
+Please review carefully.`
+            })
+        env:
+          COUNT: ${{ steps.count-files.outputs.count }}
+

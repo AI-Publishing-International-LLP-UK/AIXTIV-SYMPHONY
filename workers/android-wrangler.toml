@@ -1,0 +1,23 @@
+
+name = "asoos-mobile-android"
+main = "mobile-android-worker.js"
+compatibility_date = "2023-12-01"
+account_id = "aef30d920913c188b9b6048cc7f42951"
+
+[env.production]
+name = "asoos-mobile-android-prod"
+
+[[env.production.routes]]
+pattern = "mobile-android.asoos.2100.cool"
+custom_domain = true
+
+[[env.production.routes]]
+pattern = "mobile-android.asoos.2100.cool/api/*"
+zone_name = "2100.cool"
+
+[env.production.vars]
+PLATFORM = "android"
+APP_VERSION = "1.0.0"
+ENVIRONMENT = "production"
+SALLYPORT_AUTH_ENABLED = "true"
+Q4D_LENZ_ENABLED = "true"

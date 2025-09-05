@@ -1,0 +1,126 @@
+{
+  "provider": "xero",
+  "entity": "us-llc",
+  "entityName": "AI Publishing International LLP (US)",
+  "entityType": "llc",
+  "region": "us",
+  "description": "Xero OAuth2 configuration for US LLC entity - handles accounting integration for US-based operations",
+  
+  "oauth2": {
+    "authorizationEndpoint": "https://login.xero.com/identity/connect/authorize",
+    "tokenEndpoint": "https://identity.xero.com/connect/token",
+    "revokeEndpoint": "https://identity.xero.com/connect/revocation",
+    "userInfoEndpoint": "https://api.xero.com/api.xro/2.0/Organisation",
+    "responseType": "code",
+    "grantType": "authorization_code"
+  },
+  
+  "client": {
+    "clientIdSecretName": "xero-us-llc-client-id",
+    "clientSecretSecretName": "xero-us-llc-client-secret",
+    "redirectUri": "https://integration-gateway-yutylytffa-uw.a.run.app/oauth2/callback/xero-us-llc",
+    "postLogoutRedirectUri": "https://integration-gateway-yutylytffa-uw.a.run.app/oauth2/logout/xero-us-llc"
+  },
+  
+  "scopes": [
+    "accounting.transactions",
+    "accounting.contacts",
+    "accounting.settings",
+    "accounting.journals.read",
+    "accounting.reports.read",
+    "accounting.attachments",
+    "offline_access"
+  ],
+  
+  "endpoints": {
+    "apiBase": "https://api.xero.com/api.xro/2.0",
+    "connectionsEndpoint": "https://api.xero.com/connections",
+    "organisationEndpoint": "https://api.xero.com/api.xro/2.0/Organisation",
+    "contactsEndpoint": "https://api.xero.com/api.xro/2.0/Contacts",
+    "invoicesEndpoint": "https://api.xero.com/api.xro/2.0/Invoices",
+    "paymentsEndpoint": "https://api.xero.com/api.xro/2.0/Payments",
+    "accountsEndpoint": "https://api.xero.com/api.xro/2.0/Accounts",
+    "reportsEndpoint": "https://api.xero.com/api.xro/2.0/Reports"
+  },
+  
+  "tokenManagement": {
+    "tokenRefreshThreshold": 300,
+    "maxRetries": 3,
+    "retryDelay": 1000,
+    "tokenStorageKey": "xero_us_llc_tokens",
+    "stateStorageKey": "xero_us_llc_state"
+  },
+  
+  "rateLimiting": {
+    "requestsPerMinute": 60,
+    "requestsPerDay": 5000,
+    "burstLimit": 10
+  },
+  
+  "security": {
+    "enforceHttps": true,
+    "validateState": true,
+    "validateNonce": false,
+    "pkceRequired": true,
+    "tokenEncryption": true
+  },
+  
+  "entitySpecific": {
+    "tenantId": null,
+    "baseCurrency": "USD",
+    "countryCode": "US",
+    "timeZone": "America/Los_Angeles",
+    "taxConfiguration": {
+      "defaultTaxType": "TAX001",
+      "salesTaxEnabled": true,
+      "taxReporting": "quarterly"
+    },
+    "complianceRequirements": [
+      "SOX",
+      "GAAP",
+      "IRS"
+    ]
+  },
+  
+  "integration": {
+    "webhooks": {
+      "enabled": true,
+      "endpoint": "https://integration-gateway-yutylytffa-uw.a.run.app/webhooks/xero-us-llc",
+      "events": [
+        "CREATE",
+        "UPDATE",
+        "DELETE"
+      ]
+    },
+    "syncFrequency": "realtime",
+    "batchProcessing": {
+      "enabled": true,
+      "batchSize": 100,
+      "maxConcurrentBatches": 5
+    }
+  },
+  
+  "monitoring": {
+    "healthCheckEndpoint": "/health/xero-us-llc",
+    "metricsCollection": true,
+    "alerting": {
+      "tokenExpiration": 24,
+      "rateLimitWarning": 80,
+      "errorThreshold": 10
+    }
+  },
+  
+  "metadata": {
+    "createdAt": "2025-01-30T04:00:00Z",
+    "version": "1.0.0",
+    "environment": "production",
+    "maintainer": "Integration Gateway Team",
+    "tags": [
+      "xero",
+      "accounting",
+      "us-llc",
+      "oauth2",
+      "financial"
+    ]
+  }
+}

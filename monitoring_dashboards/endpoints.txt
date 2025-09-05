@@ -1,0 +1,5 @@
+✅ Health: https://monitor.aixtiv-symphony.com/health
+✅ Agents: https://monitor.aixtiv-symphony.com/agents  
+✅ Clients: https://monitor.aixtiv-symphony.com/clients
+✅ Finance: https://monitor.aixtiv-symphony.com/finance
+✅ Alerts: https://monitor.aixtiv-symphony.com/alerts

@@ -15,8 +15,8 @@
  * Version: 4.0.0-access-integration
  */
 
-import { USPTOPatentFilingOrchestrator } from './USPTOPatentFilingOrchestrator.js';
-import { UnifiedElevenLabsAgentSystem } from './unified-elevenlabs-agent-system.js';
+import pkg from './USPTOPatentFilingOrchestrator.js';
+const { USPTOPatentFilingOrchestrator } = pkg;
 import { SecretManagerServiceClient } from '@google-cloud/secret-manager';
 import winston from 'winston';
 

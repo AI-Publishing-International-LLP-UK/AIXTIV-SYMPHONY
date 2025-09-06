@@ -31,7 +31,7 @@
 
 ### 4. **2100.cool** ✅ ACTIVE
 - **Cloudflare Project**: `2100-cool-primary`
-- **GitHub Repo**: `AI-Publishing-International-LLP-UK/Aixtiv-Symphony-Opus1.0.1`
+- **GitHub Repo**: `AI-Publishing-International-LLP-UK/Aixtiv-Symphony`
 - **Integration**: SallyPort authentication + Cloudflare validation
 - **Fallback if Integration Fails**: 2100.cool Subscriber or Join Cohort
 - **Purpose**: PAYMENT GATEWAY FOR ALL landing pages it is the public gateway

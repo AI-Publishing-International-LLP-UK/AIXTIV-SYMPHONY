@@ -1,0 +1,283 @@
+steps:
+  # Build the unified voice system Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/unified-elevenlabs-voice-system:$COMMIT_SHA'
+      - '-f'
+      - 'services/voice-synthesis/Dockerfile'
+      - '.'
+    dir: '.'
+
+  # Push the unified voice system image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/unified-elevenlabs-voice-system:$COMMIT_SHA'
+
+  # Build VLS supporting system
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/vls-voice-synthesis:$COMMIT_SHA'
+      - '-f'
+      - 'vls/solutions/voice_synthesis/Dockerfile'
+      - '.'
+    dir: '.'
+
+  # Push VLS system image  
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/vls-voice-synthesis:$COMMIT_SHA'
+
+  # Build Google Cloud TTL/SST optimizer
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/google-cloud-voice-optimizer:$COMMIT_SHA'
+      - '-f'
+      - 'cloud-functions/voice-synthesis/Dockerfile'
+      - '.'
+    dir: '.'
+
+  # Push Google Cloud optimizer image
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push' 
+      - 'gcr.io/$PROJECT_ID/google-cloud-voice-optimizer:$COMMIT_SHA'
+
+  # Deploy unified voice system to Cloud Run - Primary (us-west1)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'unified-elevenlabs-voice-system'
+      - '--image=gcr.io/$PROJECT_ID/unified-elevenlabs-voice-system:$COMMIT_SHA'
+      - '--region=us-west1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--memory=8Gi'
+      - '--cpu=4'
+      - '--timeout=900'
+      - '--concurrency=1000'
+      - '--min-instances=1'
+      - '--max-instances=100'
+      - '--port=8080'
+      - '--set-env-vars=NODE_ENV=production,GCP_PROJECT_ID=$PROJECT_ID,CLOUD_ML_REGION=us-west1'
+      - '--set-secrets=ELEVENLABS_API_KEY=ELEVENLABS_API_KEY:latest,OAUTH2_CLIENT_ID=OAUTH2_CLIENT_ID:latest,OAUTH2_CLIENT_SECRET=OAUTH2_CLIENT_SECRET:latest,JWT_SECRET=JWT_SECRET:latest,SALLYPORT_VERIFICATION_KEY=SALLYPORT_VERIFICATION_KEY:latest'
+      - '--tag=primary'
+
+  # Deploy unified voice system to Cloud Run - Secondary (us-central1)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'unified-elevenlabs-voice-system-secondary'
+      - '--image=gcr.io/$PROJECT_ID/unified-elevenlabs-voice-system:$COMMIT_SHA'
+      - '--region=us-central1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--memory=8Gi'
+      - '--cpu=4'
+      - '--timeout=900'
+      - '--concurrency=1000'
+      - '--min-instances=0'
+      - '--max-instances=50'
+      - '--port=8080'
+      - '--set-env-vars=NODE_ENV=production,GCP_PROJECT_ID=$PROJECT_ID,CLOUD_ML_REGION=us-central1'
+      - '--set-secrets=ELEVENLABS_API_KEY=ELEVENLABS_API_KEY:latest,OAUTH2_CLIENT_ID=OAUTH2_CLIENT_ID:latest,OAUTH2_CLIENT_SECRET=OAUTH2_CLIENT_SECRET:latest,JWT_SECRET=JWT_SECRET:latest,SALLYPORT_VERIFICATION_KEY=SALLYPORT_VERIFICATION_KEY:latest'
+      - '--tag=secondary'
+
+  # Deploy unified voice system to Cloud Run - International (eu-west1)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'unified-elevenlabs-voice-system-international'
+      - '--image=gcr.io/$PROJECT_ID/unified-elevenlabs-voice-system:$COMMIT_SHA'
+      - '--region=eu-west1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--memory=8Gi'
+      - '--cpu=4'
+      - '--timeout=900'
+      - '--concurrency=1000'
+      - '--min-instances=0'
+      - '--max-instances=50'
+      - '--port=8080'
+      - '--set-env-vars=NODE_ENV=production,GCP_PROJECT_ID=$PROJECT_ID,CLOUD_ML_REGION=eu-west1'
+      - '--set-secrets=ELEVENLABS_API_KEY=ELEVENLABS_API_KEY:latest,OAUTH2_CLIENT_ID=OAUTH2_CLIENT_ID:latest,OAUTH2_CLIENT_SECRET=OAUTH2_CLIENT_SECRET:latest,JWT_SECRET=JWT_SECRET:latest,SALLYPORT_VERIFICATION_KEY=SALLYPORT_VERIFICATION_KEY:latest'
+      - '--tag=international'
+
+  # Deploy VLS supporting system
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'vls-voice-synthesis-supporting'
+      - '--image=gcr.io/$PROJECT_ID/vls-voice-synthesis:$COMMIT_SHA'
+      - '--region=us-west1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--memory=4Gi'
+      - '--cpu=2'
+      - '--timeout=600'
+      - '--concurrency=500'
+      - '--min-instances=1'
+      - '--max-instances=50'
+      - '--port=8081'
+      - '--set-env-vars=NODE_ENV=production,GCP_PROJECT_ID=$PROJECT_ID,VLS_PORT=8081'
+      - '--set-secrets=ELEVENLABS_API_KEY=ELEVENLABS_API_KEY:latest'
+      - '--tag=vls-supporting'
+
+  # Deploy Google Cloud TTL/SST optimizer
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'google-cloud-voice-optimizer'
+      - '--image=gcr.io/$PROJECT_ID/google-cloud-voice-optimizer:$COMMIT_SHA'
+      - '--region=us-west1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--memory=4Gi'
+      - '--cpu=2'
+      - '--timeout=600'
+      - '--concurrency=500'
+      - '--min-instances=1'
+      - '--max-instances=25'
+      - '--port=8082'
+      - '--set-env-vars=NODE_ENV=production,GCP_PROJECT_ID=$PROJECT_ID,GCP_OPTIMIZER_PORT=8082'
+      - '--tag=cloud-optimizer'
+
+  # Create Cloud Run traffic allocation for load balancing
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'services'
+      - 'update-traffic'
+      - 'unified-elevenlabs-voice-system'
+      - '--region=us-west1'
+      - '--to-revisions=primary=100'
+
+  # Setup Cloud Load Balancer for global distribution
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        # Create backend service for primary region
+        gcloud compute backend-services create unified-voice-backend-primary \
+          --global \
+          --load-balancing-scheme=EXTERNAL_MANAGED \
+          --protocol=HTTP \
+          --port-name=http \
+          --health-checks-region=us-west1 \
+          --enable-cdn || true
+
+        # Create backend service for secondary region  
+        gcloud compute backend-services create unified-voice-backend-secondary \
+          --global \
+          --load-balancing-scheme=EXTERNAL_MANAGED \
+          --protocol=HTTP \
+          --port-name=http \
+          --health-checks-region=us-central1 \
+          --enable-cdn || true
+
+        # Create backend service for international region
+        gcloud compute backend-services create unified-voice-backend-international \
+          --global \
+          --load-balancing-scheme=EXTERNAL_MANAGED \
+          --protocol=HTTP \
+          --port-name=http \
+          --health-checks-region=eu-west1 \
+          --enable-cdn || true
+
+        # Create URL map for load balancing
+        gcloud compute url-maps create unified-voice-load-balancer \
+          --default-service=unified-voice-backend-primary || true
+
+        # Create HTTPS target proxy
+        gcloud compute target-https-proxies create unified-voice-https-proxy \
+          --url-map=unified-voice-load-balancer || true
+
+        # Reserve global IP address
+        gcloud compute addresses create unified-voice-ip \
+          --global || true
+
+        # Create forwarding rule
+        gcloud compute forwarding-rules create unified-voice-forwarding-rule \
+          --global \
+          --target-https-proxy=unified-voice-https-proxy \
+          --address=unified-voice-ip \
+          --ports=443 || true
+
+  # Setup IAM permissions for settlement wings integration
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
+    entrypoint: bash
+    args:
+      - '-c'
+      - |
+        # Grant Cloud Run Invoker role to settlement wings service accounts
+        for wing in diamond-sao mocoa didc anthology trinity dream-command squadronx; do
+          gcloud run services add-iam-policy-binding unified-elevenlabs-voice-system \
+            --region=us-west1 \
+            --member="serviceAccount:$${wing}@$PROJECT_ID.iam.gserviceaccount.com" \
+            --role="roles/run.invoker" || true
+        done
+
+        # Grant Secret Manager accessor role for voice system secrets
+        gcloud projects add-iam-policy-binding $PROJECT_ID \
+          --member="serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com" \
+          --role="roles/secretmanager.secretAccessor" || true
+
+        # Grant Cloud Storage object admin for voice asset caching
+        gcloud projects add-iam-policy-binding $PROJECT_ID \
+          --member="serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com" \
+          --role="roles/storage.objectAdmin" || true
+
+# Build options
+options:
+  env:
+    - 'DOCKER_BUILDKIT=1'
+  machineType: 'E2_HIGHCPU_32'
+  diskSizeGb: 100
+  logging: CLOUD_LOGGING_ONLY
+
+# Timeout for the entire build
+timeout: '3600s'
+
+# Tags for the build
+tags:
+  - 'unified-voice-system'
+  - 'elevenlabs-integration' 
+  - 'settlement-wings'
+  - 'diamond-sao'
+  - 'production'
+
+# Substitutions
+substitutions:
+  _SERVICE_NAME: 'unified-elevenlabs-voice-system'
+  _REGION: 'us-west1'
+  _MEMORY: '8Gi'
+  _CPU: '4'
+  _MAX_INSTANCES: '100'
+  _MIN_INSTANCES: '1'
+  _CONCURRENCY: '1000'
+  _TIMEOUT: '900'
+
+# Images produced by this build
+images:
+  - 'gcr.io/$PROJECT_ID/unified-elevenlabs-voice-system:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/vls-voice-synthesis:$COMMIT_SHA' 
+  - 'gcr.io/$PROJECT_ID/google-cloud-voice-optimizer:$COMMIT_SHA'

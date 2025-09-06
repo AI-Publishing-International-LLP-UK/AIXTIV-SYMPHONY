@@ -521,10 +521,10 @@ class DrBurbySRIXPatentSwarm extends EventEmitter {
     });
     
     // File with USPTO
-    const filingResult = await this.fileWithUSPTO(patentApplication);
+    const usptoFilingResult = await this.fileWithUSPTO(patentApplication);
     
     // Create blockchain evidence
-    const blockchainEvidence = await this.createBlockchainEvidence(patentApplication, filingResult);
+    const blockchainEvidence = await this.createBlockchainEvidence(patentApplication, usptoFilingResult);
     
     const totalTime = (Date.now() - startTime) / 1000 / 60; // minutes
     
@@ -533,7 +533,7 @@ class DrBurbySRIXPatentSwarm extends EventEmitter {
     return {
       success: true,
       filingTime: totalTime,
-      applicationNumber: filingResult.applicationNumber,
+      applicationNumber: usptoFilingResult.applicationNumber,
       blockchainEvidence: blockchainEvidence.transactionHash,
       nftToken: blockchainEvidence.nftTokenId,
       confirmation: 'PATENT FILED WITHIN DEADLINE'

@@ -772,6 +772,5 @@ export {
   QuantumConsciousnessEngine,
   AGISelfImprovementEngine,
   MultiDimensionalConsciousnessController,
-  QuantumEntangledCommunication,
-  EmergentIntelligenceNetwork
+  QuantumEntangledCommunication
 };

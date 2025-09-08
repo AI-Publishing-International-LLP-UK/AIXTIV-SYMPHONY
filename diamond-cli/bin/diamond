@@ -13,40 +13,24 @@
  */
 
 // Node.js v24+ compatibility fixes
+import { spawn } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { Buffer } from 'buffer';
+
 try {
-  const fs = require('fs');
   if (fs.F_OK && !fs.constants) {
     fs.constants = { F_OK: fs.F_OK, R_OK: fs.R_OK, W_OK: fs.W_OK, X_OK: fs.X_OK };
   }
-  global.Buffer = global.Buffer || require('buffer').Buffer;
+  global.Buffer = global.Buffer || Buffer;
 } catch (e) {
   // Continue with fallback
 }
 
-const { spawn } = require('child_process');
-const fs = require('fs');
-const path = require('path');
-
 console.log('✅ Node.js v24+ compatibility fix applied');
 
-// Import CTTT integration if available
+// Dynamic import for CTTT integration - production mode
 let DiamondCLICTTTIntegration;
-try {
-  DiamondCLICTTTIntegration = require('../../diamond-cli-cttt-integration.js');
-} catch (e) {
-  // Create minimal CTTT stub
-  DiamondCLICTTTIntegration = class {
-    constructor() {}
-    async handleCTTTCommand(args) {
-      console.log('💎 DIAMOND CLI - CTTT NEWMAN INTEGRATION');
-      console.log('🏛️  Authority: Diamond SAO Command Center');
-      console.log('📊 CTTT: Continuous Testing, Training & Tracing');
-      console.log('🧪 Newman: Enterprise API Testing Integration');
-      return { success: true, message: 'CTTT integration active' };
-    }
-  };
-}
-
 class DiamondCLI {
   constructor() {
     this.version = '1.0.1-aixtiv-symphony';
@@ -59,11 +43,21 @@ class DiamondCLI {
       authority: 'Only Diamond SAO in existence'
     };
     
-    this.ctttIntegration = new DiamondCLICTTTIntegration();
-    
+    this.ctttIntegration = null;
+    this.initializeCTTTIntegration();
     this.initializeHeaders();
   }
   
+  async initializeCTTTIntegration() {
+    try {
+      const ctttModule = await import('../../diamond-cli-cttt-integration.js');
+      DiamondCLICTTTIntegration = ctttModule.default || ctttModule.DiamondCLICTTTIntegration;
+      this.ctttIntegration = new DiamondCLICTTTIntegration();
+    } catch (e) {
+      // Fallback - load from production path if available
+      this.log('⚠️ CTTT integration loading from fallback path', 'WARN');
+    }
+  }
   initializeHeaders() {
     console.log('💎 DIAMOND CLI - CTTT NEWMAN INTEGRATION');
     console.log('🏛️  Authority: Diamond SAO Command Center');
@@ -95,7 +89,6 @@ class DiamondCLI {
     
     try {
       // Check if we're in the AIXTIV-SYMPHONY repository
-      const { spawn } = require('child_process');
       const gitProcess = spawn('git', ['remote', 'get-url', 'origin'], {
         stdio: 'pipe',
         cwd: process.cwd()
@@ -214,14 +207,20 @@ class DiamondCLI {
 
   async handleCTTTCommand(subcommand, params) {
     try {
-      const ctttArgs = [subcommand, ...params];
-      const result = await this.ctttIntegration.handleCTTTCommand(ctttArgs);
-      
-      if (result && result.success) {
-        this.log('✅ CTTT command completed successfully', 'SUCCESS');
+      if (!this.ctttIntegration) {
+        await this.initializeCTTTIntegration();
       }
       
-      return result;
+      if (this.ctttIntegration) {
+        const ctttArgs = [subcommand, ...params];
+        const result = await this.ctttIntegration.handleCTTTCommand(ctttArgs);
+        
+        if (result && result.success) {
+          this.log('✅ CTTT command completed successfully', 'SUCCESS');
+        }
+        
+        return result;
+      }
     } catch (error) {
       this.log(`❌ CTTT command failed: ${error.message}`, 'ERROR');
       
@@ -358,9 +357,9 @@ async function main() {
   }
 }
 
-// Run if called directly
-if (require.main === module) {
+// Run if called directly - ES module way
+if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 
-module.exports = DiamondCLI;
+export default DiamondCLI;

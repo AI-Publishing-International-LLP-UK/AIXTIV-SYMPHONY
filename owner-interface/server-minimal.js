@@ -83,6 +83,11 @@ app.get('/health', (req, res) => {
   res.json({ status: 'healthy', service: 'mocoa-owner-interface' });
 });
 
+// ElevenLabs health check endpoint
+app.get('/api/elevenlabs/health', (req, res) => {
+  res.json({ status: 'healthy', service: 'elevenlabs-proxy' });
+});
+
 // -------- Mock/stub API endpoints required by the interface --------
 
 // GCP token stub (frontend expects a JSON with { access_token })

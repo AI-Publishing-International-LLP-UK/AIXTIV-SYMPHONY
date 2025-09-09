@@ -2,9 +2,9 @@
   "name": "mocoa-owner-interface-fixed",
   "version": "1.0.2",
   "description": "MOCOA Owner Interface with GCP Secret Manager integration",
-  "main": "server-voice-integrated.js",
+  "main": "server-minimal.js",
   "scripts": {
-    "start": "node server-voice-integrated.js",
+    "start": "node server-minimal.js",
     "dev": "nodemon server.js",
     "oauth2-server": "node oauth2-elevenlabs-server.js",
     "oauth2-dev": "NODE_ENV=development nodemon oauth2-elevenlabs-server.js",
@@ -18,7 +18,6 @@
     "init-agents": "node elevenlabs-conversational-agents.js",
     "test-agents": "node test-agents.js"
   },
-  "type": "module",
   "dependencies": {
     "@elevenlabs/elevenlabs-js": "^2.13.0",
     "@google-cloud/pubsub": "^5.2.0",

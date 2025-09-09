@@ -5,7 +5,7 @@ class TestamentSwarmBackend extends EventEmitter {
   constructor() {
     super();
     this.isConnected = false;
-    this.totalAgents = 18000000; // 18M agents
+    this.totalAgents = 18650000; // 18.65M agents + 650K Diamond SAO quantum agents
     this.vlsSolutions = this.initializeVLSSolutions();
     this.activeConnections = new Map();
     this.connect();
@@ -176,19 +176,21 @@ class TestamentSwarmBackend extends EventEmitter {
 
   getAgentAllocation() {
     return {
-      totalSystemAgents: 505001,
+      totalSystemAgents: 650000, // Scaled from 505,001 to 650,000
       testamentSwarm: this.totalAgents,
       vlsSolutions: this.vlsSolutions,
       wings: {
-        core_squadron: { agents: 168334, description: 'Foundation work, system analysis, data processing' },
-        deploy_squadron: { agents: 168334, description: 'Deployment, integration, automation' },
-        engage_squadron: { agents: 168333, description: 'Client engagement, analysis, reporting' }
+        wing1_core: { agents: 216667, leader: 'Dr. Lucy', description: 'Foundation work, ML processing, quantum analytics' },
+        wing2_deploy: { agents: 216667, leader: 'Dr. Grant', description: 'Deployment, cybersecurity, automation at scale' },
+        wing3_engage: { agents: 216666, leader: 'Dr. Sabina', description: 'Client engagement, dream commander, quantum operations' }
       },
       specializedSwarms: {
         testament: { agents: this.totalAgents, description: 'Testament Swarm operations' },
-        cyber: { agents: 82000, description: 'Cybersecurity operations' },
-        wfa: { agents: 75000, description: 'Workflow automation' },
-        intelligence: { agents: 95000, description: 'Intelligence gathering' }
+        quantum: { agents: 150000, description: 'Quantum operations and processing' },
+        diamond_sao: { agents: 650000, description: 'Diamond SAO Command Center operations' },
+        cyber: { agents: 120000, description: 'Enhanced cybersecurity operations' },
+        wfa: { agents: 180000, description: 'Workflow automation at quantum scale' },
+        intelligence: { agents: 250000, description: 'Intelligence gathering and analysis' }
       }
     };
   }

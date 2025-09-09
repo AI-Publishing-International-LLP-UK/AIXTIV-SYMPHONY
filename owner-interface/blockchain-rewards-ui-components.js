@@ -39,10 +39,10 @@ class BlockchainRewardsUI {
       // Start real-time updates
       this.startRealTimeUpdates();
       
-      console.log(`✅ Blockchain & Rewards UI initialized`);
+      console.log('✅ Blockchain & Rewards UI initialized');
       
     } catch (error) {
-      console.error(`❌ Error initializing UI:`, error);
+      console.error('❌ Error initializing UI:', error);
     }
   }
 

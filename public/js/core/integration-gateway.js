@@ -29,7 +29,7 @@ const IntegrationGateway = (() => {
    */
   const initialize = async () => {
     try {
-      console.log("Initializing Integration Gateway connection...");
+      console.log('Initializing Integration Gateway connection...');
       
       // Check if the integration gateway is available
       const status = await checkStatus();
@@ -44,17 +44,17 @@ const IntegrationGateway = (() => {
           integrationGatewayStatus: 'connected'
         });
         
-        console.log("Integration Gateway connected successfully");
+        console.log('Integration Gateway connected successfully');
       } else {
-        throw new Error("Integration Gateway unavailable");
+        throw new Error('Integration Gateway unavailable');
       }
     } catch (error) {
-      console.error("Integration Gateway connection error:", error);
+      console.error('Integration Gateway connection error:', error);
       
       integrationStatus.isConnected = false;
       integrationStatus.errors.push({
         timestamp: Date.now(),
-        message: error.message || "Connection failed"
+        message: error.message || 'Connection failed'
       });
       
       // Update system status in AppState
@@ -75,13 +75,13 @@ const IntegrationGateway = (() => {
     
     return {
       available: true,
-      version: "1.0.3",
+      version: '1.0.3',
       services: [
-        "SallyPort",
-        "Dr.Claude",
-        "Symphony",
-        "GreenScreen",
-        "AgentAnimator"
+        'SallyPort',
+        'Dr.Claude',
+        'Symphony',
+        'GreenScreen',
+        'AgentAnimator'
       ]
     };
   };
@@ -94,18 +94,18 @@ const IntegrationGateway = (() => {
   const getSecret = async (secretName) => {
     try {
       if (!integrationStatus.isConnected) {
-        throw new Error("Integration Gateway not connected");
+        throw new Error('Integration Gateway not connected');
       }
       
       // In a real implementation, this would make a secure API call
       // For demo purposes, return placeholder values
       switch (secretName) {
-        case 'SALLYPORT_API_KEY':
-          return "sk_sallyport_********";
-        case 'SYMPHONY_TOKEN':
-          return "sym_token_********";
-        default:
-          return null;
+      case 'SALLYPORT_API_KEY':
+        return 'sk_sallyport_********';
+      case 'SYMPHONY_TOKEN':
+        return 'sym_token_********';
+      default:
+        return null;
       }
     } catch (error) {
       console.error(`Error retrieving secret '${secretName}':`, error);
@@ -123,7 +123,7 @@ const IntegrationGateway = (() => {
   const callApi = async (service, endpoint, options = {}) => {
     try {
       if (!integrationStatus.isConnected) {
-        throw new Error("Integration Gateway not connected");
+        throw new Error('Integration Gateway not connected');
       }
       
       // Build cache key for this request
@@ -143,17 +143,17 @@ const IntegrationGateway = (() => {
       let response;
       
       switch (`${service}/${endpoint}`) {
-        case 'SallyPort/verify':
-          response = { valid: true, user: { id: "00001", role: "admin" } };
-          break;
-        case 'Symphony/status':
-          response = { active: true, components: 6, health: "optimal" };
-          break;
-        case 'GreenScreen/layers':
-          response = { layers: 3, active: true, composition: "ready" };
-          break;
-        default:
-          response = { success: true };
+      case 'SallyPort/verify':
+        response = { valid: true, user: { id: '00001', role: 'admin' } };
+        break;
+      case 'Symphony/status':
+        response = { active: true, components: 6, health: 'optimal' };
+        break;
+      case 'GreenScreen/layers':
+        response = { layers: 3, active: true, composition: 'ready' };
+        break;
+      default:
+        response = { success: true };
       }
       
       // Cache the response
@@ -171,7 +171,7 @@ const IntegrationGateway = (() => {
         service,
         endpoint,
         timestamp: Date.now(),
-        message: error.message || "API call failed"
+        message: error.message || 'API call failed'
       });
       
       throw error;
@@ -186,7 +186,7 @@ const IntegrationGateway = (() => {
    */
   const registerWebhook = (event, callback) => {
     if (!integrationStatus.isConnected) {
-      console.error("Cannot register webhook: Integration Gateway not connected");
+      console.error('Cannot register webhook: Integration Gateway not connected');
       return null;
     }
     

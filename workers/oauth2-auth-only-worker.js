@@ -42,44 +42,44 @@ export default {
     try {
       // Handle OAuth2 authentication routes ONLY
       switch (path) {
-        case '/auth/oauth2/authorize':
-          return handleAuthorizationRequest(request, url);
+      case '/auth/oauth2/authorize':
+        return handleAuthorizationRequest(request, url);
           
-        case '/auth/oauth2/callback':
-          return handleAuthCallback(request);
+      case '/auth/oauth2/callback':
+        return handleAuthCallback(request);
           
-        case '/auth/logout':
-          return handleLogout(request);
+      case '/auth/logout':
+        return handleLogout(request);
           
-        case '/auth/login.html':
-          return serveLoginPage();
+      case '/auth/login.html':
+        return serveLoginPage();
           
-        case '/auth/callback.html':
-          return serveCallbackPage();
+      case '/auth/callback.html':
+        return serveCallbackPage();
           
-        case '/auth/status':
-          return handleAuthStatus(request);
+      case '/auth/status':
+        return handleAuthStatus(request);
           
-        default:
-          // All other routes are blocked
-          return new Response(
-            JSON.stringify({
-              error: 'Authentication service only',
-              message: 'This system provides OAuth2 authentication only',
-              availableEndpoints: [
-                '/auth/oauth2/authorize',
-                '/auth/oauth2/callback', 
-                '/auth/logout',
-                '/auth/login.html'
-              ],
-              securityLevel: 'diamond_sao',
-              apiAccess: false
-            }),
-            {
-              status: 404,
-              headers: { 'Content-Type': 'application/json' }
-            }
-          );
+      default:
+        // All other routes are blocked
+        return new Response(
+          JSON.stringify({
+            error: 'Authentication service only',
+            message: 'This system provides OAuth2 authentication only',
+            availableEndpoints: [
+              '/auth/oauth2/authorize',
+              '/auth/oauth2/callback', 
+              '/auth/logout',
+              '/auth/login.html'
+            ],
+            securityLevel: 'diamond_sao',
+            apiAccess: false
+          }),
+          {
+            status: 404,
+            headers: { 'Content-Type': 'application/json' }
+          }
+        );
       }
     } catch (error) {
       return new Response(

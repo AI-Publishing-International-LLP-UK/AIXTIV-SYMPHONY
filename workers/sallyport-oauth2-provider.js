@@ -144,43 +144,43 @@ export default {
 
       // Route OAuth2/OIDC endpoints
       switch (url.pathname) {
-        case '/authorize':
-          response = await handleAuthorizationRequest(request, env);
-          break;
-        case '/token':
-          response = await handleTokenRequest(request, env);
-          break;
-        case '/.well-known/jwks.json':
-          response = await handleJWKSRequest(env);
-          break;
-        case '/.well-known/openid-configuration':
-          response = await handleDiscoveryRequest(env, url);
-          break;
-        case '/userinfo':
-          response = await handleUserInfoRequest(request, env);
-          break;
-        case '/introspect':
-          response = await handleIntrospectRequest(request, env);
-          break;
-        case '/revoke':
-          response = await handleRevokeRequest(request, env);
-          break;
-        case '/health':
-          response = new Response(JSON.stringify({
-            status: 'healthy',
-            service: 'sallyport-oauth2-provider',
-            version: '3.0.0',
-            timestamp: new Date().toISOString()
-          }), { headers: { 'Content-Type': 'application/json' } });
-          break;
-        default:
-          response = new Response(JSON.stringify({
-            error: 'not_found',
-            error_description: 'Endpoint not found'
-          }), { 
-            status: 404, 
-            headers: { 'Content-Type': 'application/json' } 
-          });
+      case '/authorize':
+        response = await handleAuthorizationRequest(request, env);
+        break;
+      case '/token':
+        response = await handleTokenRequest(request, env);
+        break;
+      case '/.well-known/jwks.json':
+        response = await handleJWKSRequest(env);
+        break;
+      case '/.well-known/openid-configuration':
+        response = await handleDiscoveryRequest(env, url);
+        break;
+      case '/userinfo':
+        response = await handleUserInfoRequest(request, env);
+        break;
+      case '/introspect':
+        response = await handleIntrospectRequest(request, env);
+        break;
+      case '/revoke':
+        response = await handleRevokeRequest(request, env);
+        break;
+      case '/health':
+        response = new Response(JSON.stringify({
+          status: 'healthy',
+          service: 'sallyport-oauth2-provider',
+          version: '3.0.0',
+          timestamp: new Date().toISOString()
+        }), { headers: { 'Content-Type': 'application/json' } });
+        break;
+      default:
+        response = new Response(JSON.stringify({
+          error: 'not_found',
+          error_description: 'Endpoint not found'
+        }), { 
+          status: 404, 
+          headers: { 'Content-Type': 'application/json' } 
+        });
       }
 
       // Add CORS headers to response
@@ -320,14 +320,14 @@ async function handleTokenRequest(request, env) {
   }
 
   switch (grant_type) {
-    case 'authorization_code':
-      return handleAuthorizationCodeGrant(params, client, env);
-    case 'client_credentials':
-      return handleClientCredentialsGrant(params, client, env);
-    case 'refresh_token':
-      return handleRefreshTokenGrant(params, client, env);
-    default:
-      return errorResponse('unsupported_grant_type', 'Unsupported grant type');
+  case 'authorization_code':
+    return handleAuthorizationCodeGrant(params, client, env);
+  case 'client_credentials':
+    return handleClientCredentialsGrant(params, client, env);
+  case 'refresh_token':
+    return handleRefreshTokenGrant(params, client, env);
+  default:
+    return errorResponse('unsupported_grant_type', 'Unsupported grant type');
   }
 }
 

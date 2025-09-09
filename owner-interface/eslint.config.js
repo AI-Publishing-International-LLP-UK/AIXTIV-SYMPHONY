@@ -3,10 +3,10 @@
 
 export default [
   {
-    files: ["**/*.js"],
+    files: ['**/*.js'],
     languageOptions: {
       ecmaVersion: 2022,
-      sourceType: "commonjs",
+      sourceType: 'commonjs',
       globals: {
         // Node.js globals
         __dirname: true,

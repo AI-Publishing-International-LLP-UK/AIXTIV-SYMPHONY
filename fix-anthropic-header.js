@@ -35,7 +35,7 @@ if (!contentTypeMatch) {
 // Insert the anthropic-api-key header after Content-Type
 const updatedContent = content.replace(
   contentTypePattern,
-  `'Content-Type': 'application/json',\n  'anthropic-api-key': process.env.ANTHROPIC_API_KEY || process.env.DR_CLAUDE_API || '',\n  'anthropic-version':`
+  '\'Content-Type\': \'application/json\',\n  \'anthropic-api-key\': process.env.ANTHROPIC_API_KEY || process.env.DR_CLAUDE_API || \'\',\n  \'anthropic-version\':'
 );
 
 // Write the updated content back to the file

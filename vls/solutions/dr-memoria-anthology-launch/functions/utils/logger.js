@@ -225,10 +225,10 @@ class Logger {
     const errorData =
       error instanceof Error
         ? {
-            error_name: error.name,
-            error_message: error.message,
-            error_stack: error.stack,
-          }
+          error_name: error.name,
+          error_message: error.message,
+          error_stack: error.stack,
+        }
         : error;
 
     this._write(LogLevel.ERROR, 'ERROR', message, errorData);
@@ -245,10 +245,10 @@ class Logger {
     const errorData =
       error instanceof Error
         ? {
-            error_name: error.name,
-            error_message: error.message,
-            error_stack: error.stack,
-          }
+          error_name: error.name,
+          error_message: error.message,
+          error_stack: error.stack,
+        }
         : error;
 
     this._write(LogLevel.FATAL, 'FATAL', message, errorData);

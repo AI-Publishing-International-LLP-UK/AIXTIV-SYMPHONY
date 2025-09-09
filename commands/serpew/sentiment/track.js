@@ -142,13 +142,13 @@ module.exports = async function trackSentiment(options) {
  */
 function getSentimentColorText(sentiment) {
   switch (sentiment.toLowerCase()) {
-    case 'positive':
-      return chalk.green('Positive');
-    case 'negative':
-      return chalk.red('Negative');
-    case 'neutral':
-      return chalk.blue('Neutral');
-    default:
-      return chalk.white(sentiment);
+  case 'positive':
+    return chalk.green('Positive');
+  case 'negative':
+    return chalk.red('Negative');
+  case 'neutral':
+    return chalk.blue('Neutral');
+  default:
+    return chalk.white(sentiment);
   }
 }

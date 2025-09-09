@@ -132,21 +132,21 @@ module.exports = async function copilotExpiration(options) {
     const expirationDate = new Date(now);
 
     switch (unit) {
-      case 'minutes':
-        expirationDate.setMinutes(now.getMinutes() + periodNum);
-        break;
-      case 'hours':
-        expirationDate.setHours(now.getHours() + periodNum);
-        break;
-      case 'days':
-        expirationDate.setDate(now.getDate() + periodNum);
-        break;
-      case 'weeks':
-        expirationDate.setDate(now.getDate() + periodNum * 7);
-        break;
-      case 'months':
-        expirationDate.setMonth(now.getMonth() + periodNum);
-        break;
+    case 'minutes':
+      expirationDate.setMinutes(now.getMinutes() + periodNum);
+      break;
+    case 'hours':
+      expirationDate.setHours(now.getHours() + periodNum);
+      break;
+    case 'days':
+      expirationDate.setDate(now.getDate() + periodNum);
+      break;
+    case 'weeks':
+      expirationDate.setDate(now.getDate() + periodNum * 7);
+      break;
+    case 'months':
+      expirationDate.setMonth(now.getMonth() + periodNum);
+      break;
     }
 
     // Calculate warning date (30 days before expiration)

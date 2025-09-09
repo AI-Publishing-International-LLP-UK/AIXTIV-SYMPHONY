@@ -18,98 +18,98 @@ class Victory36MarketAnalysis {
     // Market data and competitive landscape
     this.marketData = {
       totalAddressableMarket: {
-        "USA/Canada Business Users": 45000000,
-        "LATAM Business Users": 25000000,
-        "USA/Canada Remote Workers": 22000000,
-        "LATAM Remote Workers": 12000000,
-        "USA/Canada Enterprise Employees": 85000000,
-        "LATAM Enterprise Employees": 35000000,
-        "Global ERP Market Users": 180000000,
-        "Workforce Management Users": 120000000
+        'USA/Canada Business Users': 45000000,
+        'LATAM Business Users': 25000000,
+        'USA/Canada Remote Workers': 22000000,
+        'LATAM Remote Workers': 12000000,
+        'USA/Canada Enterprise Employees': 85000000,
+        'LATAM Enterprise Employees': 35000000,
+        'Global ERP Market Users': 180000000,
+        'Workforce Management Users': 120000000
       },
 
       currentSolutionCosts: {
-        "Individual Productivity Stack": {
-          "LinkedIn Navigator": 80,
-          "Salesforce Individual": 125,
-          "Microsoft 365 Business": 22,
-          "Slack Pro": 7.25,
-          "Zoom Pro": 16.99,
-          "Notion Team": 10,
-          "Monday.com Basic": 8,
-          "Total Monthly": 269.24
+        'Individual Productivity Stack': {
+          'LinkedIn Navigator': 80,
+          'Salesforce Individual': 125,
+          'Microsoft 365 Business': 22,
+          'Slack Pro': 7.25,
+          'Zoom Pro': 16.99,
+          'Notion Team': 10,
+          'Monday.com Basic': 8,
+          'Total Monthly': 269.24
         },
 
-        "Enterprise Employee Stack": {
-          "Salesforce Enterprise": 300,
-          "Microsoft 365 E5": 57,
-          "ServiceNow": 200,
-          "Workday": 150,
-          "SAP License": 180,
-          "UiPath": 420,
-          "Total Monthly": 1307
+        'Enterprise Employee Stack': {
+          'Salesforce Enterprise': 300,
+          'Microsoft 365 E5': 57,
+          'ServiceNow': 200,
+          'Workday': 150,
+          'SAP License': 180,
+          'UiPath': 420,
+          'Total Monthly': 1307
         }
       },
 
       professionalServicesMarket: {
-        "Global IT Consulting Market": "$537 billion annually",
-        "Business Process Consulting": "$289 billion annually", 
-        "ERP Implementation Services": "$45 billion annually",
-        "Digital Transformation Consulting": "$180 billion annually",
-        "Workforce Management Consulting": "$25 billion annually",
+        'Global IT Consulting Market': '$537 billion annually',
+        'Business Process Consulting': '$289 billion annually', 
+        'ERP Implementation Services': '$45 billion annually',
+        'Digital Transformation Consulting': '$180 billion annually',
+        'Workforce Management Consulting': '$25 billion annually',
         
-        "Typical Consulting Rates": {
-          "Big 4 (Deloitte, McKinsey, etc)": "$500-2000/hour",
-          "Tier 2 Consulting": "$300-800/hour",  
-          "Local/Regional Consulting": "$150-400/hour",
-          "Offshore Consulting": "$50-150/hour",
-          "Average Blended Rate": "$350/hour"
+        'Typical Consulting Rates': {
+          'Big 4 (Deloitte, McKinsey, etc)': '$500-2000/hour',
+          'Tier 2 Consulting': '$300-800/hour',  
+          'Local/Regional Consulting': '$150-400/hour',
+          'Offshore Consulting': '$50-150/hour',
+          'Average Blended Rate': '$350/hour'
         },
 
-        "Typical Enterprise Consulting Spend": {
-          "Small Business (10-50 employees)": "$8,000-25,000/month",
-          "Mid-Market (50-500 employees)": "$25,000-100,000/month",
-          "Large Enterprise (500-5000 employees)": "$100,000-500,000/month", 
-          "Fortune 500 (5000+ employees)": "$500,000-5,000,000/month",
-          "Government Agencies": "$200,000-10,000,000/month"
+        'Typical Enterprise Consulting Spend': {
+          'Small Business (10-50 employees)': '$8,000-25,000/month',
+          'Mid-Market (50-500 employees)': '$25,000-100,000/month',
+          'Large Enterprise (500-5000 employees)': '$100,000-500,000/month', 
+          'Fortune 500 (5000+ employees)': '$500,000-5,000,000/month',
+          'Government Agencies': '$200,000-10,000,000/month'
         },
 
-        "What Consultants Actually Do": {
-          "ERP Implementation": "6-24 months @ $2-10M per project",
-          "Business Process Optimization": "$50k-500k per process",
-          "Digital Transformation": "$1-50M per organization",
-          "Change Management": "$200-2000/hour for training",
-          "System Integration": "$150-800/hour for connecting tools",
-          "Data Migration": "$100-500/hour for moving data",
-          "Custom Development": "$100-300/hour for coding",
-          "Project Management": "$150-400/hour for coordination"
+        'What Consultants Actually Do': {
+          'ERP Implementation': '6-24 months @ $2-10M per project',
+          'Business Process Optimization': '$50k-500k per process',
+          'Digital Transformation': '$1-50M per organization',
+          'Change Management': '$200-2000/hour for training',
+          'System Integration': '$150-800/hour for connecting tools',
+          'Data Migration': '$100-500/hour for moving data',
+          'Custom Development': '$100-300/hour for coding',
+          'Project Management': '$150-400/hour for coordination'
         },
 
-        "Hidden Consulting Reality": {
-          "ERP Projects": "80% require additional consulting beyond initial scope",
-          "Implementation Failures": "60% of ERP projects fail or go over budget",
-          "Ongoing Support": "Enterprises pay 15-25% of license cost annually in consulting",
-          "Training Costs": "$500-2000 per employee for enterprise software training",
-          "Customization Debt": "Every customization requires ongoing consultant maintenance"
+        'Hidden Consulting Reality': {
+          'ERP Projects': '80% require additional consulting beyond initial scope',
+          'Implementation Failures': '60% of ERP projects fail or go over budget',
+          'Ongoing Support': 'Enterprises pay 15-25% of license cost annually in consulting',
+          'Training Costs': '$500-2000 per employee for enterprise software training',
+          'Customization Debt': 'Every customization requires ongoing consultant maintenance'
         }
       },
 
       erpWorkforceMarket: {
-        "SAP Users Globally": 440000000,
-        "Oracle ERP Users": 430000000, 
-        "Microsoft Dynamics Users": 245000000,
-        "Workday Users": 45000000,
-        "ServiceNow Users": 19000000,
-        "Average SAP Cost Per User": 180,
-        "Average Oracle Cost Per User": 150,
-        "Average Workday Cost Per User": 200,
-        "Implementation Costs": "50-500% of license costs annually",
+        'SAP Users Globally': 440000000,
+        'Oracle ERP Users': 430000000, 
+        'Microsoft Dynamics Users': 245000000,
+        'Workday Users': 45000000,
+        'ServiceNow Users': 19000000,
+        'Average SAP Cost Per User': 180,
+        'Average Oracle Cost Per User': 150,
+        'Average Workday Cost Per User': 200,
+        'Implementation Costs': '50-500% of license costs annually',
         
-        "ERP Consulting Dependency": {
-          "SAP Consulting Market": "$12 billion annually",
-          "Oracle Consulting Market": "$8 billion annually",
-          "Workday Consulting Market": "$3 billion annually",
-          "Average Consulting-to-License Ratio": "3:1 (spend $3 on consulting for every $1 on licenses)"
+        'ERP Consulting Dependency': {
+          'SAP Consulting Market': '$12 billion annually',
+          'Oracle Consulting Market': '$8 billion annually',
+          'Workday Consulting Market': '$3 billion annually',
+          'Average Consulting-to-License Ratio': '3:1 (spend $3 on consulting for every $1 on licenses)'
         }
       }
     };
@@ -140,8 +140,8 @@ class Victory36MarketAnalysis {
         },
 
         roi: {
-          usa: "651% ROI (pay $149, get $970 value)",
-          latam: "7413% ROI (pay $14.90, get $1104 value)"
+          usa: '651% ROI (pay $149, get $970 value)',
+          latam: '7413% ROI (pay $14.90, get $1104 value)'
         }
       },
 
@@ -167,8 +167,8 @@ class Victory36MarketAnalysis {
         },
 
         roi: {
-          usa: "924% ROI (pay $899, get $8308 value)",
-          latam: "10138% ROI (pay $89.90, get $9117 value)"
+          usa: '924% ROI (pay $899, get $8308 value)',
+          latam: '10138% ROI (pay $89.90, get $9117 value)'
         }
       },
 
@@ -197,8 +197,8 @@ class Victory36MarketAnalysis {
         },
 
         roi: {
-          usa: "782% ROI (pay $89k, get $696k value)",
-          latam: "8721% ROI (pay $8.9k, get $776k value)"
+          usa: '782% ROI (pay $89k, get $696k value)',
+          latam: '8721% ROI (pay $8.9k, get $776k value)'
         }
       },
 
@@ -228,8 +228,8 @@ class Victory36MarketAnalysis {
         },
 
         roi: {
-          usa: "1646% ROI (pay $899k, get $14.8M value)",
-          latam: "17367% ROI (pay $89.9k, get $15.6M value)"
+          usa: '1646% ROI (pay $899k, get $14.8M value)',
+          latam: '17367% ROI (pay $89.9k, get $15.6M value)'
         }
       }
     };
@@ -347,25 +347,25 @@ class Victory36MarketAnalysis {
       },
 
       workforce_enablement_opportunity: {
-        "Total Workforce Management Users": 120000000,
-        "Average Current Cost Per User": 45, // Monthly software
-        "Average Consulting Cost Per User": 25, // Monthly consulting support
-        "Total Current Cost Per User": 70, // Monthly total
+        'Total Workforce Management Users': 120000000,
+        'Average Current Cost Per User': 45, // Monthly software
+        'Average Consulting Cost Per User': 25, // Monthly consulting support
+        'Total Current Cost Per User': 70, // Monthly total
         
-        "ASOOS Replacement Value": {
-          "Remote Teams Tier": "80% of workforce users",
-          "Professional Tier": "15% of workforce users", 
-          "Enterprise Tier": "5% of workforce users"
+        'ASOOS Replacement Value': {
+          'Remote Teams Tier': '80% of workforce users',
+          'Professional Tier': '15% of workforce users', 
+          'Enterprise Tier': '5% of workforce users'
         },
         
-        "Addressable Annual Revenue": {
-          usa_canada: "96M users × $149 × 12 = $171.6B potential",
-          latam: "24M users × $14.90 × 12 = $4.3B potential"
+        'Addressable Annual Revenue': {
+          usa_canada: '96M users × $149 × 12 = $171.6B potential',
+          latam: '24M users × $14.90 × 12 = $4.3B potential'
         },
         
-        "Consulting Elimination": {
-          usa_canada: "96M users × $25 × 12 = $28.8B consulting eliminated",
-          latam: "24M users × $15 × 12 = $4.32B consulting eliminated"
+        'Consulting Elimination': {
+          usa_canada: '96M users × $25 × 12 = $28.8B consulting eliminated',
+          latam: '24M users × $15 × 12 = $4.32B consulting eliminated'
         }
       }
     };
@@ -396,7 +396,7 @@ class Victory36MarketAnalysis {
           projections.usa_canada.fortune_500.consulting_savings +
           projections.usa_canada.erp_displacement.total_consulting_savings,
         
-        market_penetration: "1.2% of total addressable North American market"
+        market_penetration: '1.2% of total addressable North American market'
       },
 
       latam_totals: {
@@ -417,7 +417,7 @@ class Victory36MarketAnalysis {
           projections.latam.enterprise.consulting_savings +
           projections.latam.erp_displacement.total_consulting_savings,
         
-        market_penetration: "2.8% of total addressable LATAM market"
+        market_penetration: '2.8% of total addressable LATAM market'
       },
 
       combined_projections: {

@@ -125,26 +125,26 @@ async function processRepository(owner, repo, action, branch, securityCheck) {
   
   // Process based on action type
   switch (action) {
-    case 'align':
-      changes = await performAlignAction(owner, repo, contents);
-      break;
-    case 'clean':
-      changes = await performCleanAction(owner, repo, contents);
-      break;
-    case 'secure':
-      const securityResult = await performSecurityAudit(owner, repo, contents);
-      changes = securityResult.changes;
-      issues = securityResult.issues;
-      break;
-    case 'memoria-assist':
-      changes = await performMemoriaIntegration(owner, repo, contents);
-      break;
-    case 'sync':
-      changes = await performSyncAction(owner, repo, contents);
-      break;
-    default:
-      console.log(chalk.yellow(`Action "${action}" not yet implemented for live API`));
-      changes = contents.length; // Use content count as placeholder
+  case 'align':
+    changes = await performAlignAction(owner, repo, contents);
+    break;
+  case 'clean':
+    changes = await performCleanAction(owner, repo, contents);
+    break;
+  case 'secure':
+    const securityResult = await performSecurityAudit(owner, repo, contents);
+    changes = securityResult.changes;
+    issues = securityResult.issues;
+    break;
+  case 'memoria-assist':
+    changes = await performMemoriaIntegration(owner, repo, contents);
+    break;
+  case 'sync':
+    changes = await performSyncAction(owner, repo, contents);
+    break;
+  default:
+    console.log(chalk.yellow(`Action "${action}" not yet implemented for live API`));
+    changes = contents.length; // Use content count as placeholder
   }
   
   if (securityCheck === 'true' && action !== 'secure') {
@@ -294,13 +294,13 @@ module.exports = async function automateGithubTasks(options) {
       AI_PUBLISHING_REPOS.forEach((repo) => console.log(chalk.cyan(`- ${repo}`)));
       console.log(chalk.yellow('\nUse --organization=custom to work with external repositories.'));
       // Display debug information
-  debugDisplay({
-    thought: internalThought,
-    result: { status: 'error', message: 'Repository not found' },
-    command: 'claude:return'
-  });
+      debugDisplay({
+        thought: internalThought,
+        result: { status: 'error', message: 'Repository not found' },
+        command: 'claude:return'
+      });
   
-  return;
+      return;
     }
 
     // Execute GitHub automation with spinner
@@ -389,39 +389,39 @@ module.exports = async function automateGithubTasks(options) {
 
       console.log(chalk.bold('\nNext Steps:'));
       switch (action) {
-        case 'align':
-          console.log(`Files have been aligned according to the Aixtiv Symphony standards.`);
-          console.log(
-            `Consider running ${chalk.yellow(`aixtiv claude:automation:github -r ${repository} -a secure`)} to perform a security check.`
-          );
-          break;
-        case 'clean':
-          console.log(`Repository has been cleaned and pending changes have been resolved.`);
-          break;
-        case 'secure':
-          console.log(
-            `Security checks have been completed. Issues have been ${result.issues > 0 ? 'identified and documented' : 'resolved'}.`
-          );
-          break;
-        case 'memoria-assist':
-          console.log(`Dr. Memoria Anthology integration has been set up.`);
-          console.log(`Check the documentation repository for publishing workflow instructions.`);
-          break;
-        case 'sync':
-          console.log(`Repository has been synchronized with the latest automation code.`);
-          console.log(`Consider running other automation tasks to ensure full compliance.`);
-          break;
+      case 'align':
+        console.log('Files have been aligned according to the Aixtiv Symphony standards.');
+        console.log(
+          `Consider running ${chalk.yellow(`aixtiv claude:automation:github -r ${repository} -a secure`)} to perform a security check.`
+        );
+        break;
+      case 'clean':
+        console.log('Repository has been cleaned and pending changes have been resolved.');
+        break;
+      case 'secure':
+        console.log(
+          `Security checks have been completed. Issues have been ${result.issues > 0 ? 'identified and documented' : 'resolved'}.`
+        );
+        break;
+      case 'memoria-assist':
+        console.log('Dr. Memoria Anthology integration has been set up.');
+        console.log('Check the documentation repository for publishing workflow instructions.');
+        break;
+      case 'sync':
+        console.log('Repository has been synchronized with the latest automation code.');
+        console.log('Consider running other automation tasks to ensure full compliance.');
+        break;
       }
     }
   } catch (error) {
     console.error(chalk.red('\nGitHub automation failed:'), error.message);
     // Display debug information
-  debugDisplay({
-    thought: internalThought,
-    result: { status: 'error', message: error.message },
-    command: 'claude:process.exit'
-  });
+    debugDisplay({
+      thought: internalThought,
+      result: { status: 'error', message: error.message },
+      command: 'claude:process.exit'
+    });
   
-  process.exit(1);
+    process.exit(1);
   }
 };

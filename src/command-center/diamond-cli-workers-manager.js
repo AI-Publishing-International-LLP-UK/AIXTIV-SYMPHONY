@@ -296,52 +296,52 @@ class DiamondCLIWorkersManager {
     };
     
     switch (intent.operation) {
-      case 'deploy_worker':
-        operation.parameters = {
-          action: 'deploy',
-          script: intent.service?.script || 'src/workers/default.js',
-          routes: intent.service?.routes || [],
-          name: intent.service?.name || 'default-worker',
-          environment: 'production'
-        };
-        break;
+    case 'deploy_worker':
+      operation.parameters = {
+        action: 'deploy',
+        script: intent.service?.script || 'src/workers/default.js',
+        routes: intent.service?.routes || [],
+        name: intent.service?.name || 'default-worker',
+        environment: 'production'
+      };
+      break;
         
-      case 'update_worker':
-        operation.parameters = {
-          action: 'update',
-          script: intent.service?.script || 'src/workers/default.js',
-          name: intent.service?.name || 'default-worker',
-          environment: 'production'
-        };
-        break;
+    case 'update_worker':
+      operation.parameters = {
+        action: 'update',
+        script: intent.service?.script || 'src/workers/default.js',
+        name: intent.service?.name || 'default-worker',
+        environment: 'production'
+      };
+      break;
         
-      case 'delete_worker':
-        operation.parameters = {
-          action: 'delete',
-          name: intent.service?.name || 'default-worker'
-        };
-        break;
+    case 'delete_worker':
+      operation.parameters = {
+        action: 'delete',
+        name: intent.service?.name || 'default-worker'
+      };
+      break;
         
-      case 'check_worker_status':
-        operation.parameters = {
-          action: 'status',
-          name: intent.service?.name || 'all-workers'
-        };
-        break;
+    case 'check_worker_status':
+      operation.parameters = {
+        action: 'status',
+        name: intent.service?.name || 'all-workers'
+      };
+      break;
         
-      case 'manage_kv':
-        operation.parameters = {
-          action: 'kv_management',
-          namespace: 'production-kv'
-        };
-        break;
+    case 'manage_kv':
+      operation.parameters = {
+        action: 'kv_management',
+        namespace: 'production-kv'
+      };
+      break;
         
-      case 'manage_durable_objects':
-        operation.parameters = {
-          action: 'durable_objects',
-          class: intent.worker || 'default'
-        };
-        break;
+    case 'manage_durable_objects':
+      operation.parameters = {
+        action: 'durable_objects',
+        class: intent.worker || 'default'
+      };
+      break;
     }
     
     return operation;
@@ -363,32 +363,32 @@ class DiamondCLIWorkersManager {
       let result;
       
       switch (operation.type) {
-        case 'deploy_worker':
-          result = await this.deployWorkerDirect(operation);
-          break;
+      case 'deploy_worker':
+        result = await this.deployWorkerDirect(operation);
+        break;
           
-        case 'update_worker':
-          result = await this.updateWorkerDirect(operation);
-          break;
+      case 'update_worker':
+        result = await this.updateWorkerDirect(operation);
+        break;
           
-        case 'delete_worker':
-          result = await this.deleteWorkerDirect(operation);
-          break;
+      case 'delete_worker':
+        result = await this.deleteWorkerDirect(operation);
+        break;
           
-        case 'check_worker_status':
-          result = await this.checkWorkerStatusDirect(operation);
-          break;
+      case 'check_worker_status':
+        result = await this.checkWorkerStatusDirect(operation);
+        break;
           
-        case 'manage_kv':
-          result = await this.manageKVDirect(operation);
-          break;
+      case 'manage_kv':
+        result = await this.manageKVDirect(operation);
+        break;
           
-        case 'manage_durable_objects':
-          result = await this.manageDurableObjectsDirect(operation);
-          break;
+      case 'manage_durable_objects':
+        result = await this.manageDurableObjectsDirect(operation);
+        break;
           
-        default:
-          throw new Error(`Unknown workers operation: ${operation.type}`);
+      default:
+        throw new Error(`Unknown workers operation: ${operation.type}`);
       }
       
       // Store operation in Diamond SAO Firestore

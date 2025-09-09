@@ -307,7 +307,7 @@ CMD ["node", "vls-computationalist-agents.js"]
     };
 
     fs.writeFileSync('/Users/as/asoos/integration-gateway/owner-interface/cloudrun.yaml', 
-                     JSON.stringify(cloudRunConfig, null, 2));
+      JSON.stringify(cloudRunConfig, null, 2));
     this.log('Cloud Run configuration created', 'SUCCESS');
   }
 
@@ -326,7 +326,7 @@ CMD ["node", "vls-computationalist-agents.js"]
       
       // Configure Docker for GCR
       this.log('Configuring Docker for GCR...', 'DEPLOY');
-      execSync(`gcloud auth configure-docker --quiet`, { stdio: 'inherit' });
+      execSync('gcloud auth configure-docker --quiet', { stdio: 'inherit' });
       
       // Push to GCR
       this.log('Pushing image to Google Container Registry...', 'DEPLOY');

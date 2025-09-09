@@ -113,7 +113,7 @@ module.exports = async function summonVisionary(options) {
     console.log(chalk.bgCyan.white(' VISIONARY 1 COMMAND SUITE '));
     console.log('');
     console.log(chalk.cyan('🚀 Graphical Control Suite online.'));
-    console.log(chalk.blue("🎯 Connected to Dr. Lucy's security protocol."));
+    console.log(chalk.blue('🎯 Connected to Dr. Lucy\'s security protocol.'));
     console.log(chalk.green('🧬 Custom themes and abilities now live.'));
 
     // Complete the sequence

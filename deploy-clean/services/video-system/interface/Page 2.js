@@ -124,9 +124,9 @@ var __disposeResources =
     typeof SuppressedError === 'function'
       ? SuppressedError
       : function (error, suppressed, message) {
-          var e = new Error(message);
-          return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
-        }
+        var e = new Error(message);
+        return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
+      }
   );
 import {
   concat,
@@ -858,8 +858,8 @@ let Page = (() => {
       const { timeout: ms = this.getDefaultTimeout(), signal } = options;
       const predicate = isString(urlOrPredicate)
         ? (frame) => {
-            return urlOrPredicate === frame.url();
-          }
+          return urlOrPredicate === frame.url();
+        }
         : urlOrPredicate;
       return await firstValueFrom(
         merge(
@@ -1025,10 +1025,10 @@ let Page = (() => {
           height: cropHeight,
         } = roundRectangle(normalizeRectangle(options.crop));
         if (x < 0 || y < 0) {
-          throw new Error(`\`crop.x\` and \`crop.y\` must be greater than or equal to 0.`);
+          throw new Error('`crop.x` and `crop.y` must be greater than or equal to 0.');
         }
         if (cropWidth <= 0 || cropHeight <= 0) {
-          throw new Error(`\`crop.height\` and \`crop.width\` must be greater than or equal to 0.`);
+          throw new Error('`crop.height` and `crop.width` must be greater than or equal to 0.');
         }
         const viewportWidth = width / devicePixelRatio;
         const viewportHeight = height / devicePixelRatio;
@@ -1050,10 +1050,10 @@ let Page = (() => {
         };
       }
       if (options.speed !== undefined && options.speed <= 0) {
-        throw new Error(`\`speed\` must be greater than 0.`);
+        throw new Error('`speed` must be greater than 0.');
       }
       if (options.scale !== undefined && options.scale <= 0) {
-        throw new Error(`\`scale\` must be greater than 0.`);
+        throw new Error('`scale` must be greater than 0.');
       }
       const recorder = new ScreenRecorder(this, width, height, {
         ...options,
@@ -1149,8 +1149,8 @@ let Page = (() => {
           ...userOptions,
           clip: userOptions.clip
             ? {
-                ...userOptions.clip,
-              }
+              ...userOptions.clip,
+            }
             : undefined,
         };
         if (options.type === undefined && options.path !== undefined) {
@@ -1158,16 +1158,16 @@ let Page = (() => {
           // Note we cannot use Node.js here due to browser compatibility.
           const extension = filePath.slice(filePath.lastIndexOf('.') + 1).toLowerCase();
           switch (extension) {
-            case 'png':
-              options.type = 'png';
-              break;
-            case 'jpeg':
-            case 'jpg':
-              options.type = 'jpeg';
-              break;
-            case 'webp':
-              options.type = 'webp';
-              break;
+          case 'png':
+            options.type = 'png';
+            break;
+          case 'jpeg':
+          case 'jpg':
+            options.type = 'jpeg';
+            break;
+          case 'webp':
+            options.type = 'webp';
+            break;
           }
         }
         if (options.quality !== undefined) {
@@ -1182,17 +1182,17 @@ let Page = (() => {
         }
         if (options.clip) {
           if (options.clip.width <= 0) {
-            throw new Error("'width' in 'clip' must be positive.");
+            throw new Error('\'width\' in \'clip\' must be positive.');
           }
           if (options.clip.height <= 0) {
-            throw new Error("'height' in 'clip' must be positive.");
+            throw new Error('\'height\' in \'clip\' must be positive.');
           }
         }
         setDefaultScreenshotOptions(options);
         const stack = __addDisposableResource(env_2, new AsyncDisposableStack(), true);
         if (options.clip) {
           if (options.fullPage) {
-            throw new Error("'clip' and 'fullPage' are mutually exclusive");
+            throw new Error('\'clip\' and \'fullPage\' are mutually exclusive');
           }
           options.clip = roundRectangle(normalizeRectangle(options.clip));
         } else {
@@ -1630,22 +1630,22 @@ function normalizeRectangle(clip) {
     ...clip,
     ...(clip.width < 0
       ? {
-          x: clip.x + clip.width,
-          width: -clip.width,
-        }
+        x: clip.x + clip.width,
+        width: -clip.width,
+      }
       : {
-          x: clip.x,
-          width: clip.width,
-        }),
+        x: clip.x,
+        width: clip.width,
+      }),
     ...(clip.height < 0
       ? {
-          y: clip.y + clip.height,
-          height: -clip.height,
-        }
+        y: clip.y + clip.height,
+        height: -clip.height,
+      }
       : {
-          y: clip.y,
-          height: clip.height,
-        }),
+        y: clip.y,
+        height: clip.height,
+      }),
   };
 }
 function roundRectangle(clip) {

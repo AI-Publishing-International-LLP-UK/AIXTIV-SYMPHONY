@@ -43,26 +43,26 @@ class DreamCommanderIntegration {
     
     // Different update schedules based on day
     switch(dayType) {
-      case 'saturday': // Saturday - Weekly summary at 6 AM
-        if (currentHour < 6) {
-          return (6 - currentHour) * 60 * 60 * 1000;
-        }
-        return 24 * 60 * 60 * 1000; // Next day
+    case 'saturday': // Saturday - Weekly summary at 6 AM
+      if (currentHour < 6) {
+        return (6 - currentHour) * 60 * 60 * 1000;
+      }
+      return 24 * 60 * 60 * 1000; // Next day
         
-      case 'sunday': // Sunday - Week prep at 8 AM
-        if (currentHour < 8) {
-          return (8 - currentHour) * 60 * 60 * 1000;
-        }
-        return 24 * 60 * 60 * 1000; // Next day
+    case 'sunday': // Sunday - Week prep at 8 AM
+      if (currentHour < 8) {
+        return (8 - currentHour) * 60 * 60 * 1000;
+      }
+      return 24 * 60 * 60 * 1000; // Next day
         
-      default: // Weekdays - Multiple updates
-        // Morning briefing at 6 AM, midday at 12 PM, evening at 6 PM
-        const updateHours = [6, 12, 18];
-        const nextHour = updateHours.find(hour => hour > currentHour);
-        if (nextHour) {
-          return (nextHour - currentHour) * 60 * 60 * 1000;
-        }
-        return (24 - currentHour + 6) * 60 * 60 * 1000; // Next day at 6 AM
+    default: // Weekdays - Multiple updates
+      // Morning briefing at 6 AM, midday at 12 PM, evening at 6 PM
+      const updateHours = [6, 12, 18];
+      const nextHour = updateHours.find(hour => hour > currentHour);
+      if (nextHour) {
+        return (nextHour - currentHour) * 60 * 60 * 1000;
+      }
+      return (24 - currentHour + 6) * 60 * 60 * 1000; // Next day at 6 AM
     }
   }
 
@@ -553,15 +553,15 @@ class DreamCommanderIntegration {
     
     try {
       switch(dayType) {
-        case 'saturday':
-          await this.loadWeeklySummaryData();
-          break;
-        case 'sunday':
-          await this.loadWeekPreparationData();
-          break;
-        default:
-          await this.loadWeekdayData();
-          break;
+      case 'saturday':
+        await this.loadWeeklySummaryData();
+        break;
+      case 'sunday':
+        await this.loadWeekPreparationData();
+        break;
+      default:
+        await this.loadWeekdayData();
+        break;
       }
       
       // Track performance metrics

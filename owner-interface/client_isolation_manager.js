@@ -296,16 +296,16 @@ class ClientIsolationManager {
     const militaryCapabilities = ['classified_operations', 'quantum_secure'];
 
     switch (isolationLevel) {
-      case 1:
-      case 2:
-        return baseCapabilities;
-      case 3:
-      case 4:
-        return [...baseCapabilities, ...enhancedCapabilities];
-      case 5:
-        return [...baseCapabilities, ...enhancedCapabilities, ...militaryCapabilities];
-      default:
-        return baseCapabilities;
+    case 1:
+    case 2:
+      return baseCapabilities;
+    case 3:
+    case 4:
+      return [...baseCapabilities, ...enhancedCapabilities];
+    case 5:
+      return [...baseCapabilities, ...enhancedCapabilities, ...militaryCapabilities];
+    default:
+      return baseCapabilities;
     }
   }
 

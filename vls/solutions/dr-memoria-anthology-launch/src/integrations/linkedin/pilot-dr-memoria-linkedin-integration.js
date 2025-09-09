@@ -6,8 +6,8 @@ var __awaiter =
       return value instanceof P
         ? value
         : new P(function (resolve) {
-            resolve(value);
-          });
+          resolve(value);
+        });
     }
     return new (P || (P = Promise))(function (resolve, reject) {
       function fulfilled(value) {
@@ -79,8 +79,8 @@ class LinkedInOAuthService {
     const baseScopes = this.config.scopes;
     const scopesParam = [...baseScopes, ...(additionalScopes || [])].join(' ');
     return (
-      `https://www.linkedin.com/oauth/v2/authorization?` +
-      `response_type=code` +
+      'https://www.linkedin.com/oauth/v2/authorization?' +
+      'response_type=code' +
       `&client_id=${this.config.clientId}` +
       `&redirect_uri=${encodeURIComponent(this.config.redirectUri)}` +
       `&scope=${encodeURIComponent(scopesParam)}` +

@@ -34,35 +34,35 @@ export default {
     try {
       // Route handling with tenant context
       switch (path) {
-        case '/setup-tenant':
-          return await handleTenantSetup(request, env);
-        case '/setup-user':
-          return await handleUserSetup(request, env, tenant);
-        case '/setup-mcp-client':
-          return await handleMCPClientSetup(request, env, tenant);
-        case '/oauth/authorize':
-          return await handleOAuthAuthorize(request, env, tenant);
-        case '/oauth/token':
-          return await handleOAuthToken(request, env, tenant);
-        case '/oauth/callback':
-          return await handleOAuthCallback(request, env, tenant);
-        case '/oauth/userinfo':
-          return await handleUserInfo(request, env, tenant);
-        case '/mcp/deploy':
-          return await handleMCPDeploy(request, env, tenant);
-        case '/mcp/status':
-          return await handleMCPStatus(request, env, tenant);
-        case '/health':
-          return new Response(JSON.stringify({ 
-            status: 'OK', 
-            tenant: tenant,
-            timestamp: new Date().toISOString() 
-          }), { 
-            status: 200, 
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-          });
-        default:
-          return new Response('Not Found', { status: 404, headers: corsHeaders });
+      case '/setup-tenant':
+        return await handleTenantSetup(request, env);
+      case '/setup-user':
+        return await handleUserSetup(request, env, tenant);
+      case '/setup-mcp-client':
+        return await handleMCPClientSetup(request, env, tenant);
+      case '/oauth/authorize':
+        return await handleOAuthAuthorize(request, env, tenant);
+      case '/oauth/token':
+        return await handleOAuthToken(request, env, tenant);
+      case '/oauth/callback':
+        return await handleOAuthCallback(request, env, tenant);
+      case '/oauth/userinfo':
+        return await handleUserInfo(request, env, tenant);
+      case '/mcp/deploy':
+        return await handleMCPDeploy(request, env, tenant);
+      case '/mcp/status':
+        return await handleMCPStatus(request, env, tenant);
+      case '/health':
+        return new Response(JSON.stringify({ 
+          status: 'OK', 
+          tenant: tenant,
+          timestamp: new Date().toISOString() 
+        }), { 
+          status: 200, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      default:
+        return new Response('Not Found', { status: 404, headers: corsHeaders });
       }
     } catch (error) {
       console.error('Worker error:', error);
@@ -300,7 +300,7 @@ async function handleUserSetup(request, env, tenant) {
       tenant,
       JSON.stringify([
         `https://${tenant}.sallyport.aixtiv.dev/oauth/callback`,
-        `https://sallyport.aixtiv.dev/oauth/callback`
+        'https://sallyport.aixtiv.dev/oauth/callback'
       ]),
       JSON.stringify(allScopes)
     ).run();

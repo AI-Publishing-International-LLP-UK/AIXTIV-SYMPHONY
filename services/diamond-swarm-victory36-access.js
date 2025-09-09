@@ -329,7 +329,7 @@ class DiamondSwarmVictory36AccessIntegration {
     try {
       // Test voice security validation with Victory36
       const voiceTest = await this.voiceSystem.synthesizeVoice({
-        text: "Victory36 security validation test - all systems operational with Diamond SAO authority",
+        text: 'Victory36 security validation test - all systems operational with Diamond SAO authority',
         voiceProfile: 'diamondSAO'
       });
       

@@ -300,7 +300,7 @@ class DiamondDNSTestSuite {
       console.log(`  DNS Operation: ${result.dnsOperation.type}`);
       console.log(`  Execution: ${result.executionResult.success ? 'Success' : 'Failed'}`);
       console.log(`  Diamond SAO Response: ${result.conversationalResponse.authority}`);
-      console.log(`  Firestore Storage: Simulated - would store in diamond_sao_dns_operations collection`);
+      console.log('  Firestore Storage: Simulated - would store in diamond_sao_dns_operations collection');
       
       this.testResults.push({
         category: 'Diamond SAO Integration',

@@ -60,7 +60,7 @@ class EnhancedVoiceIntegrationTester {
       // Test voice generation
       this.log('Testing voice generation...', 'TEST');
       const testResult = await manager.generateOwnerInterfaceVoice(
-        "Welcome to the MOCOA Owner Interface. Diamond SAO Command Center is operational."
+        'Welcome to the MOCOA Owner Interface. Diamond SAO Command Center is operational.'
       );
       
       if (testResult.success && testResult.audioBuffer) {
@@ -141,7 +141,7 @@ class EnhancedVoiceIntegrationTester {
         // Test V36 RIX (Victory36) enhancements
         this.log('Verifying V36 RIX (Victory36) enhanced capabilities...', 'AI');
         if (v36Rix.capabilities.security_integrations.threat_intelligence.real_time_monitoring &&
-            v36Rix.identity.background.experience === "3,240 years of collective security experience") {
+            v36Rix.identity.background.experience === '3,240 years of collective security experience') {
           this.log('V36 RIX enhancements verified: Threat Intelligence, Security Analytics', 'SUCCESS');
         } else {
           throw new Error('V36 RIX enhancements not properly configured');

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 /**
  * AIXTIV SYMPHONY™ Complete Agent Adapter System
  * © 2025 AI Publishing International LLP
@@ -8,7 +8,7 @@
  * All rights reserved. No part of this software may be reproduced,
  * modified, or distributed without prior written permission.
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.DrMariaAdapter = exports.DrMatchAdapter = exports.DrLucyAdapter = exports.DrMemoriaAdapter = exports.BaseAgentAdapter = exports.AgentAIAdapter = exports.AgentAdapterFactory = exports.DrGrant03Adapter = exports.DrBurby03Adapter = exports.DrMaria03Adapter = exports.DrCypriot03Adapter = exports.DrMatch03Adapter = exports.ProfessorLee03Adapter = exports.DrMemoria03Adapter = exports.DrRoark03Adapter = exports.DrClaude03Adapter = exports.DrLucy03Adapter = exports.DrSabina03Adapter = exports.DrSabina02Adapter = exports.DrBurby02Adapter = exports.DrMaria02Adapter = exports.DrCypriot02Adapter = exports.DrMatch02Adapter = exports.ProfessorLee02Adapter = exports.DrMemoria02Adapter = exports.DrRoark02Adapter = exports.DrClaude02Adapter = exports.DrLucy02Adapter = exports.DrGrant02Adapter = exports.DrSabina01Adapter = exports.DrGrant01Adapter = exports.DrBurby01Adapter = exports.DrMaria01Adapter = exports.DrCypriot01Adapter = exports.DrMatch01Adapter = exports.ProfessorLee01Adapter = exports.DrRoark01Adapter = exports.DrClaude01Adapter = exports.DrLucy01Adapter = void 0;
 // The complete implementation would include all 33 agent adapters
 // Following is the structure of how they would be organized and implemented
@@ -287,59 +287,59 @@ exports.DrGrant03Adapter = DrGrant03Adapter;
  * Creates and configures the appropriate agent adapter based on PilotType
  */
 class AgentAdapterFactory {
-    constructor(aiConnector, s2doManager = null) {
-        this.aiConnector = aiConnector;
-        this.s2doManager = s2doManager;
-    }
-    /**
+  constructor(aiConnector, s2doManager = null) {
+    this.aiConnector = aiConnector;
+    this.s2doManager = s2doManager;
+  }
+  /**
      * Create an agent adapter for the specified pilot type
      */
-    createAdapter(pilotType) {
-        switch (pilotType) {
-            // R1 Core Agency adapters
-            case PilotType.DR_LUCY_R1_CORE_01:
-                return new DrLucy01Adapter(this.aiConnector, this.s2doManager);
-            case PilotType.DR_MEMORIA_PILOT:
-                return new DrMemoriaAdapter(this.aiConnector, this.s2doManager);
-            // Add cases for all other R1 adapters...
-            // R2 Deploy Agency adapters
-            case 'DR_GRANT_02': // Would need to add to PilotType enum
-                return new DrGrant02Adapter(this.aiConnector, this.s2doManager);
-            // Add cases for all other R2 adapters...
-            // R3 Engage & Sales Agency adapters
-            case PilotType.DR_MATCH_PILOT:
-                return new DrMatchAdapter(this.aiConnector, this.s2doManager);
-            case PilotType.DR_MARIA_HISTORICAL_01:
-                return new DrMariaAdapter(this.aiConnector, this.s2doManager);
-            // Add cases for all other R3 adapters...
-            default:
-                throw new Error(`Unsupported pilot type: ${pilotType}`);
-        }
+  createAdapter(pilotType) {
+    switch (pilotType) {
+    // R1 Core Agency adapters
+    case PilotType.DR_LUCY_R1_CORE_01:
+      return new DrLucy01Adapter(this.aiConnector, this.s2doManager);
+    case PilotType.DR_MEMORIA_PILOT:
+      return new DrMemoriaAdapter(this.aiConnector, this.s2doManager);
+      // Add cases for all other R1 adapters...
+      // R2 Deploy Agency adapters
+    case 'DR_GRANT_02': // Would need to add to PilotType enum
+      return new DrGrant02Adapter(this.aiConnector, this.s2doManager);
+      // Add cases for all other R2 adapters...
+      // R3 Engage & Sales Agency adapters
+    case PilotType.DR_MATCH_PILOT:
+      return new DrMatchAdapter(this.aiConnector, this.s2doManager);
+    case PilotType.DR_MARIA_HISTORICAL_01:
+      return new DrMariaAdapter(this.aiConnector, this.s2doManager);
+      // Add cases for all other R3 adapters...
+    default:
+      throw new Error(`Unsupported pilot type: ${pilotType}`);
     }
-    /**
+  }
+  /**
      * Create all adapters for a specific squadron
      */
-    createSquadronAdapters(squadron) {
-        switch (squadron) {
-            case 'R1':
-                return [
-                    this.createAdapter(PilotType.DR_LUCY_R1_CORE_01),
-                    // Add all other R1 adapters...
-                ];
-            case 'R2':
-                return [
-                // Add all R2 adapters...
-                ];
-            case 'R3':
-                return [
-                    this.createAdapter(PilotType.DR_MATCH_PILOT),
-                    this.createAdapter(PilotType.DR_MARIA_HISTORICAL_01),
-                    // Add all other R3 adapters...
-                ];
-            default:
-                throw new Error(`Unsupported squadron: ${squadron}`);
-        }
+  createSquadronAdapters(squadron) {
+    switch (squadron) {
+    case 'R1':
+      return [
+        this.createAdapter(PilotType.DR_LUCY_R1_CORE_01),
+        // Add all other R1 adapters...
+      ];
+    case 'R2':
+      return [
+        // Add all R2 adapters...
+      ];
+    case 'R3':
+      return [
+        this.createAdapter(PilotType.DR_MATCH_PILOT),
+        this.createAdapter(PilotType.DR_MARIA_HISTORICAL_01),
+        // Add all other R3 adapters...
+      ];
+    default:
+      throw new Error(`Unsupported squadron: ${squadron}`);
     }
+  }
 }
 exports.AgentAdapterFactory = AgentAdapterFactory;
 //# sourceMappingURL=as-aixtiv-agent-adapters-plan.js.map

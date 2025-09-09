@@ -400,7 +400,7 @@ class MajorSystemCommands {
       
       console.log('⏰ TIME RESET PROTOCOL COMPLETED SUCCESSFULLY');
       console.log(`✅ System rolled back to: ${nearestCheckpoint.timestamp}`);
-      console.log(`🧠 All agents have forgotten events after checkpoint`);
+      console.log('🧠 All agents have forgotten events after checkpoint');
       console.log(`💾 Emergency backup created: ${emergencyBackup.id}`);
       console.log('🔄 System ready to continue from restored state');
       

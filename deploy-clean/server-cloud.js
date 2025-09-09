@@ -407,34 +407,34 @@ app.post('/api/asoos/test', async (req, res) => {
     let testResult;
     
     switch (testType) {
-      case 'connectors':
-        testResult = {
-          available: connectorManager.getAvailableConnectors(),
-          status: await connectorManager.testAllConnectors()
-        };
-        break;
+    case 'connectors':
+      testResult = {
+        available: connectorManager.getAvailableConnectors(),
+        status: await connectorManager.testAllConnectors()
+      };
+      break;
         
-      case 'curation':
-        testResult = await curationSystem.performHealthCheck();
-        break;
+    case 'curation':
+      testResult = await curationSystem.performHealthCheck();
+      break;
         
-      case 'ml_pipeline':
-        const sampleOrg = {
-          name: 'Test Organization',
-          domain: 'test.com',
-          metadata: { test: true }
-        };
-        testResult = await connectorManager.processOrganizations([sampleOrg], { test: true });
-        break;
+    case 'ml_pipeline':
+      const sampleOrg = {
+        name: 'Test Organization',
+        domain: 'test.com',
+        metadata: { test: true }
+      };
+      testResult = await connectorManager.processOrganizations([sampleOrg], { test: true });
+      break;
         
-      default:
-        testResult = {
-          systemStatus: asoosSystemStatus,
-          timestamp: new Date().toISOString(),
-          message: 'Basic system test completed - ASOOS Flyer operational',
-          cloudDeployment: true,
-          mlSystemActive: true
-        };
+    default:
+      testResult = {
+        systemStatus: asoosSystemStatus,
+        timestamp: new Date().toISOString(),
+        message: 'Basic system test completed - ASOOS Flyer operational',
+        cloudDeployment: true,
+        mlSystemActive: true
+      };
     }
     
     res.json({
@@ -488,7 +488,7 @@ async function gracefulShutdown(signal) {
 // Start the server
 app.listen(PORT, () => {
   logger.info(`🚀 ASOOS Flyer ML Server running on port ${PORT}`);
-  logger.info(`🌐 Cloud deployment operational`);
-  logger.info(`📊 Health check: /health`);
-  logger.info(`🧠 Dr. Lucy ML + Professor Lee AI-Human Feedback Loop ready`);
+  logger.info('🌐 Cloud deployment operational');
+  logger.info('📊 Health check: /health');
+  logger.info('🧠 Dr. Lucy ML + Professor Lee AI-Human Feedback Loop ready');
 });

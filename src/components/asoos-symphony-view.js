@@ -15,7 +15,7 @@
     contentElement = document.getElementById('app-content');
     
     if (!contentElement) {
-      console.error("Content element not found in DOM");
+      console.error('Content element not found in DOM');
       return;
     }
     
@@ -81,17 +81,17 @@
       });
       
       // Log view rendering for audit
-      console.log("Symphony view rendered successfully");
+      console.log('Symphony view rendered successfully');
       
     } catch (error) {
-      console.error("Error rendering Symphony view:", error);
+      console.error('Error rendering Symphony view:', error);
       
       // Show error state
       contentElement.innerHTML = `
         <div class="p-8 max-w-md mx-auto mt-8">
           <div class="bg-red-50 border border-red-200 p-4 rounded-lg text-red-700">
             <h3 class="font-bold mb-2">Error Loading Symphony View</h3>
-            <p>${error.message || "Failed to load component data"}</p>
+            <p>${error.message || 'Failed to load component data'}</p>
             <button class="mt-3 px-4 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors retry-button">
               Retry
             </button>

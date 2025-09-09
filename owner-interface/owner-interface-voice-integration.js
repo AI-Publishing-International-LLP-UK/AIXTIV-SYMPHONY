@@ -46,16 +46,16 @@ class OwnerInterfaceVoiceIntegration {
     
     // Pre-defined interface messages
     this.interfaceMessages = {
-      startup: "MOCOA Owner Interface is initializing. Diamond SAO Command Center online.",
-      ready: "All systems operational. Awaiting Diamond SAO commands.",
-      authenticated: "Diamond SAO authentication confirmed. Maximum authority granted.",
-      deploymentStart: "Initiating deployment sequence. All systems prepared.",
-      deploymentComplete: "Deployment completed successfully. All services operational.",
-      mcpUpdate: "MCP domain configuration updated. Company integration active.",
-      securityAlert: "Security alert detected. Diamond SAO intervention required.",
-      systemError: "System error detected. Diagnostic mode activated.",
-      shutdown: "MOCOA Owner Interface shutting down. Diamond SAO session complete.",
-      maintenance: "System entering maintenance mode. Operations will resume shortly."
+      startup: 'MOCOA Owner Interface is initializing. Diamond SAO Command Center online.',
+      ready: 'All systems operational. Awaiting Diamond SAO commands.',
+      authenticated: 'Diamond SAO authentication confirmed. Maximum authority granted.',
+      deploymentStart: 'Initiating deployment sequence. All systems prepared.',
+      deploymentComplete: 'Deployment completed successfully. All services operational.',
+      mcpUpdate: 'MCP domain configuration updated. Company integration active.',
+      securityAlert: 'Security alert detected. Diamond SAO intervention required.',
+      systemError: 'System error detected. Diagnostic mode activated.',
+      shutdown: 'MOCOA Owner Interface shutting down. Diamond SAO session complete.',
+      maintenance: 'System entering maintenance mode. Operations will resume shortly.'
     };
     
     console.log('🎤 OWNER INTERFACE VOICE INTEGRATION - Diamond SAO CLI Extension');
@@ -151,21 +151,21 @@ class OwnerInterfaceVoiceIntegration {
       let audioResult;
       
       switch (voiceType.toLowerCase()) {
-        case 'diamond':
-        case 'sao':
-          audioResult = await this.elevenLabsManager.generateDiamondSAOVoice(text, options);
-          break;
+      case 'diamond':
+      case 'sao':
+        audioResult = await this.elevenLabsManager.generateDiamondSAOVoice(text, options);
+        break;
         
-        case 'moca':
-        case 'mocoa':
-          audioResult = await this.elevenLabsManager.generateMocaVoice(text, options);
-          break;
+      case 'moca':
+      case 'mocoa':
+        audioResult = await this.elevenLabsManager.generateMocaVoice(text, options);
+        break;
         
-        default:
-        case 'owner':
-        case 'interface':
-          audioResult = await this.elevenLabsManager.generateOwnerInterfaceVoice(text, options);
-          break;
+      default:
+      case 'owner':
+      case 'interface':
+        audioResult = await this.elevenLabsManager.generateOwnerInterfaceVoice(text, options);
+        break;
       }
       
       // Save with appropriate naming for interface use

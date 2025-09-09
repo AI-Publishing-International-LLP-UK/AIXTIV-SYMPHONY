@@ -27,8 +27,8 @@ class Page extends EventEmitter {
     this._recordingStartTime = null;
     this._recordingBuffer = null;
     this._backgroundColor = browser.isGreenScreenEnabled() ? 
-                           process.env.CHROMA_KEY_COLOR || '#00FF00' : 
-                           '#FFFFFF';
+      process.env.CHROMA_KEY_COLOR || '#00FF00' : 
+      '#FFFFFF';
     this._requests = new Map();
     this._frameId = 'main-frame';
     

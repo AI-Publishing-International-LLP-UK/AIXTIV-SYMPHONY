@@ -34,7 +34,7 @@ module.exports = async function addToRepository(options) {
   // Validate squadron format
   const squadronPattern = /^R[1-5]|RIX$/;
   if (!squadronPattern.test(squadron)) {
-    displayResult(`Error: Invalid squadron ID. Must be R1, R2, R3, R4, R5, or RIX`, 'error');
+    displayResult('Error: Invalid squadron ID. Must be R1, R2, R3, R4, R5, or RIX', 'error');
     return;
   }
 

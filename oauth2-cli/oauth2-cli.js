@@ -93,35 +93,35 @@ async function getAccessToken(keyFile, scope) {
 // Process commands
 async function processCommand() {
   switch (command) {
-    case 'help':
-      showHelp();
-      break;
+  case 'help':
+    showHelp();
+    break;
 
-    case 'auth':
-      const keyFile = args[1];
-      if (!keyFile) {
-        console.error('Error: Key file path is required');
-        showHelp();
-        process.exit(1);
-      }
-      await authenticateServiceAccount(keyFile);
-      break;
-
-    case 'token':
-      const tokenKeyFile = args[1];
-      const scope = args[2];
-      if (!tokenKeyFile) {
-        console.error('Error: Key file path is required');
-        showHelp();
-        process.exit(1);
-      }
-      await getAccessToken(tokenKeyFile, scope);
-      break;
-
-    default:
-      console.error(`Error: Unknown command '${command}'`);
+  case 'auth':
+    const keyFile = args[1];
+    if (!keyFile) {
+      console.error('Error: Key file path is required');
       showHelp();
       process.exit(1);
+    }
+    await authenticateServiceAccount(keyFile);
+    break;
+
+  case 'token':
+    const tokenKeyFile = args[1];
+    const scope = args[2];
+    if (!tokenKeyFile) {
+      console.error('Error: Key file path is required');
+      showHelp();
+      process.exit(1);
+    }
+    await getAccessToken(tokenKeyFile, scope);
+    break;
+
+  default:
+    console.error(`Error: Unknown command '${command}'`);
+    showHelp();
+    process.exit(1);
   }
 }
 

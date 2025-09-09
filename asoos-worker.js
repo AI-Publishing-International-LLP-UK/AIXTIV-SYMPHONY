@@ -13,7 +13,7 @@ export default {
       'X-Frame-Options': 'DENY',
       'X-XSS-Protection': '1; mode=block',
       'Referrer-Policy': 'strict-origin-when-cross-origin',
-      'Content-Security-Policy': "default-src 'self' 'unsafe-inline' 'unsafe-eval' https: data: blob:; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;",
+      'Content-Security-Policy': 'default-src \'self\' \'unsafe-inline\' \'unsafe-eval\' https: data: blob:; font-src \'self\' https://fonts.googleapis.com https://fonts.gstatic.com https://cdnjs.cloudflare.com; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com https://cdnjs.cloudflare.com;',
       'Cache-Control': 'public, max-age=300'
     };
 
@@ -76,27 +76,27 @@ async function handleAPI(url, request, env) {
   const endpoint = url.pathname.replace('/api/', '');
   
   switch (endpoint) {
-    case 'auth':
-      return new Response(JSON.stringify({ 
-        message: 'LLP Member authentication required',
-        redirectUrl: 'https://2100.cool' 
-      }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      });
+  case 'auth':
+    return new Response(JSON.stringify({ 
+      message: 'LLP Member authentication required',
+      redirectUrl: 'https://2100.cool' 
+    }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' }
+    });
     
-    case 'status':
-      return new Response(JSON.stringify({
-        service: 'ASOOS.2100.cool',
-        agents: '20M+',
-        llpMembersOnly: true,
-        status: 'operational'
-      }), {
-        headers: { 'Content-Type': 'application/json' }
-      });
+  case 'status':
+    return new Response(JSON.stringify({
+      service: 'ASOOS.2100.cool',
+      agents: '20M+',
+      llpMembersOnly: true,
+      status: 'operational'
+    }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
     
-    default:
-      return new Response('API endpoint not found', { status: 404 });
+  default:
+    return new Response('API endpoint not found', { status: 404 });
   }
 }
 

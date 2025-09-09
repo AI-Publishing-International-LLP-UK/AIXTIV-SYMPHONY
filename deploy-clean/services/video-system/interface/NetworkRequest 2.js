@@ -746,18 +746,18 @@ class NetworkRequest {
    */
   #getDestination() {
     switch (this.#request.info?.type) {
-      case 'Script':
-        return 'script';
-      case 'Stylesheet':
-        return 'style';
-      case 'Image':
-        return 'image';
-      case 'Document':
-        // If request to document is initiated by parser, assume it is expected to
-        // arrive in an iframe. Otherwise, fallback to empty string.
-        return this.#request.info?.initiator.type === 'parser' ? 'iframe' : '';
-      default:
-        return '';
+    case 'Script':
+      return 'script';
+    case 'Stylesheet':
+      return 'style';
+    case 'Image':
+      return 'image';
+    case 'Document':
+      // If request to document is initiated by parser, assume it is expected to
+      // arrive in an iframe. Otherwise, fallback to empty string.
+      return this.#request.info?.initiator.type === 'parser' ? 'iframe' : '';
+    default:
+      return '';
     }
   }
   /**
@@ -770,27 +770,27 @@ class NetworkRequest {
   #getInitiatorType() {
     if (this.#request.info?.initiator.type === 'parser') {
       switch (this.#request.info?.type) {
-        case 'Document':
-          // The request to document is initiated by the parser. Assuming it's an iframe.
-          return 'iframe';
-        case 'Font':
-          // If the document's url is not the parser's url, assume the resource is loaded
-          // from css. Otherwise, it's a `font` element.
-          return this.#request.info?.initiator?.url === this.#request.info?.documentURL
-            ? 'font'
-            : 'css';
-        case 'Image':
-          // If the document's url is not the parser's url, assume the resource is loaded
-          // from css. Otherwise, it's a `img` element.
-          return this.#request.info?.initiator?.url === this.#request.info?.documentURL
-            ? 'img'
-            : 'css';
-        case 'Script':
-          return 'script';
-        case 'Stylesheet':
-          return 'link';
-        default:
-          return null;
+      case 'Document':
+        // The request to document is initiated by the parser. Assuming it's an iframe.
+        return 'iframe';
+      case 'Font':
+        // If the document's url is not the parser's url, assume the resource is loaded
+        // from css. Otherwise, it's a `font` element.
+        return this.#request.info?.initiator?.url === this.#request.info?.documentURL
+          ? 'font'
+          : 'css';
+      case 'Image':
+        // If the document's url is not the parser's url, assume the resource is loaded
+        // from css. Otherwise, it's a `img` element.
+        return this.#request.info?.initiator?.url === this.#request.info?.documentURL
+          ? 'img'
+          : 'css';
+      case 'Script':
+        return 'script';
+      case 'Stylesheet':
+        return 'link';
+      default:
+        return null;
       }
     }
     if (this.#request?.info?.type === 'Fetch') {
@@ -864,12 +864,12 @@ class NetworkRequest {
   }
   static #getInitiator(initiatorType) {
     switch (initiatorType) {
-      case 'parser':
-      case 'script':
-      case 'preflight':
-        return initiatorType;
-      default:
-        return 'other';
+    case 'parser':
+    case 'script':
+    case 'preflight':
+      return initiatorType;
+    default:
+      return 'other';
     }
   }
 }

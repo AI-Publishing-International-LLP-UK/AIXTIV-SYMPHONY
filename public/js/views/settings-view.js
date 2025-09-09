@@ -15,7 +15,7 @@
     contentElement = document.getElementById('app-content');
     
     if (!contentElement) {
-      console.error("Content element not found in DOM");
+      console.error('Content element not found in DOM');
       return;
     }
     
@@ -348,7 +348,7 @@
     if (saveButton) {
       saveButton.addEventListener('click', () => {
         // Simulate saving settings
-        console.log("Saving settings...");
+        console.log('Saving settings...');
         
         // Show success notification
         const notification = document.createElement('div');

@@ -21,15 +21,15 @@ export class SecurityHeaders {
     
     // Content Security Policy
     const csp = [
-      "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://fonts.googleapis.com",
-      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-      "font-src 'self' https://fonts.gstatic.com",
-      "img-src 'self' data: https:",
-      "connect-src 'self' https://www.linkedin.com https://api.linkedin.com https://*.2100.cool https://*.run.app",
-      "frame-src 'self' https://www.linkedin.com",
-      "base-uri 'self'",
-      "form-action 'self' https://www.linkedin.com"
+      'default-src \'self\'',
+      'script-src \'self\' \'unsafe-inline\' \'unsafe-eval\' https://fonts.googleapis.com',
+      'style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com',
+      'font-src \'self\' https://fonts.gstatic.com',
+      'img-src \'self\' data: https:',
+      'connect-src \'self\' https://www.linkedin.com https://api.linkedin.com https://*.2100.cool https://*.run.app',
+      'frame-src \'self\' https://www.linkedin.com',
+      'base-uri \'self\'',
+      'form-action \'self\' https://www.linkedin.com'
     ].join('; ');
     headers.set('Content-Security-Policy', csp);
 

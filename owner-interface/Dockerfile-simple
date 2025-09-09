@@ -1,5 +1,5 @@
 # Simple Dockerfile for MOCOA JavaScript Fix Deployment
-FROM node:18-slim
+FROM node:24-slim
 
 # Set working directory
 WORKDIR /app

@@ -110,33 +110,33 @@ class GatewayFactory {
 
     // Initialize the appropriate gateway based on tier type
     switch (tierType.toLowerCase()) {
-      case TIER_TYPES.OWNER_SUBSCRIBER:
-        this.logger.info(
-          `Initializing Owner Subscriber Gateway for user: ${userId}`
-        );
-        return new OwnerSubscriberGateway(baseConfig);
+    case TIER_TYPES.OWNER_SUBSCRIBER:
+      this.logger.info(
+        `Initializing Owner Subscriber Gateway for user: ${userId}`
+      );
+      return new OwnerSubscriberGateway(baseConfig);
 
-      case TIER_TYPES.TEAM:
-        this.logger.info(`Initializing Team Gateway for user: ${userId}`);
-        return new TeamGateway(baseConfig);
+    case TIER_TYPES.TEAM:
+      this.logger.info(`Initializing Team Gateway for user: ${userId}`);
+      return new TeamGateway(baseConfig);
 
-      case TIER_TYPES.GROUP:
-        this.logger.info(`Initializing Group Gateway for user: ${userId}`);
-        return new GroupGateway(baseConfig);
+    case TIER_TYPES.GROUP:
+      this.logger.info(`Initializing Group Gateway for user: ${userId}`);
+      return new GroupGateway(baseConfig);
 
-      case TIER_TYPES.PRACTITIONER:
-        this.logger.info(
-          `Initializing Practitioner Gateway for user: ${userId}`
-        );
-        return new PractitionerGateway(baseConfig);
+    case TIER_TYPES.PRACTITIONER:
+      this.logger.info(
+        `Initializing Practitioner Gateway for user: ${userId}`
+      );
+      return new PractitionerGateway(baseConfig);
 
-      case TIER_TYPES.ENTERPRISE:
-        this.logger.info(`Initializing Enterprise Gateway for user: ${userId}`);
-        return new EnterpriseGateway(baseConfig);
+    case TIER_TYPES.ENTERPRISE:
+      this.logger.info(`Initializing Enterprise Gateway for user: ${userId}`);
+      return new EnterpriseGateway(baseConfig);
 
-      default:
-        // This should never be reached due to validation check
-        throw new Error(`Unsupported tier type: ${tierType}`);
+    default:
+      // This should never be reached due to validation check
+      throw new Error(`Unsupported tier type: ${tierType}`);
     }
   }
 

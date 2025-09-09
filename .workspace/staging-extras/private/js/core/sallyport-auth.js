@@ -23,7 +23,7 @@ const SallyPortAuth = (() => {
    */
   const initialize = async () => {
     try {
-      console.log("Initializing SallyPort authentication...");
+      console.log('Initializing SallyPort authentication...');
       authState.isLoading = true;
       notifyListeners();
       
@@ -40,10 +40,10 @@ const SallyPortAuth = (() => {
         authState.error = null;
       }
     } catch (error) {
-      console.error("Authentication initialization error:", error);
+      console.error('Authentication initialization error:', error);
       authState.isAuthenticated = false;
       authState.isLoading = false;
-      authState.error = error.message || "Authentication failed";
+      authState.error = error.message || 'Authentication failed';
     }
     
     notifyListeners();
@@ -56,7 +56,7 @@ const SallyPortAuth = (() => {
    */
   const authenticate = async (credentials = {}) => {
     try {
-      console.log("Authenticating with SallyPort...");
+      console.log('Authenticating with SallyPort...');
       authState.isLoading = true;
       notifyListeners();
       
@@ -66,7 +66,7 @@ const SallyPortAuth = (() => {
       
       // In production, this would validate credentials with the backend
       // and receive a token upon successful authentication
-      const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMDAwMDEiLCJuYW1lIjoiTXIuIFBoaWxsaXAgQ29yZXkgUm9hcmsiLCJyb2xlIjoiQ0VPIC8gUHJpbmNpcGFsIn0";
+      const token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMDAwMDEiLCJuYW1lIjoiTXIuIFBoaWxsaXAgQ29yZXkgUm9hcmsiLCJyb2xlIjoiQ0VPIC8gUHJpbmNpcGFsIn0';
       
       // Store token securely
       localStorage.setItem('sallyport_token', token);
@@ -76,22 +76,22 @@ const SallyPortAuth = (() => {
       authState.isLoading = false;
       authState.error = null;
       authState.user = {
-        uuid: "00001",
-        name: "Mr. Phillip Corey Roark",
-        role: "CEO / Principal"
+        uuid: '00001',
+        name: 'Mr. Phillip Corey Roark',
+        role: 'CEO / Principal'
       };
       
       notifyListeners();
       
       // Log authentication success for security audit
-      console.log("SallyPort authentication successful");
+      console.log('SallyPort authentication successful');
       
       return true;
     } catch (error) {
-      console.error("Authentication error:", error);
+      console.error('Authentication error:', error);
       authState.isAuthenticated = false;
       authState.isLoading = false;
-      authState.error = error.message || "Authentication failed";
+      authState.error = error.message || 'Authentication failed';
       
       notifyListeners();
       
@@ -109,7 +109,7 @@ const SallyPortAuth = (() => {
    */
   const verifyToken = async (token) => {
     try {
-      console.log("Verifying SallyPort token...");
+      console.log('Verifying SallyPort token...');
       
       // In a real implementation, validate the token with your integration-gateway
       // For demo purposes, simulate a network request
@@ -121,17 +121,17 @@ const SallyPortAuth = (() => {
       authState.isLoading = false;
       authState.error = null;
       authState.user = {
-        uuid: "00001",
-        name: "Mr. Phillip Corey Roark",
-        role: "CEO / Principal"
+        uuid: '00001',
+        name: 'Mr. Phillip Corey Roark',
+        role: 'CEO / Principal'
       };
       
       return true;
     } catch (error) {
-      console.error("Token verification error:", error);
+      console.error('Token verification error:', error);
       authState.isAuthenticated = false;
       authState.isLoading = false;
-      authState.error = error.message || "Token verification failed";
+      authState.error = error.message || 'Token verification failed';
       
       // Clear the invalid token
       localStorage.removeItem('sallyport_token');
@@ -144,7 +144,7 @@ const SallyPortAuth = (() => {
    * Log out the current user
    */
   const logout = () => {
-    console.log("Logging out from SallyPort...");
+    console.log('Logging out from SallyPort...');
     
     // Clear authentication token
     localStorage.removeItem('sallyport_token');
@@ -157,7 +157,7 @@ const SallyPortAuth = (() => {
     
     notifyListeners();
     
-    console.log("Logout successful");
+    console.log('Logout successful');
   };
   
   /**
@@ -203,13 +203,13 @@ const SallyPortAuth = (() => {
   // Add a listener for security events
   window.addEventListener('error', (event) => {
     if (event.message && (
-      event.message.includes("SDK compromised") || 
-      event.message.includes("security violation") ||
-      event.message.includes("unauthorized access")
+      event.message.includes('SDK compromised') || 
+      event.message.includes('security violation') ||
+      event.message.includes('unauthorized access')
     )) {
-      console.error("Security alert detected:", event.message);
+      console.error('Security alert detected:', event.message);
       // Log security incident
-      console.warn("SECURITY ALERT: Potential security breach detected");
+      console.warn('SECURITY ALERT: Potential security breach detected');
       
       // Execute security protocol
       logout();

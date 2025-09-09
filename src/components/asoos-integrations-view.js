@@ -15,7 +15,7 @@
     contentElement = document.getElementById('app-content');
     
     if (!contentElement) {
-      console.error("Content element not found in DOM");
+      console.error('Content element not found in DOM');
       return;
     }
     
@@ -123,8 +123,8 @@
               <select class="border border-gray-300 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-1">
                 <option value="">All Categories</option>
                 ${integrationCategories.map(category => 
-                  `<option value="${category.id}">${category.name}</option>`
-                ).join('')}
+    `<option value="${category.id}">${category.name}</option>`
+  ).join('')}
               </select>
               <select class="border border-gray-300 rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-1">
                 <option value="">All Tenants</option>
@@ -162,8 +162,8 @@
                       
                       <div class="flex flex-wrap gap-2 mb-3">
                         ${integration.tags.map(tag => 
-                          `<span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">${tag}</span>`
-                        ).join('')}
+    `<span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded">${tag}</span>`
+  ).join('')}
                       </div>
                       
                       <div class="flex justify-between items-center">
@@ -326,7 +326,7 @@
       notification.className = 'fixed bottom-6 right-6 bg-red-50 border border-red-200 p-4 rounded-lg text-red-700 max-w-md z-50';
       notification.innerHTML = `
         <h3 class="font-bold mb-1">Integration Failed</h3>
-        <p>${error.message || "Failed to configure integration."}</p>
+        <p>${error.message || 'Failed to configure integration.'}</p>
         <button class="mt-2 px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 transition-colors retry-button">
           Retry
         </button>

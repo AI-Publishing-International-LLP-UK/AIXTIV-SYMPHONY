@@ -113,16 +113,16 @@
   const monitorSDKSecurity = () => {
     // Monitor for SDK security events
     window.addEventListener('error', (event) => {
-      if (event.message && event.message.includes("SDK compromised password BG")) {
-        console.error("SDK SECURITY BREACH DETECTED:", event.message);
+      if (event.message && event.message.includes('SDK compromised password BG')) {
+        console.error('SDK SECURITY BREACH DETECTED:', event.message);
         
         // Trigger security protocol
         document.dispatchEvent(new CustomEvent('sallyport:security-breach', { 
-          detail: { message: "SDK compromised password detected" }
+          detail: { message: 'SDK compromised password detected' }
         }));
         
         // Show security notification
-        showSecurityNotification("Security breach detected in SDK authentication. System is taking protective measures.");
+        showSecurityNotification('Security breach detected in SDK authentication. System is taking protective measures.');
       }
     });
   };
@@ -141,7 +141,7 @@
         rapidActionCount++;
         
         if (rapidActionCount > 10) {
-          console.warn("Suspicious rapid user activity detected");
+          console.warn('Suspicious rapid user activity detected');
           rapidActionCount = 0;
         }
       } else {
@@ -153,7 +153,7 @@
     
     // Listen for security breach events
     document.addEventListener('sallyport:security-breach', (event) => {
-      console.error("SECURITY BREACH:", event.detail.message);
+      console.error('SECURITY BREACH:', event.detail.message);
       
       // Log security incident
       logSecurityIncident(event.detail.message);
@@ -163,7 +163,7 @@
       IntegrationGateway.clearCache();
       
       // Show security notification
-      showSecurityNotification("Security alert: Your session has been terminated for protection.");
+      showSecurityNotification('Security alert: Your session has been terminated for protection.');
     });
   };
   

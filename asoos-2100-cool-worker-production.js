@@ -540,28 +540,28 @@ async function handleAPIEndpoints(url, request, env) {
   const endpoint = url.pathname.replace('/api/', '');
   
   switch (endpoint) {
-    case 'auth/sallyport':
-      // Integration with SALLY_PORT_SECRET_KEY
-      return new Response('SallyPort authentication flow', { status: 200 });
+  case 'auth/sallyport':
+    // Integration with SALLY_PORT_SECRET_KEY
+    return new Response('SallyPort authentication flow', { status: 200 });
       
-    case 'auth/oauth':
-      // Integration with OAUTH_CLIENT_ID and OAUTH_CLIENT_SECRET
-      return new Response('OAuth authentication flow', { status: 200 });
+  case 'auth/oauth':
+    // Integration with OAUTH_CLIENT_ID and OAUTH_CLIENT_SECRET
+    return new Response('OAuth authentication flow', { status: 200 });
       
-    case 'status':
-      return new Response(JSON.stringify({
-        service: 'ASOOS.2100.cool',
-        agents: '20M+',
-        llpMembersOnly: true,
-        status: 'operational',
-        version: '2.0.0',
-        authentication: 'SallyPort + OAuth'
-      }), {
-        headers: { 'Content-Type': 'application/json' }
-      });
+  case 'status':
+    return new Response(JSON.stringify({
+      service: 'ASOOS.2100.cool',
+      agents: '20M+',
+      llpMembersOnly: true,
+      status: 'operational',
+      version: '2.0.0',
+      authentication: 'SallyPort + OAuth'
+    }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
       
-    default:
-      return new Response('API endpoint not found', { status: 404 });
+  default:
+    return new Response('API endpoint not found', { status: 404 });
   }
 }
 

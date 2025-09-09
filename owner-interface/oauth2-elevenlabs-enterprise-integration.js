@@ -566,7 +566,7 @@ class ElevenLabsServiceLayer {
       // For now, returning a placeholder structure
       return {
         success: true,
-        transcript: "Transcription would be implemented here",
+        transcript: 'Transcription would be implemented here',
         language: options.language || 'auto',
         confidence: 0.95,
         timestamp: new Date().toISOString()

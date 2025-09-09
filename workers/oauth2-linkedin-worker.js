@@ -34,39 +34,39 @@ export default {
     try {
       // Route LinkedIn OAuth flows
       switch (path) {
-        case '/auth/linkedin/start':
-          return handleLinkedInStart(request, env);
+      case '/auth/linkedin/start':
+        return handleLinkedInStart(request, env);
           
-        case '/auth/linkedin/callback':
-          return handleLinkedInCallback(request, env);
+      case '/auth/linkedin/callback':
+        return handleLinkedInCallback(request, env);
           
-        case '/auth/linkedin/status':
-          return handleLinkedInStatus(request, env);
+      case '/auth/linkedin/status':
+        return handleLinkedInStatus(request, env);
 
-        case '/auth/linkedin/disconnect':
-          return handleLinkedInDisconnect(request, env);
+      case '/auth/linkedin/disconnect':
+        return handleLinkedInDisconnect(request, env);
           
-        default:
-          return new Response(
-            JSON.stringify({
-              error: 'Not Found',
-              message: 'LinkedIn OAuth service only',
-              availableEndpoints: [
-                '/auth/linkedin/start',
-                '/auth/linkedin/callback', 
-                '/auth/linkedin/status',
-                '/auth/linkedin/disconnect'
-              ],
-              securityLevel: 'diamond_sao'
-            }),
-            {
-              status: 404,
-              headers: { 
-                'Content-Type': 'application/json',
-                ...corsHeaders
-              }
+      default:
+        return new Response(
+          JSON.stringify({
+            error: 'Not Found',
+            message: 'LinkedIn OAuth service only',
+            availableEndpoints: [
+              '/auth/linkedin/start',
+              '/auth/linkedin/callback', 
+              '/auth/linkedin/status',
+              '/auth/linkedin/disconnect'
+            ],
+            securityLevel: 'diamond_sao'
+          }),
+          {
+            status: 404,
+            headers: { 
+              'Content-Type': 'application/json',
+              ...corsHeaders
             }
-          );
+          }
+        );
       }
     } catch (error) {
       console.error('LinkedIn OAuth Error:', error);
@@ -112,8 +112,8 @@ async function handleLinkedInStart(request, env) {
     }
     
     // Build LinkedIn authorization URL
-    const authUrl = `https://www.linkedin.com/oauth/v2/authorization?` +
-      `response_type=code&` +
+    const authUrl = 'https://www.linkedin.com/oauth/v2/authorization?' +
+      'response_type=code&' +
       `client_id=${clientId}&` +
       `redirect_uri=${encodeURIComponent(redirectUri)}&` +
       `state=${state}&` +
@@ -144,7 +144,7 @@ async function handleLinkedInCallback(request, env) {
     
     if (!code || !state) {
       return new Response(
-        `<html><body><h1>LinkedIn OAuth Error</h1><p>Missing authorization code or state parameter</p><p><a href="/interface">Return to Dashboard</a></p></body></html>`,
+        '<html><body><h1>LinkedIn OAuth Error</h1><p>Missing authorization code or state parameter</p><p><a href="/interface">Return to Dashboard</a></p></body></html>',
         { status: 400, headers: { 'Content-Type': 'text/html' } }
       );
     }
@@ -158,7 +158,7 @@ async function handleLinkedInCallback(request, env) {
         await env.AUTH_SESSIONS.delete(`linkedin_state_${state}`);
       } else {
         return new Response(
-          `<html><body><h1>LinkedIn OAuth Error</h1><p>Invalid or expired state parameter</p><p><a href="/interface">Return to Dashboard</a></p></body></html>`,
+          '<html><body><h1>LinkedIn OAuth Error</h1><p>Invalid or expired state parameter</p><p><a href="/interface">Return to Dashboard</a></p></body></html>',
           { status: 400, headers: { 'Content-Type': 'text/html' } }
         );
       }

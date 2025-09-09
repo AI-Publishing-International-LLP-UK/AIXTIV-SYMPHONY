@@ -85,6 +85,6 @@ app.get('/api/system/status', (req, res) => {
 const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`🚀 MOCOA Fixed Interface running on port ${port}`);
-  console.log(`🔧 JavaScript duplicate function issue RESOLVED`);
-  console.log(`✅ Ready for demo!`);
+  console.log('🔧 JavaScript duplicate function issue RESOLVED');
+  console.log('✅ Ready for demo!');
 });

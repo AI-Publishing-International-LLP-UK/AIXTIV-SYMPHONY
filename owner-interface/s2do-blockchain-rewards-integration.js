@@ -115,14 +115,14 @@ class S2DOBlockchainRewardsIntegration {
       // Log to Dream Commander for tracking
       await this.logToDreamCommander(userId, completion);
       
-      console.log(`✅ S2DO task completion tracked successfully`);
+      console.log('✅ S2DO task completion tracked successfully');
       console.log(`💰 AIRewards: ${completion.aiRewards.total} tokens`);
       console.log(`⭐ Quality Points: ${completion.qualityPoints.total} points`);
       
       return completion;
       
     } catch (error) {
-      console.error(`❌ Error tracking S2DO task completion:`, error);
+      console.error('❌ Error tracking S2DO task completion:', error);
       throw error;
     }
   }
@@ -267,7 +267,7 @@ class S2DOBlockchainRewardsIntegration {
    */
   async submitToBlockchain(completionData) {
     try {
-      console.log(`⛓️ Submitting to S2DO blockchain...`);
+      console.log('⛓️ Submitting to S2DO blockchain...');
       
       // Simulate blockchain transaction (replace with actual blockchain API calls)
       const transactionData = {
@@ -297,7 +297,7 @@ class S2DOBlockchainRewardsIntegration {
       return blockchainResponse;
       
     } catch (error) {
-      console.error(`❌ Blockchain submission failed:`, error);
+      console.error('❌ Blockchain submission failed:', error);
       return {
         transaction_pending: true,
         confirmation_hash: null,
@@ -337,7 +337,7 @@ class S2DOBlockchainRewardsIntegration {
       return partitionUpdate;
       
     } catch (error) {
-      console.error(`❌ Error updating partition data:`, error);
+      console.error('❌ Error updating partition data:', error);
       throw error;
     }
   }
@@ -360,7 +360,7 @@ class S2DOBlockchainRewardsIntegration {
       return balanceUpdate;
       
     } catch (error) {
-      console.error(`❌ Error updating rewards balance:`, error);
+      console.error('❌ Error updating rewards balance:', error);
       throw error;
     }
   }
@@ -382,7 +382,7 @@ class S2DOBlockchainRewardsIntegration {
       return qualityUpdate;
       
     } catch (error) {
-      console.error(`❌ Error updating quality points:`, error);
+      console.error('❌ Error updating quality points:', error);
       throw error;
     }
   }
@@ -408,11 +408,11 @@ class S2DOBlockchainRewardsIntegration {
       };
       
       // This would integrate with dream-commander-elite11-mastery33.js
-      console.log(`📝 Logged to Dream Commander system`);
+      console.log('📝 Logged to Dream Commander system');
       return dreamCommanderLog;
       
     } catch (error) {
-      console.error(`❌ Error logging to Dream Commander:`, error);
+      console.error('❌ Error logging to Dream Commander:', error);
       throw error;
     }
   }
@@ -473,7 +473,7 @@ class S2DOBlockchainRewardsIntegration {
       return stats;
       
     } catch (error) {
-      console.error(`❌ Error fetching user blockchain stats:`, error);
+      console.error('❌ Error fetching user blockchain stats:', error);
       throw error;
     }
   }
@@ -512,7 +512,7 @@ class S2DOBlockchainRewardsIntegration {
       return initialization;
       
     } catch (error) {
-      console.error(`❌ Error initializing user:`, error);
+      console.error('❌ Error initializing user:', error);
       throw error;
     }
   }

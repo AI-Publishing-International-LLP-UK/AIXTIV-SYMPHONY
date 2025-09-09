@@ -445,7 +445,7 @@ class ASOOSFrontendIntegration {
     const response = await fetch(url, options);
     const result = await response.json();
 
-    this.log(`API Response:`, result);
+    this.log('API Response:', result);
     return result;
   }
 

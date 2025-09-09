@@ -204,10 +204,10 @@ class DUPS_CUPS_System {
     };
 
     switch (plan) {
-      case 'starter': return baseFeatures;
-      case 'professional': return professionalFeatures;
-      case 'enterprise': return enterpriseFeatures;
-      default: return professionalFeatures;
+    case 'starter': return baseFeatures;
+    case 'professional': return professionalFeatures;
+    case 'enterprise': return enterpriseFeatures;
+    default: return professionalFeatures;
     }
   }
 

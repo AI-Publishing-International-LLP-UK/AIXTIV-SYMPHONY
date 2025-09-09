@@ -242,12 +242,12 @@ async function integrateTelementry() {
   // Write the updated content
   fs.writeFileSync(MAIN_CLI_PATH, updatedContent);
   
-  console.log(`\nTelemetry integration complete!`);
+  console.log('\nTelemetry integration complete!');
   console.log(`\nMain CLI file updated at: ${MAIN_CLI_PATH}`);
   console.log(`Backup saved at: ${BACKUP_CLI_PATH}`);
-  console.log(`\nNext steps:`);
-  console.log(`1. Test the integration by running a command, e.g., 'bin/aixtiv.js --version'`);
-  console.log(`2. Add specific telemetry calls for knowledge access in your command files`);
+  console.log('\nNext steps:');
+  console.log('1. Test the integration by running a command, e.g., \'bin/aixtiv.js --version\'');
+  console.log('2. Add specific telemetry calls for knowledge access in your command files');
   console.log(`3. If any issues arise, restore from the backup: 'cp ${BACKUP_CLI_PATH} ${MAIN_CLI_PATH}'`);
   
   rl.close();

@@ -83,7 +83,7 @@ async function generateLockFile(packageDir, packageJsonPath) {
     // Verify the lock file was created
     const lockFilePath = path.join(packageDir, 'package-lock.json');
     if (fs.existsSync(lockFilePath)) {
-      console.log(`   ✅ Successfully generated package-lock.json`);
+      console.log('   ✅ Successfully generated package-lock.json');
       
       // Get file size for verification
       const stats = fs.statSync(lockFilePath);
@@ -91,7 +91,7 @@ async function generateLockFile(packageDir, packageJsonPath) {
       
       return true;
     } else {
-      console.log(`   ⚠️  Lock file not created (may have no dependencies)`);
+      console.log('   ⚠️  Lock file not created (may have no dependencies)');
       return false;
     }
     
@@ -142,7 +142,7 @@ async function main() {
     console.log(`\n🔍 Found ${needsLockFile.length} packages that need lock files:`);
     needsLockFile.forEach(item => console.log(`   - ${item.relativePath}`));
     
-    console.log(`\n⚡ Starting lock file generation...`);
+    console.log('\n⚡ Starting lock file generation...');
     
     let successCount = 0;
     let failCount = 0;
@@ -160,13 +160,13 @@ async function main() {
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     
-    console.log(`\n📊 Generation Summary:`);
+    console.log('\n📊 Generation Summary:');
     console.log(`   Total packages processed: ${needsLockFile.length}`);
     console.log(`   Successfully generated: ${successCount}`);
     console.log(`   Failed to generate: ${failCount}`);
     
     if (successCount > 0) {
-      console.log(`\n🎉 Lock file generation completed! Run the dependency checker again to verify.`);
+      console.log('\n🎉 Lock file generation completed! Run the dependency checker again to verify.');
     }
     
   } catch (err) {

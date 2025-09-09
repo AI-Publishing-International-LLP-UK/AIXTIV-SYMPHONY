@@ -146,24 +146,24 @@ class OAuth2Service {
     };
 
     switch (provider) {
-      case 'google':
-        normalized.id = rawUserInfo.id;
-        normalized.email = rawUserInfo.email;
-        normalized.name = rawUserInfo.name;
-        normalized.avatar = rawUserInfo.picture;
-        break;
-      case 'github':
-        normalized.id = rawUserInfo.id.toString();
-        normalized.email = rawUserInfo.email;
-        normalized.name = rawUserInfo.name || rawUserInfo.login;
-        normalized.avatar = rawUserInfo.avatar_url;
-        break;
-      case 'microsoft':
-        normalized.id = rawUserInfo.id;
-        normalized.email = rawUserInfo.mail || rawUserInfo.userPrincipalName;
-        normalized.name = rawUserInfo.displayName;
-        normalized.avatar = ''; // Microsoft Graph doesn't provide avatar in basic profile
-        break;
+    case 'google':
+      normalized.id = rawUserInfo.id;
+      normalized.email = rawUserInfo.email;
+      normalized.name = rawUserInfo.name;
+      normalized.avatar = rawUserInfo.picture;
+      break;
+    case 'github':
+      normalized.id = rawUserInfo.id.toString();
+      normalized.email = rawUserInfo.email;
+      normalized.name = rawUserInfo.name || rawUserInfo.login;
+      normalized.avatar = rawUserInfo.avatar_url;
+      break;
+    case 'microsoft':
+      normalized.id = rawUserInfo.id;
+      normalized.email = rawUserInfo.mail || rawUserInfo.userPrincipalName;
+      normalized.name = rawUserInfo.displayName;
+      normalized.avatar = ''; // Microsoft Graph doesn't provide avatar in basic profile
+      break;
     }
 
     return normalized;

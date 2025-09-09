@@ -181,7 +181,7 @@ UNLICENSED
     // Check if directory exists
     if (fs.existsSync(projectPath) && !force) {
       console.error(chalk.red(`Error: Directory '${name}' already exists.`));
-      console.log(chalk.yellow(`Use --force to overwrite existing directory.`));
+      console.log(chalk.yellow('Use --force to overwrite existing directory.'));
       process.exit(1);
     }
 

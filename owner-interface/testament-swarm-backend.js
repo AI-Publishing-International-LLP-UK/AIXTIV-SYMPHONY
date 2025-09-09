@@ -138,26 +138,26 @@ class TestamentSwarmBackend extends EventEmitter {
   getHotTopics() {
     return [
       {
-        title: "Testament Swarm Integration Complete",
-        description: "All 11 VLS solutions now operational with 18M+ agents",
-        priority: "high",
-        source: "Dream Commander",
+        title: 'Testament Swarm Integration Complete',
+        description: 'All 11 VLS solutions now operational with 18M+ agents',
+        priority: 'high',
+        source: 'Dream Commander',
         timestamp: new Date().toISOString(),
         agents_involved: 320000
       },
       {
-        title: "Dr. Lucy Deep Mind Enhancement", 
-        description: "ML engine upgraded with 20M pilot capacity",
-        priority: "medium",
-        source: "QB RIX System",
+        title: 'Dr. Lucy Deep Mind Enhancement', 
+        description: 'ML engine upgraded with 20M pilot capacity',
+        priority: 'medium',
+        source: 'QB RIX System',
         timestamp: new Date().toISOString(),
         agents_involved: 1850000
       },
       {
-        title: "Victory36 Prediction Engine Active",
-        description: "150M+ resource access for enterprise clients",
-        priority: "high", 
-        source: "Prediction Systems",
+        title: 'Victory36 Prediction Engine Active',
+        description: '150M+ resource access for enterprise clients',
+        priority: 'high', 
+        source: 'Prediction Systems',
         timestamp: new Date().toISOString(),
         agents_involved: 2100000
       }

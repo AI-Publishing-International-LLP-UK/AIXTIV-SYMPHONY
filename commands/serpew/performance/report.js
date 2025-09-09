@@ -26,30 +26,30 @@ module.exports = async function generatePerformanceReport(options) {
     let startDate = new Date();
 
     switch (period) {
-      case '24h':
-        startDate.setDate(startDate.getDate() - 1);
-        break;
-      case '7d':
-        startDate.setDate(startDate.getDate() - 7);
-        break;
-      case '30d':
-        startDate.setDate(startDate.getDate() - 30);
-        break;
-      case '90d':
-        startDate.setDate(startDate.getDate() - 90);
-        break;
-      default:
-        // Try to parse as number of days
-        const days = parseInt(period);
-        if (!isNaN(days) && days > 0) {
-          startDate.setDate(startDate.getDate() - days);
-        } else {
-          displayResult(
-            `Error: Invalid period format. Use 24h, 7d, 30d, 90d or number of days`,
-            'error'
-          );
-          return;
-        }
+    case '24h':
+      startDate.setDate(startDate.getDate() - 1);
+      break;
+    case '7d':
+      startDate.setDate(startDate.getDate() - 7);
+      break;
+    case '30d':
+      startDate.setDate(startDate.getDate() - 30);
+      break;
+    case '90d':
+      startDate.setDate(startDate.getDate() - 90);
+      break;
+    default:
+      // Try to parse as number of days
+      const days = parseInt(period);
+      if (!isNaN(days) && days > 0) {
+        startDate.setDate(startDate.getDate() - days);
+      } else {
+        displayResult(
+          'Error: Invalid period format. Use 24h, 7d, 30d, 90d or number of days',
+          'error'
+        );
+        return;
+      }
     }
 
     // Convert dates to timestamps for Firestore query
@@ -116,7 +116,7 @@ module.exports = async function generatePerformanceReport(options) {
     );
 
     if (result && result.success) {
-      console.log(chalk.green(`\n✓ Success: Performance Report Generated\n`));
+      console.log(chalk.green('\n✓ Success: Performance Report Generated\n'));
 
       // Report header
       console.log(chalk.bold('Performance Report:'));

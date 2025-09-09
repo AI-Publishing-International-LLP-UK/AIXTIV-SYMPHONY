@@ -616,28 +616,28 @@ class DrLucyGatewayConnector {
   generateFallbackResponse(message) {
     // Simpler fallback responses that sound like Dr. Lucy
     const responses = [
-      "I'm analyzing that request, but I'm having trouble connecting to my full knowledge base right now. Let me provide what information I can based on my core understanding.",
+      'I\'m analyzing that request, but I\'m having trouble connecting to my full knowledge base right now. Let me provide what information I can based on my core understanding.',
       
-      "While I'm experiencing some connectivity issues with my extended memory systems, I can still assist you. My baseline knowledge suggests that your question about this topic is important for organizational growth.",
+      'While I\'m experiencing some connectivity issues with my extended memory systems, I can still assist you. My baseline knowledge suggests that your question about this topic is important for organizational growth.',
       
-      "I'm operating with limited access to my flight memory at the moment, but I can still provide strategic insights. Based on my core knowledge, here's what I recommend for this situation.",
+      'I\'m operating with limited access to my flight memory at the moment, but I can still provide strategic insights. Based on my core knowledge, here\'s what I recommend for this situation.',
       
-      "My connection to the FMS historical database is currently limited, but I can still leverage my fundamental knowledge. Let me share what I know about this topic from my core understanding.",
+      'My connection to the FMS historical database is currently limited, but I can still leverage my fundamental knowledge. Let me share what I know about this topic from my core understanding.',
       
-      "I'm currently operating with a partial connection to my knowledge systems, but I'm still here to help. Based on what I can access, here's my analysis of your question."
+      'I\'m currently operating with a partial connection to my knowledge systems, but I\'m still here to help. Based on what I can access, here\'s my analysis of your question.'
     ];
     
     // Simple keyword-based context matching
     let response = responses[Math.floor(Math.random() * responses.length)];
     
     if (message.toLowerCase().includes('report') || message.toLowerCase().includes('data')) {
-      response += " When it comes to data analysis and reporting, I typically recommend focusing on actionable insights rather than just raw metrics. This helps drive more strategic decision-making.";
+      response += ' When it comes to data analysis and reporting, I typically recommend focusing on actionable insights rather than just raw metrics. This helps drive more strategic decision-making.';
     } 
     else if (message.toLowerCase().includes('team') || message.toLowerCase().includes('staff')) {
-      response += " When addressing team dynamics, I've observed that clear communication frameworks and well-defined roles typically lead to higher performance and better outcomes.";
+      response += ' When addressing team dynamics, I\'ve observed that clear communication frameworks and well-defined roles typically lead to higher performance and better outcomes.';
     }
     else if (message.toLowerCase().includes('strategy') || message.toLowerCase().includes('plan')) {
-      response += " Strategic planning should always balance innovation with practical implementation. My analysis typically shows that the most successful strategies maintain this balance while remaining adaptable.";
+      response += ' Strategic planning should always balance innovation with practical implementation. My analysis typically shows that the most successful strategies maintain this balance while remaining adaptable.';
     }
     
     return response;
@@ -650,40 +650,40 @@ class DrLucyGatewayConnector {
     const lowerMessage = message.toLowerCase();
     
     // Start with Dr. Lucy's knowledge-infused voice pattern
-    let response = "Based on my analysis and historical data, ";
+    let response = 'Based on my analysis and historical data, ';
     
     // Add specific domain knowledge based on keywords
     if (lowerMessage.includes('report') || lowerMessage.includes('data')) {
-      response += "I can help you with that reporting request. My flight memory indicates we've processed similar reports in the past with great success. The key metrics you'll want to focus on include customer acquisition cost, lifetime value, and engagement rates. Historical FMS data shows these have been particularly insightful for your team.";
+      response += 'I can help you with that reporting request. My flight memory indicates we\'ve processed similar reports in the past with great success. The key metrics you\'ll want to focus on include customer acquisition cost, lifetime value, and engagement rates. Historical FMS data shows these have been particularly insightful for your team.';
     } 
     else if (lowerMessage.includes('team') || lowerMessage.includes('staff')) {
-      response += "team dynamics are critical to organizational success. Our FMS historical data shows that your leadership approach has created strong team cohesion. I'd recommend continuing the weekly strategy sessions that have proven effective, while incorporating more cross-functional collaboration which has shown a 24% increase in innovation outcomes in similar organizational structures.";
+      response += 'team dynamics are critical to organizational success. Our FMS historical data shows that your leadership approach has created strong team cohesion. I\'d recommend continuing the weekly strategy sessions that have proven effective, while incorporating more cross-functional collaboration which has shown a 24% increase in innovation outcomes in similar organizational structures.';
     }
     else if (lowerMessage.includes('strategy') || lowerMessage.includes('plan')) {
-      response += "strategic planning requires both visionary thinking and practical implementation. From my knowledge base, I can see that your organization has historically excelled at innovation but sometimes faced challenges in execution phases. I recommend a staged implementation approach with clear milestones and accountability metrics, which has shown 37% better outcomes in similar contexts.";
+      response += 'strategic planning requires both visionary thinking and practical implementation. From my knowledge base, I can see that your organization has historically excelled at innovation but sometimes faced challenges in execution phases. I recommend a staged implementation approach with clear milestones and accountability metrics, which has shown 37% better outcomes in similar contexts.';
     }
     else if (lowerMessage.includes('project') || lowerMessage.includes('deadline')) {
-      response += "project management is an area where your organization has developed strong competencies. Looking at your historical project data in the FMS, I can see a pattern of successful delivery on complex initiatives. The current project timeline appears ambitious but achievable based on your team's previous performance metrics and capacity analysis.";
+      response += 'project management is an area where your organization has developed strong competencies. Looking at your historical project data in the FMS, I can see a pattern of successful delivery on complex initiatives. The current project timeline appears ambitious but achievable based on your team\'s previous performance metrics and capacity analysis.';
     }
     else {
-      response += "I'd be happy to provide insights on this topic. My knowledge base contains extensive information that can help guide your decision-making process. Based on historical patterns and current data trends, I can offer both strategic and tactical recommendations tailored to your specific organizational context.";
+      response += 'I\'d be happy to provide insights on this topic. My knowledge base contains extensive information that can help guide your decision-making process. Based on historical patterns and current data trends, I can offer both strategic and tactical recommendations tailored to your specific organizational context.';
     }
     
     // Add a Dr. Lucy signature comment about integration
-    response += " One thing I've consistently observed across multiple organizations is that integrated approaches tend to yield superior results compared to siloed efforts. My flight memory records show this pattern repeatedly across diverse industries and contexts.";
+    response += ' One thing I\'ve consistently observed across multiple organizations is that integrated approaches tend to yield superior results compared to siloed efforts. My flight memory records show this pattern repeatedly across diverse industries and contexts.';
     
     return {
       message: response,
       voice_url: null,
       knowledge_sources: [
-        { name: "Historical FMS Data", confidence: 0.87 },
-        { name: "Flight Memory Records", confidence: 0.92 },
-        { name: "Organizational Knowledge Base", confidence: 0.95 }
+        { name: 'Historical FMS Data', confidence: 0.87 },
+        { name: 'Flight Memory Records', confidence: 0.92 },
+        { name: 'Organizational Knowledge Base', confidence: 0.95 }
       ],
       metadata: {
         processing_time: 1.2,
         confidence: 0.89,
-        model: "Dr. Lucy Knowledge Integration",
+        model: 'Dr. Lucy Knowledge Integration',
         contexts_used: 5
       }
     };

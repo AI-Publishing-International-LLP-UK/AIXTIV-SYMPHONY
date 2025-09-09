@@ -63,9 +63,9 @@ function generateMockCode(language, task) {
   const taskLower = task.toLowerCase();
 
   switch (language) {
-    case 'javascript':
-      if (taskLower.includes('filter')) {
-        return `/**
+  case 'javascript':
+    if (taskLower.includes('filter')) {
+      return `/**
  * Filters an array of objects by a property value
  * @param {Array} array - The array to filter
  * @param {string} property - The property to filter by
@@ -95,8 +95,8 @@ const users = [
 
 const adminUsers = filterByProperty(users, 'role', 'admin');
 console.log(adminUsers);`;
-      } else {
-        return `/**
+    } else {
+      return `/**
  * Implementation for: ${task}
  */
 function solution() {
@@ -106,10 +106,10 @@ function solution() {
 
 // Example usage
 solution();`;
-      }
+    }
 
-    case 'python':
-      return `"""
+  case 'python':
+    return `"""
 Implementation for: ${task}
 """
 
@@ -121,8 +121,8 @@ def solution():
 if __name__ == "__main__":
     solution()`;
 
-    default:
-      return `// Generated mock code for ${language}
+  default:
+    return `// Generated mock code for ${language}
 // Implementation for: ${task}
 // This is a placeholder - in a real implementation, Dr. Claude would
 // generate actual code in the requested language.`;
@@ -247,7 +247,7 @@ async function delegateCommand(options, { spinner } = {}) {
   // Text output
   utils.ui.feedback.success('Project successfully delegated to Dr. Claude');
 
-  console.log(`\nDelegation Details:`);
+  console.log('\nDelegation Details:');
   console.log(`  - ID: ${chalk.bold(delegationId)}`);
   console.log(`  - Project: ${chalk.bold(options.project)}`);
   console.log(`  - Description: ${options.description}`);
@@ -626,8 +626,8 @@ async function statusCommand(options, { spinner } = {}) {
 
   console.log(`\nTotal Agents: ${agents.length}`);
   console.log(`Active Agents: ${agents.filter((a) => a.status === 'active').length}`);
-  console.log(`\nFor detailed information on a specific agent, use:`);
-  console.log(`  aixtiv claude:status -a <agent-id> --detailed`);
+  console.log('\nFor detailed information on a specific agent, use:');
+  console.log('  aixtiv claude:status -a <agent-id> --detailed');
 }
 
 /**

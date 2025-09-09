@@ -10,66 +10,66 @@ console.log('✅ Current directory:', process.cwd());
 
 // Test npm packages
 try {
-    const axios = require('axios');
-    console.log('✅ axios loaded successfully');
+  const axios = require('axios');
+  console.log('✅ axios loaded successfully');
 } catch (e) {
-    console.log('❌ axios failed:', e.message);
+  console.log('❌ axios failed:', e.message);
 }
 
 try {
-    const cheerio = require('cheerio');
-    console.log('✅ cheerio loaded successfully');
+  const cheerio = require('cheerio');
+  console.log('✅ cheerio loaded successfully');
 } catch (e) {
-    console.log('❌ cheerio failed:', e.message);
+  console.log('❌ cheerio failed:', e.message);
 }
 
 try {
-    const puppeteer = require('puppeteer');
-    console.log('✅ puppeteer loaded successfully');
+  const puppeteer = require('puppeteer');
+  console.log('✅ puppeteer loaded successfully');
 } catch (e) {
-    console.log('❌ puppeteer failed:', e.message);
+  console.log('❌ puppeteer failed:', e.message);
 }
 
 try {
-    const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
-    console.log('✅ Google Cloud Secret Manager loaded successfully');
+  const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
+  console.log('✅ Google Cloud Secret Manager loaded successfully');
 } catch (e) {
-    console.log('❌ Google Cloud Secret Manager failed:', e.message);
+  console.log('❌ Google Cloud Secret Manager failed:', e.message);
 }
 
 // Test working modules
 try {
-    const { ConnectorManager } = require('./connectors');
-    console.log('✅ Connector Manager loaded successfully');
+  const { ConnectorManager } = require('./connectors');
+  console.log('✅ Connector Manager loaded successfully');
     
-    const connectorManager = new ConnectorManager();
-    console.log('✅ Connector Manager instantiated successfully');
-    console.log('📊 Available connectors:', connectorManager.getAvailableConnectors());
+  const connectorManager = new ConnectorManager();
+  console.log('✅ Connector Manager instantiated successfully');
+  console.log('📊 Available connectors:', connectorManager.getAvailableConnectors());
     
 } catch (e) {
-    console.log('❌ Connector Manager failed:', e.message);
+  console.log('❌ Connector Manager failed:', e.message);
 }
 
 // Test individual connectors
 try {
-    const { DrMemoriaLinkedInConnector } = require('./connectors/dr-memoria-connector');
-    console.log('✅ Dr. Memoria connector loaded successfully');
+  const { DrMemoriaLinkedInConnector } = require('./connectors/dr-memoria-connector');
+  console.log('✅ Dr. Memoria connector loaded successfully');
 } catch (e) {
-    console.log('❌ Dr. Memoria connector failed:', e.message);
+  console.log('❌ Dr. Memoria connector failed:', e.message);
 }
 
 try {
-    const { DrMatchLinkedInConnector } = require('./connectors/dr-match-connector');
-    console.log('✅ Dr. Match connector loaded successfully');
+  const { DrMatchLinkedInConnector } = require('./connectors/dr-match-connector');
+  console.log('✅ Dr. Match connector loaded successfully');
 } catch (e) {
-    console.log('❌ Dr. Match connector failed:', e.message);
+  console.log('❌ Dr. Match connector failed:', e.message);
 }
 
 try {
-    const { WebCrawlerConnector } = require('./connectors/web-crawler-connector');
-    console.log('✅ Web Crawler connector loaded successfully');
+  const { WebCrawlerConnector } = require('./connectors/web-crawler-connector');
+  console.log('✅ Web Crawler connector loaded successfully');
 } catch (e) {
-    console.log('❌ Web Crawler connector failed:', e.message);
+  console.log('❌ Web Crawler connector failed:', e.message);
 }
 
 console.log('\n🎉 Setup test completed!');

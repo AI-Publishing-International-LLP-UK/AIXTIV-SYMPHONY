@@ -25,7 +25,7 @@ export default {
     
     // Handle robots.txt
     if (url.pathname === '/robots.txt') {
-      return new Response(`User-agent: *\nDisallow: /cdn-cgi/\nAllow: /\n\nSitemap: https://asoos.2100.cool/sitemap.xml`, {
+      return new Response('User-agent: *\nDisallow: /cdn-cgi/\nAllow: /\n\nSitemap: https://asoos.2100.cool/sitemap.xml', {
         headers: { 'Content-Type': 'text/plain' }
       });
     }
@@ -597,7 +597,7 @@ export default {
           'X-Frame-Options': 'SAMEORIGIN',
           'X-Content-Type-Options': 'nosniff',
           'Referrer-Policy': 'strict-origin-when-cross-origin',
-          'Content-Security-Policy': "default-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; script-src 'self' 'unsafe-inline';"
+          'Content-Security-Policy': 'default-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src \'self\' data: https:; script-src \'self\' \'unsafe-inline\';'
         }
       });
     } catch (error) {

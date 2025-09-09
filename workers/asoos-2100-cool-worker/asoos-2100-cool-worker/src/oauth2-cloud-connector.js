@@ -57,16 +57,16 @@ export class OAuth2CloudConnector {
     const service = url.searchParams.get('service');
     
     switch (action) {
-      case 'initiate':
-        return this.initiateOAuth2Flow(service);
-      case 'callback':
-        return this.handleOAuth2Callback(request, service);
-      case 'activate_features':
-        return this.activateFeatures(request);
-      case 'get_status':
-        return this.getFeatureStatus(request);
-      default:
-        return new Response('Invalid action', { status: 400 });
+    case 'initiate':
+      return this.initiateOAuth2Flow(service);
+    case 'callback':
+      return this.handleOAuth2Callback(request, service);
+    case 'activate_features':
+      return this.activateFeatures(request);
+    case 'get_status':
+      return this.getFeatureStatus(request);
+    default:
+      return new Response('Invalid action', { status: 400 });
     }
   }
 
@@ -202,17 +202,17 @@ export class OAuth2CloudConnector {
       try {
         let result;
         switch (feature) {
-          case 'elite11':
-            result = await this.activateElite11(llp_member_email);
-            break;
-          case 'mastery33':
-            result = await this.activateMastery33(llp_member_email);
-            break;
-          case 'victory36':
-            result = await this.activateVictory36(llp_member_email);
-            break;
-          default:
-            result = { success: false, error: 'unknown_feature' };
+        case 'elite11':
+          result = await this.activateElite11(llp_member_email);
+          break;
+        case 'mastery33':
+          result = await this.activateMastery33(llp_member_email);
+          break;
+        case 'victory36':
+          result = await this.activateVictory36(llp_member_email);
+          break;
+        default:
+          result = { success: false, error: 'unknown_feature' };
         }
         activationResults[feature] = result;
       } catch (error) {

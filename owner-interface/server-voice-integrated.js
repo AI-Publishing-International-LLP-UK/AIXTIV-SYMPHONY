@@ -49,12 +49,12 @@ const config = {
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https://api.elevenlabs.io", "https://*.googleapis.com"],
-      mediaSrc: ["'self'", "blob:", "data:"],
+      defaultSrc: ['\'self\''],
+      styleSrc: ['\'self\'', '\'unsafe-inline\''],
+      scriptSrc: ['\'self\'', '\'unsafe-inline\'', '\'unsafe-eval\''],
+      imgSrc: ['\'self\'', 'data:', 'https:'],
+      connectSrc: ['\'self\'', 'https://api.elevenlabs.io', 'https://*.googleapis.com'],
+      mediaSrc: ['\'self\'', 'blob:', 'data:'],
     },
   },
 }));
@@ -178,17 +178,17 @@ app.post('/api/elevenlabs/generate-voice', async (req, res) => {
     
     let voiceResult;
     switch (voiceType?.toLowerCase()) {
-      case 'diamond':
-      case 'sao':
-        voiceResult = await elevenLabsManager.generateDiamondSAOVoice(text, options);
-        break;
-      case 'moca':
-      case 'mocoa':
-        voiceResult = await elevenLabsManager.generateMocaVoice(text, options);
-        break;
-      default:
-        voiceResult = await elevenLabsManager.generateOwnerInterfaceVoice(text, options);
-        break;
+    case 'diamond':
+    case 'sao':
+      voiceResult = await elevenLabsManager.generateDiamondSAOVoice(text, options);
+      break;
+    case 'moca':
+    case 'mocoa':
+      voiceResult = await elevenLabsManager.generateMocaVoice(text, options);
+      break;
+    default:
+      voiceResult = await elevenLabsManager.generateOwnerInterfaceVoice(text, options);
+      break;
     }
     
     // Convert audio buffer to base64 for transmission
@@ -562,7 +562,7 @@ async function startServer() {
       console.log('   GET  /api/rix/agents - Available RIX agents');
       console.log('   POST /api/rix/conversation/create - Create RIX conversation');
       console.log('');
-      console.log(`🔷 Ready to serve Diamond SAO Command Center`);
+      console.log('🔷 Ready to serve Diamond SAO Command Center');
     });
     
     // Graceful shutdown

@@ -169,7 +169,7 @@ const AppState = (() => {
    * Initialize the application state
    */
   const initialize = () => {
-    console.log("Initializing application state...");
+    console.log('Initializing application state...');
     
     // Load saved preferences if available
     const savedPreferences = localStorage.getItem('asoos_preferences');
@@ -181,7 +181,7 @@ const AppState = (() => {
           ...parsed
         };
       } catch (error) {
-        console.error("Error loading saved preferences:", error);
+        console.error('Error loading saved preferences:', error);
       }
     }
     
@@ -216,7 +216,7 @@ const AppState = (() => {
       });
     });
     
-    console.log("Application state initialized");
+    console.log('Application state initialized');
   };
   
   // Initialize on page load

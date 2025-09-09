@@ -74,7 +74,7 @@ class DreamCommanderElite11Mastery33 {
     
     console.log('🌟 Dream Commander Elite11 Mastery33 initialized');
     console.log(`👥 ${this.agents} specialized agents + gigantic commander`);
-    console.log(`💾 12-partition system with Cloudflare D1 storage`);
+    console.log('💾 12-partition system with Cloudflare D1 storage');
   }
 
   /**

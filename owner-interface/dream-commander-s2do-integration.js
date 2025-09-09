@@ -88,7 +88,7 @@ class DreamCommanderS2DOIntegration {
       };
       
     } catch (error) {
-      console.error(`❌ Error initializing Dream Commander integration:`, error);
+      console.error('❌ Error initializing Dream Commander integration:', error);
       throw error;
     }
   }
@@ -370,7 +370,7 @@ class DreamCommanderS2DOIntegration {
       }
 
       const result = await response.json();
-      console.log(`✅ Performance monitoring setup complete`);
+      console.log('✅ Performance monitoring setup complete');
       
       return result;
       
@@ -422,7 +422,7 @@ class DreamCommanderS2DOIntegration {
         await this.sendCoachingInsights(userId, analysis.coaching_insights);
       }
       
-      console.log(`✅ Dream Commander analysis complete`);
+      console.log('✅ Dream Commander analysis complete');
       
       return analysis;
       

@@ -178,7 +178,7 @@ class IntegrationGatewayMCPProvisioner {
       
       this.log(`✅ UAO-Aligned MCP created: ${companyName}`, 'SUCCESS');
       this.log(`🌐 Domain: ${mcpDomain}`, 'SUCCESS');
-      this.log(`🎯 UAO Coordination: Active`, 'UAO');
+      this.log('🎯 UAO Coordination: Active', 'UAO');
       
       console.log(`${mcpDomain}`);
       return companyEntry;
@@ -199,7 +199,7 @@ class IntegrationGatewayMCPProvisioner {
       console.log('\n📋 UAO-ALIGNED MCP COMPANIES');
       console.log('═══════════════════════════════════');
       console.log(`🏛️  Authority: ${this.diamondSAO.name}`);
-      console.log(`🎯 UAO Alignment: Active`);
+      console.log('🎯 UAO Alignment: Active');
       console.log(`📊 Total: ${companies.length}`);
       console.log('');
       
@@ -273,25 +273,25 @@ async function main() {
 
   try {
     switch (command) {
-      case 'create':
-        if (params.length < 1) {
-          console.error('❌ Error: Company name required');
-          process.exit(1);
-        }
-        await provisioner.createUAOAlignedMCP(params[0], params.slice(1));
-        break;
-
-      case 'list':
-        await provisioner.listUAOAlignedCompanies();
-        break;
-
-      case 'help':
-        provisioner.showHelp();
-        break;
-
-      default:
-        console.error(`❌ Error: Unknown command '${command}'`);
+    case 'create':
+      if (params.length < 1) {
+        console.error('❌ Error: Company name required');
         process.exit(1);
+      }
+      await provisioner.createUAOAlignedMCP(params[0], params.slice(1));
+      break;
+
+    case 'list':
+      await provisioner.listUAOAlignedCompanies();
+      break;
+
+    case 'help':
+      provisioner.showHelp();
+      break;
+
+    default:
+      console.error(`❌ Error: Unknown command '${command}'`);
+      process.exit(1);
     }
 
     process.exit(0);

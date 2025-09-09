@@ -42,12 +42,12 @@ const config = {
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https://api.elevenlabs.io", "wss://api.elevenlabs.io", "https://*.googleapis.com"],
-      mediaSrc: ["'self'", "blob:", "data:"],
+      defaultSrc: ['\'self\''],
+      styleSrc: ['\'self\'', '\'unsafe-inline\''],
+      scriptSrc: ['\'self\'', '\'unsafe-inline\'', '\'unsafe-eval\''],
+      imgSrc: ['\'self\'', 'data:', 'https:'],
+      connectSrc: ['\'self\'', 'https://api.elevenlabs.io', 'wss://api.elevenlabs.io', 'https://*.googleapis.com'],
+      mediaSrc: ['\'self\'', 'blob:', 'data:'],
     },
   },
 }));
@@ -720,15 +720,15 @@ async function startServer() {
       console.log('✅ SERVER READY');
       console.log('═══════════════════════════════════════════════');
       console.log(`🌐 Server running on port ${config.port}`);
-      console.log(`🔐 OAuth2 Authentication: ACTIVE`);
-      console.log(`🎤 ElevenLabs Integration: COMPLETE SUITE`);
-      console.log(`🛡️  Enterprise Security: MAXIMUM`);
+      console.log('🔐 OAuth2 Authentication: ACTIVE');
+      console.log('🎤 ElevenLabs Integration: COMPLETE SUITE');
+      console.log('🛡️  Enterprise Security: MAXIMUM');
       console.log('');
       console.log('🎯 OAuth2 Flow:');
-      console.log(`   1. GET /auth/login - Get authorization URL`);
-      console.log(`   2. Redirect user to authorization URL`);
-      console.log(`   3. User authorizes and returns to callback`);
-      console.log(`   4. Include Bearer token in API requests`);
+      console.log('   1. GET /auth/login - Get authorization URL');
+      console.log('   2. Redirect user to authorization URL');
+      console.log('   3. User authorizes and returns to callback');
+      console.log('   4. Include Bearer token in API requests');
       console.log('');
       console.log('🎤 ElevenLabs Capabilities:');
       console.log('   ✅ Text-to-Speech (TTS)');
@@ -739,7 +739,7 @@ async function startServer() {
       console.log('   ✅ Real-time Streaming');
       console.log('   ✅ Enterprise Security');
       console.log('');
-      console.log(`🔷 Ready to serve Diamond SAO Command Center`);
+      console.log('🔷 Ready to serve Diamond SAO Command Center');
     });
     
     // Graceful shutdown

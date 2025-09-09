@@ -1,5 +1,5 @@
 # ASOOS Flyer - Dr. Lucy ML + Professor Lee Cloud Deployment
-FROM node:20-alpine
+FROM node:24-alpine
 
 # Set working directory
 WORKDIR /app

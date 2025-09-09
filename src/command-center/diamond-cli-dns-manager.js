@@ -289,39 +289,39 @@ class DiamondCLIDNSManager {
     };
     
     switch (intent.operation) {
-      case 'update_mcp_domain':
-        operation.parameters = {
-          recordType: 'CNAME',
-          name: intent.domain,
-          content: intent.service,
-          ttl: 300,
-          proxied: true
-        };
-        break;
+    case 'update_mcp_domain':
+      operation.parameters = {
+        recordType: 'CNAME',
+        name: intent.domain,
+        content: intent.service,
+        ttl: 300,
+        proxied: true
+      };
+      break;
         
-      case 'create_mcp_domain':
-        operation.parameters = {
-          recordType: 'CNAME',
-          name: intent.domain,
-          content: 'integration-gateway-js-yutylytffa-uw.a.run.app', // Default to MCP JSON API
-          ttl: 300,
-          proxied: true
-        };
-        break;
+    case 'create_mcp_domain':
+      operation.parameters = {
+        recordType: 'CNAME',
+        name: intent.domain,
+        content: 'integration-gateway-js-yutylytffa-uw.a.run.app', // Default to MCP JSON API
+        ttl: 300,
+        proxied: true
+      };
+      break;
         
-      case 'delete_mcp_domain':
-        operation.parameters = {
-          action: 'delete',
-          name: intent.domain
-        };
-        break;
+    case 'delete_mcp_domain':
+      operation.parameters = {
+        action: 'delete',
+        name: intent.domain
+      };
+      break;
         
-      case 'check_mcp_status':
-        operation.parameters = {
-          action: 'status',
-          name: intent.domain
-        };
-        break;
+    case 'check_mcp_status':
+      operation.parameters = {
+        action: 'status',
+        name: intent.domain
+      };
+      break;
     }
     
     return operation;
@@ -344,24 +344,24 @@ class DiamondCLIDNSManager {
       let result;
       
       switch (operation.type) {
-        case 'update_mcp_domain':
-          result = await this.updateMCPDomainDirect(operation);
-          break;
+      case 'update_mcp_domain':
+        result = await this.updateMCPDomainDirect(operation);
+        break;
           
-        case 'create_mcp_domain':
-          result = await this.createMCPDomainDirect(operation);
-          break;
+      case 'create_mcp_domain':
+        result = await this.createMCPDomainDirect(operation);
+        break;
           
-        case 'delete_mcp_domain':
-          result = await this.deleteMCPDomainDirect(operation);
-          break;
+      case 'delete_mcp_domain':
+        result = await this.deleteMCPDomainDirect(operation);
+        break;
           
-        case 'check_mcp_status':
-          result = await this.checkMCPStatusDirect(operation);
-          break;
+      case 'check_mcp_status':
+        result = await this.checkMCPStatusDirect(operation);
+        break;
           
-        default:
-          throw new Error(`Unknown DNS operation: ${operation.type}`);
+      default:
+        throw new Error(`Unknown DNS operation: ${operation.type}`);
       }
       
       // Store operation in Diamond SAO Firestore

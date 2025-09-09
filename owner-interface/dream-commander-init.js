@@ -127,28 +127,28 @@ class DreamCommanderDataFetcher {
   generateHotTopicsData() {
     const topics = [
       {
-        title: "Enterprise Multi-Tenant Architecture",
-        status: "Active",
-        priority: "High",
-        source: "Dream Commander Elite11",
-        trend: "+15%",
-        description: "Scaling architecture for 500+ enterprise clients"
+        title: 'Enterprise Multi-Tenant Architecture',
+        status: 'Active',
+        priority: 'High',
+        source: 'Dream Commander Elite11',
+        trend: '+15%',
+        description: 'Scaling architecture for 500+ enterprise clients'
       },
       {
-        title: "AI Copilot Expansion Initiative",
-        status: "Planning",
-        priority: "Critical",
-        source: "Victory36 Engine",
-        trend: "+280%",
-        description: "Deploy 12 additional sRIX specialists across squadrons"
+        title: 'AI Copilot Expansion Initiative',
+        status: 'Planning',
+        priority: 'Critical',
+        source: 'Victory36 Engine',
+        trend: '+280%',
+        description: 'Deploy 12 additional sRIX specialists across squadrons'
       },
       {
-        title: "Revenue Optimization Pipeline",
-        status: "Active",
-        priority: "High",
-        source: "Testament Swarm Analytics",
-        trend: "+47%",
-        description: "ARR growth acceleration through automation"
+        title: 'Revenue Optimization Pipeline',
+        status: 'Active',
+        priority: 'High',
+        source: 'Testament Swarm Analytics',
+        trend: '+47%',
+        description: 'ARR growth acceleration through automation'
       }
     ];
 
@@ -158,39 +158,39 @@ class DreamCommanderDataFetcher {
   generateProposalsData() {
     return [
       {
-        title: "Quantum-Encrypted Communication Layer",
-        status: "APPROVED",
-        roi: "$2.1M annually",
-        priority: "Critical",
-        timeline: "Q3-Q4 2024"
+        title: 'Quantum-Encrypted Communication Layer',
+        status: 'APPROVED',
+        roi: '$2.1M annually',
+        priority: 'Critical',
+        timeline: 'Q3-Q4 2024'
       },
       {
-        title: "Advanced RIX Integration Platform",
-        status: "PENDING",
-        roi: "$850K annually",
-        priority: "High", 
-        timeline: "Q4 2024"
+        title: 'Advanced RIX Integration Platform',
+        status: 'PENDING',
+        roi: '$850K annually',
+        priority: 'High', 
+        timeline: 'Q4 2024'
       },
       {
-        title: "Multi-Tenant Gateway Optimization",
-        status: "PENDING",
-        roi: "$1.3M annually",
-        priority: "High",
-        timeline: "Q1 2025"
+        title: 'Multi-Tenant Gateway Optimization',
+        status: 'PENDING',
+        roi: '$1.3M annually',
+        priority: 'High',
+        timeline: 'Q1 2025'
       },
       {
-        title: "Dream Commander Elite11 Scaling",
-        status: "IN REVIEW",
-        roi: "$2.8M annually",
-        priority: "Critical",
-        timeline: "Q4 2024 - Q1 2025"
+        title: 'Dream Commander Elite11 Scaling',
+        status: 'IN REVIEW',
+        roi: '$2.8M annually',
+        priority: 'Critical',
+        timeline: 'Q4 2024 - Q1 2025'
       },
       {
-        title: "Testament Swarm Infrastructure Upgrade",
-        status: "APPROVED",
-        roi: "$950K annually",
-        priority: "Medium",
-        timeline: "Q2 2025"
+        title: 'Testament Swarm Infrastructure Upgrade',
+        status: 'APPROVED',
+        roi: '$950K annually',
+        priority: 'Medium',
+        timeline: 'Q2 2025'
       }
     ];
   }
@@ -198,51 +198,51 @@ class DreamCommanderDataFetcher {
   generateProjectsData() {
     return [
       {
-        name: "Dream Commander V99 Deployment",
+        name: 'Dream Commander V99 Deployment',
         progress: 92,
-        status: "On Track",
-        team: "Elite Development Squadron",
-        deadline: "End of Q3"
+        status: 'On Track',
+        team: 'Elite Development Squadron',
+        deadline: 'End of Q3'
       },
       {
-        name: "Testament Swarm Integration",
+        name: 'Testament Swarm Integration',
         progress: 78,
-        status: "Active",
-        team: "Infrastructure Squadron", 
-        deadline: "Mid Q4"
+        status: 'Active',
+        team: 'Infrastructure Squadron', 
+        deadline: 'Mid Q4'
       },
       {
-        name: "Multi-Tenant Architecture Scaling",
+        name: 'Multi-Tenant Architecture Scaling',
         progress: 67,
-        status: "Active",
-        team: "Architecture Squadron",
-        deadline: "Q1 2025"
+        status: 'Active',
+        team: 'Architecture Squadron',
+        deadline: 'Q1 2025'
       },
       {
-        name: "Enterprise Security Compliance",
+        name: 'Enterprise Security Compliance',
         progress: 45,
-        status: "Planning",
-        team: "Security Squadron",
-        deadline: "Q2 2025"
+        status: 'Planning',
+        team: 'Security Squadron',
+        deadline: 'Q2 2025'
       },
       {
-        name: "AI Copilot Fleet Expansion",
+        name: 'AI Copilot Fleet Expansion',
         progress: 23,
-        status: "Initiated",
-        team: "AI Development Squadron",
-        deadline: "Q3 2025"
+        status: 'Initiated',
+        team: 'AI Development Squadron',
+        deadline: 'Q3 2025'
       }
     ];
   }
 
   generateGrowthData() {
     return {
-      userEngagement: "+340%",
-      revenueGrowth: "+127%", 
-      clientRetention: "97.3%",
+      userEngagement: '+340%',
+      revenueGrowth: '+127%', 
+      clientRetention: '97.3%',
       details: {
-        copilotInteractions: "2.4M monthly",
-        arr: "$18.7M",
+        copilotInteractions: '2.4M monthly',
+        arr: '$18.7M',
         enterpriseClients: 142
       }
     };
@@ -251,13 +251,13 @@ class DreamCommanderDataFetcher {
   generateAlignmentData() {
     return {
       strategicPriorities: [
-        "Enterprise scalability (Banking sector)",
-        "Multi-tenant architecture completion", 
-        "Regulatory compliance (SOX, GDPR)"
+        'Enterprise scalability (Banking sector)',
+        'Multi-tenant architecture completion', 
+        'Regulatory compliance (SOX, GDPR)'
       ],
       teamObjectives: {
-        leadershipDev: "Leadership development: 3 promotions pending",
-        crossTraining: "Cross-training: 85% completion rate"
+        leadershipDev: 'Leadership development: 3 promotions pending',
+        crossTraining: 'Cross-training: 85% completion rate'
       }
     };
   }
@@ -265,13 +265,13 @@ class DreamCommanderDataFetcher {
   generateSupportData() {
     return {
       recommendedTraining: [
-        "Executive Leadership Certification (8 weeks)",
-        "Enterprise Architecture Mastery",
-        "Board Presentation Skills Workshop"
+        'Executive Leadership Certification (8 weeks)',
+        'Enterprise Architecture Mastery',
+        'Board Presentation Skills Workshop'
       ],
       careerAdvancement: {
-        nextRole: "Chief Technology Officer",
-        timeline: "Q4 2025"
+        nextRole: 'Chief Technology Officer',
+        timeline: 'Q4 2025'
       }
     };
   }
@@ -429,8 +429,8 @@ class DreamCommanderDataFetcher {
       <div style="padding: 6px; border-radius: 6px; margin-bottom: 6px; background: rgba(255, 255, 255, 0.02);">
         <div style="font-size: 11px; font-weight: 600; color: #fff; margin-bottom: 2px;">Q2 Strategic Priorities</div>
         ${alignment.strategicPriorities.map(priority => 
-          `<div style="font-size: 9px; color: #aaa; line-height: 1.2; margin-bottom: 3px;">• ${priority}</div>`
-        ).join('')}
+    `<div style="font-size: 9px; color: #aaa; line-height: 1.2; margin-bottom: 3px;">• ${priority}</div>`
+  ).join('')}
       </div>
       <div style="padding: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.02);">
         <div style="font-size: 11px; font-weight: 600; color: #fff; margin-bottom: 2px;">Team Objectives</div>
@@ -450,8 +450,8 @@ class DreamCommanderDataFetcher {
       <div style="padding: 6px; border-radius: 6px; margin-bottom: 6px; background: rgba(255, 255, 255, 0.02);">
         <div style="font-size: 11px; font-weight: 600; color: #fff; margin-bottom: 2px;">Recommended Training</div>
         ${support.recommendedTraining.map(training => 
-          `<div style="font-size: 9px; color: #aaa; line-height: 1.2; margin-bottom: 2px;">• ${training}</div>`
-        ).join('')}
+    `<div style="font-size: 9px; color: #aaa; line-height: 1.2; margin-bottom: 2px;">• ${training}</div>`
+  ).join('')}
       </div>
       <div style="padding: 6px; border-radius: 6px; background: rgba(255, 255, 255, 0.02);">
         <div style="font-size: 11px; font-weight: 600; color: #fff; margin-bottom: 2px;">Career Advancement</div>

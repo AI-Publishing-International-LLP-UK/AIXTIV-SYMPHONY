@@ -35,7 +35,7 @@ async function createTestAudio() {
   }
   
   // Generate test audio for SirHand
-  const sirHandText = "Hello, this is SirHand, copilot-01. I am testing the speech system.";
+  const sirHandText = 'Hello, this is SirHand, copilot-01. I am testing the speech system.';
   const sirHandAudio = await speechService.textToSpeech(sirHandText, {
     copilotId: 'copilot-01',
     userId: USERS.PCR
@@ -45,7 +45,7 @@ async function createTestAudio() {
   fs.writeFileSync(sirHandPath, sirHandAudio);
   
   // Generate test audio for QBLucy
-  const qbLucyText = "Hello, this is QBLucy, copilot-02. I am testing the speech system.";
+  const qbLucyText = 'Hello, this is QBLucy, copilot-02. I am testing the speech system.';
   const qbLucyAudio = await speechService.textToSpeech(qbLucyText, {
     copilotId: 'copilot-02',
     userId: USERS.PCR
@@ -88,7 +88,7 @@ async function testTTS() {
   try {
     // Test SirHand voice
     console.log(chalk.yellow('Testing SirHand voice...'));
-    const sirHandText = "This is a test of the SirHand voice system. I am your copilot, sir.";
+    const sirHandText = 'This is a test of the SirHand voice system. I am your copilot, sir.';
     const sirHandAudio = await speechService.textToSpeech(sirHandText, {
       copilotId: 'copilot-01',
       userId: USERS.PCR
@@ -100,7 +100,7 @@ async function testTTS() {
     
     // Test QBLucy voice
     console.log(chalk.yellow('Testing QBLucy voice...'));
-    const qbLucyText = "This is a test of the QBLucy voice system. I am your digital assistant.";
+    const qbLucyText = 'This is a test of the QBLucy voice system. I am your digital assistant.';
     const qbLucyAudio = await speechService.textToSpeech(qbLucyText, {
       copilotId: 'copilot-02',
       userId: USERS.PCR
@@ -112,7 +112,7 @@ async function testTTS() {
     
     // Test Dream Commander voice
     console.log(chalk.yellow('Testing Dream Commander voice...'));
-    const dreamText = "This is a test of the Dream Commander voice system. Welcome to the dreamscape.";
+    const dreamText = 'This is a test of the Dream Commander voice system. Welcome to the dreamscape.';
     const dreamAudio = await speechService.textToSpeech(dreamText, {
       copilotId: 'dream-commander',
       userId: USERS.PCR
@@ -164,7 +164,7 @@ async function testPersonalization() {
     console.log(chalk.yellow('Testing personalized voices...'));
     
     // Generate personalized SirHand audio
-    const sirHandText = "This is my personalized voice as SirHand.";
+    const sirHandText = 'This is my personalized voice as SirHand.';
     const sirHandAudio = await speechService.textToSpeech(sirHandText, {
       copilotId: 'copilot-01',
       userId: USERS.PCR,
@@ -176,7 +176,7 @@ async function testPersonalization() {
     console.log(chalk.green('✅ Personalized SirHand audio generated:'), sirHandPath);
     
     // Generate personalized QBLucy audio
-    const qbLucyText = "This is my personalized voice as QBLucy.";
+    const qbLucyText = 'This is my personalized voice as QBLucy.';
     const qbLucyAudio = await speechService.textToSpeech(qbLucyText, {
       copilotId: 'copilot-02',
       userId: USERS.PCR,
@@ -253,14 +253,14 @@ async function testDreamCommander() {
     console.log(chalk.yellow('Interacting with Dream Commander...'));
     const response1 = await speechService.dreamCommanderInteraction(
       session.sessionId,
-      "Hello Dream Commander, I am excited to begin this journey with you."
+      'Hello Dream Commander, I am excited to begin this journey with you.'
     );
     console.log(chalk.green('✅ Dream Commander response 1:'), response1.text);
     
     // Second interaction
     const response2 = await speechService.dreamCommanderInteraction(
       session.sessionId,
-      "I am feeling uncertain about what we will discover in the dreamscape."
+      'I am feeling uncertain about what we will discover in the dreamscape.'
     );
     console.log(chalk.green('✅ Dream Commander response 2:'), response2.text);
     

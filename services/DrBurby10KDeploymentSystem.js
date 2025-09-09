@@ -234,7 +234,7 @@ class DrBurby10KDeploymentSystem extends EventEmitter {
         this.deploymentStatus.active += result.value.active;
       } else {
         this.deploymentStatus.failed += instancesPerRegion;
-        console.error(`❌ Region deployment failed:`, result.reason);
+        console.error('❌ Region deployment failed:', result.reason);
       }
     });
   }

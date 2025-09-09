@@ -207,12 +207,12 @@ async function handleMobileRequest(request, url, env) {
         platform: platform,
         designTokens: {
           colors: ${JSON.stringify({
-            base: { primary: '#3A4F66', uplight: '#4B6582', shadow: '#2A3B4D' },
-            effects: { glow: 'rgba(255, 255, 255, 0.15)', ambient: 'rgba(0, 0, 0, 0.08)' }
-          })},
+    base: { primary: '#3A4F66', uplight: '#4B6582', shadow: '#2A3B4D' },
+    effects: { glow: 'rgba(255, 255, 255, 0.15)', ambient: 'rgba(0, 0, 0, 0.08)' }
+  })},
           typography: ${JSON.stringify({
-            sizes: { verySmall: '5px', small: '9px', medium: '14px' }
-          })}
+    sizes: { verySmall: '5px', small: '9px', medium: '14px' }
+  })}
         },
         auth: {
           sallyportEnabled: true,

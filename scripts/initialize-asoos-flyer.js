@@ -94,7 +94,7 @@ class ASOOSIntelligenceSwarmInitializer {
    */
   async initialize() {
     try {
-    logger.info('🚀 Starting Intelligence Swarm system initialization...');
+      logger.info('🚀 Starting Intelligence Swarm system initialization...');
       
       // Step 1: Initialize Dr. Memoria LinkedIn App
       await this.initializeDrMemoria();

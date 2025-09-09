@@ -99,7 +99,7 @@ class EnterpriseValidationSystem {
     // SQL injection prevention
     this.sanitizers.set('sql', (input) => {
       return input
-        .replace(/'/g, "''")
+        .replace(/'/g, '\'\'')
         .replace(/--/g, '')
         .replace(/\/\*/g, '')
         .replace(/\*\//g, '')

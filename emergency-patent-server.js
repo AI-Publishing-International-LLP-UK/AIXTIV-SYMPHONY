@@ -185,9 +185,9 @@ app.listen(PORT, () => {
   console.log('🔒 Blockchain evidence: Immutable');
   console.log('');
   console.log('📞 Emergency endpoints:');
-  console.log(`   POST /emergency/file-patent`);
-  console.log(`   GET  /emergency/status`);
-  console.log(`   POST /emergency/deploy-swarm`);
+  console.log('   POST /emergency/file-patent');
+  console.log('   GET  /emergency/status');
+  console.log('   POST /emergency/deploy-swarm');
 });
 
 module.exports = app;

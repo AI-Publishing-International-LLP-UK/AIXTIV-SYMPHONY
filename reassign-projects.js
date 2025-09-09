@@ -80,14 +80,14 @@ async function findProjects() {
 
 function getPriorityColor(priority) {
   switch (priority?.toLowerCase()) {
-    case 'high':
-      return chalk.red('High');
-    case 'medium':
-      return chalk.yellow('Medium');
-    case 'low':
-      return chalk.blue('Low');
-    default:
-      return chalk.grey(priority || 'Unknown');
+  case 'high':
+    return chalk.red('High');
+  case 'medium':
+    return chalk.yellow('Medium');
+  case 'low':
+    return chalk.blue('Low');
+  default:
+    return chalk.grey(priority || 'Unknown');
   }
 }
 

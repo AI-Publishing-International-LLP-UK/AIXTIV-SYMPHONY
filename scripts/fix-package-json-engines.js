@@ -286,7 +286,7 @@ class PackageJsonFixer {
       }
 
       console.log('\n🎯 All package.json files now have Node.js engine specifications!');
-      console.log(`📄 Detailed report saved to: package-json-fixes-report.json`);
+      console.log('📄 Detailed report saved to: package-json-fixes-report.json');
 
       // Exit with appropriate code
       process.exit(this.errors.length > 0 ? 1 : 0);

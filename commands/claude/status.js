@@ -247,16 +247,16 @@ module.exports = async function agentStatus(options) {
 // Helper function to color status
 function getStatusColor(status, text) {
   switch (status) {
-    case 'available':
-      return chalk.green(text);
-    case 'busy':
-      return chalk.yellow(text);
-    case 'overloaded':
-      return chalk.red(text);
-    case 'offline':
-      return chalk.gray(text);
-    default:
-      return text;
+  case 'available':
+    return chalk.green(text);
+  case 'busy':
+    return chalk.yellow(text);
+  case 'overloaded':
+    return chalk.red(text);
+  case 'offline':
+    return chalk.gray(text);
+  default:
+    return text;
   }
 }
 

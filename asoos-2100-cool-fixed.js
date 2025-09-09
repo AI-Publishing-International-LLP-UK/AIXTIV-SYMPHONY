@@ -5,11 +5,11 @@ export default {
     // Public status endpoint - no auth required
     if (url.pathname === '/status' || url.pathname === '/api/status') {
       return new Response(JSON.stringify({
-        system: "AIXTIV SYMPHONY™",
-        status: "100% OPERATIONAL",
+        system: 'AIXTIV SYMPHONY™',
+        status: '100% OPERATIONAL',
         readiness: {
           percentage: 100,
-          certification: "PRODUCTION EXCELLENCE"
+          certification: 'PRODUCTION EXCELLENCE'
         },
         agents: {
           total: 20000000,
@@ -23,12 +23,12 @@ export default {
           r2_buckets: 17,
           regions: 5
         },
-        message: "Welcome to ASOOS - 100% Ready!",
+        message: 'Welcome to ASOOS - 100% Ready!',
         timestamp: new Date().toISOString()
       }, null, 2), {
         headers: { 
-          "Content-Type": "application/json",
-          "Cache-Control": "public, max-age=60"
+          'Content-Type': 'application/json',
+          'Cache-Control': 'public, max-age=60'
         }
       });
     }
@@ -146,11 +146,11 @@ export default {
 </html>
 `;
       return new Response(htmlContent, {
-        headers: { "Content-Type": "text/html" }
+        headers: { 'Content-Type': 'text/html' }
       });
     }
     
     // Default redirect to login for protected routes
     return Response.redirect(url.origin + '/auth/login', 302);
   }
-}
+};

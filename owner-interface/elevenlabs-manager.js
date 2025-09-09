@@ -182,7 +182,7 @@ class ElevenLabsManager {
       ...options.settings
     };
 
-    this.log(`🎤 Generating voice for Diamond SAO interface...`, 'VOICE');
+    this.log('🎤 Generating voice for Diamond SAO interface...', 'VOICE');
     this.log(`📝 Text length: ${text.length} characters`, 'INFO');
     this.log(`🔊 Voice ID: ${voiceId}`, 'INFO');
 
@@ -190,7 +190,7 @@ class ElevenLabsManager {
       const audio = await this.client.generate({
         voice: voiceId,
         text: text,
-        model_id: options.model || "eleven_multilingual_v2",
+        model_id: options.model || 'eleven_multilingual_v2',
         voice_settings: voiceSettings
       });
 
@@ -294,7 +294,7 @@ class ElevenLabsManager {
         diamondSAO: { id: this.voiceConfig.diamondSAOVoice, name: 'Josh' }
       };
       
-      this.log(`✅ Retrieved configured voices for Diamond SAO`, 'SUCCESS');
+      this.log('✅ Retrieved configured voices for Diamond SAO', 'SUCCESS');
       
       return {
         success: true,

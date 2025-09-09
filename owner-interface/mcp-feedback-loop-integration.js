@@ -506,20 +506,20 @@ class MCPFeedbackLoopIntegration {
     
     // Process different types of master updates
     switch (updateData.type) {
-      case 'template_update':
-        this.handleTemplateUpdate(tenantId, updateData);
-        break;
-      case 'capability_enhancement':
-        this.handleCapabilityEnhancement(tenantId, updateData);
-        break;
-      case 'security_update':
-        this.handleSecurityUpdate(tenantId, updateData);
-        break;
-      case 'shared_resource_update':
-        this.handleSharedResourceUpdate(tenantId, updateData);
-        break;
-      default:
-        console.log(`🔄 Generic update processed for ${tenantId}`);
+    case 'template_update':
+      this.handleTemplateUpdate(tenantId, updateData);
+      break;
+    case 'capability_enhancement':
+      this.handleCapabilityEnhancement(tenantId, updateData);
+      break;
+    case 'security_update':
+      this.handleSecurityUpdate(tenantId, updateData);
+      break;
+    case 'shared_resource_update':
+      this.handleSharedResourceUpdate(tenantId, updateData);
+      break;
+    default:
+      console.log(`🔄 Generic update processed for ${tenantId}`);
     }
     
     // Update sync metadata

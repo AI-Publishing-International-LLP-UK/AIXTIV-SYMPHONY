@@ -595,17 +595,17 @@ class EnterpriseSecurityAntiLock {
     
     // Basic fallbacks for critical functions
     switch (funcName) {
-      case 'activateRIX':
-        this.fallbackActivateRIX(args[0], args[1]);
-        break;
-      case 'sendCopilotMessage':
-        this.fallbackSendMessage();
-        break;
-      case 'toggleConversationMode':
-        this.fallbackToggleConversation();
-        break;
-      default:
-        console.log(`No fallback available for ${funcName}`);
+    case 'activateRIX':
+      this.fallbackActivateRIX(args[0], args[1]);
+      break;
+    case 'sendCopilotMessage':
+      this.fallbackSendMessage();
+      break;
+    case 'toggleConversationMode':
+      this.fallbackToggleConversation();
+      break;
+    default:
+      console.log(`No fallback available for ${funcName}`);
     }
   }
 

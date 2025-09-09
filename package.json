@@ -8,7 +8,9 @@
     "dev": "nodemon server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "fix-promises": "node utils/promiseHandler.js",
-    "start-safe": "node -r ./utils/promiseHandler.js index.js"
+    "start-safe": "node -r ./utils/promiseHandler.js index.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "keywords": [
     "gateway",
@@ -56,10 +58,11 @@
     "winston": "^3.17.0"
   },
   "devDependencies": {
+    "eslint": "^9.35.0",
     "nodemon": "^3.0.1"
   },
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=24.0.0",
     "npm": ">=9.0.0"
   }
 }

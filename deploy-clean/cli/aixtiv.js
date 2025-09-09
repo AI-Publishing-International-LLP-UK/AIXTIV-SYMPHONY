@@ -203,7 +203,7 @@ utils.config.data = utils.config.load();
 const ASOOS_BANNER = `
 ${gradient.rainbow('     _      _          _     _              ____                          _                           ')}
 ${gradient.rainbow('    / \\    (_) __  __ | |_  (_) __   __    / ___|  _   _  _ __ ___  _ __ | |__    ___   _ __   _   _ ')}
-${gradient.rainbow("   / _ \\   | | \\ \\/ / | __| | | \\ \\ / /    \\___ \\ | | | || '_ ` _ \\| '_ \\| '_ \\  / _ \\ | '_ \\ | | | |")}
+${gradient.rainbow('   / _ \\   | | \\ \\/ / | __| | | \\ \\ / /    \\___ \\ | | | || \'_ ` _ \\| \'_ \\| \'_ \\  / _ \\ | \'_ \\ | | | |')}
 ${gradient.rainbow('  / ___ \\  | |  >  <  | |_  | |  \\ V /      ___) || |_| || | | | | | |_) | | | || (_) || | | || |_| |')}
 ${gradient.rainbow(' /_/   \\_\\ |_| /_/\\_\\  \\__| |_|   \\_/      |____/  \\__, ||_| |_| |_| .__/|_| |_| \\___/ |_| |_| \\__, |')}
 ${gradient.rainbow('                                                    |___/            |_|                        |___/ ')}
@@ -311,30 +311,30 @@ utils.ui = {
   // Helper for status coloring
   colorizeStatus: (status) => {
     switch (status) {
-      case 'active':
-        return chalk.green('Active');
-      case 'offline':
-        return chalk.red('Offline');
-      case 'pending':
-        return chalk.yellow('Pending');
-      case 'in-progress':
-        return chalk.blue('In Progress');
-      default:
-        return status;
+    case 'active':
+      return chalk.green('Active');
+    case 'offline':
+      return chalk.red('Offline');
+    case 'pending':
+      return chalk.yellow('Pending');
+    case 'in-progress':
+      return chalk.blue('In Progress');
+    default:
+      return status;
     }
   },
 
   // Helper for priority coloring
   colorizeByPriority: (priority) => {
     switch (priority.toLowerCase()) {
-      case 'high':
-        return chalk.red('High');
-      case 'medium':
-        return chalk.yellow('Medium');
-      case 'low':
-        return chalk.green('Low');
-      default:
-        return priority;
+    case 'high':
+      return chalk.red('High');
+    case 'medium':
+      return chalk.yellow('Medium');
+    case 'low':
+      return chalk.green('Low');
+    default:
+      return priority;
     }
   },
 };

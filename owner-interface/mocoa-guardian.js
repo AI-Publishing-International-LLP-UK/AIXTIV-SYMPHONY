@@ -103,7 +103,7 @@ class MOCOAGuardian {
     }
     
     if (currentChecksum !== storedData.checksum) {
-      this.log(`File integrity compromised! Checksum mismatch`, 'ERROR');
+      this.log('File integrity compromised! Checksum mismatch', 'ERROR');
       this.log(`Expected: ${storedData.checksum.substring(0, 12)}...`);
       this.log(`Current:  ${currentChecksum.substring(0, 12)}...`);
       return { changed: true, currentContent, storedData };
@@ -292,30 +292,30 @@ if (require.main === module) {
   const command = process.argv[2] || 'protect';
   
   switch (command) {
-    case 'protect':
-      guardian.protect().catch(error => {
-        console.error('Guardian failed:', error.message);
-        process.exit(1);
-      });
-      break;
-      
-    case 'status':
-      guardian.status().then(status => {
-        process.exit(status.protected && status.integrity ? 0 : 1);
-      });
-      break;
-      
-    case 'create':
-      guardian.createProtectedVersion();
-      console.log('✅ Protected version created');
-      break;
-      
-    default:
-      console.log('Usage: node mocoa-guardian.js [protect|status|create]');
-      console.log('  protect - Start file monitoring and protection');
-      console.log('  status  - Check current protection status');
-      console.log('  create  - Create a protected version now');
+  case 'protect':
+    guardian.protect().catch(error => {
+      console.error('Guardian failed:', error.message);
       process.exit(1);
+    });
+    break;
+      
+  case 'status':
+    guardian.status().then(status => {
+      process.exit(status.protected && status.integrity ? 0 : 1);
+    });
+    break;
+      
+  case 'create':
+    guardian.createProtectedVersion();
+    console.log('✅ Protected version created');
+    break;
+      
+  default:
+    console.log('Usage: node mocoa-guardian.js [protect|status|create]');
+    console.log('  protect - Start file monitoring and protection');
+    console.log('  status  - Check current protection status');
+    console.log('  create  - Create a protected version now');
+    process.exit(1);
   }
 }
 

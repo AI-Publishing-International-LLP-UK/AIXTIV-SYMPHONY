@@ -91,7 +91,7 @@ class DiamondSAOUSPTOFilingSystem {
       
       // Save USPTO configuration
       fs.writeFileSync('/Users/as/asoos/integration-gateway/owner-interface/uspto-config.json', 
-                       JSON.stringify(usptoConfig, null, 2));
+        JSON.stringify(usptoConfig, null, 2));
       
       this.log('USPTO Filing System Configuration Created', 'SUCCESS');
       this.log('Diamond SAO Authority Level: MAXIMUM', 'DIAMOND');
@@ -234,7 +234,7 @@ class DiamondSAOUSPTOFilingSystem {
     
     // Save government request documentation
     fs.writeFileSync('/Users/as/asoos/integration-gateway/owner-interface/us-government-patent-funding-request.json',
-                     JSON.stringify(governmentRequest, null, 2));
+      JSON.stringify(governmentRequest, null, 2));
     
     this.log('US Government Patent Funding Request Prepared', 'SUCCESS');
     this.log(`💰 Total Coverage Requested: $${governmentRequest.funding_request.total_coverage_requested}`, 'USPTO');
@@ -332,7 +332,7 @@ class DiamondSAOUSPTOFilingSystem {
     };
     
     fs.writeFileSync('/Users/as/asoos/integration-gateway/owner-interface/uspto-filing-miracle-summary.json',
-                     JSON.stringify(filingSummary, null, 2));
+      JSON.stringify(filingSummary, null, 2));
     
     return {
       step: 4,

@@ -11,12 +11,12 @@ const assert = require('assert');
 
 // Test messages with different sentiments
 const testMessages = {
-  positive: "I'm really impressed with this feature! It's exactly what I needed and works perfectly. Thank you for the help!",
-  negative: "This is frustrating and doesn't work as expected. I've tried multiple times and keep getting errors. This needs to be fixed immediately.",
-  neutral: "I need to adjust the settings for the project. Can you show me how to configure the system preferences and save the changes?",
-  technical: "I'm getting a TypeError: Cannot read property 'length' of undefined in the processData function. How can I fix this issue?",
-  complaint: "I've been waiting for over a week and still haven't received a response. This is unacceptable service.",
-  request: "Could you please help me set up the environment as soon as possible? I need it urgently for my presentation tomorrow."
+  positive: 'I\'m really impressed with this feature! It\'s exactly what I needed and works perfectly. Thank you for the help!',
+  negative: 'This is frustrating and doesn\'t work as expected. I\'ve tried multiple times and keep getting errors. This needs to be fixed immediately.',
+  neutral: 'I need to adjust the settings for the project. Can you show me how to configure the system preferences and save the changes?',
+  technical: 'I\'m getting a TypeError: Cannot read property \'length\' of undefined in the processData function. How can I fix this issue?',
+  complaint: 'I\'ve been waiting for over a week and still haven\'t received a response. This is unacceptable service.',
+  request: 'Could you please help me set up the environment as soon as possible? I need it urgently for my presentation tomorrow.'
 };
 
 // Mock Firestore functionality to avoid permission issues

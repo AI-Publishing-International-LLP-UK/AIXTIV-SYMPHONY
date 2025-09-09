@@ -1,7 +1,7 @@
 function _checkInRHS(e) {
   if (Object(e) !== e)
     throw TypeError(
-      "right-hand side of 'in' should be an object, got " + (null !== e ? typeof e : 'null')
+      'right-hand side of \'in\' should be an object, got ' + (null !== e ? typeof e : 'null')
     );
   return e;
 }
@@ -278,8 +278,8 @@ var Puppeteer = (function (
       return value instanceof P
         ? value
         : new P(function (resolve) {
-            resolve(value);
-          });
+          resolve(value);
+        });
     }
     return new (P || (P = Promise))(function (resolve, reject) {
       function fulfilled(value) {
@@ -349,50 +349,50 @@ var Puppeteer = (function (
             return t;
           if (((y = 0), t)) op = [op[0] & 2, t.value];
           switch (op[0]) {
-            case 0:
-            case 1:
+          case 0:
+          case 1:
+            t = op;
+            break;
+          case 4:
+            _.label++;
+            return {
+              value: op[1],
+              done: false,
+            };
+          case 5:
+            _.label++;
+            y = op[1];
+            op = [0];
+            continue;
+          case 7:
+            op = _.ops.pop();
+            _.trys.pop();
+            continue;
+          default:
+            if (
+              !((t = _.trys), (t = t.length > 0 && t[t.length - 1])) &&
+                (op[0] === 6 || op[0] === 2)
+            ) {
+              _ = 0;
+              continue;
+            }
+            if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) {
+              _.label = op[1];
+              break;
+            }
+            if (op[0] === 6 && _.label < t[1]) {
+              _.label = t[1];
               t = op;
               break;
-            case 4:
-              _.label++;
-              return {
-                value: op[1],
-                done: false,
-              };
-            case 5:
-              _.label++;
-              y = op[1];
-              op = [0];
-              continue;
-            case 7:
-              op = _.ops.pop();
-              _.trys.pop();
-              continue;
-            default:
-              if (
-                !((t = _.trys), (t = t.length > 0 && t[t.length - 1])) &&
-                (op[0] === 6 || op[0] === 2)
-              ) {
-                _ = 0;
-                continue;
-              }
-              if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) {
-                _.label = op[1];
-                break;
-              }
-              if (op[0] === 6 && _.label < t[1]) {
-                _.label = t[1];
-                t = op;
-                break;
-              }
-              if (t && _.label < t[2]) {
-                _.label = t[2];
-                _.ops.push(op);
-                break;
-              }
-              if (t[2]) _.ops.pop();
-              _.trys.pop();
-              continue;
+            }
+            if (t && _.label < t[2]) {
+              _.label = t[2];
+              _.ops.push(op);
+              break;
+            }
+            if (t[2]) _.ops.pop();
+            _.trys.pop();
+            continue;
           }
           op = body.call(thisArg, _);
         } catch (e) {
@@ -519,14 +519,14 @@ var Puppeteer = (function (
     return m
       ? m.call(o)
       : ((o = typeof __values === 'function' ? __values(o) : o[Symbol.iterator]()),
-        (i = {}),
-        verb('next'),
-        verb('throw'),
-        verb('return'),
-        (i[Symbol.asyncIterator] = function () {
-          return this;
-        }),
-        i);
+      (i = {}),
+      verb('next'),
+      verb('throw'),
+      verb('return'),
+      (i[Symbol.asyncIterator] = function () {
+        return this;
+      }),
+      i);
     function verb(n) {
       i[n] =
         o[n] &&
@@ -1104,34 +1104,34 @@ var Puppeteer = (function (
       _this.shouldUnsubscribe = shouldUnsubscribe;
       _this._next = onNext
         ? function (value) {
-            try {
-              onNext(value);
-            } catch (err) {
-              destination.error(err);
-            }
+          try {
+            onNext(value);
+          } catch (err) {
+            destination.error(err);
           }
+        }
         : _super.prototype._next;
       _this._error = onError
         ? function (err) {
-            try {
-              onError(err);
-            } catch (err2) {
-              destination.error(err2);
-            } finally {
-              this.unsubscribe();
-            }
+          try {
+            onError(err);
+          } catch (err2) {
+            destination.error(err2);
+          } finally {
+            this.unsubscribe();
           }
+        }
         : _super.prototype._error;
       _this._complete = onComplete
         ? function () {
-            try {
-              onComplete();
-            } catch (err) {
-              destination.error(err);
-            } finally {
-              this.unsubscribe();
-            }
+          try {
+            onComplete();
+          } catch (err) {
+            destination.error(err);
+          } finally {
+            this.unsubscribe();
           }
+        }
         : _super.prototype._complete;
       return _this;
     }
@@ -1646,7 +1646,7 @@ var Puppeteer = (function (
   function createInvalidObservableTypeError(input) {
     return new TypeError(
       'You provided ' +
-        (input !== null && typeof input === 'object' ? 'an invalid object' : "'" + input + "'") +
+        (input !== null && typeof input === 'object' ? 'an invalid object' : '\'' + input + '\'') +
         ' where a stream was expected. You can provide an Observable, Promise, ReadableStream, Array, AsyncIterable, or Iterable.'
     );
   }
@@ -1671,34 +1671,34 @@ var Puppeteer = (function (
       var reader, _a, value, done;
       return __generator(this, function (_b) {
         switch (_b.label) {
-          case 0:
-            reader = readableStream.getReader();
-            _b.label = 1;
-          case 1:
-            _b.trys.push([1, , 9, 10]);
-            _b.label = 2;
-          case 2:
-            return [4, __await(reader.read())];
-          case 3:
-            (_a = _b.sent()), (value = _a.value), (done = _a.done);
-            if (!done) return [3, 5];
-            return [4, __await(void 0)];
-          case 4:
-            return [2, _b.sent()];
-          case 5:
-            return [4, __await(value)];
-          case 6:
-            return [4, _b.sent()];
-          case 7:
-            _b.sent();
-            return [3, 2];
-          case 8:
-            return [3, 10];
-          case 9:
-            reader.releaseLock();
-            return [7];
-          case 10:
-            return [2];
+        case 0:
+          reader = readableStream.getReader();
+          _b.label = 1;
+        case 1:
+          _b.trys.push([1, , 9, 10]);
+          _b.label = 2;
+        case 2:
+          return [4, __await(reader.read())];
+        case 3:
+          (_a = _b.sent()), (value = _a.value), (done = _a.done);
+          if (!done) return [3, 5];
+          return [4, __await(void 0)];
+        case 4:
+          return [2, _b.sent()];
+        case 5:
+          return [4, __await(value)];
+        case 6:
+          return [4, _b.sent()];
+        case 7:
+          _b.sent();
+          return [3, 2];
+        case 8:
+          return [3, 10];
+        case 9:
+          reader.releaseLock();
+          return [7];
+        case 10:
+          return [2];
         }
       });
     });
@@ -1814,48 +1814,48 @@ var Puppeteer = (function (
       var value, e_2_1;
       return __generator(this, function (_b) {
         switch (_b.label) {
-          case 0:
-            _b.trys.push([0, 5, 6, 11]);
-            asyncIterable_1 = __asyncValues(asyncIterable);
-            _b.label = 1;
-          case 1:
-            return [4, asyncIterable_1.next()];
-          case 2:
-            if (!((asyncIterable_1_1 = _b.sent()), !asyncIterable_1_1.done)) return [3, 4];
-            value = asyncIterable_1_1.value;
-            subscriber.next(value);
-            if (subscriber.closed) {
-              return [2];
-            }
-            _b.label = 3;
-          case 3:
-            return [3, 1];
-          case 4:
-            return [3, 11];
-          case 5:
-            e_2_1 = _b.sent();
-            e_2 = {
-              error: e_2_1,
-            };
-            return [3, 11];
-          case 6:
-            _b.trys.push([6, , 9, 10]);
-            if (!(asyncIterable_1_1 && !asyncIterable_1_1.done && (_a = asyncIterable_1.return)))
-              return [3, 8];
-            return [4, _a.call(asyncIterable_1)];
-          case 7:
-            _b.sent();
-            _b.label = 8;
-          case 8:
-            return [3, 10];
-          case 9:
-            if (e_2) throw e_2.error;
-            return [7];
-          case 10:
-            return [7];
-          case 11:
-            subscriber.complete();
+        case 0:
+          _b.trys.push([0, 5, 6, 11]);
+          asyncIterable_1 = __asyncValues(asyncIterable);
+          _b.label = 1;
+        case 1:
+          return [4, asyncIterable_1.next()];
+        case 2:
+          if (!((asyncIterable_1_1 = _b.sent()), !asyncIterable_1_1.done)) return [3, 4];
+          value = asyncIterable_1_1.value;
+          subscriber.next(value);
+          if (subscriber.closed) {
             return [2];
+          }
+          _b.label = 3;
+        case 3:
+          return [3, 1];
+        case 4:
+          return [3, 11];
+        case 5:
+          e_2_1 = _b.sent();
+          e_2 = {
+            error: e_2_1,
+          };
+          return [3, 11];
+        case 6:
+          _b.trys.push([6, , 9, 10]);
+          if (!(asyncIterable_1_1 && !asyncIterable_1_1.done && (_a = asyncIterable_1.return)))
+            return [3, 8];
+          return [4, _a.call(asyncIterable_1)];
+        case 7:
+          _b.sent();
+          _b.label = 8;
+        case 8:
+          return [3, 10];
+        case 9:
+          if (e_2) throw e_2.error;
+          return [7];
+        case 10:
+          return [7];
+        case 11:
+          subscriber.complete();
+          return [2];
         }
       });
     });
@@ -2275,10 +2275,10 @@ var Puppeteer = (function (
     var _a = __read(
         isEventTarget(target)
           ? eventTargetMethods.map(function (methodName) {
-              return function (handler) {
-                return target[methodName](eventName, handler, options);
-              };
-            })
+            return function (handler) {
+              return target[methodName](eventName, handler, options);
+            };
+          })
           : isNodeStyleEventEmitter(target)
             ? nodeEventEmitterMethods.map(toCommonHandlerRegistry(target, eventName))
             : isJQueryStyleEventEmitter(target)
@@ -2476,21 +2476,21 @@ var Puppeteer = (function (
   function take(count) {
     return count <= 0
       ? function () {
-          return EMPTY;
-        }
+        return EMPTY;
+      }
       : operate(function (source, subscriber) {
-          var seen = 0;
-          source.subscribe(
-            createOperatorSubscriber(subscriber, function (value) {
-              if (++seen <= count) {
-                subscriber.next(value);
-                if (count <= seen) {
-                  subscriber.complete();
-                }
+        var seen = 0;
+        source.subscribe(
+          createOperatorSubscriber(subscriber, function (value) {
+            if (++seen <= count) {
+              subscriber.next(value);
+              if (count <= seen) {
+                subscriber.complete();
               }
-            })
-          );
-        });
+            }
+          })
+        );
+      });
   }
 
   // ../../node_modules/rxjs/dist/esm5/internal/operators/ignoreElements.js
@@ -2532,15 +2532,15 @@ var Puppeteer = (function (
       return source.pipe(
         predicate
           ? filter(function (v, i) {
-              return predicate(v, i, source);
-            })
+            return predicate(v, i, source);
+          })
           : identity,
         take(1),
         hasDefaultValue
           ? defaultIfEmpty(defaultValue)
           : throwIfEmpty(function () {
-              return new EmptyError();
-            })
+            return new EmptyError();
+          })
       );
     };
   }
@@ -2580,8 +2580,8 @@ var Puppeteer = (function (
     return !otherSources.length
       ? identity
       : operate(function (source, subscriber) {
-          raceInit(__spreadArray([source], __read(otherSources)))(subscriber);
-        });
+        raceInit(__spreadArray([source], __read(otherSources)))(subscriber);
+      });
   }
 
   // ../../node_modules/rxjs/dist/esm5/internal/operators/retry.js
@@ -2605,62 +2605,62 @@ var Puppeteer = (function (
     return count <= 0
       ? identity
       : operate(function (source, subscriber) {
-          var soFar = 0;
-          var innerSub;
-          var subscribeForRetry = function () {
-            var syncUnsub = false;
-            innerSub = source.subscribe(
-              createOperatorSubscriber(
-                subscriber,
-                function (value) {
-                  if (resetOnSuccess) {
-                    soFar = 0;
-                  }
-                  subscriber.next(value);
-                },
-                void 0,
-                function (err) {
-                  if (soFar++ < count) {
-                    var resub_1 = function () {
-                      if (innerSub) {
-                        innerSub.unsubscribe();
-                        innerSub = null;
-                        subscribeForRetry();
-                      } else {
-                        syncUnsub = true;
-                      }
-                    };
-                    if (delay2 != null) {
-                      var notifier =
-                        typeof delay2 === 'number' ? timer(delay2) : innerFrom(delay2(err, soFar));
-                      var notifierSubscriber_1 = createOperatorSubscriber(
-                        subscriber,
-                        function () {
-                          notifierSubscriber_1.unsubscribe();
-                          resub_1();
-                        },
-                        function () {
-                          subscriber.complete();
-                        }
-                      );
-                      notifier.subscribe(notifierSubscriber_1);
-                    } else {
-                      resub_1();
-                    }
-                  } else {
-                    subscriber.error(err);
-                  }
+        var soFar = 0;
+        var innerSub;
+        var subscribeForRetry = function () {
+          var syncUnsub = false;
+          innerSub = source.subscribe(
+            createOperatorSubscriber(
+              subscriber,
+              function (value) {
+                if (resetOnSuccess) {
+                  soFar = 0;
                 }
-              )
-            );
-            if (syncUnsub) {
-              innerSub.unsubscribe();
-              innerSub = null;
-              subscribeForRetry();
-            }
-          };
-          subscribeForRetry();
-        });
+                subscriber.next(value);
+              },
+              void 0,
+              function (err) {
+                if (soFar++ < count) {
+                  var resub_1 = function () {
+                    if (innerSub) {
+                      innerSub.unsubscribe();
+                      innerSub = null;
+                      subscribeForRetry();
+                    } else {
+                      syncUnsub = true;
+                    }
+                  };
+                  if (delay2 != null) {
+                    var notifier =
+                        typeof delay2 === 'number' ? timer(delay2) : innerFrom(delay2(err, soFar));
+                    var notifierSubscriber_1 = createOperatorSubscriber(
+                      subscriber,
+                      function () {
+                        notifierSubscriber_1.unsubscribe();
+                        resub_1();
+                      },
+                      function () {
+                        subscriber.complete();
+                      }
+                    );
+                    notifier.subscribe(notifierSubscriber_1);
+                  } else {
+                    resub_1();
+                  }
+                } else {
+                  subscriber.error(err);
+                }
+              }
+            )
+          );
+          if (syncUnsub) {
+            innerSub.unsubscribe();
+            innerSub = null;
+            subscribeForRetry();
+          }
+        };
+        subscribeForRetry();
+      });
   }
 
   // ../../node_modules/rxjs/dist/esm5/internal/operators/startWith.js
@@ -2742,56 +2742,56 @@ var Puppeteer = (function (
     var tapObserver =
       isFunction(observerOrNext) || error || complete
         ? {
-            next: observerOrNext,
-            error,
-            complete,
-          }
+          next: observerOrNext,
+          error,
+          complete,
+        }
         : observerOrNext;
     return tapObserver
       ? operate(function (source, subscriber) {
-          var _a;
-          (_a = tapObserver.subscribe) === null || _a === void 0 ? void 0 : _a.call(tapObserver);
-          var isUnsub = true;
-          source.subscribe(
-            createOperatorSubscriber(
-              subscriber,
-              function (value) {
-                var _a2;
-                (_a2 = tapObserver.next) === null || _a2 === void 0
-                  ? void 0
-                  : _a2.call(tapObserver, value);
-                subscriber.next(value);
-              },
-              function () {
-                var _a2;
-                isUnsub = false;
-                (_a2 = tapObserver.complete) === null || _a2 === void 0
+        var _a;
+        (_a = tapObserver.subscribe) === null || _a === void 0 ? void 0 : _a.call(tapObserver);
+        var isUnsub = true;
+        source.subscribe(
+          createOperatorSubscriber(
+            subscriber,
+            function (value) {
+              var _a2;
+              (_a2 = tapObserver.next) === null || _a2 === void 0
+                ? void 0
+                : _a2.call(tapObserver, value);
+              subscriber.next(value);
+            },
+            function () {
+              var _a2;
+              isUnsub = false;
+              (_a2 = tapObserver.complete) === null || _a2 === void 0
+                ? void 0
+                : _a2.call(tapObserver);
+              subscriber.complete();
+            },
+            function (err) {
+              var _a2;
+              isUnsub = false;
+              (_a2 = tapObserver.error) === null || _a2 === void 0
+                ? void 0
+                : _a2.call(tapObserver, err);
+              subscriber.error(err);
+            },
+            function () {
+              var _a2, _b;
+              if (isUnsub) {
+                (_a2 = tapObserver.unsubscribe) === null || _a2 === void 0
                   ? void 0
                   : _a2.call(tapObserver);
-                subscriber.complete();
-              },
-              function (err) {
-                var _a2;
-                isUnsub = false;
-                (_a2 = tapObserver.error) === null || _a2 === void 0
-                  ? void 0
-                  : _a2.call(tapObserver, err);
-                subscriber.error(err);
-              },
-              function () {
-                var _a2, _b;
-                if (isUnsub) {
-                  (_a2 = tapObserver.unsubscribe) === null || _a2 === void 0
-                    ? void 0
-                    : _a2.call(tapObserver);
-                }
-                (_b = tapObserver.finalize) === null || _b === void 0
-                  ? void 0
-                  : _b.call(tapObserver);
               }
-            )
-          );
-        })
+              (_b = tapObserver.finalize) === null || _b === void 0
+                ? void 0
+                : _b.call(tapObserver);
+            }
+          )
+        );
+      })
       : identity;
   }
 
@@ -2832,7 +2832,7 @@ var Puppeteer = (function (
           i.slice().map(function (n2) {
             n2(e);
           }),
-          (i = n.get('*')) &&
+        (i = n.get('*')) &&
             i.slice().map(function (n2) {
               n2(t, e);
             });
@@ -3858,12 +3858,12 @@ var Puppeteer = (function (
     return ms === 0
       ? NEVER
       : timer(ms).pipe(
-          map(() => {
-            throw new TimeoutError(`Timed out after waiting ${ms}ms`, {
-              cause,
-            });
-          })
-        );
+        map(() => {
+          throw new TimeoutError(`Timed out after waiting ${ms}ms`, {
+            cause,
+          });
+        })
+      );
   }
   /**
    * @internal
@@ -3987,16 +3987,16 @@ var Puppeteer = (function (
   function fromAbortSignal(signal, cause) {
     return signal
       ? fromEvent(signal, 'abort').pipe(
-          map(() => {
-            if (signal.reason instanceof Error) {
-              signal.reason.cause = cause;
-              throw signal.reason;
-            }
-            throw new Error(signal.reason, {
-              cause,
-            });
-          })
-        )
+        map(() => {
+          if (signal.reason instanceof Error) {
+            signal.reason.cause = cause;
+            throw signal.reason;
+          }
+          throw new Error(signal.reason, {
+            cause,
+          });
+        })
+      )
       : NEVER;
   }
   /**
@@ -4228,7 +4228,7 @@ var Puppeteer = (function (
           }
           return value;
         });
-        // eslint-disable-next-line no-restricted-syntax
+         
         return await Promise.race(promises);
       } finally {
         for (const deferred of deferredWithTimeout) {
@@ -4439,7 +4439,7 @@ var Puppeteer = (function (
         (_this$screenshotOpera2 = _this$screenshotOpera++),
         _this$screenshotOpera)
       ),
-        _this$screenshotOpera2;
+      _this$screenshotOpera2;
       return mutex.acquire(() => {
         var _this$screenshotOpera3, _this$screenshotOpera4;
         _classPrivateFieldSet(
@@ -4449,7 +4449,7 @@ var Puppeteer = (function (
           (_this$screenshotOpera4 = _this$screenshotOpera3--),
           _this$screenshotOpera3)
         ),
-          _this$screenshotOpera4;
+        _this$screenshotOpera4;
         if (_classPrivateFieldGet(_screenshotOperationsCount, this) === 0) {
           // Remove the mutex to indicate no ongoing screenshot operation.
           _classPrivateFieldSet(_pageScreenshotMutex, this, undefined);
@@ -4764,7 +4764,7 @@ var Puppeteer = (function (
     } catch (err) {
       if (
         err.message.includes(
-          `Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive`
+          'Refused to evaluate a string as JavaScript because \'unsafe-eval\' is not an allowed source of script in the following Content Security Policy directive'
         )
       ) {
         // The content security policy does not allow Function eval. Let's
@@ -4899,9 +4899,9 @@ var Puppeteer = (function (
       typeof SuppressedError === 'function'
         ? SuppressedError
         : function (error, suppressed, message) {
-            var e = new Error(message);
-            return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
-          }
+          var e = new Error(message);
+          return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
+        }
     );
   const DEFAULT_BATCH_SIZE = 20;
   /**
@@ -5109,9 +5109,9 @@ var Puppeteer = (function (
       typeof SuppressedError === 'function'
         ? SuppressedError
         : function (error, suppressed, message) {
-            var e = new Error(message);
-            return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
-          }
+          var e = new Error(message);
+          return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
+        }
     );
   /**
    * @internal
@@ -5482,10 +5482,10 @@ var Puppeteer = (function (
       const module = {};
       ${source}
       ${[..._classPrivateFieldGet(_amendments, this)]
-        .map((statement) => {
-          return `(${statement})(module.exports.default);`;
-        })
-        .join('')}
+    .map((statement) => {
+      return `(${statement})(module.exports.default);`;
+    })
+    .join('')}
       return module.exports.default;
     })()`;
   }
@@ -5542,10 +5542,10 @@ var Puppeteer = (function (
         !_classPrivateFieldGet(_handlers2, this).has(name),
         `Cannot register over existing handler: ${name}`
       );
-      assert(/^[a-zA-Z]+$/.test(name), `Custom query handler names may only contain [a-zA-Z]`);
+      assert(/^[a-zA-Z]+$/.test(name), 'Custom query handler names may only contain [a-zA-Z]');
       assert(
         handler.queryAll || handler.queryOne,
-        `At least one query method must be implemented.`
+        'At least one query method must be implemented.'
       );
       const Handler =
         ((_Class = class Handler extends QueryHandler {}),
@@ -5705,14 +5705,14 @@ var Puppeteer = (function (
   var TRIM_TOKENS = /* @__PURE__ */ new Set(['combinator', 'comma']);
   var getArgumentPatternByType = (type) => {
     switch (type) {
-      case 'pseudo-element':
-      case 'pseudo-class':
-        return new RegExp(
-          TOKENS[type].source.replace('(?<argument>\xB6*)', '(?<argument>.*)'),
-          'gu'
-        );
-      default:
-        return TOKENS[type];
+    case 'pseudo-element':
+    case 'pseudo-class':
+      return new RegExp(
+        TOKENS[type].source.replace('(?<argument>\xB6*)', '(?<argument>.*)'),
+        'gu'
+      );
+    default:
+      return TOKENS[type];
     }
   };
   function gobbleParens(text, offset) {
@@ -5721,12 +5721,12 @@ var Puppeteer = (function (
     for (; offset < text.length; offset++) {
       const char = text[offset];
       switch (char) {
-        case '(':
-          ++nesting;
-          break;
-        case ')':
-          --nesting;
-          break;
+      case '(':
+        ++nesting;
+        break;
+      case ')':
+        --nesting;
+        break;
       }
       result += char;
       if (nesting === 0) {
@@ -5773,15 +5773,15 @@ var Puppeteer = (function (
     let offset = 0;
     for (const token of tokens) {
       switch (typeof token) {
-        case 'string':
-          throw new Error(`Unexpected sequence ${token} found at index ${offset}`);
-        case 'object':
-          offset += token.content.length;
-          token.pos = [offset - token.content.length, offset];
-          if (TRIM_TOKENS.has(token.type)) {
-            token.content = token.content.trim() || ' ';
-          }
-          break;
+      case 'string':
+        throw new Error(`Unexpected sequence ${token} found at index ${offset}`);
+      case 'object':
+        offset += token.content.length;
+        token.pos = [offset - token.content.length, offset];
+        if (TRIM_TOKENS.has(token.type)) {
+          token.content = token.content.trim() || ' ';
+        }
+        break;
       }
     }
     return tokens;
@@ -5857,16 +5857,16 @@ var Puppeteer = (function (
       return listOrNode.map((token) => token.content).join('');
     }
     switch (listOrNode.type) {
-      case 'list':
-        return listOrNode.list.map(stringify).join(',');
-      case 'relative':
-        return listOrNode.combinator + stringify(listOrNode.right);
-      case 'complex':
-        return stringify(listOrNode.left) + listOrNode.combinator + stringify(listOrNode.right);
-      case 'compound':
-        return listOrNode.list.map(stringify).join('');
-      default:
-        return listOrNode.content;
+    case 'list':
+      return listOrNode.list.map(stringify).join(',');
+    case 'relative':
+      return listOrNode.combinator + stringify(listOrNode.right);
+    case 'complex':
+      return stringify(listOrNode.left) + listOrNode.combinator + stringify(listOrNode.right);
+    case 'compound':
+      return listOrNode.list.map(stringify).join('');
+    default:
+      return listOrNode.content;
     }
   }
 
@@ -5882,7 +5882,7 @@ var Puppeteer = (function (
     if (text.length <= 1) {
       return text;
     }
-    if ((text[0] === '"' || text[0] === "'") && text.endsWith(text[0])) {
+    if ((text[0] === '"' || text[0] === '\'') && text.endsWith(text[0])) {
       text = text.slice(1, -1);
     }
     return text.replace(ESCAPE_REGEXP, (match) => {
@@ -5906,60 +5906,60 @@ var Puppeteer = (function (
     const storage = [];
     for (const token of tokens) {
       switch (token.type) {
-        case 'combinator':
-          switch (token.content) {
-            case '>>>' /* PCombinator.Descendent */:
-              isPureCSS = false;
-              if (storage.length) {
-                compoundSelector.push(stringify(storage));
-                storage.splice(0);
-              }
-              compoundSelector = [];
-              complexSelector.push('>>>' /* PCombinator.Descendent */);
-              complexSelector.push(compoundSelector);
-              continue;
-            case '>>>>' /* PCombinator.Child */:
-              isPureCSS = false;
-              if (storage.length) {
-                compoundSelector.push(stringify(storage));
-                storage.splice(0);
-              }
-              compoundSelector = [];
-              complexSelector.push('>>>>' /* PCombinator.Child */);
-              complexSelector.push(compoundSelector);
-              continue;
-          }
-          break;
-        case 'pseudo-element':
-          if (!token.name.startsWith('-p-')) {
-            break;
-          }
+      case 'combinator':
+        switch (token.content) {
+        case '>>>' /* PCombinator.Descendent */:
           isPureCSS = false;
           if (storage.length) {
             compoundSelector.push(stringify(storage));
             storage.splice(0);
           }
-          const name = token.name.slice(3);
-          if (name === 'aria') {
-            hasAria = true;
-          }
-          compoundSelector.push({
-            name,
-            value: unquote(token.argument ?? ''),
-          });
+          compoundSelector = [];
+          complexSelector.push('>>>' /* PCombinator.Descendent */);
+          complexSelector.push(compoundSelector);
           continue;
-        case 'pseudo-class':
-          hasPseudoClasses = true;
-          break;
-        case 'comma':
+        case '>>>>' /* PCombinator.Child */:
+          isPureCSS = false;
           if (storage.length) {
             compoundSelector.push(stringify(storage));
             storage.splice(0);
           }
           compoundSelector = [];
-          complexSelector = [compoundSelector];
-          selectors.push(complexSelector);
+          complexSelector.push('>>>>' /* PCombinator.Child */);
+          complexSelector.push(compoundSelector);
           continue;
+        }
+        break;
+      case 'pseudo-element':
+        if (!token.name.startsWith('-p-')) {
+          break;
+        }
+        isPureCSS = false;
+        if (storage.length) {
+          compoundSelector.push(stringify(storage));
+          storage.splice(0);
+        }
+        const name = token.name.slice(3);
+        if (name === 'aria') {
+          hasAria = true;
+        }
+        compoundSelector.push({
+          name,
+          value: unquote(token.argument ?? ''),
+        });
+        continue;
+      case 'pseudo-class':
+        hasPseudoClasses = true;
+        break;
+      case 'comma':
+        if (storage.length) {
+          compoundSelector.push(stringify(storage));
+          storage.splice(0);
+        }
+        compoundSelector = [];
+        complexSelector = [compoundSelector];
+        selectors.push(complexSelector);
+        continue;
       }
       storage.push(token);
     }
@@ -6162,9 +6162,9 @@ var Puppeteer = (function (
       typeof SuppressedError === 'function'
         ? SuppressedError
         : function (error, suppressed, message) {
-            var e = new Error(message);
-            return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
-          }
+          var e = new Error(message);
+          return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
+        }
     );
   const instances = new WeakSet();
   function moveable(Class, _) {
@@ -6320,9 +6320,9 @@ var Puppeteer = (function (
         var result = (0, decorators[i])(
           kind === 'accessor'
             ? {
-                get: descriptor.get,
-                set: descriptor.set,
-              }
+              get: descriptor.get,
+              set: descriptor.set,
+            }
             : descriptor[key],
           context
         );
@@ -6418,9 +6418,9 @@ var Puppeteer = (function (
       typeof SuppressedError === 'function'
         ? SuppressedError
         : function (error, suppressed, message) {
-            var e = new Error(message);
-            return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
-          }
+          var e = new Error(message);
+          return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
+        }
     );
   /**
    * Represents a reference to a JavaScript object. Instances can be created using
@@ -6655,9 +6655,9 @@ var Puppeteer = (function (
         var result = (0, decorators[i])(
           kind === 'accessor'
             ? {
-                get: descriptor.get,
-                set: descriptor.set,
-              }
+              get: descriptor.get,
+              set: descriptor.set,
+            }
             : descriptor[key],
           context
         );
@@ -6753,9 +6753,9 @@ var Puppeteer = (function (
       typeof SuppressedError === 'function'
         ? SuppressedError
         : function (error, suppressed, message) {
-            var e = new Error(message);
-            return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
-          }
+          var e = new Error(message);
+          return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
+        }
     );
   var __setFunctionName$1 =
     (undefined && undefined.__setFunctionName) ||
@@ -8746,9 +8746,9 @@ var Puppeteer = (function (
       typeof SuppressedError === 'function'
         ? SuppressedError
         : function (error, suppressed, message) {
-            var e = new Error(message);
-            return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
-          }
+          var e = new Error(message);
+          return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
+        }
     );
   /**
    * All the events that a locator instance may emit.
@@ -9231,65 +9231,65 @@ var Puppeteer = (function (
           .pipe(
             mergeMap((inputType) => {
               switch (inputType) {
-                case 'select':
-                  return from(handle.select(value).then(noop));
-                case 'contenteditable':
-                case 'typeable-input':
-                  return from(
-                    handle.evaluate((input, newValue) => {
-                      const currentValue = input.isContentEditable ? input.innerText : input.value;
-                      // Clear the input if the current value does not match the filled
-                      // out value.
-                      if (
-                        newValue.length <= currentValue.length ||
+              case 'select':
+                return from(handle.select(value).then(noop));
+              case 'contenteditable':
+              case 'typeable-input':
+                return from(
+                  handle.evaluate((input, newValue) => {
+                    const currentValue = input.isContentEditable ? input.innerText : input.value;
+                    // Clear the input if the current value does not match the filled
+                    // out value.
+                    if (
+                      newValue.length <= currentValue.length ||
                         !newValue.startsWith(input.value)
-                      ) {
-                        if (input.isContentEditable) {
-                          input.innerText = '';
-                        } else {
-                          input.value = '';
-                        }
-                        return newValue;
-                      }
-                      const originalValue = input.isContentEditable ? input.innerText : input.value;
-                      // If the value is partially filled out, only type the rest. Move
-                      // cursor to the end of the common prefix.
+                    ) {
                       if (input.isContentEditable) {
                         input.innerText = '';
-                        input.innerText = originalValue;
                       } else {
                         input.value = '';
-                        input.value = originalValue;
                       }
-                      return newValue.substring(originalValue.length);
-                    }, value)
-                  ).pipe(
-                    mergeMap((textToType) => {
-                      return from(handle.type(textToType));
-                    })
-                  );
-                case 'other-input':
-                  return from(handle.focus()).pipe(
-                    mergeMap(() => {
-                      return from(
-                        handle.evaluate((input, value) => {
-                          input.value = value;
-                          input.dispatchEvent(
-                            new Event('input', {
-                              bubbles: true,
-                            })
-                          );
-                          input.dispatchEvent(
-                            new Event('change', {
-                              bubbles: true,
-                            })
-                          );
-                        }, value)
-                      );
-                    })
-                  );
-                case 'unknown':
-                  throw new Error(`Element cannot be filled out.`);
+                      return newValue;
+                    }
+                    const originalValue = input.isContentEditable ? input.innerText : input.value;
+                    // If the value is partially filled out, only type the rest. Move
+                    // cursor to the end of the common prefix.
+                    if (input.isContentEditable) {
+                      input.innerText = '';
+                      input.innerText = originalValue;
+                    } else {
+                      input.value = '';
+                      input.value = originalValue;
+                    }
+                    return newValue.substring(originalValue.length);
+                  }, value)
+                ).pipe(
+                  mergeMap((textToType) => {
+                    return from(handle.type(textToType));
+                  })
+                );
+              case 'other-input':
+                return from(handle.focus()).pipe(
+                  mergeMap(() => {
+                    return from(
+                      handle.evaluate((input, value) => {
+                        input.value = value;
+                        input.dispatchEvent(
+                          new Event('input', {
+                            bubbles: true,
+                          })
+                        );
+                        input.dispatchEvent(
+                          new Event('change', {
+                            bubbles: true,
+                          })
+                        );
+                      }, value)
+                    );
+                  })
+                );
+              case 'unknown':
+                throw new Error('Element cannot be filled out.');
               }
             })
           )
@@ -9559,14 +9559,14 @@ var Puppeteer = (function (
         }
         return (() => {
           switch (this.visibility) {
-            case 'hidden':
-              return defer(() => {
-                return from(handle.isHidden());
-              });
-            case 'visible':
-              return defer(() => {
-                return from(handle.isVisible());
-              });
+          case 'hidden':
+            return defer(() => {
+              return from(handle.isHidden());
+            });
+          case 'visible':
+            return defer(() => {
+              return from(handle.isVisible());
+            });
           }
         })().pipe(
           first(identity),
@@ -9694,9 +9694,9 @@ var Puppeteer = (function (
         var result = (0, decorators[i])(
           kind === 'accessor'
             ? {
-                get: descriptor.get,
-                set: descriptor.set,
-              }
+              get: descriptor.get,
+              set: descriptor.set,
+            }
             : descriptor[key],
           context
         );
@@ -9792,9 +9792,9 @@ var Puppeteer = (function (
       typeof SuppressedError === 'function'
         ? SuppressedError
         : function (error, suppressed, message) {
-            var e = new Error(message);
-            return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
-          }
+          var e = new Error(message);
+          return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
+        }
     );
   /**
    * We use symbols to prevent external parties listening to these events.
@@ -10231,12 +10231,12 @@ var Puppeteer = (function (
             let content = '';
             for (const node of document.childNodes) {
               switch (node) {
-                case document.documentElement:
-                  content += document.documentElement.outerHTML;
-                  break;
-                default:
-                  content += new XMLSerializer().serializeToString(node);
-                  break;
+              case document.documentElement:
+                content += document.documentElement.outerHTML;
+                break;
+              default:
+                content += new XMLSerializer().serializeToString(node);
+                break;
               }
             }
             return content;
@@ -11150,15 +11150,15 @@ var Puppeteer = (function (
       this.interception.handlers = [];
       const { action } = this.interceptResolutionState();
       switch (action) {
-        case 'abort':
-          return await this._abort(this.interception.abortReason);
-        case 'respond':
-          if (this.interception.response === null) {
-            throw new Error('Response is missing for the interception');
-          }
-          return await this._respond(this.interception.response);
-        case 'continue':
-          return await this._continue(this.interception.requestOverrides);
+      case 'abort':
+        return await this._abort(this.interception.abortReason);
+      case 'respond':
+        if (this.interception.response === null) {
+          throw new Error('Response is missing for the interception');
+        }
+        return await this._respond(this.interception.response);
+      case 'continue':
+        return await this._continue(this.interception.requestOverrides);
       }
     }
     /**
@@ -11413,7 +11413,7 @@ var Puppeteer = (function (
     415: 'Unsupported Media Type',
     416: 'Range Not Satisfiable',
     417: 'Expectation Failed',
-    418: "I'm a teapot",
+    418: 'I\'m a teapot',
     421: 'Misdirected Request',
     422: 'Unprocessable Entity',
     423: 'Locked',
@@ -11830,9 +11830,9 @@ var Puppeteer = (function (
         var result = (0, decorators[i])(
           kind === 'accessor'
             ? {
-                get: descriptor.get,
-                set: descriptor.set,
-              }
+              get: descriptor.get,
+              set: descriptor.set,
+            }
             : descriptor[key],
           context
         );
@@ -11928,9 +11928,9 @@ var Puppeteer = (function (
       typeof SuppressedError === 'function'
         ? SuppressedError
         : function (error, suppressed, message) {
-            var e = new Error(message);
-            return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
-          }
+          var e = new Error(message);
+          return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
+        }
     );
   /**
    * @internal
@@ -12622,8 +12622,8 @@ var Puppeteer = (function (
           const { timeout: ms = this.getDefaultTimeout(), signal } = options;
           const predicate = isString(urlOrPredicate)
             ? (frame) => {
-                return urlOrPredicate === frame.url();
-              }
+              return urlOrPredicate === frame.url();
+            }
             : urlOrPredicate;
           return await firstValueFrom(
             merge(
@@ -12796,11 +12796,11 @@ var Puppeteer = (function (
               height: cropHeight,
             } = roundRectangle(normalizeRectangle(options.crop));
             if (x < 0 || y < 0) {
-              throw new Error(`\`crop.x\` and \`crop.y\` must be greater than or equal to 0.`);
+              throw new Error('`crop.x` and `crop.y` must be greater than or equal to 0.');
             }
             if (cropWidth <= 0 || cropHeight <= 0) {
               throw new Error(
-                `\`crop.height\` and \`crop.width\` must be greater than or equal to 0.`
+                '`crop.height` and `crop.width` must be greater than or equal to 0.'
               );
             }
             const viewportWidth = width / devicePixelRatio;
@@ -12823,10 +12823,10 @@ var Puppeteer = (function (
             };
           }
           if (options.speed !== undefined && options.speed <= 0) {
-            throw new Error(`\`speed\` must be greater than 0.`);
+            throw new Error('`speed` must be greater than 0.');
           }
           if (options.scale !== undefined && options.scale <= 0) {
-            throw new Error(`\`scale\` must be greater than 0.`);
+            throw new Error('`scale` must be greater than 0.');
           }
           const recorder = new ScreenRecorder(this, width, height, {
             ...options,
@@ -12912,8 +12912,8 @@ var Puppeteer = (function (
               ...userOptions,
               clip: userOptions.clip
                 ? {
-                    ...userOptions.clip,
-                  }
+                  ...userOptions.clip,
+                }
                 : undefined,
             };
             if (options.type === undefined && options.path !== undefined) {
@@ -12921,16 +12921,16 @@ var Puppeteer = (function (
               // Note we cannot use Node.js here due to browser compatibility.
               const extension = filePath.slice(filePath.lastIndexOf('.') + 1).toLowerCase();
               switch (extension) {
-                case 'png':
-                  options.type = 'png';
-                  break;
-                case 'jpeg':
-                case 'jpg':
-                  options.type = 'jpeg';
-                  break;
-                case 'webp':
-                  options.type = 'webp';
-                  break;
+              case 'png':
+                options.type = 'png';
+                break;
+              case 'jpeg':
+              case 'jpg':
+                options.type = 'jpeg';
+                break;
+              case 'webp':
+                options.type = 'webp';
+                break;
               }
             }
             if (options.quality !== undefined) {
@@ -12945,17 +12945,17 @@ var Puppeteer = (function (
             }
             if (options.clip) {
               if (options.clip.width <= 0) {
-                throw new Error("'width' in 'clip' must be positive.");
+                throw new Error('\'width\' in \'clip\' must be positive.');
               }
               if (options.clip.height <= 0) {
-                throw new Error("'height' in 'clip' must be positive.");
+                throw new Error('\'height\' in \'clip\' must be positive.');
               }
             }
             setDefaultScreenshotOptions(options);
             const stack = __addDisposableResource$5(env_2, new AsyncDisposableStack(), true);
             if (options.clip) {
               if (options.fullPage) {
-                throw new Error("'clip' and 'fullPage' are mutually exclusive");
+                throw new Error('\'clip\' and \'fullPage\' are mutually exclusive');
               }
               options.clip = roundRectangle(normalizeRectangle(options.clip));
             } else {
@@ -13454,22 +13454,22 @@ var Puppeteer = (function (
       ...clip,
       ...(clip.width < 0
         ? {
-            x: clip.x + clip.width,
-            width: -clip.width,
-          }
+          x: clip.x + clip.width,
+          width: -clip.width,
+        }
         : {
-            x: clip.x,
-            width: clip.width,
-          }),
+          x: clip.x,
+          width: clip.width,
+        }),
       ...(clip.height < 0
         ? {
-            y: clip.y + clip.height,
-            height: -clip.height,
-          }
+          y: clip.y + clip.height,
+          height: -clip.height,
+        }
         : {
-            y: clip.y,
-            height: clip.height,
-          }),
+          y: clip.y,
+          height: clip.height,
+        }),
     };
   }
   function roundRectangle(clip) {
@@ -13534,12 +13534,12 @@ var Puppeteer = (function (
         }
       );
       switch (typeof fn) {
-        case 'string':
-          _classPrivateFieldSet(_fn, this, `() => {return (${fn});}`);
-          break;
-        default:
-          _classPrivateFieldSet(_fn, this, stringifyFunction(fn));
-          break;
+      case 'string':
+        _classPrivateFieldSet(_fn, this, `() => {return (${fn});}`);
+        break;
+      default:
+        _classPrivateFieldSet(_fn, this, stringifyFunction(fn));
+        break;
       }
       _classPrivateFieldSet(_args, this, args);
       _classPrivateFieldGet(_world, this).taskManager.add(this);
@@ -13571,65 +13571,65 @@ var Puppeteer = (function (
       _classPrivateFieldGet(_reruns, this).push(controller);
       try {
         switch (_classPrivateFieldGet(_polling, this)) {
-          case 'raf':
-            _classPrivateFieldSet(
-              _poller,
-              this,
-              await _classPrivateFieldGet(_world, this).evaluateHandle(
-                ({ RAFPoller, createFunction }, fn, ...args) => {
-                  const fun = createFunction(fn);
-                  return new RAFPoller(() => {
-                    return fun(...args);
-                  });
-                },
-                LazyArg.create((context) => {
-                  return context.puppeteerUtil;
-                }),
-                _classPrivateFieldGet(_fn, this),
-                ..._classPrivateFieldGet(_args, this)
-              )
-            );
-            break;
-          case 'mutation':
-            _classPrivateFieldSet(
-              _poller,
-              this,
-              await _classPrivateFieldGet(_world, this).evaluateHandle(
-                ({ MutationPoller, createFunction }, root, fn, ...args) => {
-                  const fun = createFunction(fn);
-                  return new MutationPoller(() => {
-                    return fun(...args);
-                  }, root || document);
-                },
-                LazyArg.create((context) => {
-                  return context.puppeteerUtil;
-                }),
-                _classPrivateFieldGet(_root, this),
-                _classPrivateFieldGet(_fn, this),
-                ..._classPrivateFieldGet(_args, this)
-              )
-            );
-            break;
-          default:
-            _classPrivateFieldSet(
-              _poller,
-              this,
-              await _classPrivateFieldGet(_world, this).evaluateHandle(
-                ({ IntervalPoller, createFunction }, ms, fn, ...args) => {
-                  const fun = createFunction(fn);
-                  return new IntervalPoller(() => {
-                    return fun(...args);
-                  }, ms);
-                },
-                LazyArg.create((context) => {
-                  return context.puppeteerUtil;
-                }),
-                _classPrivateFieldGet(_polling, this),
-                _classPrivateFieldGet(_fn, this),
-                ..._classPrivateFieldGet(_args, this)
-              )
-            );
-            break;
+        case 'raf':
+          _classPrivateFieldSet(
+            _poller,
+            this,
+            await _classPrivateFieldGet(_world, this).evaluateHandle(
+              ({ RAFPoller, createFunction }, fn, ...args) => {
+                const fun = createFunction(fn);
+                return new RAFPoller(() => {
+                  return fun(...args);
+                });
+              },
+              LazyArg.create((context) => {
+                return context.puppeteerUtil;
+              }),
+              _classPrivateFieldGet(_fn, this),
+              ..._classPrivateFieldGet(_args, this)
+            )
+          );
+          break;
+        case 'mutation':
+          _classPrivateFieldSet(
+            _poller,
+            this,
+            await _classPrivateFieldGet(_world, this).evaluateHandle(
+              ({ MutationPoller, createFunction }, root, fn, ...args) => {
+                const fun = createFunction(fn);
+                return new MutationPoller(() => {
+                  return fun(...args);
+                }, root || document);
+              },
+              LazyArg.create((context) => {
+                return context.puppeteerUtil;
+              }),
+              _classPrivateFieldGet(_root, this),
+              _classPrivateFieldGet(_fn, this),
+              ..._classPrivateFieldGet(_args, this)
+            )
+          );
+          break;
+        default:
+          _classPrivateFieldSet(
+            _poller,
+            this,
+            await _classPrivateFieldGet(_world, this).evaluateHandle(
+              ({ IntervalPoller, createFunction }, ms, fn, ...args) => {
+                const fun = createFunction(fn);
+                return new IntervalPoller(() => {
+                  return fun(...args);
+                }, ms);
+              },
+              LazyArg.create((context) => {
+                return context.puppeteerUtil;
+              }),
+              _classPrivateFieldGet(_polling, this),
+              _classPrivateFieldGet(_fn, this),
+              ..._classPrivateFieldGet(_args, this)
+            )
+          );
+          break;
         }
         await _classPrivateFieldGet(_poller, this).evaluate((poller) => {
           void poller.start();
@@ -14018,9 +14018,9 @@ var Puppeteer = (function (
       typeof SuppressedError === 'function'
         ? SuppressedError
         : function (error, suppressed, message) {
-            var e = new Error(message);
-            return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
-          }
+          var e = new Error(message);
+          return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
+        }
     );
   /**
    * The Accessibility class provides methods for inspecting the browser's
@@ -14284,16 +14284,16 @@ var Puppeteer = (function (
       // (Note that whilst ARIA buttons can have only presentational children, HTML5
       // buttons are allowed to have content.)
       switch (_classPrivateFieldGet(_role, this)) {
-        case 'doc-cover':
-        case 'graphics-symbol':
-        case 'img':
-        case 'image':
-        case 'Meter':
-        case 'scrollbar':
-        case 'slider':
-        case 'separator':
-        case 'progressbar':
-          return true;
+      case 'doc-cover':
+      case 'graphics-symbol':
+      case 'img':
+      case 'image':
+      case 'Meter':
+      case 'scrollbar':
+      case 'slider':
+      case 'separator':
+      case 'progressbar':
+        return true;
       }
       // Here and below: Android heuristics
       if (_assertClassBrand(_AXNode_brand, this, _hasFocusableChild).call(this)) {
@@ -14309,30 +14309,30 @@ var Puppeteer = (function (
     }
     isControl() {
       switch (_classPrivateFieldGet(_role, this)) {
-        case 'button':
-        case 'checkbox':
-        case 'ColorWell':
-        case 'combobox':
-        case 'DisclosureTriangle':
-        case 'listbox':
-        case 'menu':
-        case 'menubar':
-        case 'menuitem':
-        case 'menuitemcheckbox':
-        case 'menuitemradio':
-        case 'radio':
-        case 'scrollbar':
-        case 'searchbox':
-        case 'slider':
-        case 'spinbutton':
-        case 'switch':
-        case 'tab':
-        case 'textbox':
-        case 'tree':
-        case 'treeitem':
-          return true;
-        default:
-          return false;
+      case 'button':
+      case 'checkbox':
+      case 'ColorWell':
+      case 'combobox':
+      case 'DisclosureTriangle':
+      case 'listbox':
+      case 'menu':
+      case 'menubar':
+      case 'menuitem':
+      case 'menuitemcheckbox':
+      case 'menuitemradio':
+      case 'radio':
+      case 'scrollbar':
+      case 'searchbox':
+      case 'slider':
+      case 'spinbutton':
+      case 'switch':
+      case 'tab':
+      case 'textbox':
+      case 'tree':
+      case 'treeitem':
+        return true;
+      default:
+        return false;
       }
     }
     isInteresting(insideControl) {
@@ -14584,9 +14584,9 @@ var Puppeteer = (function (
       typeof SuppressedError === 'function'
         ? SuppressedError
         : function (error, suppressed, message) {
-            var e = new Error(message);
-            return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
-          }
+          var e = new Error(message);
+          return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
+        }
     );
   /**
    * @internal
@@ -14645,11 +14645,11 @@ var Puppeteer = (function (
               // aren't plain objects so add subtypes when the use-case arises.
               if (index in args) {
                 switch (handle.remoteObject().subtype) {
-                  case 'node':
-                    args[+index] = handle;
-                    break;
-                  default:
-                    stack.use(handle);
+                case 'node':
+                  args[+index] = handle;
+                  break;
+                default:
+                  stack.use(handle);
                 }
               } else {
                 stack.use(handle);
@@ -14771,8 +14771,8 @@ var Puppeteer = (function (
         _classPrivateFieldGet(_stackTraceLocations, this)[0] ??
         (_classPrivateFieldGet(_frame, this)
           ? {
-              url: _classPrivateFieldGet(_frame, this).url(),
-            }
+            url: _classPrivateFieldGet(_frame, this).url(),
+          }
           : {})
       );
     }
@@ -15945,9 +15945,9 @@ var Puppeteer = (function (
         var result = (0, decorators[i])(
           kind === 'accessor'
             ? {
-                get: descriptor.get,
-                set: descriptor.set,
-              }
+              get: descriptor.get,
+              set: descriptor.set,
+            }
             : descriptor[key],
           context
         );
@@ -16234,12 +16234,12 @@ var Puppeteer = (function (
           await _classPrivateFieldGet(_viewportState, this).setState(
             viewport
               ? {
-                  viewport,
-                  active: true,
-                }
+                viewport,
+                active: true,
+              }
               : {
-                  active: false,
-                }
+                active: false,
+              }
           );
           const mobile = viewport?.isMobile || false;
           const hasTouch = viewport?.hasTouch || false;
@@ -16397,13 +16397,13 @@ var Puppeteer = (function (
               const deviceScaleFactor = viewport.deviceScaleFactor ?? 1;
               const screenOrientation = viewport.isLandscape
                 ? {
-                    angle: 90,
-                    type: 'landscapePrimary',
-                  }
+                  angle: 90,
+                  type: 'landscapePrimary',
+                }
                 : {
-                    angle: 0,
-                    type: 'portraitPrimary',
-                  };
+                  angle: 0,
+                  type: 'portraitPrimary',
+                };
               const hasTouch = viewport.hasTouch || false;
               await Promise.all([
                 client
@@ -16632,10 +16632,10 @@ var Puppeteer = (function (
                 'Emulation.setGeolocationOverride',
                 state.geoLocation
                   ? {
-                      longitude: state.geoLocation.longitude,
-                      latitude: state.geoLocation.latitude,
-                      accuracy: state.geoLocation.accuracy,
-                    }
+                    longitude: state.geoLocation.longitude,
+                    latitude: state.geoLocation.latitude,
+                    accuracy: state.geoLocation.accuracy,
+                  }
                   : undefined
               );
             }, '#setGeolocation'),
@@ -17188,16 +17188,16 @@ var Puppeteer = (function (
         return BigInt(remoteObject.unserializableValue.replace('n', ''));
       }
       switch (remoteObject.unserializableValue) {
-        case '-0':
-          return -0;
-        case 'NaN':
-          return NaN;
-        case 'Infinity':
-          return Infinity;
-        case '-Infinity':
-          return -Infinity;
-        default:
-          throw new Error('Unsupported unserializable value: ' + remoteObject.unserializableValue);
+      case '-0':
+        return -0;
+      case 'NaN':
+        return NaN;
+      case 'Infinity':
+        return Infinity;
+      case '-Infinity':
+        return -Infinity;
+      default:
+        throw new Error('Unsupported unserializable value: ' + remoteObject.unserializableValue);
       }
     }
     return remoteObject.value;
@@ -17410,9 +17410,9 @@ var Puppeteer = (function (
         var result = (0, decorators[i])(
           kind === 'accessor'
             ? {
-                get: descriptor.get,
-                set: descriptor.set,
-              }
+              get: descriptor.get,
+              set: descriptor.set,
+            }
             : descriptor[key],
           context
         );
@@ -17772,9 +17772,9 @@ var Puppeteer = (function (
       typeof SuppressedError === 'function'
         ? SuppressedError
         : function (error, suppressed, message) {
-            var e = new Error(message);
-            return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
-          }
+          var e = new Error(message);
+          return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
+        }
     );
   const ariaQuerySelectorBinding = new Binding(
     '__ariaQuerySelector',
@@ -18016,13 +18016,13 @@ var Puppeteer = (function (
           'Runtime.addBinding',
           _classPrivateFieldGet(_name3, this)
             ? {
-                name: CDP_BINDING_PREFIX + binding.name,
-                executionContextName: _classPrivateFieldGet(_name3, this),
-              }
+              name: CDP_BINDING_PREFIX + binding.name,
+              executionContextName: _classPrivateFieldGet(_name3, this),
+            }
             : {
-                name: CDP_BINDING_PREFIX + binding.name,
-                executionContextId: _classPrivateFieldGet(_id5, this),
-              }
+              name: CDP_BINDING_PREFIX + binding.name,
+              executionContextId: _classPrivateFieldGet(_id5, this),
+            }
         );
         await this.evaluate(addPageBinding, 'internal', binding.name, CDP_BINDING_PREFIX);
         _classPrivateFieldGet(_bindings, this).set(binding.name, binding);
@@ -18133,13 +18133,13 @@ var Puppeteer = (function (
           return arg instanceof LazyArg;
         })
           ? await Promise.all(
-              args.map((arg) => {
-                return convertArgumentAsync(this, arg);
-              })
-            )
+            args.map((arg) => {
+              return convertArgumentAsync(this, arg);
+            })
+          )
           : args.map((arg) => {
-              return convertArgument(this, arg);
-            }),
+            return convertArgument(this, arg);
+          }),
         returnByValue,
         awaitPromise: true,
         userGesture: true,
@@ -18229,7 +18229,7 @@ var Puppeteer = (function (
         },
       };
     }
-    if (error.message.includes("Object couldn't be returned by value")) {
+    if (error.message.includes('Object couldn\'t be returned by value')) {
       return {
         result: {
           type: 'undefined',
@@ -18750,9 +18750,9 @@ var Puppeteer = (function (
         var result = (0, decorators[i])(
           kind === 'accessor'
             ? {
-                get: descriptor.get,
-                set: descriptor.set,
-              }
+              get: descriptor.get,
+              set: descriptor.set,
+            }
             : descriptor[key],
           context
         );
@@ -19498,8 +19498,8 @@ var Puppeteer = (function (
           const value = response.headers[header];
           responseHeaders[header.toLowerCase()] = Array.isArray(value)
             ? value.map((item) => {
-                return String(item);
-              })
+              return String(item);
+            })
             : String(value);
         }
       }
@@ -21131,16 +21131,16 @@ var Puppeteer = (function (
       return;
     }
     switch (reason) {
-      case 'remove':
-        // Only remove the frame if the reason for the detached event is
-        // an actual removement of the frame.
-        // For frames that become OOP iframes, the reason would be 'swap'.
-        _assertClassBrand(_FrameManager_brand, this, _removeFramesRecursively).call(this, frame);
-        break;
-      case 'swap':
-        this.emit(exports.FrameManagerEvent.FrameSwapped, frame);
-        frame.emit(exports.FrameEvent.FrameSwapped, undefined);
-        break;
+    case 'remove':
+      // Only remove the frame if the reason for the detached event is
+      // an actual removement of the frame.
+      // For frames that become OOP iframes, the reason would be 'swap'.
+      _assertClassBrand(_FrameManager_brand, this, _removeFramesRecursively).call(this, frame);
+      break;
+    case 'swap':
+      this.emit(exports.FrameManagerEvent.FrameSwapped, frame);
+      frame.emit(exports.FrameEvent.FrameSwapped, undefined);
+      break;
     }
   }
   function _onExecutionContextCreated(contextPayload, session) {
@@ -21997,7 +21997,7 @@ var Puppeteer = (function (
       keyCode: 222,
       code: 'Quote',
       shiftKey: '"',
-      key: "'",
+      key: '\'',
     },
     AltGraph: {
       keyCode: 225,
@@ -22266,9 +22266,9 @@ var Puppeteer = (function (
       key: ']',
       code: 'BracketRight',
     },
-    "'": {
+    '\'': {
       keyCode: 222,
-      key: "'",
+      key: '\'',
       code: 'Quote',
     },
     Attn: {
@@ -22735,16 +22735,16 @@ var Puppeteer = (function (
   }
   const getFlag = (button) => {
     switch (button) {
-      case MouseButton.Left:
-        return 1 /* MouseButtonFlag.Left */;
-      case MouseButton.Right:
-        return 2 /* MouseButtonFlag.Right */;
-      case MouseButton.Middle:
-        return 4 /* MouseButtonFlag.Middle */;
-      case MouseButton.Back:
-        return 8 /* MouseButtonFlag.Back */;
-      case MouseButton.Forward:
-        return 16 /* MouseButtonFlag.Forward */;
+    case MouseButton.Left:
+      return 1 /* MouseButtonFlag.Left */;
+    case MouseButton.Right:
+      return 2 /* MouseButtonFlag.Right */;
+    case MouseButton.Middle:
+      return 4 /* MouseButtonFlag.Middle */;
+    case MouseButton.Back:
+      return 8 /* MouseButtonFlag.Back */;
+    case MouseButton.Forward:
+      return 16 /* MouseButtonFlag.Forward */;
     }
   };
   /**
@@ -23314,22 +23314,22 @@ var Puppeteer = (function (
     }
     async close() {
       switch (_classPrivateFieldGet(_targetType2, this)) {
-        case exports.TargetType.SERVICE_WORKER:
-        case exports.TargetType.SHARED_WORKER: {
-          // For service and shared workers we need to close the target and detach to allow
-          // the worker to stop.
-          await this.client.connection()?.send('Target.closeTarget', {
-            targetId: _classPrivateFieldGet(_id6, this),
-          });
-          await this.client.connection()?.send('Target.detachFromTarget', {
-            sessionId: this.client.id(),
-          });
-          break;
-        }
-        default:
-          await this.evaluate(() => {
-            self.close();
-          });
+      case exports.TargetType.SERVICE_WORKER:
+      case exports.TargetType.SHARED_WORKER: {
+        // For service and shared workers we need to close the target and detach to allow
+        // the worker to stop.
+        await this.client.connection()?.send('Target.closeTarget', {
+          targetId: _classPrivateFieldGet(_id6, this),
+        });
+        await this.client.connection()?.send('Target.detachFromTarget', {
+          sessionId: this.client.id(),
+        });
+        break;
+      }
+      default:
+        await this.evaluate(() => {
+          self.close();
+        });
       }
     }
   }
@@ -23417,16 +23417,16 @@ var Puppeteer = (function (
       typeof SuppressedError === 'function'
         ? SuppressedError
         : function (error, suppressed, message) {
-            var e = new Error(message);
-            return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
-          }
+          var e = new Error(message);
+          return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
+        }
     );
   function convertConsoleMessageLevel(method) {
     switch (method) {
-      case 'warning':
-        return 'warn';
-      default:
-        return method;
+    case 'warning':
+      return 'warn';
+    default:
+      return method;
     }
   }
   /**
@@ -23836,12 +23836,12 @@ var Puppeteer = (function (
       const source = pageBindingInitString('exposedFun', name);
       let binding;
       switch (typeof pptrFunction) {
-        case 'function':
-          binding = new Binding(name, pptrFunction, source);
-          break;
-        default:
-          binding = new Binding(name, pptrFunction.default, source);
-          break;
+      case 'function':
+        binding = new Binding(name, pptrFunction, source);
+        break;
+      default:
+        binding = new Binding(name, pptrFunction.default, source);
+        break;
       }
       _classPrivateFieldGet(_bindings3, this).set(name, binding);
       const [{ identifier }] = await Promise.all([
@@ -24011,16 +24011,16 @@ var Puppeteer = (function (
             fromSurface,
             ...(quality !== undefined
               ? {
-                  quality: Math.round(quality),
-                }
+                quality: Math.round(quality),
+              }
               : {}),
             ...(clip
               ? {
-                  clip: {
-                    ...clip,
-                    scale: clip.scale ?? 1,
-                  },
-                }
+                clip: {
+                  ...clip,
+                  scale: clip.scale ?? 1,
+                },
+              }
               : {}),
             captureBeyondViewport,
           }
@@ -24403,7 +24403,7 @@ var Puppeteer = (function (
       return;
     }
     const textTokens = [];
-    // eslint-disable-next-line max-len -- The comment is long.
+     
     // eslint-disable-next-line rulesdir/use-using -- These are not owned by this function.
     for (const arg of args) {
       const remoteObject = arg.remoteObject();
@@ -24583,9 +24583,9 @@ var Puppeteer = (function (
       typeof SuppressedError === 'function'
         ? SuppressedError
         : function (error, suppressed, message) {
-            var e = new Error(message);
-            return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
-          }
+          var e = new Error(message);
+          return (e.name = 'SuppressedError'), (e.error = error), (e.suppressed = suppressed), e;
+        }
     );
   /**
    * @internal
@@ -24693,9 +24693,9 @@ var Puppeteer = (function (
           ...cookie,
           partitionKey: cookie.partitionKey
             ? {
-                sourceOrigin: cookie.partitionKey.topLevelSite,
-                hasCrossSiteAncestor: cookie.partitionKey.hasCrossSiteAncestor,
-              }
+              sourceOrigin: cookie.partitionKey.topLevelSite,
+              hasCrossSiteAncestor: cookie.partitionKey.hasCrossSiteAncestor,
+            }
             : undefined,
         };
       });
@@ -24816,22 +24816,22 @@ var Puppeteer = (function (
     type() {
       const type = _classPrivateFieldGet(_targetInfo, this).type;
       switch (type) {
-        case 'page':
-          return exports.TargetType.PAGE;
-        case 'background_page':
-          return exports.TargetType.BACKGROUND_PAGE;
-        case 'service_worker':
-          return exports.TargetType.SERVICE_WORKER;
-        case 'shared_worker':
-          return exports.TargetType.SHARED_WORKER;
-        case 'browser':
-          return exports.TargetType.BROWSER;
-        case 'webview':
-          return exports.TargetType.WEBVIEW;
-        case 'tab':
-          return exports.TargetType.TAB;
-        default:
-          return exports.TargetType.OTHER;
+      case 'page':
+        return exports.TargetType.PAGE;
+      case 'background_page':
+        return exports.TargetType.BACKGROUND_PAGE;
+      case 'service_worker':
+        return exports.TargetType.SERVICE_WORKER;
+      case 'shared_worker':
+        return exports.TargetType.SHARED_WORKER;
+      case 'browser':
+        return exports.TargetType.BROWSER;
+      case 'webview':
+        return exports.TargetType.WEBVIEW;
+      case 'tab':
+        return exports.TargetType.TAB;
+      default:
+        return exports.TargetType.OTHER;
       }
     }
     _targetManager() {
@@ -25240,11 +25240,11 @@ var Puppeteer = (function (
         const target = isExistingTarget
           ? _classPrivateFieldGet(_attachedTargetsByTargetId, this).get(targetInfo.targetId)
           : _classPrivateFieldGet(_targetFactory, this).call(
-              this,
-              targetInfo,
-              session,
-              parentSession instanceof CdpCDPSession ? parentSession : undefined
-            );
+            this,
+            targetInfo,
+            session,
+            parentSession instanceof CdpCDPSession ? parentSession : undefined
+          );
         if (
           _classPrivateFieldGet(_targetFilterCallback, this) &&
           !_classPrivateFieldGet(_targetFilterCallback, this).call(this, target)
@@ -25922,43 +25922,75 @@ var Puppeteer = (function (
     send(message) {
       const parsed = JSON.parse(message);
       switch (parsed.method) {
-        case 'Browser.getVersion': {
+      case 'Browser.getVersion': {
+        _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
+          id: parsed.id,
+          sessionId: parsed.sessionId,
+          method: parsed.method,
+          result: {
+            protocolVersion: '1.3',
+            product: 'chrome',
+            revision: 'unknown',
+            userAgent: 'chrome',
+            jsVersion: 'unknown',
+          },
+        });
+        return;
+      }
+      case 'Target.getBrowserContexts': {
+        _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
+          id: parsed.id,
+          sessionId: parsed.sessionId,
+          method: parsed.method,
+          result: {
+            browserContextIds: [],
+          },
+        });
+        return;
+      }
+      case 'Target.setDiscoverTargets': {
+        _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
+          method: 'Target.targetCreated',
+          params: {
+            targetInfo: tabTargetInfo,
+          },
+        });
+        _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
+          method: 'Target.targetCreated',
+          params: {
+            targetInfo: pageTargetInfo,
+          },
+        });
+        _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
+          id: parsed.id,
+          sessionId: parsed.sessionId,
+          method: parsed.method,
+          result: {},
+        });
+        return;
+      }
+      case 'Target.setAutoAttach': {
+        if (parsed.sessionId === 'tabTargetSessionId') {
           _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
-            id: parsed.id,
-            sessionId: parsed.sessionId,
-            method: parsed.method,
-            result: {
-              protocolVersion: '1.3',
-              product: 'chrome',
-              revision: 'unknown',
-              userAgent: 'chrome',
-              jsVersion: 'unknown',
-            },
-          });
-          return;
-        }
-        case 'Target.getBrowserContexts': {
-          _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
-            id: parsed.id,
-            sessionId: parsed.sessionId,
-            method: parsed.method,
-            result: {
-              browserContextIds: [],
-            },
-          });
-          return;
-        }
-        case 'Target.setDiscoverTargets': {
-          _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
-            method: 'Target.targetCreated',
-            params: {
-              targetInfo: tabTargetInfo,
-            },
-          });
-          _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
-            method: 'Target.targetCreated',
+            method: 'Target.attachedToTarget',
             params: {
               targetInfo: pageTargetInfo,
+              sessionId: 'pageTargetSessionId',
+            },
+          });
+          _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
+            id: parsed.id,
+            sessionId: parsed.sessionId,
+            method: parsed.method,
+            result: {},
+          });
+          return;
+        } else if (!parsed.sessionId) {
+          _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
+            method: 'Target.attachedToTarget',
+            params: {
+              targetInfo: tabTargetInfo,
+              sessionId: 'tabTargetSessionId',
             },
           });
           _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
@@ -25969,39 +26001,7 @@ var Puppeteer = (function (
           });
           return;
         }
-        case 'Target.setAutoAttach': {
-          if (parsed.sessionId === 'tabTargetSessionId') {
-            _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
-              method: 'Target.attachedToTarget',
-              params: {
-                targetInfo: pageTargetInfo,
-                sessionId: 'pageTargetSessionId',
-              },
-            });
-            _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
-              id: parsed.id,
-              sessionId: parsed.sessionId,
-              method: parsed.method,
-              result: {},
-            });
-            return;
-          } else if (!parsed.sessionId) {
-            _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
-              method: 'Target.attachedToTarget',
-              params: {
-                targetInfo: tabTargetInfo,
-                sessionId: 'tabTargetSessionId',
-              },
-            });
-            _assertClassBrand(_ExtensionTransport_brand, this, _dispatchResponse).call(this, {
-              id: parsed.id,
-              sessionId: parsed.sessionId,
-              method: parsed.method,
-              result: {},
-            });
-            return;
-          }
-        }
+      }
       }
       if (parsed.sessionId === 'pageTargetSessionId') {
         delete parsed.sessionId;
@@ -28009,15 +28009,15 @@ var Puppeteer = (function (
   const getWebSocketTransportClass = async () => {
     return isNode
       ? (
-          await Promise.resolve().then(() =>
-            _interopRequireWildcard(require('./node/NodeWebSocketTransport.js'))
-          )
-        ).NodeWebSocketTransport
+        await Promise.resolve().then(() =>
+          _interopRequireWildcard(require('./node/NodeWebSocketTransport.js'))
+        )
+      ).NodeWebSocketTransport
       : (
-          await Promise.resolve().then(function () {
-            return BrowserWebSocketTransport$1;
-          })
-        ).BrowserWebSocketTransport;
+        await Promise.resolve().then(function () {
+          return BrowserWebSocketTransport$1;
+        })
+      ).BrowserWebSocketTransport;
   };
   /**
    * Users should never call this directly; it's called when calling

@@ -15,7 +15,7 @@
     headerElement = document.getElementById('app-header');
     
     if (!headerElement) {
-      console.error("Header element not found in DOM");
+      console.error('Header element not found in DOM');
       return;
     }
     

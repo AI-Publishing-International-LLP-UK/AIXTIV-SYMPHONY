@@ -356,35 +356,35 @@ class DependencyCompatibilityChecker {
     // Generate specific recommendations
     for (const [type, issues] of Object.entries(issuesByType)) {
       switch (type) {
-        case 'known-incompatible':
-          this.recommendations.push({
-            type: 'package-replacement',
-            priority: 'high',
-            action: 'Replace incompatible packages',
-            details: issues.map(i => `Replace ${i.package} with ${i.alternative}`),
-            affectedFiles: issues.map(i => i.file)
-          });
-          break;
+      case 'known-incompatible':
+        this.recommendations.push({
+          type: 'package-replacement',
+          priority: 'high',
+          action: 'Replace incompatible packages',
+          details: issues.map(i => `Replace ${i.package} with ${i.alternative}`),
+          affectedFiles: issues.map(i => i.file)
+        });
+        break;
 
-        case 'engine-incompatible':
-          this.recommendations.push({
-            type: 'engine-update',
-            priority: 'high',
-            action: 'Update Node.js engine specifications',
-            details: issues.map(i => `Update ${i.file} to require Node.js >=${this.targetNodeVersion}`),
-            affectedFiles: issues.map(i => i.file)
-          });
-          break;
+      case 'engine-incompatible':
+        this.recommendations.push({
+          type: 'engine-update',
+          priority: 'high',
+          action: 'Update Node.js engine specifications',
+          details: issues.map(i => `Update ${i.file} to require Node.js >=${this.targetNodeVersion}`),
+          affectedFiles: issues.map(i => i.file)
+        });
+        break;
 
-        case 'installation-test-failed':
-          this.recommendations.push({
-            type: 'dependency-resolution',
-            priority: 'medium',
-            action: 'Resolve dependency conflicts',
-            details: 'Run npm audit and fix dependency issues',
-            affectedFiles: issues.map(i => i.file)
-          });
-          break;
+      case 'installation-test-failed':
+        this.recommendations.push({
+          type: 'dependency-resolution',
+          priority: 'medium',
+          action: 'Resolve dependency conflicts',
+          details: 'Run npm audit and fix dependency issues',
+          affectedFiles: issues.map(i => i.file)
+        });
+        break;
       }
     }
   }
@@ -431,71 +431,71 @@ class DependencyCompatibilityChecker {
     const report = this.generateReport();
 
     switch (format) {
-      case 'json':
-        console.log(JSON.stringify(report, null, 2));
-        break;
+    case 'json':
+      console.log(JSON.stringify(report, null, 2));
+      break;
 
-      case 'github-actions':
-        console.log(`::set-output name=compatibility::${report.summary.overallCompatibility}`);
-        console.log(`::set-output name=issues::${report.summary.compatibilityIssues}`);
+    case 'github-actions':
+      console.log(`::set-output name=compatibility::${report.summary.overallCompatibility}`);
+      console.log(`::set-output name=issues::${report.summary.compatibilityIssues}`);
         
-        // Output issues as GitHub Actions annotations
-        for (const issue of report.issues) {
-          const level = issue.severity === 'high' ? 'error' : 'warning';
-          console.log(`::${level} file=${issue.file}::${issue.issue}`);
-        }
+      // Output issues as GitHub Actions annotations
+      for (const issue of report.issues) {
+        const level = issue.severity === 'high' ? 'error' : 'warning';
+        console.log(`::${level} file=${issue.file}::${issue.issue}`);
+      }
         
-        for (const warning of report.warnings) {
-          console.log(`::warning file=${warning.file}::${warning.message}`);
-        }
-        break;
+      for (const warning of report.warnings) {
+        console.log(`::warning file=${warning.file}::${warning.message}`);
+      }
+      break;
 
-      default: // console
-        console.log('\n📋 Dependency Compatibility Report');
-        console.log('===================================\n');
+    default: // console
+      console.log('\n📋 Dependency Compatibility Report');
+      console.log('===================================\n');
         
-        console.log(`🎯 Target Node.js Version: ${this.targetNodeVersion}`);
-        console.log(`📊 Overall Compatibility: ${report.summary.overallCompatibility.toUpperCase()}\n`);
+      console.log(`🎯 Target Node.js Version: ${this.targetNodeVersion}`);
+      console.log(`📊 Overall Compatibility: ${report.summary.overallCompatibility.toUpperCase()}\n`);
         
-        console.log(`📦 Summary:`);
-        console.log(`   Package files checked: ${report.summary.packageFilesChecked}`);
-        console.log(`   Compatibility issues: ${report.summary.compatibilityIssues}`);
-        console.log(`   Warnings: ${report.summary.warnings}`);
-        console.log(`   Recommendations: ${report.summary.recommendations}\n`);
+      console.log('📦 Summary:');
+      console.log(`   Package files checked: ${report.summary.packageFilesChecked}`);
+      console.log(`   Compatibility issues: ${report.summary.compatibilityIssues}`);
+      console.log(`   Warnings: ${report.summary.warnings}`);
+      console.log(`   Recommendations: ${report.summary.recommendations}\n`);
 
-        if (report.issues.length > 0) {
-          console.log('🚨 Compatibility Issues:');
-          report.issues.forEach(issue => {
-            const icon = issue.severity === 'high' ? '🔴' : '🟡';
-            console.log(`   ${icon} ${issue.file}: ${issue.issue}`);
-            if (issue.alternative) {
-              console.log(`      💡 Suggested fix: ${issue.alternative}`);
-            }
-          });
-          console.log();
-        }
+      if (report.issues.length > 0) {
+        console.log('🚨 Compatibility Issues:');
+        report.issues.forEach(issue => {
+          const icon = issue.severity === 'high' ? '🔴' : '🟡';
+          console.log(`   ${icon} ${issue.file}: ${issue.issue}`);
+          if (issue.alternative) {
+            console.log(`      💡 Suggested fix: ${issue.alternative}`);
+          }
+        });
+        console.log();
+      }
 
-        if (report.warnings.length > 0) {
-          console.log('⚠️  Warnings:');
-          report.warnings.forEach(warning => {
-            console.log(`   • ${warning.file}: ${warning.message}`);
-          });
-          console.log();
-        }
+      if (report.warnings.length > 0) {
+        console.log('⚠️  Warnings:');
+        report.warnings.forEach(warning => {
+          console.log(`   • ${warning.file}: ${warning.message}`);
+        });
+        console.log();
+      }
 
-        if (report.recommendations.length > 0) {
-          console.log('💡 Recommendations:');
-          report.recommendations.forEach(rec => {
-            const priority = rec.priority === 'high' ? '🔴' : '🟡';
-            console.log(`   ${priority} ${rec.action}`);
-            if (Array.isArray(rec.details)) {
-              rec.details.forEach(detail => console.log(`      - ${detail}`));
-            } else {
-              console.log(`      - ${rec.details}`);
-            }
-          });
-        }
-        break;
+      if (report.recommendations.length > 0) {
+        console.log('💡 Recommendations:');
+        report.recommendations.forEach(rec => {
+          const priority = rec.priority === 'high' ? '🔴' : '🟡';
+          console.log(`   ${priority} ${rec.action}`);
+          if (Array.isArray(rec.details)) {
+            rec.details.forEach(detail => console.log(`      - ${detail}`));
+          } else {
+            console.log(`      - ${rec.details}`);
+          }
+        });
+      }
+      break;
     }
 
     return report;

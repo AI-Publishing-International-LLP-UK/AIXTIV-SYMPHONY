@@ -10,7 +10,7 @@ async function authenticate() {
     const client = await auth.getClient();
     const projectId = await auth.getProjectId();
 
-    console.log(`Successfully authenticated with service account!`);
+    console.log('Successfully authenticated with service account!');
     console.log(`Project ID: ${projectId}`);
 
     // Get access token

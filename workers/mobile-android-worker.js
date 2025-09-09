@@ -56,45 +56,45 @@ async function handleMobileRequest(request, url, env) {
 
   // Mobile App API Routes
   switch (path) {
-    case '/health':
-      return new Response(JSON.stringify({
-        status: 'active',
-        platform: platform,
-        version: '1.0.0',
-        features: ["SallyPort authentication","Q4D-Lenz integration","Design token system","Icon management","Layout orchestration","Diamond SAO CLI integration","Real-time sync with web interface"],
-        timestamp: new Date().toISOString()
-      }), {
-        headers: { 'Content-Type': 'application/json' }
-      });
+  case '/health':
+    return new Response(JSON.stringify({
+      status: 'active',
+      platform: platform,
+      version: '1.0.0',
+      features: ['SallyPort authentication','Q4D-Lenz integration','Design token system','Icon management','Layout orchestration','Diamond SAO CLI integration','Real-time sync with web interface'],
+      timestamp: new Date().toISOString()
+    }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
 
-    case '/config':
-      return new Response(JSON.stringify({
-        platform: platform,
-        designTokens: {
-          colors: {"base":{"primary":"#3A4F66","uplight":"#4B6582","shadow":"#2A3B4D"},"effects":{"glow":"rgba(255, 255, 255, 0.15)","ambient":"rgba(0, 0, 0, 0.08)"}},
-          typography: {"sizes":{"verySmall":"5px","small":"9px","medium":"14px"}}
-        },
-        auth: {
-          sallyportEnabled: true,
-          provider: 'Google OAuth 2.0'
-        },
-        features: ["SallyPort authentication","Q4D-Lenz integration","Design token system","Icon management","Layout orchestration","Diamond SAO CLI integration","Real-time sync with web interface"]
-      }), {
-        headers: { 'Content-Type': 'application/json' }
-      });
+  case '/config':
+    return new Response(JSON.stringify({
+      platform: platform,
+      designTokens: {
+        colors: {'base':{'primary':'#3A4F66','uplight':'#4B6582','shadow':'#2A3B4D'},'effects':{'glow':'rgba(255, 255, 255, 0.15)','ambient':'rgba(0, 0, 0, 0.08)'}},
+        typography: {'sizes':{'verySmall':'5px','small':'9px','medium':'14px'}}
+      },
+      auth: {
+        sallyportEnabled: true,
+        provider: 'Google OAuth 2.0'
+      },
+      features: ['SallyPort authentication','Q4D-Lenz integration','Design token system','Icon management','Layout orchestration','Diamond SAO CLI integration','Real-time sync with web interface']
+    }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
 
-    case '/auth/init':
-      return handleMobileAuth(request, platform);
+  case '/auth/init':
+    return handleMobileAuth(request, platform);
 
-    case '/sync':
-      return handleMobileSync(request, platform);
+  case '/sync':
+    return handleMobileSync(request, platform);
 
-    case '/diamond-cli':
-      return handleDiamondCLIIntegration(request, platform);
+  case '/diamond-cli':
+    return handleDiamondCLIIntegration(request, platform);
 
-    default:
-      // Serve mobile app shell
-      return serveAppShell(platform);
+  default:
+    // Serve mobile app shell
+    return serveAppShell(platform);
   }
 }
 

@@ -107,10 +107,10 @@ class CIGFramework {
       throw error instanceof ErrorWithCode
         ? error
         : new ErrorWithCode(
-            'Content verification failed',
-            'VERIFICATION_FAILED',
-            500
-          );
+          'Content verification failed',
+          'VERIFICATION_FAILED',
+          500
+        );
     }
   }
 
@@ -155,10 +155,10 @@ class CIGFramework {
       throw error instanceof ErrorWithCode
         ? error
         : new ErrorWithCode(
-            'Certification generation failed',
-            'CERTIFICATION_FAILED',
-            500
-          );
+          'Certification generation failed',
+          'CERTIFICATION_FAILED',
+          500
+        );
     }
   }
 
@@ -603,7 +603,7 @@ class CIGFramework {
     return (
       `This certifies that "${title}" has been verified by the Dr. Memoria's Anthology ` +
       `CIG (Code is Gold) Framework and awarded a ${certLevel} certification on ${date}. ` +
-      `This work meets or exceeds all required standards for ethical compliance, human ` +
+      'This work meets or exceeds all required standards for ethical compliance, human ' +
       `creative contribution, and publishing quality with an integrity score of ${integrityScore * 100}%.`
     );
   }

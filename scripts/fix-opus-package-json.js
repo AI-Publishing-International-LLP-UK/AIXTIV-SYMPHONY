@@ -42,18 +42,18 @@ function fixPackageJson(filePath) {
     
     // Create a proper package.json
     const properPackageJson = {
-      "name": "opus1-amplify-core",
-      "version": "1.0.0",
-      "description": "Opus1 Amplify Core package",
-      "engines": {
-        "node": ">=24.0.0"
+      'name': 'opus1-amplify-core',
+      'version': '1.0.0',
+      'description': 'Opus1 Amplify Core package',
+      'engines': {
+        'node': '>=24.0.0'
       },
-      "private": true
+      'private': true
     };
     
     // Write the fixed content
     fs.writeFileSync(filePath, JSON.stringify(properPackageJson, null, 2) + '\n', 'utf8');
-    console.log(`   ✅ Fixed successfully`);
+    console.log('   ✅ Fixed successfully');
     
     return true;
   } catch (err) {
@@ -86,7 +86,7 @@ try {
     }
   }
   
-  console.log(`\n📊 Summary:`);
+  console.log('\n📊 Summary:');
   console.log(`   Total files found: ${packageFiles.length}`);
   console.log(`   Successfully fixed: ${fixedCount}`);
   console.log(`   Failed to fix: ${packageFiles.length - fixedCount}`);

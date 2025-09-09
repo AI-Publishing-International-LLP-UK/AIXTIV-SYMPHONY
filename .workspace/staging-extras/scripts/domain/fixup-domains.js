@@ -56,7 +56,7 @@ try {
   // Save updated cache
   fs.writeFileSync(domainCachePath, JSON.stringify(cache, null, 2));
 
-  console.log(`Domain cache cleanup complete.`);
+  console.log('Domain cache cleanup complete.');
   console.log(`- Removed domains: ${removedCount}`);
   console.log(`- Updated domains: ${updatedCount}`);
   console.log(`- Cache now has ${cache.domains.length} domains.`);

@@ -56,7 +56,7 @@ function status() {
     const isReadOnly = !(stats.mode & parseInt('200', 8));
     
     console.log('\n🛡️ LOCK STATUS:');
-    console.log(`File: mocoa-current.html`);
+    console.log('File: mocoa-current.html');
     console.log(`Protected: ${isReadOnly ? '✅ YES (read-only)' : '❌ NO (writable)'}`);
     console.log(`Last modified: ${stats.mtime}`);
     
@@ -77,18 +77,18 @@ function status() {
 const command = process.argv[2] || 'lock';
 
 switch (command) {
-  case 'lock':
-    lockFixes();
-    break;
-  case 'unlock':
-    unlockFixes();
-    break;
-  case 'status':
-    status();
-    break;
-  default:
-    console.log('Usage: node lock-fixes.js [lock|unlock|status]');
-    console.log('  lock   - Fix issues and lock file against changes');
-    console.log('  unlock - Remove file protection');
-    console.log('  status - Show current lock status');
+case 'lock':
+  lockFixes();
+  break;
+case 'unlock':
+  unlockFixes();
+  break;
+case 'status':
+  status();
+  break;
+default:
+  console.log('Usage: node lock-fixes.js [lock|unlock|status]');
+  console.log('  lock   - Fix issues and lock file against changes');
+  console.log('  unlock - Remove file protection');
+  console.log('  status - Show current lock status');
 }

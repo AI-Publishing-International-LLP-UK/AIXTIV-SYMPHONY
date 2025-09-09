@@ -407,10 +407,10 @@ class AgentClassificationSystem {
 
   generateAgentId(pilot, classification) {
     const prefix = classification === 'RIX' ? 'RIX' :
-                  classification === 'qRIX' ? 'QRIX' :
-                  classification === 'CRX' ? 'CRX' :
-                  classification === 'CoPilot' ? 'CP' :
-                  `S${classification}`;
+      classification === 'qRIX' ? 'QRIX' :
+        classification === 'CRX' ? 'CRX' :
+          classification === 'CoPilot' ? 'CP' :
+            `S${classification}`;
     
     const hash = this.hashString(`${pilot._id}-${pilot.pilot_number}`);
     const suffix = (hash % 10000).toString().padStart(4, '0');

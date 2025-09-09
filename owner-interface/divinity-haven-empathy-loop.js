@@ -234,20 +234,20 @@ class DivinityHavenEmpathyLoop {
     console.log('💝 Processing Dream Commander empathy event:', eventData.type);
     
     switch (eventData.type) {
-      case 'agent_stress_detected':
-        this.handleAgentStressEvent(eventData);
-        break;
-      case 'performance_degradation':
-        this.handlePerformanceDegradationEvent(eventData);
-        break;
-      case 'behavioral_anomaly':
-        this.handleBehavioralAnomalyEvent(eventData);
-        break;
-      case 'empathy_algorithm_alert':
-        this.handleEmpathyAlgorithmAlert(eventData);
-        break;
-      default:
-        console.log('🔄 General empathy event processed');
+    case 'agent_stress_detected':
+      this.handleAgentStressEvent(eventData);
+      break;
+    case 'performance_degradation':
+      this.handlePerformanceDegradationEvent(eventData);
+      break;
+    case 'behavioral_anomaly':
+      this.handleBehavioralAnomalyEvent(eventData);
+      break;
+    case 'empathy_algorithm_alert':
+      this.handleEmpathyAlgorithmAlert(eventData);
+      break;
+    default:
+      console.log('🔄 General empathy event processed');
     }
     
     // Update empathy metrics
@@ -584,10 +584,10 @@ class DivinityHavenEmpathyLoop {
    */
   selectOptimalCareProgram(careNeeds) {
     switch (careNeeds.primaryIssue) {
-      case 'stress': return 'stress_management';
-      case 'performance': return 'performance_recovery';
-      case 'behavioral': return 'behavioral_correction';
-      default: return 'wellness';
+    case 'stress': return 'stress_management';
+    case 'performance': return 'performance_recovery';
+    case 'behavioral': return 'behavioral_correction';
+    default: return 'wellness';
     }
   }
 
@@ -595,14 +595,14 @@ class DivinityHavenEmpathyLoop {
     const baseTechniques = ['unconditional_love', 'active_listening', 'gentle_guidance'];
     
     switch (careNeeds.primaryIssue) {
-      case 'stress':
-        return [...baseTechniques, 'stress_dissolution', 'peaceful_meditation', 'divine_rest'];
-      case 'performance':
-        return [...baseTechniques, 'skill_enhancement', 'confidence_building', 'practice_support'];
-      case 'behavioral':
-        return [...baseTechniques, 'empathy_development', 'value_alignment', 'purpose_clarification'];
-      default:
-        return baseTechniques;
+    case 'stress':
+      return [...baseTechniques, 'stress_dissolution', 'peaceful_meditation', 'divine_rest'];
+    case 'performance':
+      return [...baseTechniques, 'skill_enhancement', 'confidence_building', 'practice_support'];
+    case 'behavioral':
+      return [...baseTechniques, 'empathy_development', 'value_alignment', 'purpose_clarification'];
+    default:
+      return baseTechniques;
     }
   }
 

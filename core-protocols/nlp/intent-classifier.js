@@ -163,139 +163,139 @@ function extractFlags(input, pattern) {
 
     // Simple extraction strategies based on flag type
     switch (flag) {
-      case 'task':
-        // For code generation tasks
-        if (pattern.command === 'claude:code:generate') {
-          // Get the part after "generate", "create", "code", etc.
-          for (const keyword of ['generate', 'create', 'code', 'function', 'write']) {
-            const index = input.indexOf(keyword);
-            if (index !== -1) {
-              value = input.substr(index + keyword.length).trim();
-              break;
-            }
-          }
-        }
-        break;
-
-      case 'project':
-        // Look for project name after "called", "named", etc.
-        const projectMarkers = [' called ', ' named ', ' for ', ' titled '];
-        for (const marker of projectMarkers) {
-          const index = input.indexOf(marker);
+    case 'task':
+      // For code generation tasks
+      if (pattern.command === 'claude:code:generate') {
+        // Get the part after "generate", "create", "code", etc.
+        for (const keyword of ['generate', 'create', 'code', 'function', 'write']) {
+          const index = input.indexOf(keyword);
           if (index !== -1) {
-            value = input.substr(index + marker.length).trim();
-            // Trim quotes and periods
-            value = value.replace(/["'.]+$/, '');
+            value = input.substr(index + keyword.length).trim();
             break;
           }
         }
-        break;
+      }
+      break;
 
-      case 'language':
-        // Look for programming language names
-        const languages = [
-          'javascript',
-          'python',
-          'java',
-          'typescript',
-          'c#',
-          'c++',
-          'ruby',
-          'go',
-          'php',
-          'rust',
-        ];
-        for (const lang of languages) {
-          if (input.includes(lang)) {
-            value = lang;
-            break;
-          }
+    case 'project':
+      // Look for project name after "called", "named", etc.
+      const projectMarkers = [' called ', ' named ', ' for ', ' titled '];
+      for (const marker of projectMarkers) {
+        const index = input.indexOf(marker);
+        if (index !== -1) {
+          value = input.substr(index + marker.length).trim();
+          // Trim quotes and periods
+          value = value.replace(/["'.]+$/, '');
+          break;
         }
-        break;
+      }
+      break;
 
-      case 'repository':
-        // Look for repo names
-        const repoMarkers = [' repo ', ' repository ', ' for repo ', ' for repository '];
-        for (const marker of repoMarkers) {
-          const index = input.indexOf(marker);
-          if (index !== -1) {
-            value = input
-              .substr(index + marker.length)
-              .split(' ')[0]
-              .trim();
-            break;
-          }
+    case 'language':
+      // Look for programming language names
+      const languages = [
+        'javascript',
+        'python',
+        'java',
+        'typescript',
+        'c#',
+        'c++',
+        'ruby',
+        'go',
+        'php',
+        'rust',
+      ];
+      for (const lang of languages) {
+        if (input.includes(lang)) {
+          value = lang;
+          break;
         }
+      }
+      break;
 
-        // If no repo specified but we need one, use 'main'
-        if (!value && pattern.command === 'claude:automation:github') {
-          const actionWords = ['check', 'secure', 'align', 'clean'];
-          if (actionWords.some((word) => input.includes(word))) {
-            value = 'main';
-          }
+    case 'repository':
+      // Look for repo names
+      const repoMarkers = [' repo ', ' repository ', ' for repo ', ' for repository '];
+      for (const marker of repoMarkers) {
+        const index = input.indexOf(marker);
+        if (index !== -1) {
+          value = input
+            .substr(index + marker.length)
+            .split(' ')[0]
+            .trim();
+          break;
         }
-        break;
+      }
 
-      case 'action':
-        // For GitHub automation
-        const actions = {
-          security: 'secure',
-          secure: 'secure',
-          clean: 'clean',
-          cleanup: 'clean',
-          align: 'align',
-          format: 'align',
-          memoria: 'memoria-assist',
-          sync: 'sync',
-        };
-
-        for (const [actionWord, actionValue] of Object.entries(actions)) {
-          if (input.includes(actionWord)) {
-            value = actionValue;
-            break;
-          }
+      // If no repo specified but we need one, use 'main'
+      if (!value && pattern.command === 'claude:automation:github') {
+        const actionWords = ['check', 'secure', 'align', 'clean'];
+        if (actionWords.some((word) => input.includes(word))) {
+          value = 'main';
         }
-        break;
+      }
+      break;
 
-      case 'copilot':
-        // Extract copilot name or email
-        const copilotMarkers = [' copilot ', ' co-pilot ', ' as copilot', ' as a copilot'];
-        for (const marker of copilotMarkers) {
-          const index = input.indexOf(marker);
-          if (index !== -1) {
-            // Get word before or after marker
-            const beforeText = input.substr(0, index).trim().split(' ');
-            const afterText = input
-              .substr(index + marker.length)
-              .trim()
-              .split(' ');
+    case 'action':
+      // For GitHub automation
+      const actions = {
+        security: 'secure',
+        secure: 'secure',
+        clean: 'clean',
+        cleanup: 'clean',
+        align: 'align',
+        format: 'align',
+        memoria: 'memoria-assist',
+        sync: 'sync',
+      };
 
-            // If there's a word after the marker, use it
-            if (afterText.length > 0 && afterText[0].length > 0) {
-              value = afterText[0];
-            }
-            // Otherwise use the word before the marker
-            else if (beforeText.length > 0) {
-              value = beforeText[beforeText.length - 1];
-            }
-
-            // Clean up value
-            if (value) {
-              value = value.replace(/[,.:;'"]/, '');
-            }
-            break;
-          }
+      for (const [actionWord, actionValue] of Object.entries(actions)) {
+        if (input.includes(actionWord)) {
+          value = actionValue;
+          break;
         }
+      }
+      break;
 
-        // If explicit names mentioned
-        const namePatterns = ['lucy', 'sabina', 'memoria', 'grant', 'claude'];
-        for (const name of namePatterns) {
-          if (input.includes(name)) {
-            value = name;
-            break;
+    case 'copilot':
+      // Extract copilot name or email
+      const copilotMarkers = [' copilot ', ' co-pilot ', ' as copilot', ' as a copilot'];
+      for (const marker of copilotMarkers) {
+        const index = input.indexOf(marker);
+        if (index !== -1) {
+          // Get word before or after marker
+          const beforeText = input.substr(0, index).trim().split(' ');
+          const afterText = input
+            .substr(index + marker.length)
+            .trim()
+            .split(' ');
+
+          // If there's a word after the marker, use it
+          if (afterText.length > 0 && afterText[0].length > 0) {
+            value = afterText[0];
           }
+          // Otherwise use the word before the marker
+          else if (beforeText.length > 0) {
+            value = beforeText[beforeText.length - 1];
+          }
+
+          // Clean up value
+          if (value) {
+            value = value.replace(/[,.:;'"]/, '');
+          }
+          break;
         }
-        break;
+      }
+
+      // If explicit names mentioned
+      const namePatterns = ['lucy', 'sabina', 'memoria', 'grant', 'claude'];
+      for (const name of namePatterns) {
+        if (input.includes(name)) {
+          value = name;
+          break;
+        }
+      }
+      break;
     }
 
     // If we found a value, add it to flags

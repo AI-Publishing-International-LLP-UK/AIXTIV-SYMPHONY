@@ -169,10 +169,10 @@ class MultiTenantPatentSystem {
       tenantId: tenant.id,
       companyName: tenant.companyName,
       endpoints: {
-        patentSearch: `/api/patents/search`,
-        patentFiling: `/api/filing/create`,
-        priorArt: `/api/filing/prior-art`,
-        drBurbyAnalysis: `/api/drburby/analyze`
+        patentSearch: '/api/patents/search',
+        patentFiling: '/api/filing/create',
+        priorArt: '/api/filing/prior-art',
+        drBurbyAnalysis: '/api/drburby/analyze'
       }
     };
     

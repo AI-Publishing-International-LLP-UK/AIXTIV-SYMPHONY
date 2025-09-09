@@ -35,7 +35,7 @@ if (!apiKeyMatch) {
 // Replace with a version that also checks DR_CLAUDE_API
 const updatedContent = content.replace(
   apiKeyPattern,
-  `'anthropic-api-key': process.env.ANTHROPIC_API_KEY || process.env.DR_CLAUDE_API || ''`
+  '\'anthropic-api-key\': process.env.ANTHROPIC_API_KEY || process.env.DR_CLAUDE_API || \'\''
 );
 
 // Write the updated content back to the file

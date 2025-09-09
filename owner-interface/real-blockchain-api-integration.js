@@ -108,7 +108,7 @@ class RealBlockchainAPIIntegration {
       };
       
     } catch (error) {
-      console.error(`❌ S2DO blockchain submission failed:`, error);
+      console.error('❌ S2DO blockchain submission failed:', error);
       throw error;
     }
   }
@@ -165,7 +165,7 @@ class RealBlockchainAPIIntegration {
       };
       
     } catch (error) {
-      console.error(`❌ Tower blockchain submission failed:`, error);
+      console.error('❌ Tower blockchain submission failed:', error);
       throw error;
     }
   }
@@ -256,7 +256,7 @@ class RealBlockchainAPIIntegration {
       };
       
     } catch (error) {
-      console.error(`❌ Error getting transaction status:`, error);
+      console.error('❌ Error getting transaction status:', error);
       throw error;
     }
   }
@@ -304,7 +304,7 @@ class RealBlockchainAPIIntegration {
       };
       
     } catch (error) {
-      console.error(`❌ Error getting user balances:`, error);
+      console.error('❌ Error getting user balances:', error);
       throw error;
     }
   }
@@ -354,7 +354,7 @@ class RealBlockchainAPIIntegration {
       return transactions.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
       
     } catch (error) {
-      console.error(`❌ Error getting transaction history:`, error);
+      console.error('❌ Error getting transaction history:', error);
       throw error;
     }
   }

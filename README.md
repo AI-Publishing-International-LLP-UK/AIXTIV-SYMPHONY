@@ -1,29 +1,20 @@
-# ASOOS.2100.Cool - Professional Landing Page
+# Repository Deprecated
 
-This repository contains the professional landing page for the Aixtiv Symphony Orchestrating Operating System (ASOOS).
+This repository has been deprecated as of August 22, 2025.
 
-## Overview
+## Status
+❌ **DEPRECATED** - No longer maintained
 
-ASOOS.2100.Cool serves as the main entry point for the Aixtiv Symphony Orchestrating Operating System, featuring:
+## Migration
+All functionality has been migrated to active ASOOS repositories:
+- Main ASOOS: `asoos/` (primary development)
+- AIXTIV Symphony: `AIXTIV-SYMPHONY/` (production deployment)
 
-- **560,000 AI agents** across 50 industry sectors
-- **DIDC Archives system** powered by Tower Blockchain
-- **Professional team showcase** including the 11 original pilots
-- **Zero Firebase dependencies** - fully static and secure
-- **Enterprise-ready design** with advanced animations and responsive layout
+## Archive Date
+Deprecated: August 22, 2025
 
-## Technical Details
+## Contact
+For questions about migration or access to archived code, please contact the ASOOS team.
 
-- **Pure HTML/CSS/JavaScript** - No external dependencies except fonts and icons
-- **Cloudflare-ready** with proper security headers
-- **Mobile responsive** design
-- **Professional branding** aligned with ASOOS visual identity
-- **Performance optimized** with efficient animations
-
-## Deployment
-
-This repository is configured for GitHub Pages deployment to serve ASOOS.2100.Cool.
-
-## License
-
-© 2025 AI Publishing International LLP - All Rights Reserved
+---
+*This repository is maintained only for historical reference.*

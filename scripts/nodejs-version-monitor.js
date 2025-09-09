@@ -293,61 +293,61 @@ class NodeVersionMonitor {
     const rpt = report || this.generateReport();
 
     switch (format) {
-      case 'json':
-        console.log(JSON.stringify(rpt, null, 2));
-        break;
+    case 'json':
+      console.log(JSON.stringify(rpt, null, 2));
+      break;
       
-      case 'github-actions':
-        // Output for GitHub Actions
-        console.log(`::set-output name=status::${rpt.summary.overallStatus}`);
-        console.log(`::set-output name=upgrades-needed::${rpt.recommendations.length}`);
+    case 'github-actions':
+      // Output for GitHub Actions
+      console.log(`::set-output name=status::${rpt.summary.overallStatus}`);
+      console.log(`::set-output name=upgrades-needed::${rpt.recommendations.length}`);
         
-        if (rpt.warnings.length > 0) {
-          rpt.warnings.forEach(warning => {
-            console.log(`::warning::${warning}`);
-          });
-        }
+      if (rpt.warnings.length > 0) {
+        rpt.warnings.forEach(warning => {
+          console.log(`::warning::${warning}`);
+        });
+      }
 
-        if (rpt.recommendations.length > 0) {
-          console.log('::group::Upgrade Recommendations');
-          rpt.recommendations.forEach(rec => {
-            console.log(`::notice title=${rec.file}::${rec.reason}: ${rec.current} → ${rec.recommended}`);
-          });
-          console.log('::endgroup::');
-        }
-        break;
+      if (rpt.recommendations.length > 0) {
+        console.log('::group::Upgrade Recommendations');
+        rpt.recommendations.forEach(rec => {
+          console.log(`::notice title=${rec.file}::${rec.reason}: ${rec.current} → ${rec.recommended}`);
+        });
+        console.log('::endgroup::');
+      }
+      break;
 
-      default: // console
-        console.log('\n🔍 Node.js Version Monitoring Report');
-        console.log('=====================================\n');
+    default: // console
+      console.log('\n🔍 Node.js Version Monitoring Report');
+      console.log('=====================================\n');
         
-        console.log(`📊 Summary:`);
-        console.log(`   Files scanned: ${rpt.summary.filesScanned}`);
-        console.log(`   Status: ${rpt.summary.overallStatus.toUpperCase()}`);
-        console.log(`   Upgrades recommended: ${rpt.summary.upgradesRecommended}`);
-        console.log(`   Warnings: ${rpt.summary.criticalWarnings}\n`);
+      console.log('📊 Summary:');
+      console.log(`   Files scanned: ${rpt.summary.filesScanned}`);
+      console.log(`   Status: ${rpt.summary.overallStatus.toUpperCase()}`);
+      console.log(`   Upgrades recommended: ${rpt.summary.upgradesRecommended}`);
+      console.log(`   Warnings: ${rpt.summary.criticalWarnings}\n`);
 
-        if (rpt.warnings.length > 0) {
-          console.log('⚠️  Critical Warnings:');
-          rpt.warnings.forEach(warning => console.log(`   • ${warning}`));
-          console.log();
-        }
+      if (rpt.warnings.length > 0) {
+        console.log('⚠️  Critical Warnings:');
+        rpt.warnings.forEach(warning => console.log(`   • ${warning}`));
+        console.log();
+      }
 
-        if (rpt.recommendations.length > 0) {
-          console.log('📈 Upgrade Recommendations:');
-          rpt.recommendations.forEach(rec => {
-            const priority = rec.severity === 'high' ? '🔴' : '🟡';
-            console.log(`   ${priority} ${rec.file}: ${rec.current} → ${rec.recommended} (${rec.reason})`);
-          });
-          console.log();
-        }
+      if (rpt.recommendations.length > 0) {
+        console.log('📈 Upgrade Recommendations:');
+        rpt.recommendations.forEach(rec => {
+          const priority = rec.severity === 'high' ? '🔴' : '🟡';
+          console.log(`   ${priority} ${rec.file}: ${rec.current} → ${rec.recommended} (${rec.reason})`);
+        });
+        console.log();
+      }
 
-        console.log('🌐 Latest Available Versions:');
-        const lts = rpt.latestVersions['current-lts'];
-        const latest = rpt.latestVersions['latest'];
-        console.log(`   Current LTS: ${lts.version} (${lts.lts})`);
-        console.log(`   Latest: ${latest.version}`);
-        break;
+      console.log('🌐 Latest Available Versions:');
+      const lts = rpt.latestVersions['current-lts'];
+      const latest = rpt.latestVersions['latest'];
+      console.log(`   Current LTS: ${lts.version} (${lts.lts})`);
+      console.log(`   Latest: ${latest.version}`);
+      break;
     }
   }
 

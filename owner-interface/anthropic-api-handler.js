@@ -47,7 +47,7 @@ class AnthropicAPIHandler {
         model: 'claude-4-sonnet-20241022',
         maxTokens: 1000,
         temperature: 0.7,
-        system: "You are Claude, an AI assistant integrated with the ASOOS Diamond SAO CLI system."
+        system: 'You are Claude, an AI assistant integrated with the ASOOS Diamond SAO CLI system.'
       };
       
       const queryOptions = { ...defaultOptions, ...options };

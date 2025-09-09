@@ -73,18 +73,18 @@ export default function () {
   const pilot = pilots[Math.floor(Math.random() * pilots.length)];
   
   switch (scenario) {
-    case 'voiceAssignment':
-      testVoiceAssignment(pilot);
-      break;
-    case 'voiceSynthesis':
-      testVoiceSynthesis(pilot);
-      break;
-    case 'batchAssignment':
-      testBatchAssignment();
-      break;
-    case 'statusCheck':
-      testStatusCheck(pilot);
-      break;
+  case 'voiceAssignment':
+    testVoiceAssignment(pilot);
+    break;
+  case 'voiceSynthesis':
+    testVoiceSynthesis(pilot);
+    break;
+  case 'batchAssignment':
+    testBatchAssignment();
+    break;
+  case 'statusCheck':
+    testStatusCheck(pilot);
+    break;
   }
   
   sleep(Math.random() * 2 + 1); // Random sleep between 1-3 seconds
@@ -257,24 +257,24 @@ function testFallbackMechanism(pilot, operation) {
   let fallbackEndpoint;
   
   switch (operation) {
-    case 'voiceAssignment':
-      fallbackPayload = {
-        pilotId: pilot.id,
-        voiceProfile: 'fallback-voice',
-        priority: 'high', // Increase priority for fallback
-        fallback: true
-      };
-      fallbackEndpoint = '/api/voice/assign';
-      break;
-    case 'voiceSynthesis':
-      fallbackPayload = {
-        text: 'Fallback synthesis test',
-        voiceProfile: 'fallback-voice',
-        quality: 'medium',
-        fallback: true
-      };
-      fallbackEndpoint = '/api/voice/synthesize';
-      break;
+  case 'voiceAssignment':
+    fallbackPayload = {
+      pilotId: pilot.id,
+      voiceProfile: 'fallback-voice',
+      priority: 'high', // Increase priority for fallback
+      fallback: true
+    };
+    fallbackEndpoint = '/api/voice/assign';
+    break;
+  case 'voiceSynthesis':
+    fallbackPayload = {
+      text: 'Fallback synthesis test',
+      voiceProfile: 'fallback-voice',
+      quality: 'medium',
+      fallback: true
+    };
+    fallbackEndpoint = '/api/voice/synthesize';
+    break;
   }
   
   if (fallbackPayload && fallbackEndpoint) {

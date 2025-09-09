@@ -174,7 +174,7 @@ module.exports = async function queryRepository(options) {
 
       // Provide guidance for viewing full entry
       console.log(chalk.cyan('\nTo view a full entry:'));
-      console.log(`aixtiv serpew:repository:query --id <entry_id>`);
+      console.log('aixtiv serpew:repository:query --id <entry_id>');
     } else {
       displayResult(`Error: ${result?.message || 'Failed to query repository'}`, 'error');
     }

@@ -1,107 +1,107 @@
-"use strict";
+'use strict';
 // SD20 Blockchain Service Implementation
 // Handles all blockchain interactions for the SD20 system
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(exports, '__esModule', { value: true });
 exports.SD20NFTContract = exports.SD20ActionVerificationContract = exports.SD20BlockchainService = void 0;
-const ethers_1 = require("ethers");
+const ethers_1 = require('ethers');
 /**
  * Implementation of the blockchain service interface for the SD20 system
  */
 class SD20BlockchainService {
-    constructor(rpcUrl, privateKey, actionVerificationContractAddress, actionVerificationContractAbi, nftContractAddress, nftContractAbi) {
-        this.provider = new ethers_1.ethers.providers.JsonRpcProvider(rpcUrl);
-        this.wallet = new ethers_1.ethers.Wallet(privateKey, this.provider);
-        this.actionVerificationContract = new ethers_1.ethers.Contract(actionVerificationContractAddress, actionVerificationContractAbi, this.wallet);
-        this.nftContract = new ethers_1.ethers.Contract(nftContractAddress, nftContractAbi, this.wallet);
-    }
-    /**
+  constructor(rpcUrl, privateKey, actionVerificationContractAddress, actionVerificationContractAbi, nftContractAddress, nftContractAbi) {
+    this.provider = new ethers_1.ethers.providers.JsonRpcProvider(rpcUrl);
+    this.wallet = new ethers_1.ethers.Wallet(privateKey, this.provider);
+    this.actionVerificationContract = new ethers_1.ethers.Contract(actionVerificationContractAddress, actionVerificationContractAbi, this.wallet);
+    this.nftContract = new ethers_1.ethers.Contract(nftContractAddress, nftContractAbi, this.wallet);
+  }
+  /**
      * Store action verification on the blockchain
      */
-    async storeActionVerification(actionId, actionHash, initiatorAddress, verifierAddresses) {
-        try {
-            // Create transaction to store verification
-            const tx = await this.actionVerificationContract.recordVerification(actionId, actionHash, initiatorAddress, verifierAddresses, { gasLimit: 500000 });
-            // Wait for transaction to be mined
-            const receipt = await tx.wait();
-            // Return transaction hash
-            return receipt.transactionHash;
-        }
-        catch (error) {
-            console.error('Error storing action verification:', error);
-            throw new Error('Failed to store action verification on blockchain');
-        }
+  async storeActionVerification(actionId, actionHash, initiatorAddress, verifierAddresses) {
+    try {
+      // Create transaction to store verification
+      const tx = await this.actionVerificationContract.recordVerification(actionId, actionHash, initiatorAddress, verifierAddresses, { gasLimit: 500000 });
+      // Wait for transaction to be mined
+      const receipt = await tx.wait();
+      // Return transaction hash
+      return receipt.transactionHash;
     }
-    /**
+    catch (error) {
+      console.error('Error storing action verification:', error);
+      throw new Error('Failed to store action verification on blockchain');
+    }
+  }
+  /**
      * Mint an NFT for a completed action
      */
-    async mintNFT(metadata, ownerAddress, contributorAddresses) {
-        try {
-            // Store metadata on IPFS
-            const metadataUri = await this.storeMetadataOnIPFS(metadata);
-            // Calculate royalty shares based on contributor count
-            const shares = this.calculateRoyaltyShares(contributorAddresses.length + 1);
-            // Create transaction to mint NFT
-            const tx = await this.nftContract.mintActionNFT(ownerAddress, metadataUri, contributorAddresses, shares, { gasLimit: 700000 });
-            // Wait for transaction to be mined
-            const receipt = await tx.wait();
-            // Extract token ID from event logs
-            const event = receipt.events.find(e => e.event === 'Transfer');
-            const tokenId = event.args.tokenId.toString();
-            return tokenId;
-        }
-        catch (error) {
-            console.error('Error minting NFT:', error);
-            throw new Error('Failed to mint NFT on blockchain');
-        }
+  async mintNFT(metadata, ownerAddress, contributorAddresses) {
+    try {
+      // Store metadata on IPFS
+      const metadataUri = await this.storeMetadataOnIPFS(metadata);
+      // Calculate royalty shares based on contributor count
+      const shares = this.calculateRoyaltyShares(contributorAddresses.length + 1);
+      // Create transaction to mint NFT
+      const tx = await this.nftContract.mintActionNFT(ownerAddress, metadataUri, contributorAddresses, shares, { gasLimit: 700000 });
+      // Wait for transaction to be mined
+      const receipt = await tx.wait();
+      // Extract token ID from event logs
+      const event = receipt.events.find(e => e.event === 'Transfer');
+      const tokenId = event.args.tokenId.toString();
+      return tokenId;
     }
-    /**
+    catch (error) {
+      console.error('Error minting NFT:', error);
+      throw new Error('Failed to mint NFT on blockchain');
+    }
+  }
+  /**
      * Verify an action record on the blockchain
      */
-    async verifyActionRecord(actionId, actionHash) {
-        try {
-            // Query blockchain to verify action record
-            const storedHash = await this.actionVerificationContract.getActionHash(actionId);
-            // Compare stored hash with provided hash
-            return storedHash === actionHash;
-        }
-        catch (error) {
-            console.error('Error verifying action record:', error);
-            return false;
-        }
+  async verifyActionRecord(actionId, actionHash) {
+    try {
+      // Query blockchain to verify action record
+      const storedHash = await this.actionVerificationContract.getActionHash(actionId);
+      // Compare stored hash with provided hash
+      return storedHash === actionHash;
     }
-    /**
+    catch (error) {
+      console.error('Error verifying action record:', error);
+      return false;
+    }
+  }
+  /**
      * Store metadata on IPFS and return the URI
      */
-    async storeMetadataOnIPFS(metadata) {
-        try {
-            // In a real implementation, this would use an IPFS service
-            // For this example, we'll simulate it
-            console.log('Storing metadata on IPFS:', metadata);
-            // Generate a fake IPFS CID based on the metadata
-            const fakeCid = Buffer.from(JSON.stringify(metadata))
-                .toString('base64')
-                .substring(0, 46);
-            return `ipfs://${fakeCid}`;
-        }
-        catch (error) {
-            console.error('Error storing metadata on IPFS:', error);
-            throw new Error('Failed to store metadata on IPFS');
-        }
+  async storeMetadataOnIPFS(metadata) {
+    try {
+      // In a real implementation, this would use an IPFS service
+      // For this example, we'll simulate it
+      console.log('Storing metadata on IPFS:', metadata);
+      // Generate a fake IPFS CID based on the metadata
+      const fakeCid = Buffer.from(JSON.stringify(metadata))
+        .toString('base64')
+        .substring(0, 46);
+      return `ipfs://${fakeCid}`;
     }
-    /**
+    catch (error) {
+      console.error('Error storing metadata on IPFS:', error);
+      throw new Error('Failed to store metadata on IPFS');
+    }
+  }
+  /**
      * Calculate royalty shares for contributors
      */
-    calculateRoyaltyShares(contributorCount) {
-        // Simple equal distribution for now
-        const baseShare = Math.floor(100 / contributorCount);
-        const shares = Array(contributorCount).fill(baseShare);
-        // Ensure total adds up to 100%
-        const total = shares.reduce((sum, share) => sum + share, 0);
-        if (total < 100) {
-            shares[0] += 100 - total;
-        }
-        return shares;
+  calculateRoyaltyShares(contributorCount) {
+    // Simple equal distribution for now
+    const baseShare = Math.floor(100 / contributorCount);
+    const shares = Array(contributorCount).fill(baseShare);
+    // Ensure total adds up to 100%
+    const total = shares.reduce((sum, share) => sum + share, 0);
+    if (total < 100) {
+      shares[0] += 100 - total;
     }
+    return shares;
+  }
 }
 exports.SD20BlockchainService = SD20BlockchainService;
 /**

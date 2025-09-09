@@ -97,7 +97,7 @@ class ProductionWFAOrchestrator extends Victory36MCPOrchestrator {
     this.zone = this.determineZone();
     this.deploymentMode = 'diamond-cli-production';
     
-    console.log(`💎 Diamond CLI Production WFA Orchestrator initialized`);
+    console.log('💎 Diamond CLI Production WFA Orchestrator initialized');
     console.log(`🌍 Region: ${this.region}, Zone: ${this.zone}`);
     console.log(`⚡ Deployment Mode: ${this.deploymentMode}`);
   }
@@ -150,21 +150,21 @@ class ProductionWFAOrchestrator extends Victory36MCPOrchestrator {
     const path = url.pathname.replace('/diamond', '');
     
     switch (path) {
-      case '/deploy/status':
-        return this.handleDeploymentStatus(corsHeaders);
-      case '/repair/execute':
-        return this.handleRepairExecution(request, corsHeaders);
-      case '/monitor/health':
-        return this.handleProductionMonitoring(corsHeaders);
-      default:
-        return new Response(JSON.stringify({
-          error: 'Diamond CLI endpoint not found',
-          zone: this.zone,
-          availableEndpoints: ['/deploy/status', '/repair/execute', '/monitor/health']
-        }), {
-          status: 404,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        });
+    case '/deploy/status':
+      return this.handleDeploymentStatus(corsHeaders);
+    case '/repair/execute':
+      return this.handleRepairExecution(request, corsHeaders);
+    case '/monitor/health':
+      return this.handleProductionMonitoring(corsHeaders);
+    default:
+      return new Response(JSON.stringify({
+        error: 'Diamond CLI endpoint not found',
+        zone: this.zone,
+        availableEndpoints: ['/deploy/status', '/repair/execute', '/monitor/health']
+      }), {
+        status: 404,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
     }
   }
   

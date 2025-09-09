@@ -32,7 +32,7 @@ async function testRateLimit(userType, agentType, userId, expectedLimit) {
   try {
     // First, check the rate limit status
     const statusResponse = await axios.get(`${BASE_URL}/api/rate-limit/status`, { headers });
-    console.log(`📊 Rate Limit Status:`, statusResponse.data.rateLimitInfo);
+    console.log('📊 Rate Limit Status:', statusResponse.data.rateLimitInfo);
     
     // Make a series of requests to test rate limiting
     let successCount = 0;
@@ -50,7 +50,7 @@ async function testRateLimit(userType, agentType, userId, expectedLimit) {
           console.log(`⚠️  Rate limited after ${successCount} requests`);
           break;
         } else {
-          console.error(`❌ Unexpected error:`, error.message);
+          console.error('❌ Unexpected error:', error.message);
         }
       }
       
@@ -64,13 +64,13 @@ async function testRateLimit(userType, agentType, userId, expectedLimit) {
     // Verify the limit is approximately correct (allowing some margin)
     const withinExpectedRange = successCount >= expectedLimit * 0.8 && successCount <= expectedLimit * 1.2;
     if (withinExpectedRange) {
-      console.log(`✅ Rate limiting working correctly`);
+      console.log('✅ Rate limiting working correctly');
     } else {
-      console.log(`❌ Rate limiting may not be working as expected`);
+      console.log('❌ Rate limiting may not be working as expected');
     }
     
   } catch (error) {
-    console.error(`❌ Test failed:`, error.message);
+    console.error('❌ Test failed:', error.message);
   }
 }
 

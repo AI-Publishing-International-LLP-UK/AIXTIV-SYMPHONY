@@ -398,51 +398,51 @@ EXAMPLES:
 
     try {
       switch (command) {
-        case 'check':
-        case 'monitor':
-          await this.runVersionCheck(options);
-          break;
+      case 'check':
+      case 'monitor':
+        await this.runVersionCheck(options);
+        break;
           
-        case 'compatibility':
-          const targetVer = args[1];
-          if (!targetVer) {
-            console.error('❌ Target version required for compatibility check');
-            console.error('Usage: compatibility <version>');
-            process.exit(1);
-          }
-          await this.checkCompatibility(targetVer, options);
-          break;
+      case 'compatibility':
+        const targetVer = args[1];
+        if (!targetVer) {
+          console.error('❌ Target version required for compatibility check');
+          console.error('Usage: compatibility <version>');
+          process.exit(1);
+        }
+        await this.checkCompatibility(targetVer, options);
+        break;
           
-        case 'upgrade':
-          const upgradeVer = args[1];
-          if (!upgradeVer) {
-            console.error('❌ Target version required for upgrade');
-            console.error('Usage: upgrade <version>');
-            process.exit(1);
-          }
-          const result = await this.performUpgrade(upgradeVer, options);
-          if (!result.success) {
-            process.exit(1);
-          }
-          break;
+      case 'upgrade':
+        const upgradeVer = args[1];
+        if (!upgradeVer) {
+          console.error('❌ Target version required for upgrade');
+          console.error('Usage: upgrade <version>');
+          process.exit(1);
+        }
+        const result = await this.performUpgrade(upgradeVer, options);
+        if (!result.success) {
+          process.exit(1);
+        }
+        break;
           
-        case 'status':
-          await this.showStatus(options);
-          break;
+      case 'status':
+        await this.showStatus(options);
+        break;
           
-        case 'validate':
-          const validation = await this.validateSystem();
-          if (!validation.valid) {
-            process.exit(1);
-          }
-          break;
+      case 'validate':
+        const validation = await this.validateSystem();
+        if (!validation.valid) {
+          process.exit(1);
+        }
+        break;
           
-        case 'help':
-        case '--help':
-        case '-h':
-        default:
-          this.showHelp();
-          break;
+      case 'help':
+      case '--help':
+      case '-h':
+      default:
+        this.showHelp();
+        break;
       }
     } catch (error) {
       console.error('💥 Error:', error.message);

@@ -51,17 +51,17 @@ axiosInstance.interceptors.response.use(
       
       // Handle specific GitHub API errors
       switch (status) {
-        case 401:
-          throw new Error('GitHub authentication failed. Check GITHUB_TOKEN.');
-        case 403:
-          if (data.message && data.message.includes('rate limit')) {
-            throw new Error('GitHub API rate limit exceeded. Please try again later.');
-          }
-          throw new Error('GitHub API access forbidden.');
-        case 404:
-          throw new Error('Repository, branch, or file not found.');
-        default:
-          throw new Error(`GitHub API error: ${status} ${statusText}`);
+      case 401:
+        throw new Error('GitHub authentication failed. Check GITHUB_TOKEN.');
+      case 403:
+        if (data.message && data.message.includes('rate limit')) {
+          throw new Error('GitHub API rate limit exceeded. Please try again later.');
+        }
+        throw new Error('GitHub API access forbidden.');
+      case 404:
+        throw new Error('Repository, branch, or file not found.');
+      default:
+        throw new Error(`GitHub API error: ${status} ${statusText}`);
       }
     } else if (error.request) {
       error('No response received from GitHub API:', error.message);
@@ -107,7 +107,7 @@ async function listRepoContents(owner, repo, path = '', branch) {
   
   const url = `/repos/${owner}/${repo}/contents/${path}${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
   
-  log(`Fetching repository contents`, { owner, repo, path, branch });
+  log('Fetching repository contents', { owner, repo, path, branch });
   
   try {
     const response = await axiosInstance.get(url);
@@ -139,7 +139,7 @@ async function getFile(owner, repo, path, branch, raw = true) {
   
   const url = `/repos/${owner}/${repo}/contents/${path}${queryParams.toString() ? '?' + queryParams.toString() : ''}`;
   
-  log(`Fetching file`, { owner, repo, path, branch, raw });
+  log('Fetching file', { owner, repo, path, branch, raw });
   
   try {
     const config = {
@@ -193,7 +193,7 @@ async function searchFiles(owner, repo, query, options = {}) {
   
   const url = `/search/code?${queryParams.toString()}`;
   
-  log(`Searching for files`, { owner, repo, query, options });
+  log('Searching for files', { owner, repo, query, options });
   
   try {
     const response = await axiosInstance.get(url);
@@ -217,7 +217,7 @@ async function getRepoInfo(owner, repo) {
   
   const url = `/repos/${owner}/${repo}`;
   
-  log(`Fetching repository information`, { owner, repo });
+  log('Fetching repository information', { owner, repo });
   
   try {
     const response = await axiosInstance.get(url);
@@ -250,7 +250,7 @@ async function listBranches(owner, repo) {
   
   const url = `/repos/${owner}/${repo}/branches`;
   
-  log(`Fetching repository branches`, { owner, repo });
+  log('Fetching repository branches', { owner, repo });
   
   try {
     const response = await axiosInstance.get(url);

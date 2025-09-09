@@ -298,22 +298,22 @@ class EnterpriseSelfHealingSystem {
     let delay;
 
     switch (policy.type || 'exponential') {
-      case 'exponential':
-        delay = Math.min(
-          policy.baseDelay * Math.pow(policy.backoffFactor, attempt - 1),
-          policy.maxDelay
-        );
-        break;
-      case 'linear':
-        delay = Math.min(
-          policy.baseDelay + (policy.increment * (attempt - 1)),
-          policy.maxDelay
-        );
-        break;
-      case 'fixed':
-      default:
-        delay = policy.delay || policy.baseDelay;
-        break;
+    case 'exponential':
+      delay = Math.min(
+        policy.baseDelay * Math.pow(policy.backoffFactor, attempt - 1),
+        policy.maxDelay
+      );
+      break;
+    case 'linear':
+      delay = Math.min(
+        policy.baseDelay + (policy.increment * (attempt - 1)),
+        policy.maxDelay
+      );
+      break;
+    case 'fixed':
+    default:
+      delay = policy.delay || policy.baseDelay;
+      break;
     }
 
     // Add jitter if enabled
@@ -548,15 +548,15 @@ class EnterpriseSelfHealingSystem {
 
   async handleHealthCheckFailure(checkName, result) {
     switch (checkName) {
-      case 'memory':
-        this.triggerGarbageCollection();
-        break;
-      case 'storage':
-        this.clearExpiredCache();
-        break;
-      case 'system':
-        this.performSystemRecovery();
-        break;
+    case 'memory':
+      this.triggerGarbageCollection();
+      break;
+    case 'storage':
+      this.clearExpiredCache();
+      break;
+    case 'system':
+      this.performSystemRecovery();
+      break;
     }
   }
 
@@ -627,28 +627,28 @@ class EnterpriseSelfHealingSystem {
   async checkVoiceServiceHealth(service) {
     // Implement voice service specific health checks
     switch (service) {
-      case 'elevenlabs':
-        return await this.checkEndpointHealth('https://api.elevenlabs.io');
-      case 'openai':
-        return await this.checkEndpointHealth('https://api.openai.com');
-      case 'browser':
-        return 'speechSynthesis' in window;
-      default:
-        return false;
+    case 'elevenlabs':
+      return await this.checkEndpointHealth('https://api.elevenlabs.io');
+    case 'openai':
+      return await this.checkEndpointHealth('https://api.openai.com');
+    case 'browser':
+      return 'speechSynthesis' in window;
+    default:
+      return false;
     }
   }
 
   async checkAuthMethodHealth(method) {
     // Implement auth method specific health checks
     switch (method) {
-      case 'oauth2':
-        return this.circuitBreakers.get('oauth')?.state !== 'OPEN';
-      case 'basic':
-        return true; // Basic auth is always available
-      case 'anonymous':
-        return true; // Anonymous is always available as fallback
-      default:
-        return false;
+    case 'oauth2':
+      return this.circuitBreakers.get('oauth')?.state !== 'OPEN';
+    case 'basic':
+      return true; // Basic auth is always available
+    case 'anonymous':
+      return true; // Anonymous is always available as fallback
+    default:
+      return false;
     }
   }
 }

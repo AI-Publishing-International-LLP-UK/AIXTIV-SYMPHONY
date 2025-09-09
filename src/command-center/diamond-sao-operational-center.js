@@ -675,41 +675,41 @@ class DiamondSAOOperationalCenter {
       let result;
       
       switch (action) {
-        case 'health_check':
-          result = await uac.performUACHealthCheck();
-          break;
+      case 'health_check':
+        result = await uac.performUACHealthCheck();
+        break;
           
-        case 'validate_diamond_access':
-          result = {
-            diamondSAOAccess: 'GUARANTEED',
-            emeraldEAOAccess: 'GUARANTEED',
-            ownerConsoleAccess: 'ACTIVE',
-            emergencyProtocols: 'STANDBY',
-            validation: 'PASSED'
-          };
-          uac.validateUACDiamondAccess(result);
-          break;
+      case 'validate_diamond_access':
+        result = {
+          diamondSAOAccess: 'GUARANTEED',
+          emeraldEAOAccess: 'GUARANTEED',
+          ownerConsoleAccess: 'ACTIVE',
+          emergencyProtocols: 'STANDBY',
+          validation: 'PASSED'
+        };
+        uac.validateUACDiamondAccess(result);
+        break;
           
-        case 'emergency_protocol':
-          result = await uac.emergencyUACProtocol();
-          break;
+      case 'emergency_protocol':
+        result = await uac.emergencyUACProtocol();
+        break;
           
-        case 'console_connectivity_test':
-          result = {
-            primaryUrl: 'https://mocoa-owner-interface-859242575175.us-west1.run.app',
-            backupUrl: 'https://mocoa-owner-interface-yutylytffa-uw.a.run.app',
-            primaryConnection: 'TESTING...',
-            backupConnection: 'TESTING...',
-            uacAuthentication: 'ACTIVE',
-            diamondSAOProtected: 'GUARANTEED'
-          };
-          // In a real implementation, this would test actual connectivity
-          result.primaryConnection = 'ACTIVE';
-          result.backupConnection = 'ACTIVE';
-          break;
+      case 'console_connectivity_test':
+        result = {
+          primaryUrl: 'https://mocoa-owner-interface-859242575175.us-west1.run.app',
+          backupUrl: 'https://mocoa-owner-interface-yutylytffa-uw.a.run.app',
+          primaryConnection: 'TESTING...',
+          backupConnection: 'TESTING...',
+          uacAuthentication: 'ACTIVE',
+          diamondSAOProtected: 'GUARANTEED'
+        };
+        // In a real implementation, this would test actual connectivity
+        result.primaryConnection = 'ACTIVE';
+        result.backupConnection = 'ACTIVE';
+        break;
           
-        default:
-          throw new Error(`Unknown UAC control action: ${action}`);
+      default:
+        throw new Error(`Unknown UAC control action: ${action}`);
       }
       
       diamondLogger.info('🔧 UAC System Control completed', {

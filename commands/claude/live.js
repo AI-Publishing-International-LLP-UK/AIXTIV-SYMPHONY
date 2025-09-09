@@ -61,45 +61,45 @@ module.exports = async function liveWorkflow(options) {
 
     // Prepare workflow data based on workflow type
     switch (workflow.toLowerCase()) {
-      case 'linkedin':
-        workflowName = WORKFLOWS.LINKEDIN;
+    case 'linkedin':
+      workflowName = WORKFLOWS.LINKEDIN;
         
-        // Validate LinkedIn workflow parameters
-        if (!userId || !accessToken) {
-          spinner.fail('LinkedIn workflow requires userId and accessToken parameters');
-          return;
-        }
-        
-        workflowData = { userId, accessToken };
-        break;
-        
-      case 'github':
-        workflowName = WORKFLOWS.GITHUB;
-        
-        // Validate GitHub workflow parameters
-        if (!userId || !accessToken || !repository) {
-          spinner.fail('GitHub workflow requires userId, accessToken, and repository parameters');
-          return;
-        }
-        
-        workflowData = { userId, accessToken, repositoryName: repository };
-        break;
-        
-      case 'claude':
-        workflowName = WORKFLOWS.CLAUDE;
-        
-        // Validate Claude workflow parameters
-        if (!userId || !prompt) {
-          spinner.fail('Claude workflow requires userId and prompt parameters');
-          return;
-        }
-        
-        workflowData = { userId, prompt, format, context };
-        break;
-        
-      default:
-        spinner.fail(`Unknown workflow: ${workflow}`);
+      // Validate LinkedIn workflow parameters
+      if (!userId || !accessToken) {
+        spinner.fail('LinkedIn workflow requires userId and accessToken parameters');
         return;
+      }
+        
+      workflowData = { userId, accessToken };
+      break;
+        
+    case 'github':
+      workflowName = WORKFLOWS.GITHUB;
+        
+      // Validate GitHub workflow parameters
+      if (!userId || !accessToken || !repository) {
+        spinner.fail('GitHub workflow requires userId, accessToken, and repository parameters');
+        return;
+      }
+        
+      workflowData = { userId, accessToken, repositoryName: repository };
+      break;
+        
+    case 'claude':
+      workflowName = WORKFLOWS.CLAUDE;
+        
+      // Validate Claude workflow parameters
+      if (!userId || !prompt) {
+        spinner.fail('Claude workflow requires userId and prompt parameters');
+        return;
+      }
+        
+      workflowData = { userId, prompt, format, context };
+      break;
+        
+    default:
+      spinner.fail(`Unknown workflow: ${workflow}`);
+      return;
     }
 
     // Execute the workflow

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-console.log("⚡ ENABLING HYPER-OPTIMIZATION");
-console.log("================================");
+console.log('⚡ ENABLING HYPER-OPTIMIZATION');
+console.log('================================');
 
 // Enable AG-Timepress 15x compression
 const agents = 20000000;
@@ -16,9 +16,9 @@ console.log(`Enhanced capacity: ${enhancedCapacity.toLocaleString()} agent-equiv
 const config = {
   timestamp: new Date().toISOString(),
   optimization: {
-    temporal_compression: "15x",
-    ag_timepress: "ENABLED",
-    regions: ["MOCOA", "MOCORIX", "MOCORIX2"],
+    temporal_compression: '15x',
+    ag_timepress: 'ENABLED',
+    regions: ['MOCOA', 'MOCORIX', 'MOCORIX2'],
     enhanced_agents: enhancedCapacity
   }
 };
@@ -26,5 +26,5 @@ const config = {
 // Write config
 const fs = require('fs');
 fs.writeFileSync('hyperoptimization.json', JSON.stringify(config, null, 2));
-console.log("\n✅ Hyperoptimization ENABLED!");
-console.log("✅ Created: hyperoptimization.json");
+console.log('\n✅ Hyperoptimization ENABLED!');
+console.log('✅ Created: hyperoptimization.json');

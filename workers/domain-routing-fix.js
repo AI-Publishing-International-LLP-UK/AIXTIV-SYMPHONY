@@ -21,18 +21,18 @@ export default {
     
     // Route based on hostname
     switch (hostname) {
-      case 'asoos.2100.cool':
-        return handleASOOSMainSite(request, env, ctx);
+    case 'asoos.2100.cool':
+      return handleASOOSMainSite(request, env, ctx);
         
-      case 'sallyport.2100.cool':
-        return handleSallyPortGateway(request, env, ctx);
+    case 'sallyport.2100.cool':
+      return handleSallyPortGateway(request, env, ctx);
         
-      case 'mcp.aipub.2100.cool':
-        return handleMCPOwnerInterface(request, env, ctx);
+    case 'mcp.aipub.2100.cool':
+      return handleMCPOwnerInterface(request, env, ctx);
         
-      default:
-        // Fallback for any other domains
-        return Response.redirect('https://asoos.2100.cool', 302);
+    default:
+      // Fallback for any other domains
+      return Response.redirect('https://asoos.2100.cool', 302);
     }
   }
 };

@@ -23,7 +23,7 @@
    * Initialize the router
    */
   const initialize = () => {
-    console.log("Initializing application router...");
+    console.log('Initializing application router...');
     
     // Subscribe to view changes
     AppState.subscribe('view', handleViewChange);
@@ -68,7 +68,7 @@
     
     // Redirect to login if not authenticated and trying to access protected view
     if (!authState.isAuthenticated && currentView !== 'login') {
-      console.log("User not authenticated, redirecting to login");
+      console.log('User not authenticated, redirecting to login');
       AppState.setCurrentView('login');
     }
   };
@@ -140,16 +140,16 @@
           if (success) {
             AppState.setCurrentView('symphony');
           } else {
-            throw new Error("Authentication failed");
+            throw new Error('Authentication failed');
           }
         } catch (error) {
-          console.error("Login error:", error);
+          console.error('Login error:', error);
           
           // Show error message
           contentElement.innerHTML += `
             <div class="fixed bottom-6 right-6 bg-red-50 border border-red-200 p-4 rounded-lg text-red-700 max-w-md">
               <h3 class="font-bold mb-1">Authentication Error</h3>
-              <p>${error.message || "Failed to authenticate"}</p>
+              <p>${error.message || 'Failed to authenticate'}</p>
             </div>
           `;
           

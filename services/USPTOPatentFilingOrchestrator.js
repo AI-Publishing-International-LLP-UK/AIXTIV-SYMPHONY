@@ -173,7 +173,7 @@ class USPTOPatentFilingOrchestrator {
         console.log(`✅ Patent ${patent.id} processed successfully`);
         console.log(`📄 USPTO Application: ${filingResult.usptoApplication}`);
         console.log(`🔗 Blockchain Evidence: ${filingResult.blockchainEvidence.transactionHash}`);
-        console.log(`🔒 Diamond SAO Authorization: Confirmed`);
+        console.log('🔒 Diamond SAO Authorization: Confirmed');
         
       } catch (error) {
         console.error(`❌ Patent ${patent.id} processing failed:`, error.message);

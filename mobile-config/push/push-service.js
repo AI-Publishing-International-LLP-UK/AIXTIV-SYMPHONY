@@ -5,7 +5,7 @@ import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 
 class ASSOOSPushService {
   constructor() {
-    this.app = initializeApp({"projectId":"asoos-mobile-infrastructure","messagingSenderId":"123456789012","apiKey":"AIzaSyD...","appId":"com.asoos.mobile"});
+    this.app = initializeApp({'projectId':'asoos-mobile-infrastructure','messagingSenderId':'123456789012','apiKey':'AIzaSyD...','appId':'com.asoos.mobile'});
     this.messaging = getMessaging(this.app);
     this.setupMessageHandling();
   }
@@ -57,23 +57,23 @@ class ASSOOSPushService {
 
   getNotificationActions(type) {
     switch (type) {
-      case 'infrastructure_alert':
-        return [
-          { action: 'acknowledge', title: '✅ Acknowledge' },
-          { action: 'investigate', title: '🔍 Investigate' }
-        ];
-      case 'command_completion':
-        return [
-          { action: 'view', title: '👀 View Details' },
-          { action: 'dismiss', title: '❌ Dismiss' }
-        ];
-      case 'security_alert':
-        return [
-          { action: 'secure', title: '🔒 Secure Account' },
-          { action: 'review', title: '📋 Review Activity' }
-        ];
-      default:
-        return [];
+    case 'infrastructure_alert':
+      return [
+        { action: 'acknowledge', title: '✅ Acknowledge' },
+        { action: 'investigate', title: '🔍 Investigate' }
+      ];
+    case 'command_completion':
+      return [
+        { action: 'view', title: '👀 View Details' },
+        { action: 'dismiss', title: '❌ Dismiss' }
+      ];
+    case 'security_alert':
+      return [
+        { action: 'secure', title: '🔒 Secure Account' },
+        { action: 'review', title: '📋 Review Activity' }
+      ];
+    default:
+      return [];
     }
   }
 }

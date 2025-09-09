@@ -437,32 +437,32 @@ class AIPITowerPatentChain {
     // This would return the actual ABI for the patent evidence contract
     return [
       {
-        "inputs": [
-          {"name": "applicationNumber", "type": "string"},
-          {"name": "contentHash", "type": "string"},
-          {"name": "priorArtHash", "type": "string"},
-          {"name": "metadata", "type": "string"}
+        'inputs': [
+          {'name': 'applicationNumber', 'type': 'string'},
+          {'name': 'contentHash', 'type': 'string'},
+          {'name': 'priorArtHash', 'type': 'string'},
+          {'name': 'metadata', 'type': 'string'}
         ],
-        "name": "storePatentEvidence",
-        "type": "function"
+        'name': 'storePatentEvidence',
+        'type': 'function'
       },
       {
-        "inputs": [
-          {"name": "applicationNumber", "type": "string"},
-          {"name": "metadataHash", "type": "string"}
+        'inputs': [
+          {'name': 'applicationNumber', 'type': 'string'},
+          {'name': 'metadataHash', 'type': 'string'}
         ],
-        "name": "mintPatentNFT",
-        "type": "function"
+        'name': 'mintPatentNFT',
+        'type': 'function'
       },
       {
-        "inputs": [
-          {"name": "company", "type": "string"},
-          {"name": "applicationNumber", "type": "string"},
-          {"name": "contractHash", "type": "string"},
-          {"name": "contractData", "type": "string"}
+        'inputs': [
+          {'name': 'company', 'type': 'string'},
+          {'name': 'applicationNumber', 'type': 'string'},
+          {'name': 'contractHash', 'type': 'string'},
+          {'name': 'contractData', 'type': 'string'}
         ],
-        "name": "storeSmartContract",
-        "type": "function"
+        'name': 'storeSmartContract',
+        'type': 'function'
       }
     ];
   }

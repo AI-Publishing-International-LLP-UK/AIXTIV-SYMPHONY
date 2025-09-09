@@ -30,20 +30,20 @@ export default {
     try {
       // Route handling
       switch (path) {
-        case '/setup-user':
-          return await handleUserSetup(request, env);
-        case '/oauth/authorize':
-          return await handleOAuthAuthorize(request, env);
-        case '/oauth/token':
-          return await handleOAuthToken(request, env);
-        case '/oauth/callback':
-          return await handleOAuthCallback(request, env);
-        case '/oauth/userinfo':
-          return await handleUserInfo(request, env);
-        case '/health':
-          return new Response('OK', { status: 200, headers: corsHeaders });
-        default:
-          return new Response('Not Found', { status: 404, headers: corsHeaders });
+      case '/setup-user':
+        return await handleUserSetup(request, env);
+      case '/oauth/authorize':
+        return await handleOAuthAuthorize(request, env);
+      case '/oauth/token':
+        return await handleOAuthToken(request, env);
+      case '/oauth/callback':
+        return await handleOAuthCallback(request, env);
+      case '/oauth/userinfo':
+        return await handleUserInfo(request, env);
+      case '/health':
+        return new Response('OK', { status: 200, headers: corsHeaders });
+      default:
+        return new Response('Not Found', { status: 404, headers: corsHeaders });
       }
     } catch (error) {
       console.error('Worker error:', error);

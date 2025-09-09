@@ -8,22 +8,22 @@ const getLimit = (req) => {
 
   if (agentType) {
     switch (agentType) {
-      case 'rix':
-        return 5000;
-      case 'crx':
-        return 10000;
-      case 'qrix':
-        return 20000;
-      default:
-        return 500;
+    case 'rix':
+      return 5000;
+    case 'crx':
+      return 10000;
+    case 'qrix':
+      return 20000;
+    default:
+      return 500;
     }
   } else {
     switch (userType) {
-      case 'authenticated':
-        return 2000;
-      case 'anonymous':
-      default:
-        return 200;
+    case 'authenticated':
+      return 2000;
+    case 'anonymous':
+    default:
+      return 200;
     }
   }
 };
@@ -32,7 +32,7 @@ const adaptiveRateLimiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
   max: (req) => getLimit(req),
   message: (req) => {
-    return `Too many requests, please try again later.`
+    return 'Too many requests, please try again later.';
   },
   headers: true,
   keyGenerator: (req) => {

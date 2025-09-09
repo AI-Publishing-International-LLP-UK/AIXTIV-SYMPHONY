@@ -16,7 +16,7 @@
     panelElement = document.getElementById('developer-panel');
     
     if (!panelElement) {
-      console.error("Developer panel element not found in DOM");
+      console.error('Developer panel element not found in DOM');
       return;
     }
     

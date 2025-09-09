@@ -88,12 +88,12 @@ class DeviceHealth {
    */
   async checkBiometrics() {
     try {
-        const isAvailable = await window.PublicKeyCredential?.isUserVerifyingPlatformAuthenticatorAvailable();
-        this.results.biometrics = isAvailable ? 'available' : 'unavailable';
-        this.results.biometricsOk = !!isAvailable;
+      const isAvailable = await window.PublicKeyCredential?.isUserVerifyingPlatformAuthenticatorAvailable();
+      this.results.biometrics = isAvailable ? 'available' : 'unavailable';
+      this.results.biometricsOk = !!isAvailable;
     } catch (e) {
-        this.results.biometrics = 'error';
-        this.results.biometricsOk = false;
+      this.results.biometrics = 'error';
+      this.results.biometricsOk = false;
     }
   }
 
@@ -113,12 +113,12 @@ class DeviceHealth {
    */
   async checkJailbreakRoot() {
     if (this.platform === 'ios' || this.platform === 'android') {
-        // Use SallyPort bridge for root/jailbreak detection
-        this.results.jailbreakRoot = await this.sallyPortInvoke('getJailbreakRootStatus');
-        this.results.jailbreakRootOk = this.results.jailbreakRoot === 'not_detected';
+      // Use SallyPort bridge for root/jailbreak detection
+      this.results.jailbreakRoot = await this.sallyPortInvoke('getJailbreakRootStatus');
+      this.results.jailbreakRootOk = this.results.jailbreakRoot === 'not_detected';
     } else {
-        this.results.jailbreakRoot = 'not_applicable';
-        this.results.jailbreakRootOk = true;
+      this.results.jailbreakRoot = 'not_applicable';
+      this.results.jailbreakRootOk = true;
     }
   }
 
@@ -189,7 +189,7 @@ class DeviceHealth {
     let match;
 
     if ((match = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i)) && match[1]) {
-        return { name: match[1], version: match[2] };
+      return { name: match[1], version: match[2] };
     }
 
     return { name: 'unknown', version: 'unknown' };

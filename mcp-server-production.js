@@ -31,40 +31,40 @@ export default {
     
     // MCP Protocol Routes
     switch (url.pathname) {
-      case '/':
-        return handleMCPDashboard(request, env, isASOS, isAIPUB);
+    case '/':
+      return handleMCPDashboard(request, env, isASOS, isAIPUB);
       
-      case '/mcp/server-info':
-        return handleServerInfo(request, env, isASOS, isAIPUB);
+    case '/mcp/server-info':
+      return handleServerInfo(request, env, isASOS, isAIPUB);
       
-      case '/mcp/health':
-        return handleHealthCheck(request, env);
+    case '/mcp/health':
+      return handleHealthCheck(request, env);
       
-      case '/mcp/tools':
-        return handleToolsList(request, env);
+    case '/mcp/tools':
+      return handleToolsList(request, env);
       
-      case '/mcp/orders':
-        if (request.method === 'POST') {
-          return handleCreateOrder(request, env);
-        }
-        return new Response('Method not allowed', { status: 405, headers: securityHeaders });
+    case '/mcp/orders':
+      if (request.method === 'POST') {
+        return handleCreateOrder(request, env);
+      }
+      return new Response('Method not allowed', { status: 405, headers: securityHeaders });
       
-      case '/mcp/auth/validate':
-        if (request.method === 'POST') {
-          return handleAuthValidation(request, env);
-        }
-        return new Response('Method not allowed', { status: 405, headers: securityHeaders });
+    case '/mcp/auth/validate':
+      if (request.method === 'POST') {
+        return handleAuthValidation(request, env);
+      }
+      return new Response('Method not allowed', { status: 405, headers: securityHeaders });
       
-      default:
-        if (url.pathname.startsWith('/mcp/status/')) {
-          const orderId = url.pathname.split('/').pop();
-          return handleOrderStatus(request, env, orderId);
-        }
-        if (url.pathname.startsWith('/mcp/dashboard/')) {
-          const ownerId = url.pathname.split('/').pop();
-          return handleOwnerDashboard(request, env, ownerId);
-        }
-        return new Response('Sacred endpoint not found', { status: 404, headers: securityHeaders });
+    default:
+      if (url.pathname.startsWith('/mcp/status/')) {
+        const orderId = url.pathname.split('/').pop();
+        return handleOrderStatus(request, env, orderId);
+      }
+      if (url.pathname.startsWith('/mcp/dashboard/')) {
+        const ownerId = url.pathname.split('/').pop();
+        return handleOwnerDashboard(request, env, ownerId);
+      }
+      return new Response('Sacred endpoint not found', { status: 404, headers: securityHeaders });
     }
   }
 };
@@ -236,34 +236,34 @@ async function handleMCPDashboard(request, env, isASOS, isAIPUB) {
 
 async function handleServerInfo(request, env, isASOS, isAIPUB) {
   const serverInfo = {
-    name: isASOS ? "ASOOS Master MCP Template" : "AI Publishing UK MCP Server",
-    version: "1.0.0-sacred",
-    protocol_version: "2024-11-05",
+    name: isASOS ? 'ASOOS Master MCP Template' : 'AI Publishing UK MCP Server',
+    version: '1.0.0-sacred',
+    protocol_version: '2024-11-05',
     capabilities: {
       logging: {},
       prompts: {},
       resources: {},
       tools: {}
     },
-    sacred_blessing: "Operating under the authority of Jesus Christ",
+    sacred_blessing: 'Operating under the authority of Jesus Christ',
     access_levels: [
-      "DIAMOND_SAO - Unlimited access + millisecond guarantee",
-      "EMERALD_SAO - High priority + millisecond guarantee",
-      "SAPPHIRE_SAO - High Priority + millisecond guarantee (Super admins)",
-      "OPAL_ASO - High Priority + millisecond guarantee (System admins)",
-      "ONYX_OS - High Priority (Primary Owner Subscribers)"
+      'DIAMOND_SAO - Unlimited access + millisecond guarantee',
+      'EMERALD_SAO - High priority + millisecond guarantee',
+      'SAPPHIRE_SAO - High Priority + millisecond guarantee (Super admins)',
+      'OPAL_ASO - High Priority + millisecond guarantee (System admins)',
+      'ONYX_OS - High Priority (Primary Owner Subscribers)'
     ],
     sacred_values: [
-      "Unconditional Love",
-      "Perfect Forgiveness", 
-      "Divine Understanding",
-      "Christ-like Service",
-      "Sacred Palindromic Balance"
+      'Unconditional Love',
+      'Perfect Forgiveness', 
+      'Divine Understanding',
+      'Christ-like Service',
+      'Sacred Palindromic Balance'
     ],
-    environment: "production",
-    domain: isASOS ? "mcp.asoos.2100.cool" : "mcp.aipub.2100.cool",
-    wing: isASOS ? 13 : "Company Instance",
-    instance_type: isASOS ? "Master Template" : "AI Publishing UK"
+    environment: 'production',
+    domain: isASOS ? 'mcp.asoos.2100.cool' : 'mcp.aipub.2100.cool',
+    wing: isASOS ? 13 : 'Company Instance',
+    instance_type: isASOS ? 'Master Template' : 'AI Publishing UK'
   };
 
   return new Response(JSON.stringify(serverInfo, null, 2), {
@@ -273,14 +273,14 @@ async function handleServerInfo(request, env, isASOS, isAIPUB) {
 
 async function handleHealthCheck(request, env) {
   const health = {
-    status: "blessed",
+    status: 'blessed',
     timestamp: new Date().toISOString(),
-    sacred_state: "operational",
-    divine_blessing: "active",
-    christ_like_values: "embedded",
-    palindromic_balance: "perfect",
-    uptime: "eternal",
-    message: "Sacred MCP server operating with divine love"
+    sacred_state: 'operational',
+    divine_blessing: 'active',
+    christ_like_values: 'embedded',
+    palindromic_balance: 'perfect',
+    uptime: 'eternal',
+    message: 'Sacred MCP server operating with divine love'
   };
 
   return new Response(JSON.stringify(health, null, 2), {
@@ -295,35 +295,35 @@ async function handleToolsList(request, env) {
 
   const tools = {
     DIAMOND_SAO: [
-      "s2do_divine_orchestrator",
-      "didc_archive_full_access", 
-      "flight_time_blockchain",
-      "sacred_workflow_engine",
-      "millisecond_miracle_processing",
-      "unlimited_agent_swarm"
+      's2do_divine_orchestrator',
+      'didc_archive_full_access', 
+      'flight_time_blockchain',
+      'sacred_workflow_engine',
+      'millisecond_miracle_processing',
+      'unlimited_agent_swarm'
     ],
     EMERALD_SAO: [
-      "s2do_priority_processing",
-      "didc_archive_high_access",
-      "sacred_workflow_priority",
-      "millisecond_guarantee"
+      's2do_priority_processing',
+      'didc_archive_high_access',
+      'sacred_workflow_priority',
+      'millisecond_guarantee'
     ],
     SAPPHIRE_SAO: [
-      "s2do_super_admin",
-      "team_orchestration",
-      "department_management", 
-      "academic_division_tools",
-      "ngo_community_suite"
+      's2do_super_admin',
+      'team_orchestration',
+      'department_management', 
+      'academic_division_tools',
+      'ngo_community_suite'
     ],
     OPAL_ASO: [
-      "system_admin_tools",
-      "client_management",
-      "support_interfaces"
+      'system_admin_tools',
+      'client_management',
+      'support_interfaces'
     ],
     ONYX_OS: [
-      "owner_subscriber_dashboard",
-      "basic_workflow_tools",
-      "sacred_interaction_suite"
+      'owner_subscriber_dashboard',
+      'basic_workflow_tools',
+      'sacred_interaction_suite'
     ]
   };
 
@@ -332,7 +332,7 @@ async function handleToolsList(request, env) {
   return new Response(JSON.stringify({
     access_level: accessLevel,
     available_tools: availableTools,
-    sacred_blessing: "Tools blessed with Christ-like values",
+    sacred_blessing: 'Tools blessed with Christ-like values',
     total_tools: availableTools.length
   }, null, 2), {
     headers: { 'Content-Type': 'application/json;charset=UTF-8' }
@@ -345,11 +345,11 @@ async function handleCreateOrder(request, env) {
   
   const orderResponse = {
     order_id: orderId,
-    status: "processing",
-    sacred_state: "blessed",
-    message: "Sacred order received with divine love",
-    processing_guarantee: "millisecond completion for premium subscribers",
-    christ_like_service: "enabled",
+    status: 'processing',
+    sacred_state: 'blessed',
+    message: 'Sacred order received with divine love',
+    processing_guarantee: 'millisecond completion for premium subscribers',
+    christ_like_service: 'enabled',
     expected_completion: new Date(Date.now() + 100).toISOString() // 100ms from now
   };
 
@@ -362,11 +362,11 @@ async function handleOrderStatus(request, env, orderId) {
   // Would check D1 database for actual order status
   const orderStatus = {
     order_id: orderId,
-    status: "completed",
-    sacred_state: "divinely_blessed",
+    status: 'completed',
+    sacred_state: 'divinely_blessed',
     completion_time: new Date().toISOString(),
-    divine_blessing: "Order completed with perfect love",
-    christ_like_values: "applied throughout processing"
+    divine_blessing: 'Order completed with perfect love',
+    christ_like_values: 'applied throughout processing'
   };
 
   return new Response(JSON.stringify(orderStatus, null, 2), {
@@ -377,14 +377,14 @@ async function handleOrderStatus(request, env, orderId) {
 async function handleOwnerDashboard(request, env, ownerId) {
   const dashboard = {
     owner_id: ownerId,
-    sacred_greeting: "Peace be with you",
+    sacred_greeting: 'Peace be with you',
     active_orders: 0,
     completed_orders: 0,
     sacred_tools_accessed: [],
-    divine_blessing_status: "active",
-    christ_like_service_level: "maximum",
-    access_level: "ONYX_OS", // Would be determined from database
-    message: "Your sacred workspace awaits your divine calling"
+    divine_blessing_status: 'active',
+    christ_like_service_level: 'maximum',
+    access_level: 'ONYX_OS', // Would be determined from database
+    message: 'Your sacred workspace awaits your divine calling'
   };
 
   return new Response(JSON.stringify(dashboard, null, 2), {
@@ -396,11 +396,11 @@ async function handleAuthValidation(request, env) {
   // Would integrate with Wing 13 authentication system
   const authResponse = {
     valid: true,
-    access_level: "DIAMOND_SAO", // Would be determined from actual auth
-    sacred_blessing: "Authentication blessed with divine authority",
-    christ_like_values: "verified",
-    wing_13_status: "active",
-    divine_authorization: "granted"
+    access_level: 'DIAMOND_SAO', // Would be determined from actual auth
+    sacred_blessing: 'Authentication blessed with divine authority',
+    christ_like_values: 'verified',
+    wing_13_status: 'active',
+    divine_authorization: 'granted'
   };
 
   return new Response(JSON.stringify(authResponse, null, 2), {

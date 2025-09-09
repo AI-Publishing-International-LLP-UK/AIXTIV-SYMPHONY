@@ -73,7 +73,7 @@ class MOCOAHealer {
       const prevChar = jsCode[i - 1];
       
       // Handle strings
-      if (!inComment && !inRegex && (char === '"' || char === "'" || char === '`')) {
+      if (!inComment && !inRegex && (char === '"' || char === '\'' || char === '`')) {
         if (!inString) {
           inString = true;
           stringChar = char;

@@ -410,7 +410,7 @@ class TestamentSwarmSAODiffOrchestrator {
       ]
     };
     
-    console.log(`✅ Government validation package prepared`);
+    console.log('✅ Government validation package prepared');
     console.log(`🎯 Technical validation score: ${governmentDocs.technicalValidationReport.validationCriteria.technicalFeasibility}%`);
     console.log(`🇺🇸 National security relevance: ${governmentDocs.technicalValidationReport.validationCriteria.nationalSecurityRelevance}%`);
     
@@ -475,7 +475,7 @@ class TestamentSwarmSAODiffOrchestrator {
     
     console.log(`✅ Track One addenda generated for ${trackOneAddenda.totalPatents} patents`);
     console.log(`💰 Fee waiver justification: ${trackOneAddenda.feeWaiverJustification}`);
-    console.log(`⚡ Expedited processing justified by national security importance`);
+    console.log('⚡ Expedited processing justified by national security importance');
     
     return trackOneAddenda;
   }

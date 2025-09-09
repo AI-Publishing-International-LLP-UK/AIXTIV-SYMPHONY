@@ -111,13 +111,13 @@ module.exports = async function delegateProjectToAgent(options) {
           });
 
           // Display debug information
-  debugDisplay({
-    thought: internalThought,
-    result: result,
-    command: 'claude:return'
-  });
+          debugDisplay({
+            thought: internalThought,
+            result: result,
+            command: 'claude:return'
+          });
   
-  return {
+          return {
             status: 'created',
             project_id: apiResponse.project_id,
             created_at: apiResponse.created_at || new Date().toISOString(),
@@ -167,13 +167,13 @@ module.exports = async function delegateProjectToAgent(options) {
             });
 
             // Display debug information
-  debugDisplay({
-    thought: internalThought,
-    result: result,
-    command: 'claude:return'
-  });
+            debugDisplay({
+              thought: internalThought,
+              result: result,
+              command: 'claude:return'
+            });
   
-  return {
+            return {
               status: 'created',
               project_id: projectId,
               created_at: new Date().toISOString(),
@@ -227,9 +227,9 @@ module.exports = async function delegateProjectToAgent(options) {
       if (assignTo) {
         console.log(`Dr. Claude will coordinate with ${assignTo} to execute the project.`);
       } else {
-        console.log(`Dr. Claude will analyze requirements and assign to the appropriate agent.`);
+        console.log('Dr. Claude will analyze requirements and assign to the appropriate agent.');
         console.log(
-          `Possible assignees include Dr. Lucy, Dr. Match, and other VLS solution providers.`
+          'Possible assignees include Dr. Lucy, Dr. Match, and other VLS solution providers.'
         );
       }
       console.log(
@@ -257,13 +257,13 @@ module.exports = async function delegateProjectToAgent(options) {
     }
 
     // Display debug information
-  debugDisplay({
-    thought: internalThought,
-    result: result,
-    command: 'claude:process.exit'
-  });
+    debugDisplay({
+      thought: internalThought,
+      result: result,
+      command: 'claude:process.exit'
+    });
   
-  process.exit(1);
+    process.exit(1);
   }
 };
 
@@ -281,41 +281,41 @@ module.exports = async function delegateProjectToAgent(options) {
  */
 function getPriorityColor(priority) {
   switch (priority.toLowerCase()) {
-    case 'high':
-      // Display debug information
-  debugDisplay({
-    thought: internalThought,
-    result: result,
-    command: 'claude:return'
-  });
+  case 'high':
+    // Display debug information
+    debugDisplay({
+      thought: internalThought,
+      result: result,
+      command: 'claude:return'
+    });
   
-  return chalk.red('High');
-    case 'medium':
-      // Display debug information
-  debugDisplay({
-    thought: internalThought,
-    result: result,
-    command: 'claude:return'
-  });
+    return chalk.red('High');
+  case 'medium':
+    // Display debug information
+    debugDisplay({
+      thought: internalThought,
+      result: result,
+      command: 'claude:return'
+    });
   
-  return chalk.yellow('Medium');
-    case 'low':
-      // Display debug information
-  debugDisplay({
-    thought: internalThought,
-    result: result,
-    command: 'claude:return'
-  });
+    return chalk.yellow('Medium');
+  case 'low':
+    // Display debug information
+    debugDisplay({
+      thought: internalThought,
+      result: result,
+      command: 'claude:return'
+    });
   
-  return chalk.blue('Low');
-    default:
-      // Display debug information
-  debugDisplay({
-    thought: internalThought,
-    result: result,
-    command: 'claude:return'
-  });
+    return chalk.blue('Low');
+  default:
+    // Display debug information
+    debugDisplay({
+      thought: internalThought,
+      result: result,
+      command: 'claude:return'
+    });
   
-  return chalk.green(priority);
+    return chalk.green(priority);
   }
 }

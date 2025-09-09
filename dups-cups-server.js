@@ -21,8 +21,8 @@ if (process.env.MONGODB_URI) {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log('📊 MongoDB connected'))
-  .catch(err => console.warn('⚠️ MongoDB connection failed:', err.message));
+    .then(() => console.log('📊 MongoDB connected'))
+    .catch(err => console.warn('⚠️ MongoDB connection failed:', err.message));
 }
 
 // DUPS & CUPS Routes
@@ -178,7 +178,7 @@ app.get('/portal/:companyName', async (req, res) => {
   
   res.json({
     company: company.name,
-    welcome: `Welcome to your DUPS & CUPS patent portal!`,
+    welcome: 'Welcome to your DUPS & CUPS patent portal!',
     mcpUrl: company.mcpUrl,
     status: company.onboardingStatus,
     

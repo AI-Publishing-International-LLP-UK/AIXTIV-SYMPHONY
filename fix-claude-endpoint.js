@@ -9,9 +9,9 @@ let content = fs.readFileSync(filePath, 'utf8');
 
 // Replace with the correct Anthropic API endpoint
 const oldLine =
-  "const functionUrl = process.env.CLAUDE_API_ENDPOINT || 'https://api.anthropic.com/v1/messages';";
+  'const functionUrl = process.env.CLAUDE_API_ENDPOINT || \'https://api.anthropic.com/v1/messages\';';
 const newLine =
-  "const functionUrl = process.env.CLAUDE_API_ENDPOINT || 'https://api.anthropic.com/v1/messages';";
+  'const functionUrl = process.env.CLAUDE_API_ENDPOINT || \'https://api.anthropic.com/v1/messages\';';
 
 // Also need to update the headers to match the Anthropic API requirements
 const headerSearchPattern = /headers: {[\s\S]*?},/;

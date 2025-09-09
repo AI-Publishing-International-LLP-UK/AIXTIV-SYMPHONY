@@ -635,14 +635,14 @@ class IntegratedElevenLabsVoiceSystem {
       const audio = await this.primaryClient.generate({
         voice: profile.voiceId,
         text: text,
-        model_id: options.model || "eleven_multilingual_v2",
+        model_id: options.model || 'eleven_multilingual_v2',
         voice_settings: {
           ...profile.settings,
           ...options.settings
         },
         // Settlement wing specific optimizations
         optimize_streaming_latency: options.wingSpecific ? 4 : 2,
-        output_format: options.format || "mp3_44100_128"
+        output_format: options.format || 'mp3_44100_128'
       });
       
       const audioBuffer = Buffer.from(await audio.arrayBuffer());

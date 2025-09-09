@@ -64,7 +64,7 @@ const port = process.env.PORT || 8080;
 app.listen(port, () => {
   console.log(`🚀 MOCOA Local Development Server running on port ${port}`);
   console.log(`🌐 Open http://localhost:${port} to view the interface`);
-  console.log(`💻 Local development mode - no external dependencies required`);
-  console.log(`✅ Enterprise systems: Validation, Self-healing, and Scaling loaded`);
-  console.log(`📱 Original approved interface ready for testing`);
+  console.log('💻 Local development mode - no external dependencies required');
+  console.log('✅ Enterprise systems: Validation, Self-healing, and Scaling loaded');
+  console.log('📱 Original approved interface ready for testing');
 });

@@ -162,7 +162,7 @@ app.get('/api/gcp/secrets/:secretName', async (req, res) => {
     try {
       secretValue = await getSecretFromGCP(actualSecretName);
     } catch (error) {
-      console.warn(`Failed to get secret from GCP, trying environment variables`);
+      console.warn('Failed to get secret from GCP, trying environment variables');
       // Fallback to environment variables for local development
       const envName = secretName.replace(/-/g, '_').toUpperCase();
       secretValue = process.env[envName] || process.env.ELEVENLABS_API_KEY;
@@ -302,8 +302,8 @@ app.get('/api/cli/help', (req, res) => {
 const port = process.env.PORT || 8080;
 app.listen(port, async () => {
   console.log(`🚀 MOCOA Owner Interface running on port ${port}`);
-  console.log(`📊 System Capacity: 505,001 agents across 3 wings`);
-  console.log(`🔐 GCP Secret Manager integration active`);
-  console.log(`🎤 ElevenLabs TTS endpoint available`);
-  console.log(`✅ Minimal server mode - core functionality only`);
+  console.log('📊 System Capacity: 505,001 agents across 3 wings');
+  console.log('🔐 GCP Secret Manager integration active');
+  console.log('🎤 ElevenLabs TTS endpoint available');
+  console.log('✅ Minimal server mode - core functionality only');
 });

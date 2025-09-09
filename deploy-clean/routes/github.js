@@ -88,26 +88,26 @@ router.post('/files', async (req, res) => {
     try {
       let result;
       switch (action) {
-        case 'list':
-          if (!path) {
-            throw new Error('"path" is required for the "list" action.');
-          }
-          result = await githubFileAccess.listRepoContents(owner, repo, path, branch);
-          break;
-        case 'get':
-          if (!path) {
-            throw new Error('"path" is required for the "get" action.');
-          }
-          result = await githubFileAccess.getFile(owner, repo, path, branch);
-          break;
-        case 'search':
-          if (!query) {
-            throw new Error('"query" is required for the "search" action.');
-          }
-          result = await githubFileAccess.searchFiles(owner, repo, query);
-          break;
-        default:
-          throw new Error(`Invalid action: ${action}`);
+      case 'list':
+        if (!path) {
+          throw new Error('"path" is required for the "list" action.');
+        }
+        result = await githubFileAccess.listRepoContents(owner, repo, path, branch);
+        break;
+      case 'get':
+        if (!path) {
+          throw new Error('"path" is required for the "get" action.');
+        }
+        result = await githubFileAccess.getFile(owner, repo, path, branch);
+        break;
+      case 'search':
+        if (!query) {
+          throw new Error('"query" is required for the "search" action.');
+        }
+        result = await githubFileAccess.searchFiles(owner, repo, query);
+        break;
+      default:
+        throw new Error(`Invalid action: ${action}`);
       }
       results.push({ repository: `${owner}/${repo}`, status: 'success', data: result });
     } catch (err) {

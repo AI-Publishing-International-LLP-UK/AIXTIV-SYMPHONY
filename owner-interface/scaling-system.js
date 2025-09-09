@@ -377,27 +377,27 @@ class EnterpriseScalingSystem {
 
     bottlenecks.forEach(bottleneck => {
       switch (bottleneck.type) {
-        case 'memory':
-          recommendations.push({
-            action: 'Enable aggressive garbage collection',
-            priority: 'high',
-            impact: 'Reduce memory pressure by 20-30%'
-          });
-          break;
-        case 'response_time':
-          recommendations.push({
-            action: 'Implement request queuing and batching',
-            priority: 'high',
-            impact: 'Improve response times by 40-50%'
-          });
-          break;
-        case 'cache':
-          recommendations.push({
-            action: 'Optimize cache warming strategy',
-            priority: 'medium',
-            impact: 'Increase cache hit rate to 80%+'
-          });
-          break;
+      case 'memory':
+        recommendations.push({
+          action: 'Enable aggressive garbage collection',
+          priority: 'high',
+          impact: 'Reduce memory pressure by 20-30%'
+        });
+        break;
+      case 'response_time':
+        recommendations.push({
+          action: 'Implement request queuing and batching',
+          priority: 'high',
+          impact: 'Improve response times by 40-50%'
+        });
+        break;
+      case 'cache':
+        recommendations.push({
+          action: 'Optimize cache warming strategy',
+          priority: 'medium',
+          impact: 'Increase cache hit rate to 80%+'
+        });
+        break;
       }
     });
 
@@ -593,14 +593,14 @@ class LoadBalancer {
     if (healthy.length === 0) return null;
 
     switch (this.algorithm) {
-      case 'round_robin':
-        return this.roundRobin(healthy);
-      case 'least_connections':
-        return this.leastConnections(healthy);
-      case 'weighted':
-        return this.weighted(healthy);
-      default:
-        return healthy[0];
+    case 'round_robin':
+      return this.roundRobin(healthy);
+    case 'least_connections':
+      return this.leastConnections(healthy);
+    case 'weighted':
+      return this.weighted(healthy);
+    default:
+      return healthy[0];
     }
   }
 
@@ -726,14 +726,14 @@ class CacheManager {
     const cacheKey = this.generateCacheKey(key);
     
     switch (strategy) {
-      case 'memory_first':
-        return await this.getMemoryFirst(cacheKey);
-      case 'local_storage':
-        return await this.getFromLocalStorage(cacheKey);
-      case 'indexed_db':
-        return await this.getFromIndexedDB(cacheKey);
-      default:
-        return await this.getMemoryFirst(cacheKey);
+    case 'memory_first':
+      return await this.getMemoryFirst(cacheKey);
+    case 'local_storage':
+      return await this.getFromLocalStorage(cacheKey);
+    case 'indexed_db':
+      return await this.getFromIndexedDB(cacheKey);
+    default:
+      return await this.getMemoryFirst(cacheKey);
     }
   }
 
@@ -836,20 +836,20 @@ class CacheManager {
     const expires = Date.now() + (ttl || this.defaultTTL);
     
     switch (strategy) {
-      case 'memory_first':
-        this.setInMemory(cacheKey, data, expires);
-        break;
-      case 'local_storage':
-        this.setInLocalStorage(cacheKey, data, expires);
-        break;
-      case 'indexed_db':
-        await this.setInIndexedDB(cacheKey, data, expires);
-        break;
-      case 'all_levels':
-        this.setInMemory(cacheKey, data, expires);
-        this.setInLocalStorage(cacheKey, data, expires);
-        await this.setInIndexedDB(cacheKey, data, expires);
-        break;
+    case 'memory_first':
+      this.setInMemory(cacheKey, data, expires);
+      break;
+    case 'local_storage':
+      this.setInLocalStorage(cacheKey, data, expires);
+      break;
+    case 'indexed_db':
+      await this.setInIndexedDB(cacheKey, data, expires);
+      break;
+    case 'all_levels':
+      this.setInMemory(cacheKey, data, expires);
+      this.setInLocalStorage(cacheKey, data, expires);
+      await this.setInIndexedDB(cacheKey, data, expires);
+      break;
     }
   }
 
@@ -1160,27 +1160,27 @@ class PerformanceOptimizer {
 
   setupOptimization(optimization) {
     switch (optimization) {
-      case 'request_batching':
-        this.enableRequestBatching();
-        break;
-      case 'connection_pooling':
-        this.enableConnectionPooling();
-        break;
-      case 'resource_prefetching':
-        this.enableResourcePrefetching();
-        break;
-      case 'lazy_loading':
-        this.enableLazyLoading();
-        break;
-      case 'compression':
-        this.enableCompression();
-        break;
-      case 'minification':
-        this.enableMinification();
-        break;
-      case 'cdn_optimization':
-        this.enableCDNOptimization();
-        break;
+    case 'request_batching':
+      this.enableRequestBatching();
+      break;
+    case 'connection_pooling':
+      this.enableConnectionPooling();
+      break;
+    case 'resource_prefetching':
+      this.enableResourcePrefetching();
+      break;
+    case 'lazy_loading':
+      this.enableLazyLoading();
+      break;
+    case 'compression':
+      this.enableCompression();
+      break;
+    case 'minification':
+      this.enableMinification();
+      break;
+    case 'cdn_optimization':
+      this.enableCDNOptimization();
+      break;
     }
   }
 

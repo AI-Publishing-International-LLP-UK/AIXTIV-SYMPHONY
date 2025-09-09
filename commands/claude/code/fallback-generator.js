@@ -222,7 +222,7 @@ function createGenericFallback(task, language) {
   if (language === 'python') {
     // Return Python template
   
-  return `def ${normalizedTask}_function():
+    return `def ${normalizedTask}_function():
     """
     Implementation for: ${task}
     

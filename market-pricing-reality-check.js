@@ -17,163 +17,163 @@ class MarketPricingAnalysis {
     this.currentMarketPricing = {
       // Productivity & Business Tools
       productivity: {
-        "LinkedIn Sales Navigator": {
-          price: "$79.99/month",
-          reality: "Digital phonebook with lead filtering",
-          value: "Access to contact information and basic networking",
-          limitation: "No AI, no automation, just a fancy contact list"
+        'LinkedIn Sales Navigator': {
+          price: '$79.99/month',
+          reality: 'Digital phonebook with lead filtering',
+          value: 'Access to contact information and basic networking',
+          limitation: 'No AI, no automation, just a fancy contact list'
         },
         
-        "Salesforce Enterprise": {
-          price: "$300/month per user",
-          reality: "CRM with basic automation",
-          value: "Customer data management and pipeline tracking",
-          limitation: "Requires extensive customization and training"
+        'Salesforce Enterprise': {
+          price: '$300/month per user',
+          reality: 'CRM with basic automation',
+          value: 'Customer data management and pipeline tracking',
+          limitation: 'Requires extensive customization and training'
         },
 
-        "Microsoft 365 E5": {
-          price: "$57/month per user", 
-          reality: "Office suite with cloud storage",
-          value: "Document creation and basic collaboration",
-          limitation: "No real AI automation, just cloud office tools"
+        'Microsoft 365 E5': {
+          price: '$57/month per user', 
+          reality: 'Office suite with cloud storage',
+          value: 'Document creation and basic collaboration',
+          limitation: 'No real AI automation, just cloud office tools'
         },
 
-        "Slack Enterprise Grid": {
-          price: "$15/month per user",
-          reality: "Chat application with file sharing",
-          value: "Team messaging and basic integrations",
-          limitation: "Communication tool, not business automation"
+        'Slack Enterprise Grid': {
+          price: '$15/month per user',
+          reality: 'Chat application with file sharing',
+          value: 'Team messaging and basic integrations',
+          limitation: 'Communication tool, not business automation'
         },
 
-        "Zoom Enterprise Plus": {
-          price: "$19.99/month per user",
-          reality: "Video conferencing platform",
-          value: "Virtual meetings and recordings",
-          limitation: "Single-purpose tool for video calls"
+        'Zoom Enterprise Plus': {
+          price: '$19.99/month per user',
+          reality: 'Video conferencing platform',
+          value: 'Virtual meetings and recordings',
+          limitation: 'Single-purpose tool for video calls'
         },
 
-        "Notion Team": {
-          price: "$10/month per user",
-          reality: "Note-taking and basic project management",
-          value: "Documentation and simple workflow tracking",
-          limitation: "Manual input required, no intelligent automation"
+        'Notion Team': {
+          price: '$10/month per user',
+          reality: 'Note-taking and basic project management',
+          value: 'Documentation and simple workflow tracking',
+          limitation: 'Manual input required, no intelligent automation'
         }
       },
 
       // Developer & Technical Tools  
       technical: {
-        "GitHub Enterprise": {
-          price: "$21/month per user",
-          reality: "Code repository with CI/CD",
-          value: "Version control and deployment pipelines",
-          limitation: "Developer tool only, no business automation"
+        'GitHub Enterprise': {
+          price: '$21/month per user',
+          reality: 'Code repository with CI/CD',
+          value: 'Version control and deployment pipelines',
+          limitation: 'Developer tool only, no business automation'
         },
 
-        "Datadog Pro": {
-          price: "$31/month per host",
-          reality: "System monitoring and alerting",
-          value: "Infrastructure monitoring dashboards",
-          limitation: "Monitoring only, no intelligent response"
+        'Datadog Pro': {
+          price: '$31/month per host',
+          reality: 'System monitoring and alerting',
+          value: 'Infrastructure monitoring dashboards',
+          limitation: 'Monitoring only, no intelligent response'
         },
 
-        "New Relic Pro": {
-          price: "$149/month per host",
-          reality: "Application performance monitoring",
-          value: "Performance metrics and basic alerting", 
-          limitation: "Reactive monitoring, no predictive capabilities"
+        'New Relic Pro': {
+          price: '$149/month per host',
+          reality: 'Application performance monitoring',
+          value: 'Performance metrics and basic alerting', 
+          limitation: 'Reactive monitoring, no predictive capabilities'
         },
 
-        "Splunk Cloud": {
-          price: "$150/month per GB/day",
-          reality: "Log aggregation and search",
-          value: "Data collection and basic analytics",
-          limitation: "Data storage with manual analysis required"
+        'Splunk Cloud': {
+          price: '$150/month per GB/day',
+          reality: 'Log aggregation and search',
+          value: 'Data collection and basic analytics',
+          limitation: 'Data storage with manual analysis required'
         }
       },
 
       // Enterprise AI & Automation
       aiAutomation: {
-        "UiPath Enterprise": {
-          price: "$420/month per bot",
-          reality: "Robotic Process Automation (RPA)",
-          value: "Screen scraping and simple task automation",
-          limitation: "Brittle automation that breaks with UI changes"
+        'UiPath Enterprise': {
+          price: '$420/month per bot',
+          reality: 'Robotic Process Automation (RPA)',
+          value: 'Screen scraping and simple task automation',
+          limitation: 'Brittle automation that breaks with UI changes'
         },
 
-        "Microsoft Power Platform": {
-          price: "$40/month per user",
-          reality: "Low-code automation tools",
-          value: "Basic workflow automation and app creation",
-          limitation: "Limited AI, mostly rule-based automation"
+        'Microsoft Power Platform': {
+          price: '$40/month per user',
+          reality: 'Low-code automation tools',
+          value: 'Basic workflow automation and app creation',
+          limitation: 'Limited AI, mostly rule-based automation'
         },
 
-        "Zapier Teams": {
-          price: "$103.50/month for team",
-          reality: "API connection service",
-          value: "Connect apps with simple triggers",
-          limitation: "No AI intelligence, just if-then connections"
+        'Zapier Teams': {
+          price: '$103.50/month for team',
+          reality: 'API connection service',
+          value: 'Connect apps with simple triggers',
+          limitation: 'No AI intelligence, just if-then connections'
         },
 
-        "Monday.com Enterprise": {
-          price: "$24/month per user",
-          reality: "Project management with automation",
-          value: "Task tracking with basic workflow automation",
-          limitation: "Manual setup required, no intelligent optimization"
+        'Monday.com Enterprise': {
+          price: '$24/month per user',
+          reality: 'Project management with automation',
+          value: 'Task tracking with basic workflow automation',
+          limitation: 'Manual setup required, no intelligent optimization'
         }
       },
 
       // High-End Enterprise Solutions
       enterprise: {
-        "SAP S/4HANA Cloud": {
-          price: "$180/month per user",
-          reality: "Enterprise Resource Planning (ERP)",
-          value: "Business process management and data integration",
-          limitation: "Complex implementation, limited AI capabilities"
+        'SAP S/4HANA Cloud': {
+          price: '$180/month per user',
+          reality: 'Enterprise Resource Planning (ERP)',
+          value: 'Business process management and data integration',
+          limitation: 'Complex implementation, limited AI capabilities'
         },
 
-        "Workday Enterprise": {
-          price: "$100-300/month per user",
-          reality: "HR and financial management",
-          value: "Employee and financial data management",
-          limitation: "Domain-specific, no cross-functional AI"
+        'Workday Enterprise': {
+          price: '$100-300/month per user',
+          reality: 'HR and financial management',
+          value: 'Employee and financial data management',
+          limitation: 'Domain-specific, no cross-functional AI'
         },
 
-        "ServiceNow Enterprise": {
-          price: "$200-500/month per user",
-          reality: "IT service management platform",
-          value: "Ticket management and basic workflow automation",
-          limitation: "IT-focused, limited business intelligence"
+        'ServiceNow Enterprise': {
+          price: '$200-500/month per user',
+          reality: 'IT service management platform',
+          value: 'Ticket management and basic workflow automation',
+          limitation: 'IT-focused, limited business intelligence'
         },
 
-        "Palantir Foundry": {
-          price: "$2-5 million/year enterprise",
-          reality: "Data integration and analytics platform",
-          value: "Large-scale data processing and visualization",
-          limitation: "Requires huge implementation teams and months of setup"
+        'Palantir Foundry': {
+          price: '$2-5 million/year enterprise',
+          reality: 'Data integration and analytics platform',
+          value: 'Large-scale data processing and visualization',
+          limitation: 'Requires huge implementation teams and months of setup'
         }
       },
 
       // AI-Specific Tools
       aiTools: {
-        "OpenAI API (GPT-4)": {
-          price: "$30/1M tokens",
-          reality: "AI language model API access",
-          value: "Text generation and basic reasoning",
-          limitation: "Raw AI with no business context or automation"
+        'OpenAI API (GPT-4)': {
+          price: '$30/1M tokens',
+          reality: 'AI language model API access',
+          value: 'Text generation and basic reasoning',
+          limitation: 'Raw AI with no business context or automation'
         },
 
-        "Anthropic Claude": {
-          price: "$15/1M tokens",
-          reality: "AI assistant API",
-          value: "Conversational AI responses",
-          limitation: "Generic responses, no business specialization"
+        'Anthropic Claude': {
+          price: '$15/1M tokens',
+          reality: 'AI assistant API',
+          value: 'Conversational AI responses',
+          limitation: 'Generic responses, no business specialization'
         },
 
-        "Google Vertex AI": {
-          price: "$25-100/hour compute",
-          reality: "Machine learning platform",
-          value: "Custom model training infrastructure",
-          limitation: "Requires ML expertise and extensive development"
+        'Google Vertex AI': {
+          price: '$25-100/hour compute',
+          reality: 'Machine learning platform',
+          value: 'Custom model training infrastructure',
+          limitation: 'Requires ML expertise and extensive development'
         }
       }
     };
@@ -184,39 +184,39 @@ class MarketPricingAnalysis {
   analyzeMarketGaps() {
     return {
       pricingObservations: {
-        "Basic Tools Overpriced": [
-          "LinkedIn: $80/month for glorified contact list",
-          "Slack: $15/month per user just for chat",
-          "Zoom: $20/month per user just for video calls",
-          "Notion: $10/month for fancy note-taking"
+        'Basic Tools Overpriced': [
+          'LinkedIn: $80/month for glorified contact list',
+          'Slack: $15/month per user just for chat',
+          'Zoom: $20/month per user just for video calls',
+          'Notion: $10/month for fancy note-taking'
         ],
 
-        "Enterprise Tools Expensive But Limited": [
-          "Salesforce: $300/month but requires months of customization",
-          "SAP: $180/month but needs army of consultants",
-          "ServiceNow: $500/month but only handles IT tickets",
-          "UiPath: $420/month per bot that breaks constantly"
+        'Enterprise Tools Expensive But Limited': [
+          'Salesforce: $300/month but requires months of customization',
+          'SAP: $180/month but needs army of consultants',
+          'ServiceNow: $500/month but only handles IT tickets',
+          'UiPath: $420/month per bot that breaks constantly'
         ],
 
-        "AI Tools Are Raw Materials": [
-          "OpenAI: $30/1M tokens but no business context",
-          "Anthropic: $15/1M tokens but generic responses", 
-          "Google: $100/hour compute but need ML team"
+        'AI Tools Are Raw Materials': [
+          'OpenAI: $30/1M tokens but no business context',
+          'Anthropic: $15/1M tokens but generic responses', 
+          'Google: $100/hour compute but need ML team'
         ]
       },
 
       marketGaps: {
-        "No True Business Intelligence": "All tools require manual configuration and provide no intelligent insights",
-        "No Unified Platform": "Businesses pay $1000s/month for multiple disconnected tools",
-        "No Real Automation": "Most 'automation' is just rule-based workflows that break easily",
-        "No Adaptive AI": "AI tools are generic and don't learn business-specific contexts"
+        'No True Business Intelligence': 'All tools require manual configuration and provide no intelligent insights',
+        'No Unified Platform': 'Businesses pay $1000s/month for multiple disconnected tools',
+        'No Real Automation': 'Most \'automation\' is just rule-based workflows that break easily',
+        'No Adaptive AI': 'AI tools are generic and don\'t learn business-specific contexts'
       },
 
       asoosAdvantage: {
-        "Integrated Intelligence": "One platform replaces 10+ separate tools",
-        "Business-Aware AI": "Victory36 understands business context, not just generic responses",
-        "True Automation": "Intelligent automation that adapts and improves over time",
-        "Unified Data": "All business data connected and intelligently analyzed"
+        'Integrated Intelligence': 'One platform replaces 10+ separate tools',
+        'Business-Aware AI': 'Victory36 understands business context, not just generic responses',
+        'True Automation': 'Intelligent automation that adapts and improves over time',
+        'Unified Data': 'All business data connected and intelligently analyzed'
       }
     };
   }
@@ -227,15 +227,15 @@ class MarketPricingAnalysis {
       employees: 100,
       
       currentStack: {
-        "Salesforce (CRM)": 50 * 300, // $15,000/month
-        "Microsoft 365": 100 * 57,    // $5,700/month  
-        "Slack Enterprise": 100 * 15, // $1,500/month
-        "Zoom": 100 * 20,             // $2,000/month
-        "Monday.com": 100 * 24,       // $2,400/month
-        "GitHub Enterprise": 20 * 21, // $420/month
-        "Datadog": 10 * 31,           // $310/month (10 hosts)
-        "UiPath": 5 * 420,            // $2,100/month (5 bots)
-        "LinkedIn Navigator": 10 * 80 // $800/month (sales team)
+        'Salesforce (CRM)': 50 * 300, // $15,000/month
+        'Microsoft 365': 100 * 57,    // $5,700/month  
+        'Slack Enterprise': 100 * 15, // $1,500/month
+        'Zoom': 100 * 20,             // $2,000/month
+        'Monday.com': 100 * 24,       // $2,400/month
+        'GitHub Enterprise': 20 * 21, // $420/month
+        'Datadog': 10 * 31,           // $310/month (10 hosts)
+        'UiPath': 5 * 420,            // $2,100/month (5 bots)
+        'LinkedIn Navigator': 10 * 80 // $800/month (sales team)
       },
 
       totalMonthlyCost: 0,
@@ -255,48 +255,48 @@ class MarketPricingAnalysis {
     
     return {
       marketReality: {
-        "Current Enterprise Spend": `$${currentCosts.totalMonthlyCost.toLocaleString()}/month`,
-        "Annual Enterprise Spend": `$${currentCosts.annualCost.toLocaleString()}/year`,
-        "Per Employee Cost": `$${Math.round(currentCosts.totalMonthlyCost / 100)}/month per employee`,
-        "Tools Required": "8+ separate systems that don't integrate"
+        'Current Enterprise Spend': `$${currentCosts.totalMonthlyCost.toLocaleString()}/month`,
+        'Annual Enterprise Spend': `$${currentCosts.annualCost.toLocaleString()}/year`,
+        'Per Employee Cost': `$${Math.round(currentCosts.totalMonthlyCost / 100)}/month per employee`,
+        'Tools Required': '8+ separate systems that don\'t integrate'
       },
 
       asoosValue: {
-        "Replaces All Tools": "One ASOOS platform = 8+ current tools",
-        "Intelligent Integration": "Victory36 AI connects everything intelligently",
-        "True Automation": "Not just rule-based, but adaptive learning",
-        "Predictive Insights": "Prevents problems before they occur"
+        'Replaces All Tools': 'One ASOOS platform = 8+ current tools',
+        'Intelligent Integration': 'Victory36 AI connects everything intelligently',
+        'True Automation': 'Not just rule-based, but adaptive learning',
+        'Predictive Insights': 'Prevents problems before they occur'
       },
 
       pricingJustification: {
-        "Mobile Entry": {
-          price: "$79/month",
-          comparison: "Same as LinkedIn but actually does business automation",
-          value: "More valuable than LinkedIn's digital phonebook"
+        'Mobile Entry': {
+          price: '$79/month',
+          comparison: 'Same as LinkedIn but actually does business automation',
+          value: 'More valuable than LinkedIn\'s digital phonebook'
         },
 
-        "Professional Desktop": {
-          price: "$399/month per user", 
-          comparison: "Replaces Salesforce ($300) + automation tools",
-          value: "Single user gets capabilities of entire tech stack"
+        'Professional Desktop': {
+          price: '$399/month per user', 
+          comparison: 'Replaces Salesforce ($300) + automation tools',
+          value: 'Single user gets capabilities of entire tech stack'
         },
 
-        "Enterprise Foundation": {
-          price: "$25,000/month (up to 100 users)",
-          comparison: "Current enterprise spends $30k/month on disconnected tools",
-          value: "20% cost reduction with 10x functionality improvement"
+        'Enterprise Foundation': {
+          price: '$25,000/month (up to 100 users)',
+          comparison: 'Current enterprise spends $30k/month on disconnected tools',
+          value: '20% cost reduction with 10x functionality improvement'
         },
 
-        "Enterprise Advanced": {
-          price: "$75,000/month (unlimited users)",
-          comparison: "Large enterprises spend $100k+/month on current stacks",
-          value: "25% cost reduction with custom Victory36 AI deployment"
+        'Enterprise Advanced': {
+          price: '$75,000/month (unlimited users)',
+          comparison: 'Large enterprises spend $100k+/month on current stacks',
+          value: '25% cost reduction with custom Victory36 AI deployment'
         },
 
-        "Fortune 500/Government": {
-          price: "$200,000+/month",
-          comparison: "These orgs spend $500k-$2M/month on enterprise software",
-          value: "Massive cost savings with organizational AI transformation"
+        'Fortune 500/Government': {
+          price: '$200,000+/month',
+          comparison: 'These orgs spend $500k-$2M/month on enterprise software',
+          value: 'Massive cost savings with organizational AI transformation'
         }
       }
     };

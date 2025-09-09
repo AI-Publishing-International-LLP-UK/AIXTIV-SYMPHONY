@@ -223,64 +223,64 @@ class ProviderFactory {
     
     try {
       switch (provider) {
-        case 'openai': {
-          const openai = await this.createOpenAIClient();
-          const embeddingsProvider = {
-            embedDocuments: async (texts) => {
-              const response = await openai.embeddings.create({
-                model: 'text-embedding-ada-002',
-                input: texts
-              });
-              return response.data.map(item => item.embedding);
-            },
-            embedQuery: async (text) => {
-              const response = await openai.embeddings.create({
-                model: 'text-embedding-ada-002',
-                input: text
-              });
-              return response.data[0].embedding;
-            }
-          };
-          providerCache.set(cacheKey, embeddingsProvider);
-          return embeddingsProvider;
-        }
+      case 'openai': {
+        const openai = await this.createOpenAIClient();
+        const embeddingsProvider = {
+          embedDocuments: async (texts) => {
+            const response = await openai.embeddings.create({
+              model: 'text-embedding-ada-002',
+              input: texts
+            });
+            return response.data.map(item => item.embedding);
+          },
+          embedQuery: async (text) => {
+            const response = await openai.embeddings.create({
+              model: 'text-embedding-ada-002',
+              input: text
+            });
+            return response.data[0].embedding;
+          }
+        };
+        providerCache.set(cacheKey, embeddingsProvider);
+        return embeddingsProvider;
+      }
         
-        case 'anthropic': {
-          // Note: This is for future use as Anthropic releases embedding APIs
-          throw new Error('Anthropic embeddings not yet supported');
-        }
+      case 'anthropic': {
+        // Note: This is for future use as Anthropic releases embedding APIs
+        throw new Error('Anthropic embeddings not yet supported');
+      }
         
-        case 'vertexai': {
-          const vertexai = await this.createVertexAIClient();
-          const embeddingsProvider = {
-            embedDocuments: async (texts) => {
-              const model = vertexai.preview.getGenerativeModel({ 
-                model: 'embedding-001'
-              });
+      case 'vertexai': {
+        const vertexai = await this.createVertexAIClient();
+        const embeddingsProvider = {
+          embedDocuments: async (texts) => {
+            const model = vertexai.preview.getGenerativeModel({ 
+              model: 'embedding-001'
+            });
               
-              // Process in batches if needed
-              const embeddings = [];
-              for (const text of texts) {
-                const response = await model.embedContent(text);
-                embeddings.push(response.embedding.values);
-              }
-              
-              return embeddings;
-            },
-            embedQuery: async (text) => {
-              const model = vertexai.preview.getGenerativeModel({ 
-                model: 'embedding-001'
-              });
+            // Process in batches if needed
+            const embeddings = [];
+            for (const text of texts) {
               const response = await model.embedContent(text);
-              return response.embedding.values;
+              embeddings.push(response.embedding.values);
             }
-          };
-          providerCache.set(cacheKey, embeddingsProvider);
-          return embeddingsProvider;
-        }
+              
+            return embeddings;
+          },
+          embedQuery: async (text) => {
+            const model = vertexai.preview.getGenerativeModel({ 
+              model: 'embedding-001'
+            });
+            const response = await model.embedContent(text);
+            return response.embedding.values;
+          }
+        };
+        providerCache.set(cacheKey, embeddingsProvider);
+        return embeddingsProvider;
+      }
         
-        default:
-          throw new Error(`Unknown embeddings provider: ${provider}`);
+      default:
+        throw new Error(`Unknown embeddings provider: ${provider}`);
       }
     } catch (error) {
       console.error(`Failed to create embeddings provider for ${provider}:`, error.message);

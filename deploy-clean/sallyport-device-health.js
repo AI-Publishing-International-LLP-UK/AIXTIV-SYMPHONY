@@ -48,14 +48,14 @@ class SallyPortDeviceHealth {
       },
       body: JSON.stringify(healthData),
     })
-    .then(response => response.json())
-    .then(data => {
-      console.log('SallyPort backend response:', data);
+      .then(response => response.json())
+      .then(data => {
+        console.log('SallyPort backend response:', data);
       // Handle backend response, e.g., proceed with login or show remediation steps
-    })
-    .catch(error => {
-      console.error('Error sending device health data:', error);
-    });
+      })
+      .catch(error => {
+        console.error('Error sending device health data:', error);
+      });
   }
 }
 

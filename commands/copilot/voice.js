@@ -45,42 +45,42 @@ module.exports = async function voiceCommand(options) {
 
   try {
     switch (action) {
-      case 'transcribe':
-        await transcribeAudio(file, options);
-        break;
+    case 'transcribe':
+      await transcribeAudio(file, options);
+      break;
 
-      case 'speak':
-        await generateSpeech(text, options);
-        break;
+    case 'speak':
+      await generateSpeech(text, options);
+      break;
 
-      case 'personalize':
-        await personalizeVoice(userId, copilotId, options);
-        break;
+    case 'personalize':
+      await personalizeVoice(userId, copilotId, options);
+      break;
 
-      case 'ce-score':
-        await getCEScore(userId);
-        break;
+    case 'ce-score':
+      await getCEScore(userId);
+      break;
 
-      case 'update-ce':
-        await updateCEScore(userId, ceScore, options.reason);
-        break;
+    case 'update-ce':
+      await updateCEScore(userId, ceScore, options.reason);
+      break;
 
-      case 'dream-session':
-        await createDreamSession(userId, options);
-        break;
+    case 'dream-session':
+      await createDreamSession(userId, options);
+      break;
 
-      case 'dream-interact':
-        await interactWithDream(sessionId, message);
-        break;
+    case 'dream-interact':
+      await interactWithDream(sessionId, message);
+      break;
 
-      case 'test':
-        await testVoiceSystem(options);
-        break;
+    case 'test':
+      await testVoiceSystem(options);
+      break;
 
-      default:
-        console.log(chalk.red(`Unknown action: ${action}`));
-        showHelp();
-        break;
+    default:
+      console.log(chalk.red(`Unknown action: ${action}`));
+      showHelp();
+      break;
     }
   } catch (error) {
     console.error(chalk.red('Error:'), error.message);
@@ -126,7 +126,7 @@ async function transcribeAudio(filePath, options) {
       console.log('\nSentiment Analysis:');
       const sentimentColor = 
         result.sentiment.category === 'positive' ? 'green' :
-        result.sentiment.category === 'negative' ? 'red' : 'yellow';
+          result.sentiment.category === 'negative' ? 'red' : 'yellow';
       
       console.log(boxen(
         `${chalk.bold('Category:')} ${chalk[sentimentColor](result.sentiment.category)}\n` +
@@ -458,7 +458,7 @@ async function interactWithDream(sessionId, message) {
       console.log('\nYour Message Sentiment:');
       const sentimentColor = 
         response.sentiment.category === 'positive' ? 'green' :
-        response.sentiment.category === 'negative' ? 'red' : 'yellow';
+          response.sentiment.category === 'negative' ? 'red' : 'yellow';
       
       console.log(boxen(
         `${chalk.bold('Category:')} ${chalk[sentimentColor](response.sentiment.category)}\n` +

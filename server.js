@@ -61,7 +61,7 @@ async function restartService(serviceName) {
           action: 'restart',
           service: serviceName,
           status: 'initiated',
-          message: `Restart command executed successfully`,
+          message: 'Restart command executed successfully',
           timestamp: new Date().toISOString()
         });
       }
@@ -136,8 +136,8 @@ async function getServiceLogs(serviceName) {
     'asoos-flyer': process.env.ASOOS_LOG_FILE ? `tail -n 50 ${process.env.ASOOS_LOG_FILE}` : 'tail -n 50 logs/combined.log',
     'professor-lee': 'journalctl -u professor-lee.service -n 50 --no-pager --output=json',
     'connector-manager': 'journalctl -u connector-manager.service -n 50 --no-pager --output=json',
-    'diamond-sao': `tail -n 50 logs/diamond-sao-operations.log`,
-    'uac-system': `journalctl -u uac-system.service -n 50 --no-pager --output=json`
+    'diamond-sao': 'tail -n 50 logs/diamond-sao-operations.log',
+    'uac-system': 'journalctl -u uac-system.service -n 50 --no-pager --output=json'
   };
   
   const command = logCommands[serviceName];
@@ -414,7 +414,7 @@ function executeCliCommand(command, args = {}, timeout = 30000) {
 
     const childProcess = exec(fullCommand, { timeout }, (error, stdout, stderr) => {
       if (error) {
-        logger.error(`CLI execution error`, { command, error: error.message, stderr });
+        logger.error('CLI execution error', { command, error: error.message, stderr });
         return reject(error);
       }
 
@@ -428,7 +428,7 @@ function executeCliCommand(command, args = {}, timeout = 30000) {
           return resolve({ output: stdout.trim() });
         }
       } catch (parseError) {
-        logger.error(`CLI output parse error`, { command, error: parseError.message });
+        logger.error('CLI output parse error', { command, error: parseError.message });
         reject(parseError);
       }
     });
@@ -537,24 +537,24 @@ app.get('/', (req, res) => {
 app.post('/claude-code-generate', (req, res) => {
   const { task, language } = req.body;
 
-  logger.info(`Received code generation request`, { task, language });
+  logger.info('Received code generation request', { task, language });
 
   // Call the actual CLI command instead of mock response
   executeCliCommand('claude:code:generate', { 
     task, 
     language: language || 'javascript' 
   })
-  .then(result => {
-    res.json(result);
-  })
-  .catch(error => {
-    logger.error('Code generation failed', { error: error.message });
-    res.status(500).json({ 
-      status: 'error', 
-      message: 'Code generation failed', 
-      error: error.message 
+    .then(result => {
+      res.json(result);
+    })
+    .catch(error => {
+      logger.error('Code generation failed', { error: error.message });
+      res.status(500).json({ 
+        status: 'error', 
+        message: 'Code generation failed', 
+        error: error.message 
+      });
     });
-  });
 });
 
 // Add API endpoint for agent:grant command
@@ -693,32 +693,32 @@ app.get('/api/rate-limit/status', (req, res) => {
   let limit, description;
   if (agentType) {
     switch (agentType) {
-      case 'rix':
-        limit = 5000;
-        description = 'RIX Agent';
-        break;
-      case 'crx':
-        limit = 10000;
-        description = 'CRX Agent';
-        break;
-      case 'qrix':
-        limit = 20000;
-        description = 'QRIX Agent';
-        break;
-      default:
-        limit = 500;
-        description = 'Unknown Agent';
+    case 'rix':
+      limit = 5000;
+      description = 'RIX Agent';
+      break;
+    case 'crx':
+      limit = 10000;
+      description = 'CRX Agent';
+      break;
+    case 'qrix':
+      limit = 20000;
+      description = 'QRIX Agent';
+      break;
+    default:
+      limit = 500;
+      description = 'Unknown Agent';
     }
   } else {
     switch (userType) {
-      case 'authenticated':
-        limit = 2000;
-        description = 'Authenticated User';
-        break;
-      case 'anonymous':
-      default:
-        limit = 200;
-        description = 'Anonymous User';
+    case 'authenticated':
+      limit = 2000;
+      description = 'Authenticated User';
+      break;
+    case 'anonymous':
+    default:
+      limit = 200;
+      description = 'Anonymous User';
     }
   }
   
@@ -1103,32 +1103,32 @@ app.post('/api/asoos/test', async (req, res) => {
     let testResult;
     
     switch (testType) {
-      case 'connectors':
-        testResult = {
-          available: connectorManager.getAvailableConnectors(),
-          status: await connectorManager.testAllConnectors()
-        };
-        break;
+    case 'connectors':
+      testResult = {
+        available: connectorManager.getAvailableConnectors(),
+        status: await connectorManager.testAllConnectors()
+      };
+      break;
         
-      case 'curation':
-        testResult = await curationSystem.performHealthCheck();
-        break;
+    case 'curation':
+      testResult = await curationSystem.performHealthCheck();
+      break;
         
-      case 'ml_pipeline':
-        const sampleOrg = {
-          name: 'Test Organization',
-          domain: 'test.com',
-          metadata: { test: true }
-        };
-        testResult = await connectorManager.processOrganizations([sampleOrg], { test: true });
-        break;
+    case 'ml_pipeline':
+      const sampleOrg = {
+        name: 'Test Organization',
+        domain: 'test.com',
+        metadata: { test: true }
+      };
+      testResult = await connectorManager.processOrganizations([sampleOrg], { test: true });
+      break;
         
-      default:
-        testResult = {
-          systemStatus: asoosSystemStatus,
-          timestamp: new Date().toISOString(),
-          message: 'Basic system test completed'
-        };
+    default:
+      testResult = {
+        systemStatus: asoosSystemStatus,
+        timestamp: new Date().toISOString(),
+        message: 'Basic system test completed'
+      };
     }
     
     res.json({
@@ -1297,18 +1297,18 @@ if (DIAMOND_CONSOLE_MODE) {
     
     try {
       switch(action) {
-        case 'restart':
-          result = await restartService(service);
-          break;
-        case 'status':
-          result = await getServiceStatus(service);
-          break;
-        case 'logs':
-          result = await getServiceLogs(service);
-          break;
-        default:
-          result.error = `Unknown action: ${action}`;
-          return res.status(400).json(result);
+      case 'restart':
+        result = await restartService(service);
+        break;
+      case 'status':
+        result = await getServiceStatus(service);
+        break;
+      case 'logs':
+        result = await getServiceLogs(service);
+        break;
+      default:
+        result.error = `Unknown action: ${action}`;
+        return res.status(400).json(result);
       }
       
       res.json(result);
@@ -1369,12 +1369,12 @@ app.listen(PORT, () => {
     logger.info(`💎 Diamond SAO Command Center running on port ${PORT}`);
     logger.info(`🌐 Integration Gateway count: ${diamondSystemStatus.gateways.total}`);
     logger.info(`🔗 Max concurrent connections: ${diamondSystemStatus.connections.max}`);
-    logger.info(`📡 Console endpoints available:`);
-    logger.info(`   💎 /api/diamond-sao/status - System status`);
-    logger.info(`   🌐 /api/diamond-sao/domains - Domain diagnostics`);
-    logger.info(`   🚨 /api/diamond-sao/emergency-access - Team access`);
-    logger.info(`   🔧 /api/diamond-sao/services/:action - Service management`);
-    logger.info(`   📊 /api/diamond-sao/dashboard - Full dashboard`);
+    logger.info('📡 Console endpoints available:');
+    logger.info('   💎 /api/diamond-sao/status - System status');
+    logger.info('   🌐 /api/diamond-sao/domains - Domain diagnostics');
+    logger.info('   🚨 /api/diamond-sao/emergency-access - Team access');
+    logger.info('   🔧 /api/diamond-sao/services/:action - Service management');
+    logger.info('   📊 /api/diamond-sao/dashboard - Full dashboard');
   } else {
     logger.info(`Server running on port ${PORT}`);
   }

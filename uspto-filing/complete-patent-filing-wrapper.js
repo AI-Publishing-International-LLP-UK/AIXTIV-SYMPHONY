@@ -428,11 +428,11 @@ Customer Number: 208576
   generatePatentClaims(patent) {
     return [
       `A system for ${patent.description.toLowerCase()}, comprising:`,
-      `a computational framework configured to manage artificial intelligence agents;`,
-      `a Diamond SAO Command Center interface providing centralized authority and coordination;`,
-      `a multi-language voice synthesis system supporting 99+ languages;`,
-      `a blockchain evidence creation system for immutable documentation;`,
-      `wherein the system provides scalable and secure AI agent management.`
+      'a computational framework configured to manage artificial intelligence agents;',
+      'a Diamond SAO Command Center interface providing centralized authority and coordination;',
+      'a multi-language voice synthesis system supporting 99+ languages;',
+      'a blockchain evidence creation system for immutable documentation;',
+      'wherein the system provides scalable and secure AI agent management.'
     ];
   }
   
@@ -501,7 +501,7 @@ Customer Number: 208576
       estimatedExaminationStart: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
     };
     
-    console.log(`✅ USPTO Submission Successful`);
+    console.log('✅ USPTO Submission Successful');
     console.log(`📋 Confirmation: ${filingResult.confirmationNumber}`);
     
     return filingResult;
@@ -547,7 +547,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
       console.log('🎊 USPTO PATENT FILING COMPLETED SUCCESSFULLY!');
       console.log(`✅ Confirmation Number: ${result.confirmation.confirmationNumber}`);
       console.log(`📅 Filing Date: ${result.confirmation.filingDate}`);
-      console.log(`🎯 Patents Filed: SAO-01 to SAO-45 (45 total)`);
+      console.log('🎯 Patents Filed: SAO-01 to SAO-45 (45 total)');
     })
     .catch((error) => {
       console.error('💥 Filing process failed:', error);

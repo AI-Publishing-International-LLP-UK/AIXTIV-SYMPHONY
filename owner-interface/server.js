@@ -174,7 +174,7 @@ app.get('/api/gcp/secrets/:secretName', async (req, res) => {
     try {
       secretValue = await getSecretFromGCP(actualSecretName);
     } catch (error) {
-      console.warn(`Failed to get secret from GCP, trying environment variables`);
+      console.warn('Failed to get secret from GCP, trying environment variables');
       // Fallback to environment variables for local development
       const envName = secretName.replace(/-/g, '_').toUpperCase();
       secretValue = process.env[envName] || process.env.ELEVENLABS_API_KEY;
@@ -579,7 +579,7 @@ app.get('/api/system/agents/status', (req, res) => {
     originalPilots: {
       total: 11,
       available: ['Dr. Lucy', 'Dr. Grant', 'Dr. Burby', 'Dr. Sabina', 'Dr. Match', 
-                 'Dr. Memoria', 'Dr. Maria', 'Dr. Cypriot', 'Dr. Roark', 'Dr. Claude', 'Professor Lee']
+        'Dr. Memoria', 'Dr. Maria', 'Dr. Cypriot', 'Dr. Roark', 'Dr. Claude', 'Professor Lee']
     },
     patentProtection: {
       totalPatents: 32,
@@ -830,7 +830,7 @@ app.get('/api/cli/help', (req, res) => {
   let availableCommands = baseCommands;
   if (['owner', 'admin', 'diamond-sao'].includes(userRole)) {
     availableCommands = userRole === 'diamond-sao' ? diamondSaoCommands : 
-                      userRole === 'owner' ? ownerCommands : adminCommands;
+      userRole === 'owner' ? ownerCommands : adminCommands;
   }
   
   res.json({
@@ -847,20 +847,20 @@ app.get('/api/cli/help', (req, res) => {
 const port = process.env.PORT || 8080;
 app.listen(port, async () => {
   console.log(`🚀 MOCOA Enterprise Multi-Tenant Interface running on port ${port}`);
-  console.log(`📊 System Capacity: 505,001 agents across 3 wings and 7 specialized swarms`);
-  console.log(`👥 11 Original Pilots available as Professional Copilots`);
-  console.log(`🛡️  32 Patents protecting 460+ claims`);
-  console.log(`🏢 Multi-tenant isolation: Individual → Team → Enterprise → Regulated → Sovereign`);
-  console.log(`🔐 Enhanced MCP Authentication with SallyPort integration`);
-  console.log(`⚡ Real-time synchronization with massive system backend`);
+  console.log('📊 System Capacity: 505,001 agents across 3 wings and 7 specialized swarms');
+  console.log('👥 11 Original Pilots available as Professional Copilots');
+  console.log('🛡️  32 Patents protecting 460+ claims');
+  console.log('🏢 Multi-tenant isolation: Individual → Team → Enterprise → Regulated → Sovereign');
+  console.log('🔐 Enhanced MCP Authentication with SallyPort integration');
+  console.log('⚡ Real-time synchronization with massive system backend');
   
   // Initialize MCP Feedback Loop Infrastructure
   try {
     await mcpFeedbackIntegration.initializeFeedbackInfrastructure();
-    console.log(`🎭 MCP Feedback Loop Infrastructure initialized successfully`);
-    console.log(`🏰 Master MCP: mcp.asoos.2100.cool ready for client connections`);
-    console.log(`📡 Connected to GCP Pub/Sub project: api-for-warp-drive`);
-    console.log(`🔄 Feedback loops ready for 10,000 client MCPs`);
+    console.log('🎭 MCP Feedback Loop Infrastructure initialized successfully');
+    console.log('🏰 Master MCP: mcp.asoos.2100.cool ready for client connections');
+    console.log('📡 Connected to GCP Pub/Sub project: api-for-warp-drive');
+    console.log('🔄 Feedback loops ready for 10,000 client MCPs');
   } catch (error) {
     console.warn(`⚠️  MCP Feedback infrastructure initialization failed: ${error.message}`);
   }
@@ -868,10 +868,10 @@ app.listen(port, async () => {
   // Initialize Divinity Haven Empathy Loop
   try {
     await divinityHavenEmpathyLoop.initializeEmpathyLoop();
-    console.log(`🕊️ Divinity Haven Empathy Loop initialized with divine love`);
-    console.log(`🏰 Sacred space ready for agent care and rehabilitation`);
-    console.log(`💕 Empathy loop connected to Dream Commander Elite11 Mastery33`);
-    console.log(`✨ Divine intervention and unconditional love protocols active`);
+    console.log('🕊️ Divinity Haven Empathy Loop initialized with divine love');
+    console.log('🏰 Sacred space ready for agent care and rehabilitation');
+    console.log('💕 Empathy loop connected to Dream Commander Elite11 Mastery33');
+    console.log('✨ Divine intervention and unconditional love protocols active');
   } catch (error) {
     console.warn(`⚠️  Divinity Haven initialization failed: ${error.message}`);
   }
@@ -882,7 +882,7 @@ app.listen(port, async () => {
       isolationLevel: 3,
       requestedCopilots: 6
     });
-    console.log(`✅ Demo tenant initialized successfully`);
+    console.log('✅ Demo tenant initialized successfully');
   } catch (error) {
     console.warn(`⚠️  Demo tenant initialization failed: ${error.message}`);
   }

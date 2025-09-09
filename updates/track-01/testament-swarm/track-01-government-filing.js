@@ -35,65 +35,65 @@ async function main() {
   
   try {
     switch (command.toLowerCase()) {
-      case 'status':
-        console.log('📊 TRACK ONE SYSTEM STATUS');
-        const status = trackOneSystem.getTrackOneStatus();
-        console.log(JSON.stringify(status, null, 2));
-        break;
+    case 'status':
+      console.log('📊 TRACK ONE SYSTEM STATUS');
+      const status = trackOneSystem.getTrackOneStatus();
+      console.log(JSON.stringify(status, null, 2));
+      break;
         
-      case 'petition':
-        console.log('📋 GENERATING FEE WAIVER PETITION');
-        const petition = await trackOneSystem.generateFeeWaiverPetition();
-        console.log('\n🎯 Fee Waiver Petition Generated');
-        console.log(`💰 Total government funding requested: $${petition.requestedWaivers.totalRequest.toLocaleString()}`);
-        break;
+    case 'petition':
+      console.log('📋 GENERATING FEE WAIVER PETITION');
+      const petition = await trackOneSystem.generateFeeWaiverPetition();
+      console.log('\n🎯 Fee Waiver Petition Generated');
+      console.log(`💰 Total government funding requested: $${petition.requestedWaivers.totalRequest.toLocaleString()}`);
+      break;
         
-      case 'file':
-        console.log('🚀 EXECUTING TRACK ONE FILING SEQUENCE');
-        const filingResult = await trackOneSystem.executeTrackOneFilingSequence();
+    case 'file':
+      console.log('🚀 EXECUTING TRACK ONE FILING SEQUENCE');
+      const filingResult = await trackOneSystem.executeTrackOneFilingSequence();
         
-        console.log('\n✅ FILING COMPLETE');
-        console.log(`📋 Patents filed: ${filingResult.totalPatents}`);
-        console.log(`💰 Government funding: $${filingResult.feeWaiverAmount.toLocaleString()}`);
-        console.log(`⚡ Expedited timeline: ${filingResult.expeditedTimeline.finalDisposition}`);
+      console.log('\n✅ FILING COMPLETE');
+      console.log(`📋 Patents filed: ${filingResult.totalPatents}`);
+      console.log(`💰 Government funding: $${filingResult.feeWaiverAmount.toLocaleString()}`);
+      console.log(`⚡ Expedited timeline: ${filingResult.expeditedTimeline.finalDisposition}`);
         
-        // Save filing results
-        const fs = require('fs').promises;
-        const filePath = `/Users/as/asoos/integration-gateway/updates/track-01/testament-swarm/filing-results-${Date.now()}.json`;
-        await fs.writeFile(filePath, JSON.stringify(filingResult, null, 2));
-        console.log(`💾 Results saved: ${filePath}`);
-        break;
+      // Save filing results
+      const fs = require('fs').promises;
+      const filePath = `/Users/as/asoos/integration-gateway/updates/track-01/testament-swarm/filing-results-${Date.now()}.json`;
+      await fs.writeFile(filePath, JSON.stringify(filingResult, null, 2));
+      console.log(`💾 Results saved: ${filePath}`);
+      break;
         
-      case 'briefing':
-        console.log('📊 GENERATING GOVERNMENT BRIEFING PACKAGE');
+    case 'briefing':
+      console.log('📊 GENERATING GOVERNMENT BRIEFING PACKAGE');
         
-        // Create mock submission for briefing generation
-        const mockSubmission = {
-          totalFeeWaiverRequested: 253440,
-          applications: trackOneSystem.trackOnePatents
-        };
+      // Create mock submission for briefing generation
+      const mockSubmission = {
+        totalFeeWaiverRequested: 253440,
+        applications: trackOneSystem.trackOnePatents
+      };
         
-        const briefingPackage = trackOneSystem.generateGovernmentBriefingPackage(mockSubmission);
+      const briefingPackage = trackOneSystem.generateGovernmentBriefingPackage(mockSubmission);
         
-        console.log('\n🎯 Government Briefing Package Generated');
-        console.log('Executive Summary:', briefingPackage.executiveSummary.title);
-        console.log('Classification:', briefingPackage.executiveSummary.classification);
-        console.log('Investment:', briefingPackage.executiveSummary.investment);
+      console.log('\n🎯 Government Briefing Package Generated');
+      console.log('Executive Summary:', briefingPackage.executiveSummary.title);
+      console.log('Classification:', briefingPackage.executiveSummary.classification);
+      console.log('Investment:', briefingPackage.executiveSummary.investment);
         
-        // Save briefing package
-        const briefingPath = `/Users/as/asoos/integration-gateway/updates/track-01/testament-swarm/government-briefing-${Date.now()}.json`;
-        await fs.writeFile(briefingPath, JSON.stringify(briefingPackage, null, 2));
-        console.log(`💾 Briefing saved: ${briefingPath}`);
-        break;
+      // Save briefing package
+      const briefingPath = `/Users/as/asoos/integration-gateway/updates/track-01/testament-swarm/government-briefing-${Date.now()}.json`;
+      await fs.writeFile(briefingPath, JSON.stringify(briefingPackage, null, 2));
+      console.log(`💾 Briefing saved: ${briefingPath}`);
+      break;
         
-      default:
-        console.log('❌ Unknown command:', command);
-        console.log('\n📖 Available commands:');
-        console.log('- status: Check Track One system status');
-        console.log('- petition: Generate fee waiver petition');
-        console.log('- file: Execute full Track One filing sequence');
-        console.log('- briefing: Generate government briefing package');
-        process.exit(1);
+    default:
+      console.log('❌ Unknown command:', command);
+      console.log('\n📖 Available commands:');
+      console.log('- status: Check Track One system status');
+      console.log('- petition: Generate fee waiver petition');
+      console.log('- file: Execute full Track One filing sequence');
+      console.log('- briefing: Generate government briefing package');
+      process.exit(1);
     }
     
     console.log('\n🎉 Track 01 operation completed successfully');

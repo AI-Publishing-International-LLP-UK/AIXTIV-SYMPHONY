@@ -15,7 +15,7 @@
     footerElement = document.getElementById('app-footer');
     
     if (!footerElement) {
-      console.error("Footer element not found in DOM");
+      console.error('Footer element not found in DOM');
       return;
     }
     

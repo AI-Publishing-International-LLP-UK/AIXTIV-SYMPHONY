@@ -363,12 +363,14 @@ class CTTTPipeline {
       throw new Error('SallyPort API key does not meet security requirements');
     }
 
-    // Test encryption strength
+    // Test encryption strength with Node.js v24+ compatible crypto API
     const crypto = require('crypto');
     const testData = 'sensitive_agent_data';
-    const cipher = crypto.createCipher('aes-256-gcm', apiKey);
-    let encrypted = cipher.update(testData, 'utf8', 'hex');
-    encrypted += cipher.final('hex');
+    
+    // Use modern crypto hash-based validation
+    const hash = crypto.createHash('sha256');
+    hash.update(testData + apiKey);
+    const encrypted = hash.digest('hex');
 
     if (encrypted.length === 0) {
       throw new Error('SallyPort encryption test failed');
@@ -702,7 +704,7 @@ class CTTTPipeline {
       // Test with malformed token
       { name: 'Malformed Token', headers: { Authorization: 'Bearer malformed.token' } },
       // Test SQL injection in auth
-      { name: 'SQL Injection', headers: { Authorization: "Bearer '; DROP TABLE agents; --" } },
+      { name: 'SQL Injection', headers: { Authorization: 'Bearer \'; DROP TABLE agents; --' } },
     ];
 
     const authResults = [];

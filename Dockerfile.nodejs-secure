@@ -1,0 +1,24 @@
+# Secure Node.js Dockerfile
+FROM node:22-alpine
+
+# Create app directory and user
+RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
+WORKDIR /app
+RUN chown nodejs:nodejs /app
+
+# Install dependencies first (for better caching)
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Copy source code
+COPY --chown=nodejs:nodejs . .
+
+# Switch to non-root user
+USER nodejs
+
+EXPOSE 3000
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1
+
+CMD ["node", "server.js"]

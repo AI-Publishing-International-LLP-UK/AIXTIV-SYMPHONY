@@ -1,0 +1,312 @@
+name: Docker Security Scan
+
+on:
+  push:
+    branches: [ main, staging, production ]
+  pull_request:
+    branches: [ main, staging, production ]
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+env:
+  CRITICAL_THRESHOLD: 1
+  HIGH_THRESHOLD: 5
+  REGISTRY: gcr.io
+  PROJECT_ID: api-for-warp-drive
+
+jobs:
+  vulnerability-scan:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        # Scan multiple image types
+        image-type: [
+          "aixtiv-symphony",
+          "mcp-registry", 
+          "integration-gateway"
+        ]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Configure Google Cloud credentials
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Configure Docker for GCR
+      run: |
+        gcloud auth configure-docker gcr.io
+
+    - name: Install security scanning tools
+      run: |
+        # Install Docker Scout
+        curl -sSfL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh | sh -s --
+        
+        # Install Trivy as backup scanner
+        sudo apt-get update
+        sudo apt-get install wget apt-transport-https gnupg lsb-release
+        wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+        echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+        sudo apt-get update
+        sudo apt-get install trivy
+        
+        # Install Grype as tertiary scanner  
+        curl -sSfL https://raw.githubusercontent.com/anchore/grype/main/install.sh | sh -s -- -b /usr/local/bin
+
+    - name: Pull or build image
+      run: |
+        IMAGE_NAME="${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/${{ matrix.image-type }}:latest"
+        
+        # Try to pull latest image first
+        if docker pull $IMAGE_NAME 2>/dev/null; then
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+          echo "✅ Pulled latest image from registry"
+        elif [ -f "Dockerfile" ]; then
+          # Build local image if Dockerfile exists
+          docker build -t temp-${{ matrix.image-type }} .
+          echo "IMAGE_NAME=temp-${{ matrix.image-type }}" >> $GITHUB_ENV
+          echo "✅ Built image locally"
+        else
+          echo "❌ No image available for scanning"
+          exit 1
+        fi
+
+    - name: Run multi-scanner vulnerability assessment
+      id: vuln-scan
+      run: |
+        mkdir -p scan-results
+        SCAN_SUCCESS=false
+        
+        # Try Docker Scout first
+        echo "🔍 Running Docker Scout scan..."
+        if docker scout cves ${{ env.IMAGE_NAME }} --format json --output scan-results/${{ matrix.image-type }}-scout.json 2>/dev/null; then
+          echo "✅ Docker Scout scan completed"
+          SCAN_SUCCESS=true
+          
+          # Parse Scout results
+          CRITICAL=$(jq -r '.vulnerabilities[]? | select(.severity == "critical") | .id' scan-results/${{ matrix.image-type }}-scout.json | wc -l || echo "0")
+          HIGH=$(jq -r '.vulnerabilities[]? | select(.severity == "high") | .id' scan-results/${{ matrix.image-type }}-scout.json | wc -l || echo "0")
+          MEDIUM=$(jq -r '.vulnerabilities[]? | select(.severity == "medium") | .id' scan-results/${{ matrix.image-type }}-scout.json | wc -l || echo "0")
+          LOW=$(jq -r '.vulnerabilities[]? | select(.severity == "low") | .id' scan-results/${{ matrix.image-type }}-scout.json | wc -l || echo "0")
+          
+          echo "SCANNER=docker-scout" >> $GITHUB_ENV
+        else
+          echo "⚠️ Docker Scout failed, trying Trivy..."
+          
+          # Fallback to Trivy
+          if trivy image --format json --output scan-results/${{ matrix.image-type }}-trivy.json ${{ env.IMAGE_NAME }} 2>/dev/null; then
+            echo "✅ Trivy scan completed"
+            SCAN_SUCCESS=true
+            
+            # Parse Trivy results
+            CRITICAL=$(jq -r '.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL") | .VulnerabilityID' scan-results/${{ matrix.image-type }}-trivy.json | wc -l || echo "0")
+            HIGH=$(jq -r '.Results[]?.Vulnerabilities[]? | select(.Severity == "HIGH") | .VulnerabilityID' scan-results/${{ matrix.image-type }}-trivy.json | wc -l || echo "0")
+            MEDIUM=$(jq -r '.Results[]?.Vulnerabilities[]? | select(.Severity == "MEDIUM") | .VulnerabilityID' scan-results/${{ matrix.image-type }}-trivy.json | wc -l || echo "0")
+            LOW=$(jq -r '.Results[]?.Vulnerabilities[]? | select(.Severity == "LOW") | .VulnerabilityID' scan-results/${{ matrix.image-type }}-trivy.json | wc -l || echo "0")
+            
+            echo "SCANNER=trivy" >> $GITHUB_ENV
+          else
+            echo "⚠️ Trivy failed, trying Grype..."
+            
+            # Last resort: Grype
+            if grype ${{ env.IMAGE_NAME }} -o json > scan-results/${{ matrix.image-type }}-grype.json 2>/dev/null; then
+              echo "✅ Grype scan completed"
+              SCAN_SUCCESS=true
+              
+              # Parse Grype results  
+              CRITICAL=$(jq -r '.matches[]? | select(.vulnerability.severity == "Critical") | .vulnerability.id' scan-results/${{ matrix.image-type }}-grype.json | wc -l || echo "0")
+              HIGH=$(jq -r '.matches[]? | select(.vulnerability.severity == "High") | .vulnerability.id' scan-results/${{ matrix.image-type }}-grype.json | wc -l || echo "0")
+              MEDIUM=$(jq -r '.matches[]? | select(.vulnerability.severity == "Medium") | .vulnerability.id' scan-results/${{ matrix.image-type }}-grype.json | wc -l || echo "0")
+              LOW=$(jq -r '.matches[]? | select(.vulnerability.severity == "Low") | .vulnerability.id' scan-results/${{ matrix.image-type }}-grype.json | wc -l || echo "0")
+              
+              echo "SCANNER=grype" >> $GITHUB_ENV
+            else
+              echo "❌ All scanners failed"
+              CRITICAL=999
+              HIGH=999
+              MEDIUM=0
+              LOW=0
+              echo "SCANNER=failed" >> $GITHUB_ENV
+            fi
+          fi
+        fi
+        
+        # Set outputs
+        echo "critical=$CRITICAL" >> $GITHUB_OUTPUT
+        echo "high=$HIGH" >> $GITHUB_OUTPUT
+        echo "medium=$MEDIUM" >> $GITHUB_OUTPUT
+        echo "low=$LOW" >> $GITHUB_OUTPUT
+        echo "success=$SCAN_SUCCESS" >> $GITHUB_OUTPUT
+        
+        # Log results
+        echo "## 🛡️ Vulnerability Scan Results for ${{ matrix.image-type }}" >> $GITHUB_STEP_SUMMARY
+        echo "**Scanner Used**: $SCANNER" >> $GITHUB_STEP_SUMMARY
+        echo "- **Critical**: $CRITICAL 🔴" >> $GITHUB_STEP_SUMMARY
+        echo "- **High**: $HIGH 🟠" >> $GITHUB_STEP_SUMMARY  
+        echo "- **Medium**: $MEDIUM 🟡" >> $GITHUB_STEP_SUMMARY
+        echo "- **Low**: $LOW ⚪" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+    - name: Security gate check
+      id: security-gate
+      run: |
+        CRITICAL=${{ steps.vuln-scan.outputs.critical || 0 }}
+        HIGH=${{ steps.vuln-scan.outputs.high || 0 }}
+        
+        echo "🔍 Security Gate Analysis:"
+        echo "Critical vulnerabilities: $CRITICAL (threshold: $CRITICAL_THRESHOLD)"
+        echo "High vulnerabilities: $HIGH (threshold: $HIGH_THRESHOLD)"
+        
+        if [ "$CRITICAL" -ge "$CRITICAL_THRESHOLD" ] || [ "$HIGH" -ge "$HIGH_THRESHOLD" ]; then
+          echo "blocking=true" >> $GITHUB_OUTPUT
+          echo "reason=Critical: $CRITICAL, High: $HIGH exceeds security thresholds" >> $GITHUB_OUTPUT
+          echo "## ❌ SECURITY GATE FAILURE" >> $GITHUB_STEP_SUMMARY
+          echo "Image **${{ matrix.image-type }}** blocked due to security vulnerabilities:" >> $GITHUB_STEP_SUMMARY
+          echo "- Critical: $CRITICAL (max allowed: $CRITICAL_THRESHOLD)" >> $GITHUB_STEP_SUMMARY
+          echo "- High: $HIGH (max allowed: $HIGH_THRESHOLD)" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "blocking=false" >> $GITHUB_OUTPUT
+          echo "## ✅ SECURITY GATE PASSED" >> $GITHUB_STEP_SUMMARY
+          echo "Image **${{ matrix.image-type }}** meets security requirements" >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - name: Generate remediation report
+      if: always()
+      run: |
+        echo "# 🔧 Security Remediation Report" > remediation-${{ matrix.image-type }}.md
+        echo "**Image**: ${{ env.IMAGE_NAME }}" >> remediation-${{ matrix.image-type }}.md
+        echo "**Scanner**: ${{ env.SCANNER }}" >> remediation-${{ matrix.image-type }}.md
+        echo "**Scan Date**: $(date -u)" >> remediation-${{ matrix.image-type }}.md
+        echo "" >> remediation-${{ matrix.image-type }}.md
+        
+        # Add specific remediation steps
+        echo "## 🎯 Immediate Actions Required" >> remediation-${{ matrix.image-type }}.md
+        
+        CRITICAL=${{ steps.vuln-scan.outputs.critical || 0 }}
+        HIGH=${{ steps.vuln-scan.outputs.high || 0 }}
+        
+        if [ "$CRITICAL" -gt "0" ] || [ "$HIGH" -gt "0" ]; then
+          echo "### 🚨 High Priority Fixes" >> remediation-${{ matrix.image-type }}.md
+          echo "1. **Update base image** - Use latest LTS versions" >> remediation-${{ matrix.image-type }}.md
+          echo "2. **Update system packages** - \`apt-get update && apt-get upgrade\`" >> remediation-${{ matrix.image-type }}.md
+          echo "3. **Remove unused packages** - Minimize attack surface" >> remediation-${{ matrix.image-type }}.md
+          echo "4. **Use specific version tags** - Avoid \`latest\` tags" >> remediation-${{ matrix.image-type }}.md
+        fi
+        
+        echo "" >> remediation-${{ matrix.image-type }}.md
+        echo "## 🛠️ Dockerfile Improvements" >> remediation-${{ matrix.image-type }}.md
+        echo "\`\`\`dockerfile" >> remediation-${{ matrix.image-type }}.md
+        echo "# Use specific, updated base image" >> remediation-${{ matrix.image-type }}.md
+        echo "FROM ubuntu:24.04" >> remediation-${{ matrix.image-type }}.md
+        echo "" >> remediation-${{ matrix.image-type }}.md
+        echo "# Update packages and remove cache" >> remediation-${{ matrix.image-type }}.md
+        echo "RUN apt-get update && apt-get upgrade -y && \\" >> remediation-${{ matrix.image-type }}.md
+        echo "    apt-get install -y --no-install-recommends \\" >> remediation-${{ matrix.image-type }}.md
+        echo "    your-required-packages && \\" >> remediation-${{ matrix.image-type }}.md
+        echo "    apt-get clean && \\" >> remediation-${{ matrix.image-type }}.md
+        echo "    rm -rf /var/lib/apt/lists/*" >> remediation-${{ matrix.image-type }}.md
+        echo "" >> remediation-${{ matrix.image-type }}.md
+        echo "# Create non-root user" >> remediation-${{ matrix.image-type }}.md
+        echo "RUN useradd -r -s /bin/false appuser" >> remediation-${{ matrix.image-type }}.md
+        echo "USER appuser" >> remediation-${{ matrix.image-type }}.md
+        echo "\`\`\`" >> remediation-${{ matrix.image-type }}.md
+
+    - name: Upload scan artifacts
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: security-scan-${{ matrix.image-type }}
+        path: |
+          scan-results/
+          remediation-${{ matrix.image-type }}.md
+        retention-days: 30
+
+    - name: Block deployment on security failure
+      if: steps.security-gate.outputs.blocking == 'true'
+      run: |
+        echo "::error title=Security Gate Failure::${{ steps.security-gate.outputs.reason }}"
+        echo "::error::Deployment blocked - resolve security vulnerabilities first"
+        exit 1
+
+  consolidate-and-notify:
+    needs: vulnerability-scan
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Download all scan results
+      uses: actions/download-artifact@v4
+      with:
+        pattern: security-scan-*
+        merge-multiple: true
+
+    - name: Generate executive summary
+      run: |
+        echo "# 🛡️ Docker Security Executive Summary" > security-executive-summary.md
+        echo "**Repository**: ${{ github.repository }}" >> security-executive-summary.md
+        echo "**Workflow**: ${{ github.workflow }}" >> security-executive-summary.md
+        echo "**Commit**: ${{ github.sha }}" >> security-executive-summary.md
+        echo "**Date**: $(date -u)" >> security-executive-summary.md
+        echo "" >> security-executive-summary.md
+        
+        # Count total issues across all images
+        TOTAL_CRITICAL=0
+        TOTAL_HIGH=0
+        IMAGES_SCANNED=0
+        
+        echo "## 📊 Scan Results Summary" >> security-executive-summary.md
+        echo "| Image | Critical | High | Medium | Low | Status |" >> security-executive-summary.md
+        echo "|-------|----------|------|---------|-----|--------|" >> security-executive-summary.md
+        
+        # Process each remediation file
+        for file in remediation-*.md; do
+          if [[ -f "$file" ]]; then
+            IMAGE_NAME=$(echo "$file" | sed 's/remediation-//g' | sed 's/.md//g')
+            echo "| $IMAGE_NAME | - | - | - | - | Processed |" >> security-executive-summary.md
+            ((IMAGES_SCANNED++))
+          fi
+        done
+        
+        echo "" >> security-executive-summary.md
+        echo "**Total Images Scanned**: $IMAGES_SCANNED" >> security-executive-summary.md
+        
+        echo "## 🎯 Next Steps" >> security-executive-summary.md
+        echo "1. **Review individual remediation reports** in the artifacts" >> security-executive-summary.md
+        echo "2. **Prioritize critical and high severity fixes**" >> security-executive-summary.md
+        echo "3. **Update base images** to latest LTS versions" >> security-executive-summary.md
+        echo "4. **Implement security scanning** in all CI/CD pipelines" >> security-executive-summary.md
+        echo "5. **Schedule regular security reviews**" >> security-executive-summary.md
+
+    - name: Setup continuous monitoring
+      run: |
+        echo "# 🔄 Continuous Security Monitoring Setup" > monitoring-setup.md
+        echo "" >> monitoring-setup.md
+        echo "## Automated Daily Scans" >> monitoring-setup.md
+        echo "This workflow runs daily at 2 AM UTC to catch new vulnerabilities." >> monitoring-setup.md
+        echo "" >> monitoring-setup.md
+        echo "## Security Gates" >> monitoring-setup.md
+        echo "- **Critical vulnerabilities**: Maximum ${{ env.CRITICAL_THRESHOLD }} allowed" >> monitoring-setup.md
+        echo "- **High vulnerabilities**: Maximum ${{ env.HIGH_THRESHOLD }} allowed" >> monitoring-setup.md
+        echo "" >> monitoring-setup.md
+        echo "## Integration Points" >> monitoring-setup.md
+        echo "- GitHub Security tab (SARIF reports)" >> monitoring-setup.md
+        echo "- Pull request status checks" >> monitoring-setup.md
+        echo "- Deployment pipeline gates" >> monitoring-setup.md
+        echo "- Artifact storage for historical tracking" >> monitoring-setup.md
+
+    - name: Upload consolidated report
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-executive-summary
+        path: |
+          security-executive-summary.md
+          monitoring-setup.md
+        retention-days: 90

@@ -1,0 +1,19 @@
+name = "wfa-production-orchestration"
+main = "production-wfa-orchestration.js"
+compatibility_date = "2025-08-27"
+
+# Production route configuration
+[[routes]]
+pattern = "asoos.2100.cool/wfa/*"
+zone_name = "2100.cool"
+
+# Environment variables for production
+[vars]
+ENVIRONMENT = "production"
+GCP_PROJECT_ID = "api-for-warp-drive"
+WFA_AGENTS = "20000000"
+WFA_SECTORS = "200"
+WFA_JOB_CLUSTERS = "64000000"
+WFA_CAREER_CLUSTERS = "319998"
+VICTORY36_ENABLED = "true"
+OAUTH2_ENABLED = "true"

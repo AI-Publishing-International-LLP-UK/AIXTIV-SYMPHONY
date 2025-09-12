@@ -1,0 +1,26 @@
+name = "coaching2100-com-production"
+compatibility_date = "2025-08-25"
+
+[env.production]
+name = "coaching2100-com-production"
+
+# Pages configuration for static site
+pages_build_output_dir = "coaching2100-cloudflare"
+
+# Custom domain configuration
+routes = [
+  { pattern = "coaching2100.com/*", zone_name = "coaching2100.com" },
+  { pattern = "www.coaching2100.com/*", zone_name = "coaching2100.com" }
+]
+
+# Environment variables
+[vars]
+ENVIRONMENT = "production"
+DOMAIN = "coaching2100.com"
+AUTH_REDIRECT = "https://sallyport.2100.cool"
+ASOOS_PLATFORM = "https://2100.cool"
+
+# Security headers (additional to _headers file)
+[env.production.vars]
+CSP_REPORT_URI = "https://coaching2100.com/csp-report"
+HSTS_MAX_AGE = "31536000"

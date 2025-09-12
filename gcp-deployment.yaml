@@ -1,0 +1,137 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: wfa-production-swarm
+  namespace: default
+  labels:
+    cloud.googleapis.com/location: us-west1
+  annotations:
+    run.googleapis.com/ingress: all
+    run.googleapis.com/execution-environment: gen2
+spec:
+  template:
+    metadata:
+      labels:
+        version: production-v1
+      annotations:
+        autoscaling.knative.dev/minScale: "10"
+        autoscaling.knative.dev/maxScale: "1000"
+        run.googleapis.com/cpu-throttling: "false"
+        run.googleapis.com/execution-environment: gen2
+    spec:
+      containerConcurrency: 1000
+      timeoutSeconds: 3600
+      containers:
+      - name: wfa-swarm-container
+        image: gcr.io/api-for-warp-drive/wfa-production-swarm:latest
+        ports:
+        - name: http1
+          containerPort: 8080
+        resources:
+          limits:
+            cpu: "8"
+            memory: "16Gi"
+          requests:
+            cpu: "4"
+            memory: "8Gi"
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: WFA_AGENTS_COUNT
+          value: "20000000"
+        - name: WFA_SECTORS_COUNT
+          value: "200"
+        - name: JOB_CLUSTERS_COUNT
+          value: "64000000"
+        - name: CAREER_CLUSTERS_COUNT
+          value: "319998"
+        - name: VICTORY36_PROTECTION
+          value: "maximum"
+        - name: CLOUD_TO_CLOUD_MODE
+          value: "true"
+        - name: MCP_DNS_AUTOMATION
+          value: "enabled"
+        - name: HIERARCHICAL_LEVELS
+          value: "4"
+        - name: NINTH_DEGREE_PILOTS
+          value: "enabled"
+        - name: PILOT_MENTEE_RATIO
+          value: "1:9"
+        - name: ORIGINAL_SECTORS
+          value: "33"
+        - name: CLUSTERS_PER_SECTOR
+          value: "96000"
+        - name: SUB_CLUSTERS
+          value: "9696"
+        # Secrets from Google Secret Manager
+        - name: MONGODB_CONNECTION_STRING
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-atlas-connection
+              key: connection-string
+        - name: CLOUDFLARE_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: cloudflare-credentials
+              key: api-token
+        - name: CLOUDFLARE_ZONE_ID
+          valueFrom:
+            secretKeyRef:
+              name: cloudflare-credentials
+              key: zone-id
+        - name: GCP_PROJECT_ID
+          valueFrom:
+            secretKeyRef:
+              name: gcp-project-config
+              key: project-id
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+  traffic:
+  - percent: 100
+    latestRevision: true
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wfa-production-config
+data:
+  deployment-mode: "cloud-to-cloud"
+  orchestration-level: "quantum"
+  protection-system: "victory36"
+  career-cluster-structure: |
+    {
+      "original_sectors": 33,
+      "clusters_per_sector": 96000,
+      "sub_clusters": 9696,
+      "hierarchical_levels": 4,
+      "ninth_degree_breakdown": true,
+      "total_career_clusters": 319998,
+      "pilot_mentee_assignments": {
+        "total_pilots": 35555,
+        "mentees_per_pilot": 9,
+        "active_mentorships": 319998
+      }
+    }
+  mcp-dns-config: |
+    {
+      "automation_enabled": true,
+      "domain_patterns": [
+        "mcp.{company}.com",
+        "mcp.{company}",
+        "mcp.{company}.com:2100"
+      ],
+      "production_route": "asos.cool.production.dev",
+      "ttl": 300,
+      "proxied": true
+    }

@@ -1,0 +1,115 @@
+{
+  "website_flow": {
+    "title": "ASOOS Complete Authentication Flow",
+    "version": "1.0.0",
+    "description": "Complete website flow from discovery to enterprise interface",
+    "flow_stages": [
+      {
+        "stage": 1,
+        "name": "Discovery",
+        "domain": "ASOOS.2100.COOL",
+        "purpose": "Landing page and agent showcase",
+        "features": [
+          "20M+ AI Agents showcase",
+          "200+ Industry sectors",
+          "DIDC Archives system",
+          "Professional branding"
+        ],
+        "routing": {
+          "main_cta": "https://sallyport.2100.cool",
+          "owner_portal": "https://owner.2100.cool",
+          "health_check": "/health"
+        }
+      },
+      {
+        "stage": 2,
+        "name": "Authentication",
+        "domain": "SALLYPORT.2100.COOL",
+        "purpose": "Security gateway and user verification",
+        "features": [
+          "SallyPort authentication system",
+          "Role-based access control",
+          "Diamond SAO protection",
+          "JWT token management"
+        ],
+        "routing": {
+          "success_redirect": "https://mcp.aipub.2100.cool",
+          "owner_interface": "https://owner.2100.cool",
+          "failure_redirect": "https://asoos.2100.cool"
+        }
+      },
+      {
+        "stage": 3,
+        "name": "Business Interface",
+        "domain": "MCP.AIPUB.2100.COOL",
+        "purpose": "Model Context Protocol enterprise interface",
+        "features": [
+          "AI Agent Management",
+          "Protocol Integration",
+          "Analytics Dashboard",
+          "Governance Center",
+          "Network Operations",
+          "Enterprise Services"
+        ],
+        "routing": {
+          "dashboard_sections": [
+            "/agents",
+            "/protocols",
+            "/analytics",
+            "/governance",
+            "/network",
+            "/enterprise"
+          ]
+        }
+      }
+    ],
+    "authentication_flow": {
+      "public_access": {
+        "entry_point": "https://asoos.2100.cool",
+        "description": "Anyone can access the landing page"
+      },
+      "authenticated_flow": {
+        "step_1": "User clicks Launch/Start buttons on ASOOS.2100.COOL",
+        "step_2": "Redirected to SALLYPORT.2100.COOL for authentication",
+        "step_3": "SallyPort validates credentials and permissions",
+        "step_4": "On success, redirected to MCP.AIPUB.2100.COOL",
+        "step_5": "Access enterprise dashboard and features"
+      },
+      "owner_access": {
+        "entry_point": "Diamond SAO Owner Portal",
+        "bypass_flow": "Direct access to owner interface",
+        "requirements": ["Diamond SAO role", "pr@coaching2100.com"]
+      }
+    },
+    "dns_configuration": [
+      {
+        "domain": "asoos.2100.cool",
+        "type": "A",
+        "target": "Cloudflare Worker"
+      },
+      {
+        "domain": "sallyport.2100.cool", 
+        "type": "A",
+        "target": "Cloudflare Worker"
+      },
+      {
+        "domain": "mcp.aipub.2100.cool",
+        "type": "CNAME",
+        "target": "mcp-aipub-proxy-859242575175.us-west1.run.app"
+      }
+    ],
+    "security_features": [
+      "Victory36 protection",
+      "Diamond SAO supreme access",
+      "Role-based routing",
+      "JWT token validation",
+      "Enterprise security headers",
+      "Audit logging"
+    ],
+    "deployment_status": {
+      "asoos_2100_cool": "✅ DEPLOYED",
+      "sallyport_2100_cool": "✅ DEPLOYED", 
+      "mcp_aipub_2100_cool": "✅ DEPLOYED"
+    }
+  }
+}

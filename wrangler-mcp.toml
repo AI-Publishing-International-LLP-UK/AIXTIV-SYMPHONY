@@ -1,0 +1,13 @@
+name = "mcp-proxy"
+main = "mcp-auth-bridge.js"
+compatibility_date = "2025-08-25"
+
+[vars]
+ENVIRONMENT = "production"
+TARGET_INTERFACE = "https://2100.cool/interface/"
+AUTHENTICATION_PROVIDER = "https://sally-port.2100.cool/auth"
+
+routes = [
+  { pattern = "mcp.2100.cool/*", zone_name = "2100.cool" },
+  { pattern = "mcp.aipub.2100.cool/*", zone_name = "2100.cool" }
+]

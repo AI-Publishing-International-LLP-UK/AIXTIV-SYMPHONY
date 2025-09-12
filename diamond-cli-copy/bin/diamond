@@ -1,0 +1,337 @@
+#!/usr/bin/env node
+
+/**
+ * 💎 DIAMOND CLI - AIXTIV SYMPHONY INTEGRATION
+ * 🏛️  Authority: Diamond SAO Command Center
+ * 📦 Repository: AIXTIV-SYMPHONY.git
+ * ⚡ Evolution Path: Traditional CLI → Diamond SAO CLI
+ * 🌐 WFA Swarm Execution Engine
+ * 🔄 CI/CD CTTT: Continuous Testing, Training & Tracing
+ */
+
+const path = require('path');
+const fs = require('fs');
+const { DiamondCore } = require('../lib/diamond-core');
+const { WFASwarm } = require('../lib/wfa-swarm');
+const { CTTTPipeline } = require('../lib/cttt-pipeline');
+const { SelfHealing } = require('../lib/self-healing');
+const { NewmanIntegration } = require('../lib/newman-integration');
+const Victory36Integration = require('../lib/victory36-integration');
+
+class DiamondCLI {
+    constructor() {
+        this.version = '2.0.0';
+        this.authority = 'Diamond SAO Command Center';
+        this.project = 'AIXTIV-SYMPHONY';
+        this.repository = 'https://github.com/AI-Publishing-International-LLP-UK/AIXTIV-SYMPHONY.git';
+        
+        // Initialize core systems
+        this.core = new DiamondCore(this);
+        this.wfaSwarm = new WFASwarm(this);
+        this.cttt = new CTTTPipeline(this);
+        this.selfHealing = new SelfHealing(this);
+        this.newman = new NewmanIntegration(this);
+        this.victory36 = new Victory36Integration(this);
+        
+        this.initializeLogging();
+    }
+
+    initializeLogging() {
+        this.log = {
+            info: (msg) => console.log(`💎 [${new Date().toISOString()}] DIAMOND CLI: ✅ ${msg}`),
+            error: (msg) => console.error(`💎 [${new Date().toISOString()}] DIAMOND CLI: ❌ ${msg}`),
+            warn: (msg) => console.warn(`💎 [${new Date().toISOString()}] DIAMOND CLI: ⚠️  ${msg}`),
+            success: (msg) => console.log(`💎 [${new Date().toISOString()}] DIAMOND CLI: 🎉 ${msg}`),
+            deploy: (msg) => console.log(`🚀 [${new Date().toISOString()}] DIAMOND DEPLOY: ${msg}`)
+        };
+    }
+
+    async run() {
+        const args = process.argv.slice(2);
+        
+        try {
+            // Display Diamond CLI header
+            this.displayHeader();
+            
+            // Environment validation
+            await this.validateEnvironment();
+            
+            // Parse command
+            const command = args[0];
+            const subcommand = args[1];
+            const action = args[2];
+            
+            switch (command) {
+                case 'deploy':
+                    await this.handleDeploy(subcommand, action, args);
+                    break;
+                case 'repair':
+                    await this.handleRepair(args);
+                    break;
+                case 'monitor':
+                    await this.handleMonitor(args);
+                    break;
+                case 'heal':
+                    await this.selfHealing.performHealing();
+                    break;
+                case 'cttt':
+                    await this.cttt.runPipeline(args);
+                    break;
+                case 'newman':
+                    await this.newman.runCTTTTests(args);
+                    break;
+                case 'swarm':
+                    await this.wfaSwarm.execute(args);
+                    break;
+                case 'victory36':
+                    await this.handleVictory36(subcommand, action, args);
+                    break;
+                case 'version':
+                case '--version':
+                case '-v':
+                    this.displayVersion();
+                    break;
+                case 'help':
+                case '--help':
+                case '-h':
+                default:
+                    this.displayHelp();
+                    break;
+            }
+        } catch (error) {
+            this.log.error(`Command execution failed: ${error.message}`);
+            await this.selfHealing.handleError(error);
+            process.exit(1);
+        }
+    }
+
+    displayHeader() {
+        console.log('💎 DIAMOND CLI - CTTT NEWMAN INTEGRATION');
+        console.log('🏛️  Authority: Diamond SAO Command Center');
+        console.log('📊 CTTT: Continuous Testing, Training & Tracing');
+        console.log('🧪 Newman: Enterprise API Testing Integration');
+        console.log('');
+        console.log('💎 DIAMOND CLI - AIXTIV SYMPHONY INTEGRATION');
+        console.log('🏛️  Authority: Diamond SAO Command Center');
+        console.log(`📦 Repository: ${this.repository}`);
+        console.log('⚡ Evolution Path: Traditional CLI → Diamond SAO CLI');
+        console.log('');
+    }
+
+    async validateEnvironment() {
+        this.log.info('🔐 Validating Diamond SAO environment...');
+        
+        // Get the actual Diamond CLI installation directory
+        const cliPath = __dirname; // /path/to/diamond-cli/bin
+        const cliRoot = path.dirname(cliPath); // /path/to/diamond-cli
+        
+        // Check if we can find our own source directory
+        const packageJsonPath = path.join(cliRoot, 'package.json');
+        if (fs.existsSync(packageJsonPath)) {
+            try {
+                const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+                if (packageJson.name === '@diamond-sao/cli') {
+                    this.log.info('✅ Diamond CLI source validated from installation directory');
+                    this.cliRoot = cliRoot;
+                    return true;
+                }
+            } catch (error) {
+                // Continue with other checks
+            }
+        }
+        
+        // Try to find AIXTIV-SYMPHONY directory in common locations
+        const commonPaths = [
+            '/Users/as/AIXTIV-SYMPHONY',
+            '/Users/as/asoos/AIXTIV-SYMPHONY', 
+            path.join(process.env.HOME, 'AIXTIV-SYMPHONY'),
+            path.join(process.cwd(), 'AIXTIV-SYMPHONY')
+        ];
+        
+        for (const aixtivsymphonyPath of commonPaths) {
+            const diamondCLIPath = path.join(aixtivsymphonyPath, 'diamond-cli');
+            if (fs.existsSync(diamondCLIPath)) {
+                try {
+                    const packageJsonPath = path.join(diamondCLIPath, 'package.json');
+                    if (fs.existsSync(packageJsonPath)) {
+                        const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+                        if (packageJson.name === '@diamond-sao/cli') {
+                            this.log.info(`✅ Repository validated: ${this.repository}`);
+                            this.log.info('✅ Diamond CLI source found in AIXTIV-SYMPHONY project');
+                            this.aixtivsymphonyRoot = aixtivsymphonyPath;
+                            this.cliRoot = diamondCLIPath;
+                            return true;
+                        }
+                    }
+                } catch (error) {
+                    // Continue searching
+                }
+            }
+        }
+        
+        // Check git remote as fallback if we're in a git repository
+        try {
+            const { execSync } = require('child_process');
+            const remoteUrl = execSync('git remote get-url origin', { encoding: 'utf8', cwd: process.cwd() }).trim();
+            if (remoteUrl.includes('AIXTIV-SYMPHONY')) {
+                this.log.info(`✅ Repository validated: ${this.repository}`);
+                this.log.info('✅ Diamond CLI validated via git remote');
+                this.aixtivsymphonyRoot = process.cwd();
+                return true;
+            }
+        } catch (error) {
+            // Git command failed, continue
+        }
+        
+        // If we get here, we couldn't validate but we can still run in degraded mode
+        this.log.warn('⚠️  Could not validate AIXTIV-SYMPHONY project location, running in standalone mode');
+        this.log.info('✅ Diamond CLI operational (standalone mode)');
+        return true;
+    }
+
+    async handleDeploy(subcommand, action, args) {
+        if (subcommand === 'wfa' && action === 'swarm') {
+            // Extract commander and authority from args
+            const commanderIndex = args.findIndex(arg => arg === '--commander');
+            const authorityIndex = args.findIndex(arg => arg === '--authority');
+            
+            const commander = commanderIndex !== -1 ? args[commanderIndex + 1] : 'Diamond SAO';
+            const authority = authorityIndex !== -1 ? args[authorityIndex + 1] : 'Diamond SAO Command Center';
+            
+            this.log.deploy(`👤 Commander: ${commander}`);
+            this.log.deploy(`🏛️  Authority: ${authority}`);
+            this.log.deploy('🌐 Initializing WFA Swarm deployment...');
+            
+            await this.wfaSwarm.deploy({ commander, authority });
+        } else {
+            await this.core.deploy(subcommand, action, args);
+        }
+    }
+
+    async handleRepair(args) {
+        this.log.info('🔧 Initiating Diamond CLI repair sequence...');
+        await this.selfHealing.performRepair();
+        this.log.success('Diamond CLI repair completed');
+    }
+
+    async handleMonitor(args) {
+        this.log.info('📊 Starting Diamond CLI monitoring...');
+        await this.core.monitor(args);
+    }
+
+    async handleVictory36(subcommand, action, args) {
+        this.log.info('🛡️💎 Executing Victory36 Diamond SAO Integration...');
+        
+        try {
+            switch (subcommand) {
+                case 'connect':
+                    await this.victory36.connectVictory36();
+                    break;
+                case 'status':
+                    await this.victory36.getVictory36Status();
+                    break;
+                case 'monitor':
+                    await this.victory36.monitorVictory36();
+                    break;
+                case 'deploy':
+                    await this.victory36.deployVictory36();
+                    break;
+                case 'health':
+                    await this.victory36.checkVictory36Health();
+                    break;
+                case 'repair':
+                    await this.victory36.repairVictory36();
+                    break;
+                case 'mcp':
+                    if (action === 'create') {
+                        await this.victory36.createVictory36MCP();
+                    } else {
+                        this.log.warn('Unknown Victory36 MCP action. Use: diamond victory36 mcp create');
+                    }
+                    break;
+                default:
+                    this.log.warn('Unknown Victory36 command. Use: connect, status, monitor, deploy, health, repair, mcp');
+                    this.displayVictory36Help();
+                    break;
+            }
+        } catch (error) {
+            this.log.error(`Victory36 operation failed: ${error.message}`);
+            await this.victory36.emergencyRecoveryProtocol(error);
+            throw error;
+        }
+    }
+
+    displayVersion() {
+        console.log(`💎 Diamond CLI v${this.version}`);
+        console.log(`🏛️  Authority: ${this.authority}`);
+        console.log(`📦 Project: ${this.project}`);
+    }
+
+    displayHelp() {
+        console.log('💎 DIAMOND CLI - Command Reference');
+        console.log('');
+        console.log('Usage: diamond <command> [options]');
+        console.log('');
+        console.log('Commands:');
+        console.log('  deploy wfa swarm      Deploy WFA swarm with specified commander and authority');
+        console.log('  victory36 <action>    Execute Victory36 Diamond SAO Integration');
+        console.log('  repair                Repair Diamond CLI and dependencies');
+        console.log('  heal                  Perform self-healing operations');
+        console.log('  monitor               Start monitoring dashboard');
+        console.log('  cttt                  Run CTTT pipeline');
+        console.log('  swarm <action>        Execute swarm operations');
+        console.log('  version               Display version information');
+        console.log('  help                  Display this help message');
+        console.log('');
+        console.log('Options:');
+        console.log('  --commander <name>    Specify deployment commander');
+        console.log('  --authority <name>    Specify deployment authority');
+        console.log('  --region <region>     Specify deployment region (default: us-west1)');
+        console.log('  --env <environment>   Specify environment (staging/production)');
+        console.log('');
+        console.log('Examples:');
+        console.log('  diamond deploy wfa swarm --commander "Mr. Phillip Corey Roark" --authority "Diamond SAO"');
+        console.log('  diamond victory36 connect              Connect Victory36 to Diamond SAO');
+        console.log('  diamond victory36 status               Get Victory36 integration status');
+        console.log('  diamond victory36 health               Check Victory36 health');
+        console.log('  diamond repair');
+        console.log('  diamond heal');
+        console.log('  diamond cttt --run-tests');
+    }
+
+    displayVictory36Help() {
+        console.log('🛡️💎 VICTORY36 DIAMOND SAO INTEGRATION - Command Reference');
+        console.log('');
+        console.log('Usage: diamond victory36 <action> [options]');
+        console.log('');
+        console.log('Victory36 Actions:');
+        console.log('  connect               Connect Victory36 to Diamond SAO Command Center');
+        console.log('  status                Get Victory36 integration status');
+        console.log('  monitor               Start Victory36 monitoring');
+        console.log('  deploy                Deploy Victory36 updates');
+        console.log('  health                Perform Victory36 health check');
+        console.log('  repair                Repair Victory36 integration');
+        console.log('  mcp create            Create Victory36 MCP domain');
+        console.log('');
+        console.log('Examples:');
+        console.log('  diamond victory36 connect             Connect Victory36 to Diamond SAO');
+        console.log('  diamond victory36 status              Check current integration status');
+        console.log('  diamond victory36 health              Verify Victory36 health');
+        console.log('  diamond victory36 mcp create          Create victory36.2100.cool MCP');
+        console.log('');
+        console.log('🛡️ Victory36: 3,240 years of collective intelligence');
+        console.log('💎 Diamond SAO: Apex security integration');
+        console.log('🌐 MCP Domain: victory36.2100.cool');
+    }
+}
+
+// Execute Diamond CLI
+if (require.main === module) {
+    const cli = new DiamondCLI();
+    cli.run().catch(error => {
+        console.error(`💥 Diamond CLI Error: ${error.message}`);
+        process.exit(1);
+    });
+}
+
+module.exports = DiamondCLI;

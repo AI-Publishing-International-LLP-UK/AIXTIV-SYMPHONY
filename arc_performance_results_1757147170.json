@@ -1,0 +1,389 @@
+{
+  "test_session": {
+    "timestamp": "2025-09-06 02:26:10",
+    "total_evaluation_time": 31.221939086914062,
+    "training_tasks_tested": 25,
+    "evaluation_tasks_tested": 25
+  },
+  "training_performance": {
+    "test_type": "Training",
+    "total_tasks": 25,
+    "successful_tasks": 9,
+    "failed_tasks": 16,
+    "success_rate": 36.0,
+    "total_time": 13.384252071380615,
+    "average_time_per_task": 0.5353700828552246,
+    "attempt_distribution": {
+      "1": 19,
+      "2": 5,
+      "3": 1
+    },
+    "results": [
+      {
+        "task_id": "c909285e",
+        "success": false,
+        "time_taken": 2.0050837993621826,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "4be741c5",
+        "success": false,
+        "time_taken": 0.4908170700073242,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "54d9e175",
+        "success": true,
+        "time_taken": 0.27678799629211426,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "10fcaaa3",
+        "success": true,
+        "time_taken": 0.15604901313781738,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "b91ae062",
+        "success": true,
+        "time_taken": 0.145280122756958,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "f8ff0b80",
+        "success": false,
+        "time_taken": 0.5341100692749023,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "6e02f1e3",
+        "success": true,
+        "time_taken": 0.14970898628234863,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "e73095fd",
+        "success": false,
+        "time_taken": 0.7944607734680176,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "8be77c9e",
+        "success": true,
+        "time_taken": 0.13164377212524414,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "41e4d17e",
+        "success": false,
+        "time_taken": 0.5529468059539795,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "82819916",
+        "success": false,
+        "time_taken": 0.40843796730041504,
+        "attempts_used": 2,
+        "error_message": null
+      },
+      {
+        "task_id": "75b8110e",
+        "success": false,
+        "time_taken": 0.42510271072387695,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "97a05b5b",
+        "success": false,
+        "time_taken": 0.95119309425354,
+        "attempts_used": 2,
+        "error_message": null
+      },
+      {
+        "task_id": "ddf7fa4f",
+        "success": false,
+        "time_taken": 0.40146303176879883,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "dbc1a6ce",
+        "success": false,
+        "time_taken": 0.5172967910766602,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "73251a56",
+        "success": false,
+        "time_taken": 1.425562858581543,
+        "attempts_used": 3,
+        "error_message": null
+      },
+      {
+        "task_id": "b8825c91",
+        "success": true,
+        "time_taken": 1.1283597946166992,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "9af7a82c",
+        "success": true,
+        "time_taken": 0.14586424827575684,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "dc0a314f",
+        "success": false,
+        "time_taken": 0.8728771209716797,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "ba97ae07",
+        "success": false,
+        "time_taken": 0.4372382164001465,
+        "attempts_used": 2,
+        "error_message": null
+      },
+      {
+        "task_id": "7ddcd7ec",
+        "success": false,
+        "time_taken": 0.4050908088684082,
+        "attempts_used": 2,
+        "error_message": null
+      },
+      {
+        "task_id": "88a10436",
+        "success": false,
+        "time_taken": 0.3211181163787842,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "cce03e0d",
+        "success": true,
+        "time_taken": 0.12861990928649902,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "1e0a9b12",
+        "success": true,
+        "time_taken": 0.17796611785888672,
+        "attempts_used": 2,
+        "error_message": null
+      },
+      {
+        "task_id": "8403a5d5",
+        "success": false,
+        "time_taken": 0.4011728763580322,
+        "attempts_used": 1,
+        "error_message": null
+      }
+    ]
+  },
+  "evaluation_performance": {
+    "test_type": "Evaluation",
+    "total_tasks": 25,
+    "successful_tasks": 4,
+    "failed_tasks": 21,
+    "success_rate": 16.0,
+    "total_time": 17.790658473968506,
+    "average_time_per_task": 0.7116263389587403,
+    "attempt_distribution": {
+      "1": 22,
+      "2": 3
+    },
+    "results": [
+      {
+        "task_id": "692cd3b6",
+        "success": false,
+        "time_taken": 0.7760813236236572,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "c7d4e6ad",
+        "success": false,
+        "time_taken": 0.30095911026000977,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "0d87d2a6",
+        "success": false,
+        "time_taken": 0.8870792388916016,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "7c9b52a0",
+        "success": false,
+        "time_taken": 0.872277021408081,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "4cd1b7b2",
+        "success": true,
+        "time_taken": 0.15305519104003906,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "ac3e2b04",
+        "success": false,
+        "time_taken": 0.7521369457244873,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "48f8583b",
+        "success": true,
+        "time_taken": 0.15907907485961914,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "1c0d0a4b",
+        "success": false,
+        "time_taken": 0.36809682846069336,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "dc2aa30b",
+        "success": false,
+        "time_taken": 0.46349406242370605,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "9772c176",
+        "success": false,
+        "time_taken": 1.3208372592926025,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "50f325b5",
+        "success": false,
+        "time_taken": 1.1168618202209473,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "da515329",
+        "success": false,
+        "time_taken": 0.9873368740081787,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "e74e1818",
+        "success": false,
+        "time_taken": 0.44409775733947754,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "ef26cbf6",
+        "success": false,
+        "time_taken": 0.25910234451293945,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "642d658d",
+        "success": false,
+        "time_taken": 1.6487040519714355,
+        "attempts_used": 2,
+        "error_message": null
+      },
+      {
+        "task_id": "695367ec",
+        "success": true,
+        "time_taken": 0.13117599487304688,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "12eac192",
+        "success": false,
+        "time_taken": 0.2812631130218506,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "f3e62deb",
+        "success": false,
+        "time_taken": 0.7038731575012207,
+        "attempts_used": 2,
+        "error_message": null
+      },
+      {
+        "task_id": "aa300dc3",
+        "success": false,
+        "time_taken": 0.5040791034698486,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "df8cc377",
+        "success": false,
+        "time_taken": 1.1576099395751953,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "e2092e0c",
+        "success": false,
+        "time_taken": 0.7801120281219482,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "0b17323b",
+        "success": false,
+        "time_taken": 0.5513389110565186,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "d56f2372",
+        "success": true,
+        "time_taken": 1.2109041213989258,
+        "attempts_used": 1,
+        "error_message": null
+      },
+      {
+        "task_id": "0607ce86",
+        "success": false,
+        "time_taken": 1.5570530891418457,
+        "attempts_used": 2,
+        "error_message": null
+      },
+      {
+        "task_id": "7c8af763",
+        "success": false,
+        "time_taken": 0.4040501117706299,
+        "attempts_used": 1,
+        "error_message": null
+      }
+    ]
+  }
+}

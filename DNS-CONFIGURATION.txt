@@ -1,0 +1,41 @@
+DNS CONFIGURATION FOR CLOUDFLARE DASHBOARD
+==========================================
+
+LOCATION: dash.cloudflare.com → 2100.cool zone → DNS section
+
+ADD THESE 2 DNS RECORDS:
+
+RECORD 1: asoos.2100.cool
+-------------------------
+Type: A
+Name: asoos  
+IPv4 address: 192.0.2.1
+Proxy status: Proxied (orange cloud ENABLED)
+TTL: Auto
+Comment: ASOOS Landing Page
+
+RECORD 2: sallyport.2100.cool  
+------------------------------
+Type: A
+Name: sallyport
+IPv4 address: 192.0.2.1
+Proxy status: Proxied (orange cloud ENABLED) 
+TTL: Auto
+Comment: Sally Port Authentication
+
+CRITICAL SETTINGS:
+- Orange cloud (Proxy) MUST be ON for both records
+- Use 192.0.2.1 as placeholder IP (Cloudflare proxies traffic)
+- TTL should be "Auto"
+- Only enter subdomain in Name field (asoos, sallyport)
+
+AFTER DNS IS SET:
+1. Wait 5-10 minutes for changes to take effect
+2. Test: https://asoos.2100.cool/wfa/status (should work)
+3. Deploy Pages for asoos.2100.cool main site
+4. Deploy auth service for sallyport.2100.cool
+
+CURRENT WORKER STATUS:
+✅ asoos.2100.cool/wfa/* → WFA API (working)
+❌ asoos.2100.cool/* → Landing page (needs Pages deployment)
+❌ sallyport.2100.cool/* → Authentication (needs deployment)

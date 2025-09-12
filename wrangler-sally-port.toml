@@ -1,0 +1,35 @@
+name = "sally-port"
+main = "sally-port-worker.js"
+compatibility_date = "2024-08-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Custom domain configuration
+# [[routes]]
+# pattern = "sally-port.2100.cool/*"
+# zone_name = "2100.cool"
+
+# Environment variables (use secrets for sensitive values)
+[vars]
+ENVIRONMENT = "production"
+SERVICE_NAME = "Sally Port OAuth Worker"
+VERSION = "1.2.0"
+TARGET_MCP = "mcp.aipub.2100.cool"
+
+# KV namespace for state storage (optional, for production)
+# [[kv_namespaces]]
+# binding = "OAUTH_STATE"
+# id = "your_kv_namespace_id_here"
+# preview_id = "your_preview_kv_namespace_id_here"
+
+# Durable Objects (optional, for session management)
+# [[durable_objects.bindings]]
+# name = "OAUTH_SESSIONS"
+# class_name = "OAuthSession"
+
+# Development configuration
+[env.development]
+name = "sally-port-dev"
+route = ""
+
+[build]
+command = "echo 'No build required for this worker'"

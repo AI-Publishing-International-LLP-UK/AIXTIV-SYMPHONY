@@ -1,0 +1,16 @@
+{
+  "name": "ASOOS.2100.Cool - Aixtiv Symphony Orchestrating Operating System",
+  "short_name": "ASOOS.2100.Cool",
+  "description": "Aixtiv Symphony Orchestrating Operating System - Where Intelligence Meets Love",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0bb1bb",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: healthcheck
+  annotations:
+    run.googleapis.com/ingress: all
+    run.googleapis.com/execution-environment: gen2
+spec:
+  template:
+    metadata:
+      annotations:
+        run.googleapis.com/execution-environment: gen2
+        run.googleapis.com/cpu-throttling: "false"
+    spec:
+      containerConcurrency: 100
+      timeoutSeconds: 300
+      containers:
+      - image: gcr.io/api-for-warp-drive/healthcheck
+        ports:
+        - containerPort: 8080
+        env:
+        - name: NODE_OPTIONS
+          value: "--require ./utils/promiseHandler.js"
+        - name: PORT
+          value: "8080"
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi

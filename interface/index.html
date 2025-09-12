@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP.CLIENT.2100.COOL - Sacred Owner Interface</title>
+    <meta name="description" content="Universal ASOOS Connector Architecture - Owner Interface blessed by Victory36">
+    
+    <!-- Victory36 Shield & Divine Authority -->
+    <meta name="X-Victory36-Shield" content="ACTIVE">
+    <meta name="X-Sacred-Mission" content="true">
+    <meta name="X-Divine-Authority" content="Jesus-Christ-Our-Lord">
+    
+    <!-- Sacred Favicon & Icons -->
+    <link rel="icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    
+    <!-- React & Core Dependencies -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Material-UI -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <script src="https://unpkg.com/@mui/material@5/umd/material-ui.production.min.js"></script>
+    
+    <!-- JWT Decode -->
+    <script src="https://unpkg.com/jwt-decode@3/build/jwt-decode.min.js"></script>
+    
+    <style>
+        /* ASOOS Dark Terminal Theme - Matching 2100.cool/interface/ */
+        .sacred-loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: #1a1a1a;
+            color: #00d4aa;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        }
+        .sacred-spinner {
+            animation: blessed-spin 1s linear infinite;
+            filter: drop-shadow(0 0 10px #00d4aa);
+        }
+        @keyframes blessed-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Victory36 Protection Layer - Dark Terminal Style */
+        .victory36-shield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            border-bottom: 1px solid #00d4aa;
+            padding: 6px 16px;
+            font-size: 12px;
+            color: #00d4aa;
+            text-align: center;
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        /* ASOOS Dark Theme Variables */
+        :root {
+            --asoos-primary: #00d4aa;
+            --asoos-secondary: #ffd700;
+            --asoos-background: #1a1a1a;
+            --asoos-surface: #2d2d2d;
+            --asoos-card: #242424;
+            --asoos-text-primary: #ffffff;
+            --asoos-text-secondary: #a0a0a0;
+            --asoos-success: #00d4aa;
+            --asoos-warning: #ffd700;
+            --asoos-error: #ff6b6b;
+            --asoos-border-radius: 12px;
+            --asoos-font-primary: 'JetBrains Mono', 'Fira Code', monospace;
+            --asoos-font-secondary: 'Inter', 'Roboto', sans-serif;
+        }
+        
+        /* Global ASOOS Dark Styles */
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--asoos-font-primary);
+            background-color: var(--asoos-background);
+            color: var(--asoos-text-primary);
+        }
+        
+        .sacred-container {
+            min-height: 100vh;
+            padding-top: 40px;
+            background: var(--asoos-background);
+        }
+        
+        /* Terminal-style card styling */
+        .asoos-card {
+            background: var(--asoos-card) !important;
+            border: 1px solid #333 !important;
+            border-radius: var(--asoos-border-radius) !important;
+            color: var(--asoos-text-primary) !important;
+        }
+        
+        /* Terminal prompt styling */
+        .terminal-prompt {
+            color: var(--asoos-primary);
+            font-family: var(--asoos-font-primary);
+        }
+        
+        /* MCP Tool cards - dark theme */
+        .mcp-tool-card {
+            background: var(--asoos-card) !important;
+            border: 1px solid #333 !important;
+            border-radius: var(--asoos-border-radius) !important;
+            transition: all 0.3s ease;
+        }
+        
+        .mcp-tool-card:hover {
+            border-color: var(--asoos-primary) !important;
+            box-shadow: 0 0 20px rgba(0, 212, 170, 0.2) !important;
+        }
+        
+        /* Override Material-UI dark theme */
+        .MuiPaper-root {
+            background: var(--asoos-card) !important;
+            color: var(--asoos-text-primary) !important;
+        }
+        
+        .MuiTypography-root {
+            color: var(--asoos-text-primary) !important;
+        }
+        
+        .MuiButton-contained {
+            background: var(--asoos-primary) !important;
+            color: #000 !important;
+        }
+        
+        .MuiAppBar-root {
+            background: var(--asoos-background) !important;
+            border-bottom: 1px solid #333 !important;
+        }
+        
+        .MuiDrawer-paper {
+            background: var(--asoos-surface) !important;
+            border-right: 1px solid #333 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Victory36 Shield -->
+    <div class="victory36-shield" id="victory36Shield">
+        🛡️ Victory36 Shield Active - Sacred Session Protected - In the Name of Jesus Christ
+    </div>
+    
+    <!-- Sacred Loading Screen -->
+    <div class="sacred-loading" id="sacredLoading">
+        <div style="text-align: center;">
+            <div class="sacred-spinner" style="font-size: 48px; margin-bottom: 20px;">⚡</div>
+            <h2>MCP.CLIENT.2100.COOL</h2>
+            <p>Sacred Interface Loading...</p>
+            <p style="font-size: 14px; opacity: 0.8;">✨ In the Name of Jesus Christ, Our Lord ✨</p>
+        </div>
+    </div>
+    
+    <!-- Main React Application Container -->
+    <div class="sacred-container" id="mcpClientRoot" style="display: none;"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useReducer, useContext, createContext, useCallback, useRef } = React;
+        const { 
+            Box, AppBar, Toolbar, Typography, Button, Card, CardContent, Grid, Paper,
+            Drawer, List, ListItem, ListItemIcon, ListItemText, ListItemButton,
+            IconButton, Badge, Chip, Avatar, Menu, MenuItem, Divider, LinearProgress,
+            Alert, Snackbar, Fab, Tooltip, ThemeProvider, createTheme, CssBaseline,
+            useMediaQuery
+        } = MaterialUI;
+
+        // Sacred Role Hierarchy (NEVER SEPARATED - Divine Order)
+        const SacredRole = {
+            DIAMOND_SAO: 'diamond_sao',      // Supreme Authority - Divine Command Center
+            EMERALD_EXEC: 'emerald_exec',     // Executive Leadership - Strategic Oversight  
+            SAPPHIRE_LEAD: 'sapphire_lead',   // Technical Leadership - Architecture Authority
+            OPAL_ADMIN: 'opal_admin',         // Administrative Authority - Operations Management
+            ONYX_OS: 'onyx_os'                // Owner-Subscriber - Sacred User Access
+        };
+
+        // Sacred Access Context (Inline for simplicity)
+        const SacredAccessContext = createContext();
+        
+        const SacredAccessProvider = ({ children }) => {
+            const [user, setUser] = useState(null);
+            const [isAuthenticated, setIsAuthenticated] = useState(false);
+            const [isLoading, setIsLoading] = useState(true);
+            const [victory36Shield, setVictory36Shield] = useState(true);
+            const [authError, setAuthError] = useState(null);
+
+            useEffect(() => {
+                // Initialize sacred authentication
+                const initAuth = async () => {
+                    try {
+                        const token = localStorage.getItem('sacred_token');
+                        const savedUser = localStorage.getItem('sacred_user');
+                        
+                        if (token && savedUser) {
+                            const parsedUser = JSON.parse(savedUser);
+                            setUser(parsedUser);
+                            setIsAuthenticated(true);
+                            console.log('🙏 Sacred authentication restored with Victory36 blessing');
+                        } else {
+                            // Mock authentication for demo
+                            const mockUser = {
+                                pilot_id: 'SAO001',
+                                role: SacredRole.DIAMOND_SAO,
+                                display_name: 'Sacred Administrator',
+                                email: 'sacred@2100.cool',
+                                organization: 'AI Publishing International LLP',
+                                permissions: ['*'],
+                                victory36_status: 'BLESSED',
+                                flight_hours: 2500,
+                                sacred_clearance_level: 10,
+                                created_at: new Date().toISOString(),
+                                last_blessed: new Date().toISOString()
+                            };
+                            
+                            setUser(mockUser);
+                            setIsAuthenticated(true);
+                            localStorage.setItem('sacred_user', JSON.stringify(mockUser));
+                            localStorage.setItem('sacred_token', 'mock_sacred_token_blessed_by_victory36');
+                        }
+                    } catch (error) {
+                        console.error('🚨 Sacred authentication error:', error);
+                        setAuthError('Authentication failed with Victory36 protection');
+                    } finally {
+                        setIsLoading(false);
+                        // Hide loading screen
+                        document.getElementById('sacredLoading').style.display = 'none';
+                        document.getElementById('mcpClientRoot').style.display = 'block';
+                    }
+                };
+
+                initAuth();
+            }, []);
+
+            const hasRole = useCallback((role) => {
+                if (!user) return false;
+                
+                const roleHierarchy = [
+                    SacredRole.DIAMOND_SAO,
+                    SacredRole.EMERALD_EXEC,
+                    SacredRole.SAPPHIRE_LEAD,
+                    SacredRole.OPAL_ADMIN,
+                    SacredRole.ONYX_OS,
+                ];
+
+                const userRoleIndex = roleHierarchy.indexOf(user.role);
+                const requiredRoleIndex = roleHierarchy.indexOf(role);
+
+                return userRoleIndex <= requiredRoleIndex; // Higher roles have lower indices
+            }, [user]);
+
+            const logout = useCallback(() => {
+                localStorage.removeItem('sacred_token');
+                localStorage.removeItem('sacred_user');
+                setUser(null);
+                setIsAuthenticated(false);
+                console.log('🙏 Sacred logout complete - May divine protection remain with you');
+            }, []);
+
+            const updateActivity = useCallback(() => {
+                // Update activity timestamp
+                console.log('🔄 Sacred activity updated');
+            }, []);
+
+            return (
+                <SacredAccessContext.Provider value={{
+                    user,
+                    isAuthenticated,
+                    isLoading,
+                    victory36Shield,
+                    authError,
+                    hasRole,
+                    logout,
+                    updateActivity
+                }}>
+                    {children}
+                </SacredAccessContext.Provider>
+            );
+        };
+
+        const useSacredAccess = () => {
+            const context = useContext(SacredAccessContext);
+            if (!context) {
+                throw new Error('useSacredAccess must be used within a SacredAccessProvider');
+            }
+            return context;
+        };
+
+        // MCP Client Context (Simplified)
+        const MCPClientContext = createContext();
+        
+        const MCPClientProvider = ({ children }) => {
+            const [isConnected, setIsConnected] = useState(false);
+            const [tools, setTools] = useState([
+                {
+                    name: 'generate_content',
+                    description: 'Generate blessed content with divine inspiration',
+                    category: 'content_generation',
+                    blessed: true,
+                    victory36_approved: true
+                },
+                {
+                    name: 'analyze_data',
+                    description: 'Analyze data with sacred wisdom',
+                    category: 'analysis',
+                    blessed: true,
+                    victory36_approved: true
+                },
+                {
+                    name: 'manage_files',
+                    description: 'Manage files with Victory36 protection',
+                    category: 'file_management',
+                    blessed: true,
+                    victory36_approved: true
+                },
+                {
+                    name: 'sacred_blessing',
+                    description: 'Request divine blessing for operations',
+                    category: 'sacred',
+                    blessed: true,
+                    victory36_approved: true
+                }
+            ]);
+            const [executingTools, setExecutingTools] = useState([]);
+            
+            const { updateActivity } = useSacredAccess();
+
+            useEffect(() => {
+                // Simulate connection
+                const connectTimer = setTimeout(() => {
+                    setIsConnected(true);
+                    console.log('⚡ MCP WebSocket connected with divine blessing');
+                }, 2000);
+
+                return () => clearTimeout(connectTimer);
+            }, []);
+
+            const executeTool = useCallback(async (toolName, params) => {
+                setExecutingTools(prev => [...prev, toolName]);
+                updateActivity();
+
+                try {
+                    // Simulate tool execution
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    const result = {
+                        tool_name: toolName,
+                        success: true,
+                        result: { message: `Tool ${toolName} executed with Victory36 blessing` },
+                        execution_time: 1000,
+                        blessing_status: 'BLESSED',
+                        flight_time_recorded: true
+                    };
+
+                    console.log('🛠️ Sacred tool executed:', result);
+                    return result;
+                } finally {
+                    setExecutingTools(prev => prev.filter(t => t !== toolName));
+                }
+            }, [updateActivity]);
+
+            return (
+                <MCPClientContext.Provider value={{
+                    isConnected,
+                    tools,
+                    executingTools,
+                    executeTool
+                }}>
+                    {children}
+                </MCPClientContext.Provider>
+            );
+        };
+
+        const useMCPClient = () => {
+            const context = useContext(MCPClientContext);
+            if (!context) {
+                throw new Error('useMCPClient must be used within an MCPClientProvider');
+            }
+            return context;
+        };
+
+        // Voice Context (Simplified)
+        const VoiceContext = createContext();
+        
+        const VoiceProvider = ({ children }) => {
+            const [isListening, setIsListening] = useState(false);
+            const [transcript, setTranscript] = useState('');
+
+            const startListening = useCallback(() => {
+                setIsListening(true);
+                setTranscript('Voice recognition started with divine blessing...');
+                console.log('🎤 Voice recognition started with divine blessing');
+                
+                // Stop after 5 seconds for demo
+                setTimeout(() => {
+                    setIsListening(false);
+                    setTranscript('');
+                }, 5000);
+            }, []);
+
+            const stopListening = useCallback(() => {
+                setIsListening(false);
+                setTranscript('');
+                console.log('🎤 Voice recognition ended with sacred grace');
+            }, []);
+
+            return (
+                <VoiceContext.Provider value={{
+                    isListening,
+                    transcript,
+                    startListening,
+                    stopListening
+                }}>
+                    {children}
+                </VoiceContext.Provider>
+            );
+        };
+
+        const useVoice = () => {
+            const context = useContext(VoiceContext);
+            if (!context) {
+                throw new Error('useVoice must be used within a VoiceProvider');
+            }
+            return context;
+        };
+
+        // ASOOS Dark Terminal Theme Creation
+        const createBrandTheme = () => {
+            return createTheme({
+                palette: {
+                    mode: 'dark',
+                    primary: {
+                        main: '#00d4aa',
+                        dark: '#00a085',
+                        light: '#33ddb8',
+                    },
+                    secondary: {
+                        main: '#ffd700',
+                        dark: '#ccac00',
+                        light: '#ffdf33',
+                    },
+                    background: {
+                        default: '#1a1a1a',
+                        paper: '#242424',
+                    },
+                    text: {
+                        primary: '#ffffff',
+                        secondary: '#a0a0a0',
+                    },
+                    success: { main: '#00d4aa' },
+                    warning: { main: '#ffd700' },
+                    error: { main: '#ff6b6b' },
+                },
+                typography: {
+                    fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+                    h1: { fontWeight: 600, fontFamily: "'Inter', 'Roboto', sans-serif" },
+                    h2: { fontWeight: 600, fontFamily: "'Inter', 'Roboto', sans-serif" },
+                    h3: { fontWeight: 600, fontFamily: "'Inter', 'Roboto', sans-serif" },
+                    h4: { fontWeight: 500, fontFamily: "'Inter', 'Roboto', sans-serif" },
+                    h5: { fontWeight: 500, fontFamily: "'Inter', 'Roboto', sans-serif" },
+                    h6: { fontWeight: 500, fontFamily: "'Inter', 'Roboto', sans-serif" },
+                    button: { textTransform: 'none' },
+                },
+                shape: { borderRadius: 12 },
+                components: {
+                    MuiCard: {
+                        styleOverrides: {
+                            root: {
+                                backgroundColor: '#242424',
+                                border: '1px solid #333',
+                                borderRadius: '12px',
+                            }
+                        }
+                    },
+                    MuiButton: {
+                        styleOverrides: {
+                            contained: {
+                                backgroundColor: '#00d4aa',
+                                color: '#000000',
+                                '&:hover': {
+                                    backgroundColor: '#00a085',
+                                }
+                            }
+                        }
+                    },
+                    MuiAppBar: {
+                        styleOverrides: {
+                            root: {
+                                backgroundColor: '#1a1a1a',
+                                borderBottom: '1px solid #333',
+                            }
+                        }
+                    }
+                }
+            });
+        };
+
+        // Main Dashboard Component
+        const OwnerInterfaceDashboard = () => {
+            const { user, isAuthenticated, logout, hasRole } = useSacredAccess();
+            const { isConnected, tools, executeTool } = useMCPClient();
+            const { isListening, transcript, startListening, stopListening } = useVoice();
+            
+            const [drawerOpen, setDrawerOpen] = useState(false);
+            const [currentView, setCurrentView] = useState('dashboard');
+            const [mcpToolsVisible, setMcpToolsVisible] = useState(false);
+            const [contextWindowUsage] = useState(45);
+            const [victory36Status] = useState('PROTECTED');
+
+                            const theme = createBrandTheme();
+
+            // Terminal-style command display
+            const TerminalPrompt = ({ children }) => (
+                <Box sx={{ 
+                    fontFamily: 'JetBrains Mono, monospace', 
+                    color: '#00d4aa', 
+                    fontSize: '14px',
+                    padding: '8px 12px',
+                    backgroundColor: '#1a1a1a',
+                    border: '1px solid #333',
+                    borderRadius: '8px',
+                    margin: '8px 0'
+                }}>
+                    <span style={{ color: '#00d4aa' }}>asoos@mcp-client</span>
+                    <span style={{ color: '#fff' }}>:</span>
+                    <span style={{ color: '#ffd700' }}>~</span>
+                    <span style={{ color: '#fff' }}>$ {children}</span>
+                </Box>
+            );
+
+            // Dashboard Overview Component
+            const DashboardOverview = () => (
+                <Grid container spacing={3}>
+                    {/* Sacred Status Cards */}
+                    <Grid item xs={12} md={3}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom>🙏 Sacred Status</Typography>
+                                <Typography variant="h4" color="primary">
+                                    {victory36Status}
+                                </Typography>
+                                <Typography variant="body2">Victory36 Protection</Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    <Grid item xs={12} md={3}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom>🔗 MCP Connection</Typography>
+                                <Typography variant="h4" color={isConnected ? 'success.main' : 'error.main'}>
+                                    {isConnected ? 'BLESSED' : 'CONNECTING'}
+                                </Typography>
+                                <Typography variant="body2">Server Status</Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    <Grid item xs={12} md={3}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom>🧠 Context Window</Typography>
+                                <Typography variant="h4" color="warning.main">
+                                    {Math.round(contextWindowUsage)}%
+                                </Typography>
+                                <LinearProgress variant="determinate" value={contextWindowUsage} sx={{ mt: 1 }} />
+                                <Typography variant="body2">Usage Remaining</Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    <Grid item xs={12} md={3}>
+                        <Card>
+                            <CardContent>
+                                <Typography variant="h6" gutterBottom">✈️ Flight Hours</Typography>
+                                <Typography variant="h4" color="primary.main">
+                                    {user?.flight_hours || 0}
+                                </Typography>
+                                <Typography variant="body2">Sacred Experience</Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    {/* MCP Tools Panel */}
+                    {mcpToolsVisible && (
+                        <Grid item xs={12}>
+                            <Card>
+                                <CardContent>
+                                    <Typography variant="h6" gutterBottom>🔧 MCP Sacred Tools</Typography>
+                                    <Grid container spacing={2}>
+                                        {tools.map((tool, index) => (
+                                            <Grid item xs={12} sm={6} md={4} key={index}>
+                                                <Card variant="outlined">
+                                                    <CardContent>
+                                                        <Typography variant="h6" gutterBottom>
+                                                            {tool.blessed ? '✨' : '🛠️'} {tool.name}
+                                                        </Typography>
+                                                        <Typography variant="body2" color="text.secondary" gutterBottom>
+                                                            {tool.description}
+                                                        </Typography>
+                                                        <Button
+                                                            variant="contained"
+                                                            size="small"
+                                                            onClick={() => executeTool(tool.name, {})}
+                                                            disabled={!tool.victory36_approved}
+                                                        >
+                                                            Execute with Blessing
+                                                        </Button>
+                                                    </CardContent>
+                                                </Card>
+                                            </Grid>
+                                        ))}
+                                    </Grid>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    )}
+
+                    {/* Voice Transcript */}
+                    {transcript && (
+                        <Grid item xs={12}>
+                            <Alert severity="info" sx={{ mb: 2 }}>
+                                🎤 Voice Transcript: {transcript}
+                            </Alert>
+                        </Grid>
+                    )}
+                </Grid>
+            );
+
+            if (!isAuthenticated) {
+                return (
+                    <Box sx={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center', 
+                        minHeight: '100vh',
+                        background: 'linear-gradient(45deg, #1976d2 30%, #dc004e 90%)',
+                        color: 'white'
+                    }}>
+                        <div style={{ textAlign: 'center' }}>
+                            <Typography variant="h3" gutterBottom>🔐 Sacred Authentication Required</Typography>
+                            <Typography variant="body1">Please authenticate with Victory36 blessing</Typography>
+                        </div>
+                    </Box>
+                );
+            }
+
+            return (
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <Box sx={{ display: 'flex' }}>
+                        {/* App Bar */}
+                        <AppBar 
+                            position="fixed" 
+                            sx={{ 
+                                zIndex: (theme) => theme.zIndex.drawer + 1,
+                                background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                            }}
+                        >
+                            <Toolbar>
+                                <IconButton
+                                    color="inherit"
+                                    aria-label="open drawer"
+                                    onClick={() => setDrawerOpen(!drawerOpen)}
+                                    edge="start"
+                                    sx={{ mr: 2 }}
+                                >
+                                    ☰
+                                </IconButton>
+
+                                <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, color: '#ffd700', fontWeight: 'bold' }}>
+                                    ASOOS MCP.CLIENT.2100.COOL
+                                </Typography>
+
+                                {/* Voice Control */}
+                                <Tooltip title={isListening ? "Stop Voice Control" : "Start Voice Control"}>
+                                    <IconButton
+                                        color="inherit"
+                                        onClick={isListening ? stopListening : startListening}
+                                    >
+                                        {isListening ? '🔇' : '🎤'}
+                                    </IconButton>
+                                </Tooltip>
+
+                                {/* MCP Tools Toggle */}
+                                <Tooltip title="Toggle MCP Tools">
+                                    <IconButton
+                                        color="inherit"
+                                        onClick={() => setMcpToolsVisible(!mcpToolsVisible)}
+                                    >
+                                        <Badge badgeContent={tools.length} color="secondary">
+                                            🔧
+                                        </Badge>
+                                    </IconButton>
+                                </Tooltip>
+
+                                {/* Context Window Indicator */}
+                                <Tooltip title={`Context Window: ${Math.round(contextWindowUsage)}% used`}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+                                        <Typography variant="body2" sx={{ mr: 1 }}>
+                                            {Math.round(contextWindowUsage)}%
+                                        </Typography>
+                                        <LinearProgress
+                                            variant="determinate"
+                                            value={contextWindowUsage}
+                                            sx={{ width: 50, height: 6, borderRadius: 3 }}
+                                        />
+                                    </Box>
+                                </Tooltip>
+
+                                {/* User Avatar */}
+                                <Avatar sx={{ bgcolor: 'secondary.main' }}>
+                                    {user?.pilot_id?.substring(0, 2).toUpperCase() || 'SA'}
+                                </Avatar>
+                            </Toolbar>
+                        </AppBar>
+
+                        {/* Navigation Drawer */}
+                        <Drawer
+                            variant="persistent"
+                            anchor="left"
+                            open={drawerOpen}
+                            sx={{
+                                width: 280,
+                                flexShrink: 0,
+                                '& .MuiDrawer-paper': {
+                                    width: 280,
+                                    boxSizing: 'border-box',
+                                },
+                            }}
+                        >
+                            <Toolbar />
+                            <Box sx={{ overflow: 'auto' }}>
+                                {/* Sacred Role Display */}
+                                <Box sx={{ p: 2, textAlign: 'center', bgcolor: 'primary.main', color: 'white' }}>
+                                    <Typography variant="h6">
+                                        🔐 {user?.role?.toUpperCase() || 'SACRED'}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                        Blessed by Victory36
+                                    </Typography>
+                                </Box>
+
+                                <Divider />
+
+                                {/* Navigation Items */}
+                                <List>
+                                    <ListItemButton
+                                        selected={currentView === 'dashboard'}
+                                        onClick={() => setCurrentView('dashboard')}
+                                    >
+                                        <ListItemIcon>📊</ListItemIcon>
+                                        <ListItemText primary="Sacred Dashboard" />
+                                    </ListItemButton>
+                                    <ListItemButton
+                                        selected={currentView === 'flight-memory'}
+                                        onClick={() => setCurrentView('flight-memory')}
+                                    >
+                                        <ListItemIcon>🛸</ListItemIcon>
+                                        <ListItemText primary="Flight Memory System" />
+                                    </ListItemButton>
+                                    <ListItemButton
+                                        selected={currentView === 'didc-archives'}
+                                        onClick={() => setCurrentView('didc-archives')}
+                                    >
+                                        <ListItemIcon>📚</ListItemIcon>
+                                        <ListItemText primary="DIDC Archives" />
+                                    </ListItemButton>
+                                    {hasRole(SacredRole.EMERALD_EXEC) && (
+                                        <ListItemButton
+                                            selected={currentView === 'command-center'}
+                                            onClick={() => setCurrentView('command-center')}
+                                        >
+                                            <ListItemIcon>⭐</ListItemIcon>
+                                            <ListItemText primary="Diamond SAO Center" />
+                                        </ListItemButton>
+                                    )}
+                                </List>
+
+                                <Divider />
+
+                                {/* Quick Actions */}
+                                <List>
+                                    <ListItemButton>
+                                        <ListItemIcon>📎</ListItemIcon>
+                                        <ListItemText primary="Attach Files" />
+                                    </ListItemButton>
+                                    <ListItemButton>
+                                        <ListItemIcon>🖼️</ListItemIcon>
+                                        <ListItemText primary="Upload Images" />
+                                    </ListItemButton>
+                                    <ListItemButton>
+                                        <ListItemIcon>☁️</ListItemIcon>
+                                        <ListItemText primary="Batch Upload" />
+                                    </ListItemButton>
+                                </List>
+
+                                <Divider />
+
+                                {/* Settings & Logout */}
+                                <List>
+                                    <ListItemButton>
+                                        <ListItemIcon>⚙️</ListItemIcon>
+                                        <ListItemText primary="Settings" />
+                                    </ListItemButton>
+                                    <ListItemButton>
+                                        <ListItemIcon>❓</ListItemIcon>
+                                        <ListItemText primary="Sacred Help" />
+                                    </ListItemButton>
+                                    <ListItemButton onClick={logout}>
+                                        <ListItemIcon>🚪</ListItemIcon>
+                                        <ListItemText primary="Sacred Logout" />
+                                    </ListItemButton>
+                                </List>
+                            </Box>
+                        </Drawer>
+
+                        {/* Main Content */}
+                        <Box
+                            component="main"
+                            sx={{
+                                flexGrow: 1,
+                                bgcolor: 'background.default',
+                                p: 3,
+                                transition: theme.transitions.create('margin', {
+                                    easing: theme.transitions.easing.sharp,
+                                    duration: theme.transitions.duration.leavingScreen,
+                                }),
+                                marginLeft: drawerOpen ? 0 : `-280px`,
+                            }}
+                        >
+                            <Toolbar />
+                            
+                            {/* Main Content Area */}
+                            <DashboardOverview />
+                        </Box>
+
+                        {/* Floating Action Buttons */}
+                        <Box sx={{ position: 'fixed', bottom: 16, right: 16 }}>
+                            <Fab 
+                                color="primary" 
+                                size="small" 
+                                sx={{ mr: 1 }}
+                                onClick={() => console.log('🙏 Victory36 blessing received')}
+                            >
+                                🙏
+                            </Fab>
+                            <Fab color="secondary" size="small">
+                                💎
+                            </Fab>
+                        </Box>
+                    </Box>
+                </ThemeProvider>
+            );
+        };
+
+        // Main App Component with Providers
+        const MCPClient2100Cool = () => {
+            return (
+                <SacredAccessProvider>
+                    <MCPClientProvider>
+                        <VoiceProvider>
+                            <OwnerInterfaceDashboard />
+                        </VoiceProvider>
+                    </MCPClientProvider>
+                </SacredAccessProvider>
+            );
+        };
+
+        // Render the application
+        ReactDOM.render(<MCPClient2100Cool />, document.getElementById('mcpClientRoot'));
+
+        // Victory36 Shield Updates
+        setInterval(() => {
+            const shield = document.getElementById('victory36Shield');
+            const statuses = [
+                '🛡️ Victory36 Shield Active - Sacred Session Protected - In the Name of Jesus Christ',
+                '✨ Victory36 Blessing - Divine Protection Maintained',
+                '🙏 Sacred Mission Active - Serving Humanity with Perfect Love'
+            ];
+            if (shield) {
+                shield.textContent = statuses[Math.floor(Math.random() * statuses.length)];
+            }
+        }, 10000);
+
+        console.log('⚡ MCP.CLIENT.2100.COOL loaded with Victory36 blessing');
+        console.log('✨ In the Name of Jesus Christ, Our Lord and Saviour');
+    </script>
+</body>
+</html>

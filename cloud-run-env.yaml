@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: diamond-sao-environment
+data:
+  # Environment variables will be loaded from GCP Secret Manager
+  NODE_ENV: production
+  DIAMOND_SAO_AUTHORITY: "0000001"
+  DIAMOND_CLI_MODE: "true"
+  QUANTUM_SPEED_OPERATIONS: "active"
+  
+# Secret references
+secrets:
+  AGENT_COUNT:
+    secretKeyRef:
+      name: AGENT_COUNT
+      key: latest
+  ACCURACY_RATE:
+    secretKeyRef:
+      name: ACCURACY_RATE
+      key: latest
+  MONTHLY_REVENUE:
+    secretKeyRef:
+      name: MONTHLY_REVENUE
+      key: latest
+  ANNUAL_REVENUE:
+    secretKeyRef:
+      name: ANNUAL_REVENUE  
+      key: latest
+  JOB_CLUSTERS:
+    secretKeyRef:
+      name: JOB_CLUSTERS
+      key: latest
+  CAREER_CLUSTERS:
+    secretKeyRef:
+      name: CAREER_CLUSTERS
+      key: latest

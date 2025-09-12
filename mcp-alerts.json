@@ -1,0 +1,85 @@
+{
+  "alerts": [
+    {
+      "type": "company_down",
+      "message": "Company ufo is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company ey is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company deloitte is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company microsoft is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company google is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company nestle is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company accenture is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company pwc is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company kpmg is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company ibm is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company amazon is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company meta is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company apple is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company tesla is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company nvidia is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    },
+    {
+      "type": "company_down",
+      "message": "Company asoos is down: Connection failed",
+      "timestamp": "2025-09-03T20:46:45.369Z"
+    }
+  ],
+  "generatedAt": "2025-09-03T20:46:45.399Z"
+}

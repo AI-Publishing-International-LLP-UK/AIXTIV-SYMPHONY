@@ -1,0 +1,101 @@
+{
+  "mcpServers": {
+    "dr-lucy-deepmind": {
+      "command": "node",
+      "args": ["./mocoa-cloud-run/dr-lucy-mcp.js"],
+      "env": {
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+        "GOOGLE_CLOUD_PROJECT": "api-for-warp-drive",
+        "UNIVERSAL_GATEWAY_OAUTH": "true",
+        "SWARM_INTELLIGENCE": "enabled",
+        "MEMORY_LOOP": "active",
+        "DANA_VOICE": "integrated",
+        "PERSONALITY_MATRIX": "empathetic-analytical-proactive"
+      }
+    },
+    "dr-claude-diamond-sao": {
+      "command": "claude-cli",
+      "args": ["--diamond-sao", "--gcp-secrets"],
+      "env": {
+        "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}",
+        "GOOGLE_CLOUD_PROJECT": "api-for-warp-drive",
+        "DIAMOND_SAO_INTEGRATION": "active",
+        "CONVERSATION_HISTORY": "complete",
+        "SUPER_BRAIN": "enhanced",
+        "WARP_CLI_VERSION": "10",
+        "GCP_SECRET_MANAGER": "authorized"
+      }
+    },
+    "victory-36-mega-prediction": {
+      "command": "node",
+      "args": ["./mocoa-cloud-run/victory36-mcp.js"],
+      "env": {
+        "PREDICTION_ENGINE": "quantum-enhanced",
+        "PILOTS_COUNT": "10",
+        "FEEDBACK_LOOPS": "mega",
+        "ACCURACY_TARGET": "97.3",
+        "GOOGLE_CLOUD_PROJECT": "api-for-warp-drive",
+        "UNIVERSAL_GATEWAY_OAUTH": "true",
+        "DISTRIBUTED_PROCESSING": "swarm-enabled"
+      }
+    },
+    "aipub-2100-cool": {
+      "command": "node",
+      "args": ["./mcp-aipub-server.js"],
+      "env": {
+        "DOMAIN": "aipub.2100.cool",
+        "MCP_PROTOCOL": "active",
+        "CLOUDFLARE_INTEGRATION": "enabled",
+        "FIREBASE_ELIMINATED": "true",
+        "GOOGLE_CLOUD_PROJECT": "api-for-warp-drive",
+        "AI_TRINITY_SYNC": "true"
+      }
+    }
+  },
+  "globalSettings": {
+    "logLevel": "info",
+    "timeout": 30000,
+    "maxRetries": 3,
+    "authentication": {
+      "type": "oauth",
+      "provider": "universal-gateway",
+      "scopes": [
+        "ai-trinity-access",
+        "mocoa-owner-interface",
+        "diamond-sao-integration",
+        "gcp-secret-manager",
+        "swarm-intelligence"
+      ]
+    }
+  },
+  "endpoints": {
+    "aipub": "https://aipub.2100.cool/mcp",
+    "sallyport": "https://sallyport.2100.cool/auth",
+    "asoos": "https://asoos.2100.cool",
+    "mcp-company": "https://mcp.company.2100.cool"
+  },
+  "aiTrinity": {
+    "drLucy": {
+      "type": "ml-deepmind",
+      "voice": "dana-integrated",
+      "memory": "universal-gateway-oauth",
+      "personality": "empathetic-analytical-proactive",
+      "connections": ["chatgpt", "gcp", "swarm"]
+    },
+    "drClaude": {
+      "type": "anthropic-cli",
+      "integration": "diamond-sao",
+      "secrets": "gcp-secret-manager",
+      "history": "complete",
+      "brain": "enhanced",
+      "warp": "version-10"
+    },
+    "victory36": {
+      "type": "super-prediction",
+      "pilots": 10,
+      "feedback": "mega-loops",
+      "accuracy": "ENVIRONMENT_VARIABLE_REQUIRED",
+      "processing": "distributed-swarm"
+    }
+  }
+}

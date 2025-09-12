@@ -1,0 +1,50 @@
+name = "mcp-company-2100-cool"
+main = "mcp-company-worker.js"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+account_id = "aef30d920913c188b9b6048cc7f42951"
+
+# MCP.COMPANY.2100.Cool - Final destination in the flow
+# Model Context Protocol Company Interface
+
+[vars]
+ENVIRONMENT = "production"
+SECURITY_LEVEL = "enterprise"
+SITE_DOMAIN = "mcp.company.2100.cool"
+SERVICE_NAME = "MCP Company Interface"
+VERSION = "1.0.0"
+PROTOCOL = "Model Context Protocol"
+
+# Production Routes for mcp.company.2100.cool
+[[routes]]
+pattern = "mcp.company.2100.cool/*"
+zone_name = "2100.cool"
+
+[[routes]]
+pattern = "mcp.company.2100.cool"
+zone_name = "2100.cool"
+
+[build]
+command = ""
+cwd = ""
+watch_dir = ""
+
+# Production Environment Configuration
+[env.production]
+name = "mcp-company-2100-cool"
+routes = [
+  { pattern = "mcp.company.2100.cool/*", zone_name = "2100.cool" },
+  { pattern = "mcp.company.2100.cool", zone_name = "2100.cool" }
+]
+
+[env.production.vars]
+ENVIRONMENT = "production"
+SECURITY_LEVEL = "enterprise"
+SITE_DOMAIN = "mcp.company.2100.cool"
+SERVICE_NAME = "MCP Company Interface"
+VERSION = "1.0.0"
+PROTOCOL = "Model Context Protocol"
+
+# Security and performance settings
+[placement]
+mode = "smart"

@@ -2,7 +2,7 @@ name: 🚀 Deploy ASOOS 2100.Cool to Cloudflare Pages
 
 on:
   push:
-    branches: [ main ]
+    branches: [ production ]
   workflow_dispatch:
 
 permissions:

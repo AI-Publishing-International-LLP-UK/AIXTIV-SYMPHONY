@@ -1,0 +1,10 @@
+name = "asoos-2100-cool-worker-production"
+main = "cloudflare-pages-deployment/index-full.js"
+compatibility_date = "2025-08-25"
+
+[vars]
+ENVIRONMENT = "production"
+
+routes = [
+  { pattern = "asoos.2100.cool/*", zone_name = "2100.cool" }
+]

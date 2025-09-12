@@ -4,7 +4,7 @@
 
 **Branch**: `asoos-landing-deploy`  
 **Status**: ✅ **LIVE AND DEPLOYED**  
-**Repository**: https://github.com/AI-Publishing-International-LLP-UK/Aixtiv-Symphony
+**Repository**: https://github.com/AI-Publishing-International-LLP-UK/AIXTIV-SYMPHONY
 **Commit**: `eeed906` - Enhanced Landing Page with Authentication Integration
 
 ## 🌐 **PRODUCTION DEPLOYMENT DETAILS**

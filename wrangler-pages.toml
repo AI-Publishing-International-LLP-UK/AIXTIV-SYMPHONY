@@ -1,0 +1,13 @@
+name = "asoos-2100-cool-landing"
+compatibility_date = "2025-08-25"
+
+[env.production]
+name = "asoos-2100-cool-landing"
+
+# Pages configuration
+[pages]
+directory = "cloudflare-pages-deployment"
+
+# Custom domain configuration for Pages
+[[pages.custom_domains]]
+domain = "asoos.2100.cool"

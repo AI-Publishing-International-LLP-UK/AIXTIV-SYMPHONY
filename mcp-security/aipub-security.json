@@ -1,0 +1,108 @@
+{
+  "companyName": "aipub",
+  "securityDomain": "mcp.aipub.2100.cool",
+  "ownerLevel": "SAPPHIRE",
+  "createdAt": "2025-09-02T06:27:48.118Z",
+  "availableLevels": [
+    "SAPPHIRE",
+    "OPAL",
+    "ONYX"
+  ],
+  "defaultRoles": {
+    "owner": "SAPPHIRE",
+    "admin": "OPAL",
+    "user": "ONYX"
+  },
+  "featureAccess": {
+    "SAPPHIRE": {
+      "dashboard": "advanced",
+      "analytics": "advanced",
+      "integrations": "all",
+      "automation": "advanced",
+      "api": "full",
+      "reporting": "advanced",
+      "userManagement": "full",
+      "careerDevelopment": "advanced",
+      "dreamCommander": "full"
+    },
+    "OPAL": {
+      "dashboard": "standard",
+      "analytics": "standard",
+      "integrations": "basic",
+      "automation": "standard",
+      "api": "limited",
+      "reporting": "standard",
+      "userManagement": "team",
+      "careerDevelopment": "standard",
+      "dreamCommander": "standard"
+    },
+    "ONYX": {
+      "dashboard": "basic",
+      "analytics": "basic",
+      "integrations": "none",
+      "automation": "none",
+      "api": "none",
+      "reporting": "basic",
+      "userManagement": "self",
+      "careerDevelopment": "basic",
+      "dreamCommander": "view"
+    }
+  },
+  "policies": {
+    "authentication": {
+      "tokenExpiry": {
+        "DIAMOND": "24h",
+        "EMERALD": "12h",
+        "SAPPHIRE": "8h",
+        "OPAL": "4h",
+        "ONYX": "2h"
+      },
+      "mfaRequired": {
+        "DIAMOND": true,
+        "EMERALD": true,
+        "SAPPHIRE": true,
+        "OPAL": false,
+        "ONYX": false
+      },
+      "sessionTimeout": {
+        "DIAMOND": "4h",
+        "EMERALD": "2h",
+        "SAPPHIRE": "1h",
+        "OPAL": "30m",
+        "ONYX": "15m"
+      }
+    },
+    "access": {
+      "maxConcurrentSessions": {
+        "DIAMOND": 10,
+        "EMERALD": 5,
+        "SAPPHIRE": 3,
+        "OPAL": 2,
+        "ONYX": 1
+      },
+      "ipRestrictions": {
+        "DIAMOND": false,
+        "EMERALD": false,
+        "SAPPHIRE": false,
+        "OPAL": true,
+        "ONYX": true
+      }
+    },
+    "audit": {
+      "logLevel": {
+        "DIAMOND": "DETAILED",
+        "EMERALD": "DETAILED",
+        "SAPPHIRE": "STANDARD",
+        "OPAL": "STANDARD",
+        "ONYX": "BASIC"
+      },
+      "retentionPeriod": {
+        "DIAMOND": "7y",
+        "EMERALD": "5y",
+        "SAPPHIRE": "3y",
+        "OPAL": "1y",
+        "ONYX": "6m"
+      }
+    }
+  }
+}

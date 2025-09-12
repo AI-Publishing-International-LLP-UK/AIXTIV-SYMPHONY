@@ -1,0 +1,4 @@
+# Sally Port Authentication Gateway
+# Redirect root to auth page, preserve auth page itself
+
+/  /auth  302

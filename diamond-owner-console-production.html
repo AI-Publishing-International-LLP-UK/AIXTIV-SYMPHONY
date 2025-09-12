@@ -1,0 +1,1562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💎 Diamond SAO Owner Console - ASOOS.2100.Cool (Testament Swarm Connected)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Enterprise-grade icon solution - Multiple fallbacks -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" crossorigin="anonymous">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      overflow-x: hidden;
+      overflow-y: auto;
+      min-height: 100vh;
+    }
+
+    /* Enterprise Icon System - Bulletproof SVG Icons */
+    .enterprise-icon {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      vertical-align: middle;
+      fill: currentColor;
+    }
+
+    .enterprise-icon.large {
+      width: 20px;
+      height: 20px;
+    }
+
+    .enterprise-icon.xl {
+      width: 24px;
+      height: 24px;
+    }
+
+    /* Panel Icons */
+    .panel-icon {
+      width: 14px;
+      height: 14px;
+      display: inline-block;
+      vertical-align: middle;
+      fill: currentColor;
+    }
+
+    /* Hexagon Container Styles */
+    .hexagon-container {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 20px auto;
+      perspective: 1000px;
+    }
+
+    /* 3D Hexagon Styles */
+    .hexagon {
+      position: relative;
+      width: 60px;
+      height: 52px;
+      transform-style: preserve-3d;
+      animation: float 6s ease-in-out infinite;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .hexagon:hover {
+      transform: rotateY(180deg) scale(1.1);
+    }
+
+    .hexagon.speaking {
+      animation: speakPulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotateY(0deg); }
+      50% { transform: translateY(-8px) rotateY(5deg); }
+    }
+
+    @keyframes speakPulse {
+      0%, 100% { 
+        transform: scale(1) rotateY(0deg); 
+        filter: brightness(1) drop-shadow(0 0 15px currentColor);
+      }
+      50% { 
+        transform: scale(1.15) rotateY(10deg); 
+        filter: brightness(1.3) drop-shadow(0 0 25px currentColor);
+      }
+    }
+
+    .hexagon-face {
+      position: absolute;
+      width: 60px;
+      height: 52px;
+      clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .hexagon-face.front {
+      background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+      color: #ffffff;
+      z-index: 2;
+    }
+
+    .hexagon-face.back {
+      background: linear-gradient(135deg, #4ecdc4, #ff6b6b);
+      color: #ffffff;
+      transform: rotateY(180deg) translateZ(-3px);
+      z-index: 1;
+    }
+
+    /* QB Dr. Lucy sRIX - Quantum Blue to Purple */
+    .qb-rix .he xagon-face.front {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      box-shadow: 0 0 20px rgba(102, 126, 234, 0.6);
+    }
+    .qb-srix .hexagon-face.back {
+      background: linear-gradient(135deg, #764ba2, #667eea);
+    }
+    .qb-srix.speaking {
+      color: #667eea;
+      filter: drop-shadow(0 0 20px #667eea);
+    }
+
+    /* SH Dr. Claude sRIX - Emerald to Teal */
+    .SH-srix .hexagon-face.front {
+      background: linear-gradient(135deg, #11998e, #38ef7d);
+      box-shadow: 0 0 20px rgba(56, 239, 125, 0.6);
+    }
+    .SH-srix .hexagon-face.back {
+      background: linear-gradient(135deg, #38ef7d, #11998e);
+    }
+    .SH-srix.speaking {
+      color: #11998e;
+      filter: drop-shadow(0 0 20px #11998e);
+    }
+
+    /* Victory36 - Gold to Red */
+    .victory36 .hexagon-face.front {
+      background: linear-gradient(135deg, #f7971e, #ffd200);
+      box-shadow: 0 0 20px rgba(255, 210, 0, 0.6);
+    }
+    .victory36 .hexagon-face.back {
+      background: linear-gradient(135deg, #ffd200, #f7971e);
+    }
+    .victory36.speaking {
+      color: #f7971e;
+      filter: drop-shadow(0 0 20px #f7971e);
+    }
+
+    /* Header Styles */
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 8px 20px;
+      border-bottom: 3px solid #4ecdc4;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #ffd700, #ff6b6b);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 900;
+      color: #000;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      animation: logoSpin 10s linear infinite;
+    }
+
+    @keyframes logoSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .title-section h1 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .title-section p {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.8);
+      margin: 2px 0 0 0;
+      font-weight: 500;
+    }
+
+    .diamond-authority {
+      background: linear-gradient(135deg, #ffd700, #ff6b6b);
+      padding: 8px 16px;
+      border-radius: 25px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #000;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+      animation: authorityPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes authorityPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3); }
+      50% { transform: scale(1.05); box-shadow: 0 6px 25px rgba(255, 215, 0, 0.6); }
+    }
+
+    .connection-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #4ecdc4;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: #4ecdc4;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.2); }
+    }
+
+    /* Main Layout */
+    .main-container {
+      display: grid;
+      grid-template-columns: 280px 1fr 320px;
+      gap: 20px;
+      padding: 20px;
+      min-height: calc(100vh - 80px);
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    /* Left Panel */
+    .left-panel {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid rgba(78, 205, 196, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    .eao-section {
+      text-align: center;
+      margin-bottom: 25px;
+      padding: 15px;
+      background: linear-gradient(135deg, rgba(78, 205, 196, 0.1), rgba(102, 126, 234, 0.1));
+      border-radius: 12px;
+      border: 1px solid rgba(78, 205, 196, 0.2);
+    }
+
+    .eao-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #4ecdc4;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .eao-name {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 3px;
+    }
+
+    .eao-role {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 500;
+    }
+
+    /* Copilots Section */
+    .copilots-section {
+      margin-bottom: 25px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #4ecdc4;
+      margin-bottom: 15px;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .copilot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .copilot-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(78, 205, 196, 0.05));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .copilot-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .copilot-card:hover::before {
+      left: 100%;
+    }
+
+    .copilot-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(78, 205, 196, 0.3);
+      border-color: #4ecdc4;
+    }
+
+    .copilot-card.active {
+      border: 2px solid #ffd700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    }
+
+    .copilot-name {
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-top: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .copilot-role {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.6);
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+    }
+
+    .active-copilot {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(78, 205, 196, 0.1));
+      border: 1px solid #4ecdc4;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .active-status {
+      font-size: 12px;
+      font-weight: 700;
+      color: #4ecdc4;
+      margin-bottom: 5px;
+    }
+
+    .active-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    /* Navigation */
+    .nav-section {
+      margin-bottom: 20px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: linear-gradient(135deg, rgba(78, 205, 196, 0.2), rgba(102, 126, 234, 0.2));
+      color: #ffffff;
+      transform: translateX(5px);
+      border-color: #4ecdc4;
+    }
+
+    .nav-icon {
+      width: 16px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    /* Center Panel */
+    .center-panel {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(26, 26, 26, 0.6));
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid rgba(78, 205, 196, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .center-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(78, 205, 196, 0.2);
+    }
+
+    .center-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      background: linear-gradient(135deg, #4ecdc4, #667eea);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .api-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #ff6b6b;
+    }
+
+    /* Communication Area */
+    .communication-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .welcome-message {
+      background: linear-gradient(135deg, rgba(78, 205, 196, 0.1), rgba(102, 126, 234, 0.1));
+      border: 1px solid rgba(78, 205, 196, 0.3);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .welcome-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #4ecdc4;
+      margin-bottom: 8px;
+    }
+
+    .welcome-text {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.5;
+    }
+
+    .conversation-display {
+      flex: 1;
+      min-height: 300px;
+      overflow-y: auto;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .message {
+      margin-bottom: 15px;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .message.user {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(78, 205, 196, 0.1));
+      border-color: rgba(102, 126, 234, 0.3);
+      margin-left: 20px;
+    }
+
+    .message.copilot {
+      background: linear-gradient(135deg, rgba(78, 205, 196, 0.1), rgba(118, 75, 162, 0.1));
+      border-color: rgba(78, 205, 196, 0.3);
+      margin-right: 20px;
+    }
+
+    .message.system {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 107, 107, 0.1));
+      border-color: rgba(255, 215, 0, 0.3);
+    }
+
+    .message-header {
+      font-size: 11px;
+      font-weight: 700;
+      color: #4ecdc4;
+      margin-bottom: 5px;
+    }
+
+    .message-content {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.5;
+    }
+
+    /* Input Area */
+    .input-area {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(78, 205, 196, 0.3);
+      border-radius: 25px;
+      padding: 10px 15px;
+    }
+
+    .voice-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #ffffff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .voice-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .voice-btn.active {
+      background: linear-gradient(135deg, #ff6b6b, #ffd700);
+      animation: recordPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes recordPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .message-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 500;
+      outline: none;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .message-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .send-btn {
+      background: linear-gradient(135deg, #4ecdc4, #667eea);
+      border: none;
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .send-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+    }
+
+    /* Right Panel */
+    .right-panel {
+      background: linear-gradient(135deg, rgba(118, 75, 162, 0.1), rgba(102, 126, 234, 0.1));
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid rgba(78, 205, 196, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    /* Content Sections */
+    .content-section {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .content-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #4ecdc4;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .content-item {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.4;
+      margin-bottom: 8px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 5px;
+      border-left: 3px solid #4ecdc4;
+    }
+
+    .loading-text {
+      color: rgba(255, 255, 255, 0.5);
+      font-style: italic;
+    }
+
+    /* Integration Gateway */
+    .integration-gateway {
+      text-align: center;
+      padding: 15px;
+      background: linear-gradient(135deg, rgba(78, 205, 196, 0.1), rgba(255, 215, 0, 0.1));
+      border-radius: 10px;
+      border: 1px solid rgba(78, 205, 196, 0.3);
+      margin-top: 20px;
+    }
+
+    .gateway-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffd700;
+      margin-bottom: 5px;
+    }
+
+    .gateway-subtitle {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+      .main-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+      }
+      
+      .copilot-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+      
+      .copilot-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #4ecdc4, #667eea);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <div class="logo">💎</div>
+        <div class="title-section">
+          <h1>💎 Diamond SAO Owner Console - ASOOS.2100.Cool</h1>
+          <p>(Testament Swarm Connected)</p>
+        </div>
+      </div>
+      
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <div class="diamond-authority">
+          Mr. Phillip Corey Roark (0000001)
+        </div>
+        <div class="connection-status">
+          <div class="status-dot"></div>
+          Daily.co Video Session
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Left Panel -->
+    <div class="left-panel">
+      <!-- EAO Section -->
+      <div class="eao-section">
+        <div class="eao-title">Emerald EAO ASOOS</div>
+        <div class="eao-name">Mr. Morgan O'Brien, EAO</div>
+        <div class="eao-role">Executive Administrative Officer</div>
+      </div>
+
+      <!-- AI Copilots Section -->
+      <div class="copilots-section">
+        <div class="section-title">YOUR AI COPILOTS</div>
+        
+        <div class="copilot-grid">
+          <!-- QB RIX -->
+          <div class="copilot-card qb-card" onclick="selectCopilot('QB')">
+            <div class="hexagon-container">
+              <div class="hexagon qb-rix" id="qb-hexagon">
+                <div class="hexagon-face front">QB</div>
+                <div class="hexagon-face back">💎</div>
+              </div>
+            </div>
+            <div class="copilot-name">QB RIX</div>
+            <div class="copilot-role">Quantum Business</div>
+          </div>
+
+          <!-- Dr. Lucy sRIX -->
+          <div class="copilot-card lucy-card" onclick="selectCopilot('LUCY')">
+            <div class="hexagon-container">
+              <div class="hexagon claude-rix" id="lucy-hexagon">
+                <div class="hexagon-face front">🧠</div>
+                <div class="hexagon-face back">Dr</div>
+              </div>
+            </div>
+            <div class="copilot-name">Dr. Lucy sRIX</div>
+            <div class="copilot-role">Deep Analysis</div>
+          </div>
+
+          <!-- SH RIX -->
+          <div class="copilot-card sh-card" onclick="selectCopilot('SH')">
+            <div class="hexagon-container">
+              <div class="hexagon victory36" id="sh-hexagon">
+                <div class="hexagon-face front">SH</div>
+                <div class="hexagon-face back">⚡</div>
+              </div>
+            </div>
+            <div class="copilot-name">SH RIX</div>
+            <div class="copilot-role">Strategic Handler</div>
+          </div>
+
+          <!-- Dr. Claude sRIX -->
+          <div class="copilot-card claude-card" onclick="selectCopilot('CLAUDE')">
+            <div class="hexagon-container">
+              <div class="hexagon qb-rix" id="claude-hexagon">
+                <div class="hexagon-face front">🔮</div>
+                <div class="hexagon-face back">Dr</div>
+              </div>
+            </div>
+            <div class="copilot-name">Dr. Claude sRIX</div>
+            <div class="copilot-role">AI Specialist</div>
+          </div>
+        </div>
+
+        <!-- Victory36 MAESTRO -->
+        <div class="copilot-card victory-card" onclick="selectCopilot('V36')" style="grid-column: 1 / -1;">
+          <div class="hexagon-container">
+            <div class="hexagon victory36" id="victory-hexagon">
+              <div class="hexagon-face front">🛡️</div>
+              <div class="hexagon-face back">V36</div>
+            </div>
+          </div>
+          <div class="copilot-name">V36 Victory36 MAESTRO</div>
+          <div class="copilot-role">Ultimate Protection</div>
+        </div>
+
+        <!-- Active Copilot Display -->
+        <div class="active-copilot">
+          <div class="active-status" id="activeStatus">QB RIX Active</div>
+          <div class="active-name">SCAN TO APPROVE</div>
+        </div>
+      </div>
+
+      <!-- Navigation -->
+      <div class="nav-section">
+        <a href="#" class="nav-item active">
+          <i class="nav-icon fas fa-video"></i>
+          <span>Communication</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="nav-icon fas fa-chart-line"></i>
+          <span>Growth</span>
+        </a>
+        <a href="#" class="nav-icon fas fa-users"></i>
+          <span>Services</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="nav-icon fas fa-lightbulb"></i>
+          <span>Innovation</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="nav-icon fas fa-cog"></i>
+          <span>Automation</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="nav-icon fas fa-tachometer-alt"></i>
+          <span>ROI Dashboard</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="nav-icon fas fa-star"></i>
+          <span>Wish Your Wish</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="nav-icon fas fa-graduation-cap"></i>
+          <span>Academy</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="nav-icon fas fa-plane"></i>
+          <span>Pilots' Lounge</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="nav-icon fas fa-gift"></i>
+          <span>Gift Shop</span>
+        </a>
+        <a href="#" class="nav-item">
+          <i class="nav-icon fas fa-sliders-h"></i>
+          <span>Settings</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Center Panel -->
+    <div class="center-panel">
+      <div class="center-header">
+        <div class="center-title">Aixtiv Symphony OOS</div>
+        <div class="api-status">
+          <div class="status-dot" style="background: #ff6b6b;"></div>
+          Connecting...
+        </div>
+      </div>
+
+      <div class="welcome-message">
+        <div class="welcome-title">Welcome to Aixtiv Symphony Operating System</div>
+        <div class="welcome-text">
+          Speak naturally with your AI copilots. They understand context, can pull data from any squadron, and bring visual insights directly into this space. Just ask!
+        </div>
+      </div>
+
+      <div class="communication-area">
+        <div class="conversation-display" id="conversationDisplay">
+          <div class="message system">
+            <div class="message-header">💎 Diamond SAO Command Center</div>
+            <div class="message-content">
+              Your Diamond SAO Owner Console is fully operational. All Super Trinity Copilots are synchronized and ready for your commands with unlimited authority access.
+            </div>
+          </div>
+        </div>
+
+        <div class="input-area">
+          <button class="voice-btn" id="voiceBtn" onclick="toggleVoice()" title="Voice Command">
+            <i class="fas fa-microphone"></i>
+          </button>
+          <input type="text" 
+                 class="message-input" 
+                 id="messageInput"
+                 placeholder="Communicate with your Professional Copilots..."
+                 onkeypress="handleKeyPress(event)">
+          <button class="send-btn" onclick="sendMessage()">
+            <i class="fas fa-paper-plane"></i> Send
+          </button>
+        </div>
+      </div>
+
+      <!-- CLI Section -->
+      <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 15px; border: 1px solid rgba(78,205,196,0.2);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span style="color: #4ecdc4; font-weight: 700; font-size: 12px;">AIXTIV CLI v2.1.0</span>
+          <div style="display: flex; gap: 10px; font-size: 10px;">
+            <span style="color: #667eea;">Claude 4+ Sonnet</span>
+            <span style="color: #ff6b6b;">🔥 Blend All Models</span>
+          </div>
+        </div>
+        <div style="font-family: monospace; color: #4ecdc4; font-size: 12px;">
+          asoos@diamond : ~ $ <span style="color: #fff;">_</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-panel">
+      <div class="content-section">
+        <div class="content-title">Today's Hot Topics</div>
+        <div class="content-item loading-text">Initializing real-time data...</div>
+        <div class="content-item loading-text">Content will be populated by your copilots</div>
+      </div>
+
+      <div class="content-section">
+        <div class="content-title">Today's Proposals</div>
+        <div class="content-item loading-text">Fetching live proposals...</div>
+        <div class="content-item loading-text">Your copilots will populate this with real data</div>
+      </div>
+
+      <div class="content-section">
+        <div class="content-title">Projects in Progress</div>
+        <div class="content-item loading-text">Retrieving active projects...</div>
+        <div class="content-item loading-text">Dynamic project data coming soon</div>
+      </div>
+
+      <div class="content-section">
+        <div class="content-title">Performance Metrics</div>
+        <div class="content-item loading-text">Calculating live metrics...</div>
+        <div class="content-item loading-text">Real-time metrics will appear here</div>
+      </div>
+
+      <div class="content-section">
+        <div class="content-title">Strategic Insights</div>
+        <div class="content-item loading-text">Loading strategic insights...</div>
+        <div class="content-item loading-text">Personalized content will be generated</div>
+      </div>
+
+      <div class="content-section">
+        <div class="content-title">Recommendations</div>
+        <div class="content-item loading-text">Loading recommendations...</div>
+        <div class="content-item loading-text">AI-powered suggestions will appear here</div>
+      </div>
+
+      <div class="integration-gateway" onclick="toggleIntegrationGateway()" style="cursor: pointer;">
+        <div class="gateway-title">Integration Gateway</div>
+        <div class="gateway-subtitle">S2DO</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Integration Gateway Expandable Panel -->
+  <div class="gateway-panel" id="gatewayPanel" style="display: none; position: fixed; left: 20px; top: 100px; width: 350px; height: 600px; background: rgba(0,0,0,0.95); border: 2px solid rgba(78,205,196,0.5); border-radius: 15px; backdrop-filter: blur(20px); padding: 20px; z-index: 1000; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(78,205,196,0.3);">
+      <div style="color: #4ecdc4; font-weight: 900; font-size: 16px;">🔗 Integration Gateway</div>
+      <button onclick="closeIntegrationGateway()" style="background: none; border: none; color: #ff6b6b; cursor: pointer; font-size: 18px;">✕</button>
+    </div>
+    
+    <!-- Simple Menu Bar -->
+    <div style="display: flex; gap: 5px; margin-bottom: 20px; font-size: 10px;">
+      <button class="gateway-menu-btn active" onclick="showGatewaySection('zapier')">Zapier</button>
+      <button class="gateway-menu-btn" onclick="showGatewaySection('mcp')">MCP</button>
+      <button class="gateway-menu-btn" onclick="showGatewaySection('didc')">DIDC</button>
+      <button class="gateway-menu-btn" onclick="showGatewaySection('tools')">Tools</button>
+    </div>
+
+    <!-- Zapier Section -->
+    <div id="gateway-zapier" class="gateway-section">
+      <div style="color: #0bb1bb; font-weight: 600; margin-bottom: 10px;">🔌 Zapier Connectors</div>
+      <div style="background: rgba(11,177,187,0.1); border: 1px solid rgba(11,177,187,0.3); padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+        <div style="font-size: 24px; font-weight: 900; color: #0bb1bb; text-align: center;">8,600</div>
+        <div style="color: #aaa; font-size: 10px; text-align: center;">Active Integrations</div>
+      </div>
+      <div style="font-size: 11px; color: #ccc; line-height: 1.4;">
+        • Slack • Teams • GitHub • Salesforce<br>
+        • Google Workspace • Office 365<br>
+        • Trello • Asana • Monday.com<br>
+        • HubSpot • Pipedrive • Zoom<br>
+        • + 8,588 more active connectors
+      </div>
+    </div>
+
+    <!-- MCP Section -->
+    <div id="gateway-mcp" class="gateway-section" style="display: none;">
+      <div style="color: #667eea; font-weight: 600; margin-bottom: 10px;">🏢 MCP Organizations</div>
+      <div style="background: rgba(102,126,234,0.1); border: 1px solid rgba(102,126,234,0.3); padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+        <div style="font-size: 24px; font-weight: 900; color: #667eea; text-align: center;">10,000+</div>
+        <div style="color: #aaa; font-size: 10px; text-align: center;">Enterprise Organizations</div>
+      </div>
+      <div style="font-size: 11px; color: #ccc; line-height: 1.4;">
+        • mcp.microsoft.2100.cool<br>
+        • mcp.google.2100.cool<br>
+        • mcp.amazon.2100.cool<br>
+        • mcp.tesla.2100.cool<br>
+        • mcp.nvidia.2100.cool<br>
+        • + 9,995 more organizations
+      </div>
+    </div>
+
+    <!-- DIDC Section -->
+    <div id="gateway-didc" class="gateway-section" style="display: none;">
+      <div style="color: #ff6b6b; font-weight: 600; margin-bottom: 10px;">📊 DIDC Archives</div>
+      <div style="background: rgba(255,107,107,0.1); border: 1px solid rgba(255,107,107,0.3); padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+        <div style="font-size: 20px; font-weight: 900; color: #ff6b6b; text-align: center;">850K → 150M</div>
+        <div style="color: #aaa; font-size: 10px; text-align: center;">Intelligence Records</div>
+      </div>
+      <div style="font-size: 11px; color: #ccc; line-height: 1.4;">
+        • Dynamic collaboration archives<br>
+        • Multi-agent workflow data<br>
+        • Tech stack configurations<br>
+        • Lifecycle parameters<br>
+        • Smart contract records<br>
+        • Tower Blockchain integration
+      </div>
+    </div>
+
+    <!-- Tools Section -->
+    <div id="gateway-tools" class="gateway-section" style="display: none;">
+      <div style="color: #50c878; font-weight: 600; margin-bottom: 10px;">⚡ S2DO Tools</div>
+      <input type="text" placeholder="Search tools..." style="width: 100%; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px; border-radius: 6px; margin-bottom: 15px; font-size: 11px;">
+      <div style="font-size: 11px; color: #ccc; line-height: 1.6;">
+        • Workflow Automation<br>
+        • Data Processing<br>
+        • API Management<br>
+        • Security Protocols<br>
+        • Analytics Engine<br>
+        • Voice Integration<br>
+        • Blockchain Interface<br>
+        • AI Model Orchestration
+      </div>
+    </div>
+
+    <!-- Trinity PCP Always Available -->
+    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+      <div style="color: #ffd700; font-size: 10px; font-weight: 600; margin-bottom: 5px;">🔱 Trinity PCP Available</div>
+      <div style="font-size: 9px; color: #aaa;">Dr. Lucy • Dr. Claude • Victory36</div>
+    </div>
+  </div>
+
+  <!-- Settings Panel -->
+  <div class="settings-panel" id="settingsPanel" style="display: none; position: fixed; left: 20px; top: 100px; width: 350px; height: 600px; background: rgba(0,0,0,0.95); border: 2px solid rgba(255,215,0,0.5); border-radius: 15px; backdrop-filter: blur(20px); padding: 20px; z-index: 1000; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,215,0,0.3);">
+      <div style="color: #ffd700; font-weight: 900; font-size: 16px;">⚙️ Settings</div>
+      <button onclick="closeSettings()" style="background: none; border: none; color: #ff6b6b; cursor: pointer; font-size: 18px;">✕</button>
+    </div>
+    
+    <!-- Simple Menu Bar -->
+    <div style="display: flex; gap: 5px; margin-bottom: 20px; font-size: 10px;">
+      <button class="settings-menu-btn active" onclick="showSettingsSection('account')">Account</button>
+      <button class="settings-menu-btn" onclick="showSettingsSection('security')">Security</button>
+      <button class="settings-menu-btn" onclick="showSettingsSection('integrations')">Integrations</button>
+      <button class="settings-menu-btn" onclick="showSettingsSection('advanced')">Advanced</button>
+    </div>
+
+    <div id="settings-sections">
+      <!-- Account Section -->
+      <div id="settings-account" class="settings-section">
+        <div style="color: #ffd700; font-weight: 600; margin-bottom: 15px;">👤 Account Settings</div>
+        <div style="font-size: 11px; color: #ccc; line-height: 1.6;">
+          • Profile Management<br>
+          • Diamond SAO Authority Level<br>
+          • Subscription Status<br>
+          • Usage Analytics<br>
+          • Billing & Payments<br>
+          • Team Management
+        </div>
+      </div>
+
+      <!-- Security Section -->
+      <div id="settings-security" class="settings-section" style="display: none;">
+        <div style="color: #ffd700; font-weight: 600; margin-bottom: 15px;">🛡️ Security Settings</div>
+        <div style="font-size: 11px; color: #ccc; line-height: 1.6;">
+          • Two-Factor Authentication<br>
+          • API Key Management<br>
+          • Access Control<br>
+          • Victory36 Protection Level<br>
+          • Audit Logs<br>
+          • Security Alerts
+        </div>
+      </div>
+
+      <!-- Integrations Section -->
+      <div id="settings-integrations" class="settings-section" style="display: none;">
+        <div style="color: #ffd700; font-weight: 600; margin-bottom: 15px;">🔗 Integration Settings</div>
+        <div style="font-size: 11px; color: #ccc; line-height: 1.6;">
+          • Zapier Configuration<br>
+          • MCP Organization Setup<br>
+          • DIDC Archive Settings<br>
+          • Voice Integration<br>
+          • Webhook Management<br>
+          • API Rate Limits
+        </div>
+      </div>
+
+      <!-- Advanced Section -->
+      <div id="settings-advanced" class="settings-section" style="display: none;">
+        <div style="color: #ffd700; font-weight: 600; margin-bottom: 15px;">⚡ Advanced Settings</div>
+        <div style="font-size: 11px; color: #ccc; line-height: 1.6;">
+          • System Performance<br>
+          • Debug Mode<br>
+          • Developer Tools<br>
+          • Backup & Recovery<br>
+          • Custom Configurations<br>
+          • Experimental Features
+        </div>
+      </div>
+    </div>
+
+    <!-- Trinity PCP Always Available -->
+    <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid rgba(255,255,255,0.1);">
+      <div style="color: #ffd700; font-size: 10px; font-weight: 600; margin-bottom: 5px;">🔱 Trinity PCP Available</div>
+      <div style="font-size: 9px; color: #aaa;">Dr. Lucy • Dr. Claude • Victory36</div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Global State
+    let activeCopilot = 'QB';
+    let isVoiceActive = false;
+    let conversationHistory = [];
+
+    // Voice Recognition Setup
+    let recognition;
+    if ('webkitSpeechRecognition' in window) {
+      recognition = new webkitSpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+      
+      recognition.onresult = function(event) {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            transcript += event.results[i][0].transcript;
+          }
+        }
+        if (transcript.trim()) {
+          document.getElementById('messageInput').value = transcript;
+          sendMessage();
+        }
+      };
+      
+      recognition.onend = function() {
+        if (isVoiceActive) {
+          recognition.start();
+        }
+      };
+    }
+
+    // Toggle Voice Recognition
+    function toggleVoice() {
+      const voiceBtn = document.getElementById('voiceBtn');
+      
+      if (!recognition) {
+        addMessage('system', 'Voice recognition not supported in this browser.');
+        return;
+      }
+      
+      if (isVoiceActive) {
+        isVoiceActive = false;
+        recognition.stop();
+        voiceBtn.classList.remove('active');
+        voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+        addMessage('system', '🎤 Voice command deactivated');
+      } else {
+        isVoiceActive = true;
+        recognition.start();
+        voiceBtn.classList.add('active');
+        voiceBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+        addMessage('system', '🎤 Voice command activated - speak your command');
+      }
+    }
+
+    // Send Message
+    function sendMessage() {
+      const input = document.getElementById('messageInput');
+      const message = input.value.trim();
+      
+      if (!message) return;
+      
+      addMessage('user', message);
+      input.value = '';
+      
+      // Process with active copilot
+      processMessage(message);
+    }
+
+    // Handle Key Press
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    // Add Message to Conversation
+    function addMessage(sender, content) {
+      const display = document.getElementById('conversationDisplay');
+      const messageDiv = document.createElement('div');
+      const timestamp = new Date().toLocaleTimeString();
+      
+      let senderName, messageClass;
+      
+      if (sender === 'user') {
+        senderName = '💎 Diamond SAO (0000001)';
+        messageClass = 'user';
+      } else if (sender === 'system') {
+        senderName = '🔧 System Command';
+        messageClass = 'system';
+      } else {
+        senderName = getCopilotName(sender);
+        messageClass = 'copilot';
+      }
+      
+      messageDiv.className = `message ${messageClass}`;
+      messageDiv.innerHTML = `
+        <div class="message-header">${senderName} • ${timestamp}</div>
+        <div class="message-content">${content}</div>
+      `;
+      
+      display.appendChild(messageDiv);
+      display.scrollTop = display.scrollHeight;
+      
+      conversationHistory.push({ sender, content, timestamp });
+    }
+
+    // Process Message
+    function processMessage(message) {
+      // Check for Diamond CLI commands
+      if (message.toLowerCase().startsWith('diamond ')) {
+        executeCommand(message);
+        return;
+      }
+      
+      // Route to active copilot and trigger speaking animation
+      triggerSpeaking(activeCopilot);
+      
+      setTimeout(() => {
+        const response = generateCopilotResponse(activeCopilot, message);
+        addMessage(activeCopilot, response);
+        stopSpeaking(activeCopilot);
+      }, 2000);
+    }
+
+    // Trigger Speaking Animation
+    function triggerSpeaking(copilotId) {
+      const hexagonMap = {
+        'QB': 'qb-hexagon',
+        'LUCY': 'lucy-hexagon',
+        'SH': 'sh-hexagon',
+        'CLAUDE': 'claude-hexagon',
+        'V36': 'victory-hexagon'
+      };
+      
+      const hexagon = document.getElementById(hexagonMap[copilotId]);
+      if (hexagon) {
+        hexagon.classList.add('speaking');
+      }
+    }
+
+    // Stop Speaking Animation
+    function stopSpeaking(copilotId) {
+      const hexagonMap = {
+        'QB': 'qb-hexagon',
+        'LUCY': 'lucy-hexagon',
+        'SH': 'sh-hexagon',
+        'CLAUDE': 'claude-hexagon',
+        'V36': 'victory-hexagon'
+      };
+      
+      const hexagon = document.getElementById(hexagonMap[copilotId]);
+      if (hexagon) {
+        hexagon.classList.remove('speaking');
+      }
+    }
+
+    // Select Copilot
+    function selectCopilot(copilotId) {
+      // Remove active class from all cards
+      document.querySelectorAll('.copilot-card').forEach(card => {
+        card.classList.remove('active');
+      });
+      
+      // Add active class to selected card
+      event.target.closest('.copilot-card').classList.add('active');
+      
+      activeCopilot = copilotId;
+      const copilotName = getCopilotName(copilotId);
+      document.getElementById('activeStatus').textContent = `${copilotName} Active`;
+      
+      addMessage('system', `🔱 ${copilotName} activated as primary copilot`);
+    }
+
+    // Get Copilot Name
+    function getCopilotName(copilotId) {
+      const names = {
+        'QB': '🎯 QB RIX',
+        'LUCY': '🧠 Dr. Lucy sRIX',
+        'SH': '⚡ SH RIX',
+        'CLAUDE': '🔮 Dr. Claude sRIX',
+        'V36': '🛡️ V36 Victory36 MAESTRO'
+      };
+      return names[copilotId] || '🔱 Diamond Copilot';
+    }
+
+    // Generate Copilot Response
+    function generateCopilotResponse(copilotId, message) {
+      const responses = {
+        'QB': [
+          '📈 Analyzing your request through quantum business intelligence. I see multiple exponential growth opportunities with optimal ROI pathways.',
+          '🎯 From a strategic perspective, this aligns perfectly with our diamond-level objectives. Let me outline the quantum advantage approach.',
+          '💰 Excellent command! Processing market dynamics and competitive advantages. The quantum analysis reveals unprecedented success vectors.'
+        ],
+        'LUCY': [
+          '🧠 Fascinating analysis required here. The deep learning patterns suggest several innovative breakthrough approaches worth exploring.',
+          '📚 I\'ve processed extensive research on this topic. The implications are profound with multiple strategic implementation pathways.',
+          '🔍 Your inquiry requires methodical precision across interconnected systems. Allow me to provide comprehensive intelligence insights.'
+        ],
+        'SH': [
+          '⚡ Strategic handling protocols engaged. This requires coordinated approach with multiple stakeholder considerations.',
+          '🎪 Processing strategic options with dynamic handling capabilities. Multiple pathways available for optimization.',
+          '🚀 Strategic handler analysis complete. Ready to orchestrate multi-dimensional implementation strategy.'
+        ],
+        'CLAUDE': [
+          '🔮 Deep AI analysis reveals complex interdependencies. This requires sophisticated reasoning across multiple domains.',
+          '🤖 Advanced cognitive processing initiated. The patterns suggest innovative solutions with high probability success rates.',
+          '💫 AI specialist assessment shows breakthrough potential. Ready to provide detailed technical implementation guidance.'
+        ],
+        'V36': [
+          '🛡️ Victory36 protection analysis complete. Your request aligns with maximum security protocols and operational safety.',
+          '⚔️ Threat assessment shows optimal conditions. Your Diamond SAO authority ensures maximum clearance for this operation.',
+          '🔒 Ultimate protection engaged at quantum level. Monitoring all vectors to ensure absolute success and security.'
+        ]
+      };
+      
+      const copilotResponses = responses[copilotId] || responses['QB'];
+      return copilotResponses[Math.floor(Math.random() * copilotResponses.length)];
+    }
+
+    // Execute Diamond CLI Commands
+    function executeCommand(command) {
+      addMessage('system', `⚡ Executing Diamond CLI: ${command}`);
+      
+      setTimeout(() => {
+        if (command.includes('status')) {
+          addMessage('system', `
+            💎 Diamond SAO System Status Report:<br><br>
+            • Authority Level: UNLIMITED (0000001) ✅<br>
+            • MCP Network: FULLY OPERATIONAL ✅<br>
+            • WFA Swarm: ENVIRONMENT_VARIABLE_REQUIRED agents ACTIVE ✅<br>
+            • Victory36 Protection: MAXIMUM QUANTUM ✅<br>
+            • Super Trinity: ALL SYSTEMS ONLINE ✅<br>
+            • Testament Swarm: CONNECTED ✅
+          `);
+        } else if (command.includes('deploy')) {
+          addMessage('system', '🚀 Diamond SAO deployment sequence initiated. All systems operational at quantum speed.');
+        } else {
+          addMessage('system', `✅ Diamond CLI command "${command}" executed successfully with unlimited authority.`);
+        }
+      }, 1500);
+    }
+
+    // Integration Gateway Functions
+    function toggleIntegrationGateway() {
+      const panel = document.getElementById('gatewayPanel');
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+      if (panel.style.display === 'block') {
+        addMessage('system', '🔗 Integration Gateway S2DO opened - 8,600 Zapier connectors active');
+      }
+    }
+
+    function closeIntegrationGateway() {
+      document.getElementById('gatewayPanel').style.display = 'none';
+      addMessage('system', '🔗 Integration Gateway S2DO closed');
+    }
+
+    function showGatewaySection(section) {
+      // Hide all sections
+      document.querySelectorAll('.gateway-section').forEach(el => el.style.display = 'none');
+      // Show selected section
+      document.getElementById(`gateway-${section}`).style.display = 'block';
+      // Update menu buttons
+      document.querySelectorAll('.gateway-menu-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    // Settings Functions
+    function toggleSettings() {
+      const panel = document.getElementById('settingsPanel');
+      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+      if (panel.style.display === 'block') {
+        addMessage('system', '⚙️ Settings panel opened - Trinity PCP available for assistance');
+      }
+    }
+
+    function closeSettings() {
+      document.getElementById('settingsPanel').style.display = 'none';
+      addMessage('system', '⚙️ Settings panel closed');
+    }
+
+    function showSettingsSection(section) {
+      // Hide all sections
+      document.querySelectorAll('.settings-section').forEach(el => el.style.display = 'none');
+      // Show selected section
+      document.getElementById(`settings-${section}`).style.display = 'block';
+      // Update menu buttons
+      document.querySelectorAll('.settings-menu-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    // Navigation Handler
+    function handleNavigation(action) {
+      switch(action) {
+        case 'settings':
+          toggleSettings();
+          break;
+        case 'gift-shop':
+          addMessage('system', '🎁 Gift Shop e-commerce platform activated - Trinity PCP ready to assist with purchases');
+          break;
+        case 'pilot-lounge':
+          addMessage('system', '✈️ Pilot Lounge configuration center opened - Learn about pilot options with PCP guidance');
+          break;
+        case 'innovation':
+        case 'automation':
+        case 'roi-dashboard':
+        case 'wish-your-wish':
+        case 'academy':
+          // Trigger Solutions - Lock other options and require QB consultation
+          addMessage('system', `⚡ Trigger solution "${action}" activated - QB RIX consultation required before other triggers can be accessed`);
+          addMessage('QB', 'I see you\'ve activated a trigger solution. Let me guide you through what this includes and ensure you\'re ready to proceed with the S2DO delivery of 5 projects per day plus comprehensive business planning.');
+          break;
+        default:
+          addMessage('system', `📋 ${action} section activated - Trinity PCP standing by`);
+      }
+    }
+
+    // Add CSS for menu buttons
+    const style = document.createElement('style');
+    style.textContent = `
+      .gateway-menu-btn, .settings-menu-btn {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: #ccc;
+        padding: 4px 8px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 10px;
+        transition: all 0.3s;
+      }
+      .gateway-menu-btn.active, .settings-menu-btn.active {
+        background: rgba(78,205,196,0.3);
+        border-color: #4ecdc4;
+        color: #4ecdc4;
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Update navigation click handlers
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add click handlers to navigation items
+      const navItems = document.querySelectorAll('.nav-item');
+      navItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          const text = this.querySelector('span').textContent.toLowerCase().replace(/\s+/g, '-');
+          handleNavigation(text);
+        });
+      });
+    });
+
+    // Initialize System
+    document.addEventListener('DOMContentLoaded', function() {
+      addMessage('system', '💎 Diamond SAO Owner Console fully initialized');
+      addMessage('system', '🔱 All Super Trinity Copilots synchronized and ready');
+      addMessage('system', '🎤 Voice command system ready - click microphone to activate');
+      addMessage('system', '🔗 Integration Gateway S2DO: 8,600 Zapier connectors | 10,000+ MCP orgs | 850K→150M DIDC records');
+      addMessage('system', '⚡ All tools activated for passive data collection - PCP will introduce when viable');
+      
+      // Auto-select QB RIX as default
+      setTimeout(() => {
+        document.querySelector('.qb-card').classList.add('active');
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://coaching2100.com/sitemap.xml
+
+# Security - Block sensitive paths
+Disallow: /admin
+Disallow: /auth
+Disallow: /api
+Disallow: /.env
+Disallow: /config
+
+# SEO friendly
+Allow: /services
+Allow: /about
+Allow: /contact

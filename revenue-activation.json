@@ -1,0 +1,24 @@
+{
+    "pipeline_configuration": {
+        "target_companies": "20000_to_30000",
+        "exclusions": ["coaching_firms", "big_tech", "big_four_consulting"],
+        "revenue_target": {
+            "minimum": "$3.3M",
+            "expected": "$9.6M",
+            "maximum": "$15.9M"
+        },
+        "sector_demos": {
+            "total": 90,
+            "priority": 50,
+            "automation_level": "full",
+            "delivery_method": "ai_automated"
+        },
+        "conversion_strategy": {
+            "landing_pages": "quantum_optimized",
+            "pcp_handoff": "seamless",
+            "victory36_trust": "maximum"
+        },
+        "activation_timestamp": "2025-08-28T01:14:44Z",
+        "commander": "Phillip Corey Roark"
+    }
+}

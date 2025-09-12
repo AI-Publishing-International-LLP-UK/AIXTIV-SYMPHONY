@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sally Port - ASOOS Instance Gateway</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Animated Background Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      animation: float 15s infinite ease-in-out;
+      opacity: 0.6;
+    }
+
+    .particle:nth-child(3n) {
+      width: 6px;
+      height: 6px;
+      background: radial-gradient(circle, rgba(80, 200, 120, 0.8), rgba(80, 200, 120, 0.2));
+      animation-duration: 12s;
+    }
+
+    .particle:nth-child(3n+1) {
+      width: 4px;
+      height: 4px;
+      background: radial-gradient(circle, rgba(11, 177, 187, 0.6), rgba(11, 177, 187, 0.1));
+      animation-duration: 18s;
+    }
+
+    .particle:nth-child(3n+2) {
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.7), rgba(255, 215, 0, 0.2));
+      animation-duration: 20s;
+    }
+
+    @keyframes float {
+      0%, 100% { 
+        transform: translateY(0) translateX(0) rotate(0deg) scale(1); 
+        opacity: 0.6; 
+      }
+      25% { 
+        transform: translateY(-20px) translateX(10px) rotate(90deg) scale(1.2); 
+        opacity: 0.8; 
+      }
+      50% { 
+        transform: translateY(-10px) translateX(-15px) rotate(180deg) scale(0.8); 
+        opacity: 0.4; 
+      }
+      75% { 
+        transform: translateY(15px) translateX(5px) rotate(270deg) scale(1.1); 
+        opacity: 0.7; 
+      }
+    }
+
+    /* Main Container */
+    .main-container {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* Sally Port Header */
+    .sally-port-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .sally-port-logo {
+      font-size: 48px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #FFD700, #50C878, #0bb1bb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .sally-port-tagline {
+      font-size: 18px;
+      color: #0bb1bb;
+      font-weight: 500;
+      margin-bottom: 5px;
+    }
+
+    .sally-port-subtitle {
+      font-size: 14px;
+      color: #888;
+      font-weight: 400;
+    }
+
+    /* Instance Creation Panel */
+    .instance-panel {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(80, 200, 120, 0.3);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .creation-status {
+      display: none;
+      margin-bottom: 30px;
+    }
+
+    .creation-status.active {
+      display: block;
+    }
+
+    .status-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      background: linear-gradient(135deg, #50C878, #0bb1bb);
+      animation: pulse 2s infinite;
+    }
+
+    .status-icon.creating {
+      background: linear-gradient(135deg, #FFD700, #FF6B35);
+      animation: spin 2s linear infinite;
+    }
+
+    .status-icon.success {
+      background: linear-gradient(135deg, #50C878, #0bb1bb);
+      animation: bounce 1s ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 60%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      80% { transform: translateY(-5px); }
+    }
+
+    .status-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #50C878;
+      margin-bottom: 10px;
+    }
+
+    .status-message {
+      font-size: 16px;
+      color: #aaa;
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #50C878, #0bb1bb);
+      width: 0%;
+      transition: width 0.5s ease;
+      border-radius: 3px;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 20px;
+    }
+
+    /* Sapphire Badge */
+    .sapphire-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: rgba(80, 200, 120, 0.2);
+      border: 2px solid rgba(80, 200, 120, 0.4);
+      border-radius: 25px;
+      margin-bottom: 20px;
+    }
+
+    .sapphire-icon {
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #50C878, #0bb1bb);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .sapphire-text {
+      color: #50C878;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    /* Form Fields */
+    .input-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 14px;
+      color: #0bb1bb;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .input-field:focus {
+      border-color: #50C878;
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 0 3px rgba(80, 200, 120, 0.2);
+    }
+
+    .input-field::placeholder {
+      color: #888;
+    }
+
+    /* Buttons */
+    .create-button {
+      background: linear-gradient(135deg, #50C878, #0bb1bb);
+      border: none;
+      color: white;
+      padding: 16px 40px;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(80, 200, 120, 0.4);
+      width: 100%;
+      margin-bottom: 15px;
+    }
+
+    .create-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(80, 200, 120, 0.6);
+    }
+
+    .create-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .launch-button {
+      background: linear-gradient(135deg, #FFD700, #FF6B35);
+      border: none;
+      color: #000;
+      padding: 16px 40px;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+      width: 100%;
+    }
+
+    .launch-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+    }
+
+    /* Features List */
+    .features-list {
+      text-align: left;
+      margin: 20px 0;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    .feature-check {
+      width: 16px;
+      height: 16px;
+      background: #50C878;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .sally-port-logo {
+        font-size: 36px;
+      }
+
+      .sally-port-tagline {
+        font-size: 16px;
+      }
+
+      .instance-panel {
+        padding: 30px 20px;
+        margin: 0 10px;
+      }
+
+      .status-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+      }
+
+      .status-title {
+        font-size: 20px;
+      }
+    }
+
+    /* Footer */
+    .sally-port-footer {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 12px;
+      color: #666;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="particles" id="particles"></div>
+
+  <div class="main-container">
+    <!-- Sally Port Header -->
+    <div class="sally-port-header">
+      <div class="sally-port-logo">SALLY PORT</div>
+      <div class="sally-port-tagline">ASOOS Instance Gateway</div>
+      <div class="sally-port-subtitle">Your Gateway to Professional AI Operations</div>
+    </div>
+
+    <!-- Instance Creation Panel -->
+    <div class="instance-panel">
+      <!-- Initial Form -->
+      <div id="initialForm" class="creation-status active">
+        <div class="sapphire-badge">
+          <div class="sapphire-icon">💎</div>
+          <div class="sapphire-text">Sapphire Professional Access</div>
+        </div>
+
+        <div class="status-title">Create Your ASOOS Instance</div>
+        <div class="status-message">
+          Get instant access to your personal AI copilots, automation tools, and professional dashboard.
+        </div>
+
+        <div class="features-list">
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            <span>Personal AI Copilots (Dr. Lucy, Dr. Claude, Victory36)</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            <span>Full Professional Dashboard & Analytics</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            <span>Automation & Workflow Tools</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            <span>Integration Gateway & Enterprise APIs</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-check">✓</div>
+            <span>Testament Swarm Intelligence Access</span>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="userEmail">Email Address</label>
+          <input type="email" id="userEmail" class="input-field" placeholder="your@email.com" required>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="userName">Full Name</label>
+          <input type="text" id="userName" class="input-field" placeholder="Your full name" required>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="companyName">Company/Organization (Optional)</label>
+          <input type="text" id="companyName" class="input-field" placeholder="Your company name">
+        </div>
+
+        <button class="create-button" onclick="createSapphireInstance()">
+          Create My Sapphire Instance
+        </button>
+
+        <div style="font-size: 12px; color: #666; margin-top: 10px;">
+          Free professional access • No credit card required • Instant setup
+        </div>
+      </div>
+
+      <!-- Creating Status -->
+      <div id="creatingStatus" class="creation-status">
+        <div class="status-icon creating">⚙️</div>
+        <div class="status-title">Creating Your Instance...</div>
+        <div class="status-message" id="creatingMessage">
+          Initializing your personal ASOOS environment...
+        </div>
+        
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressBar"></div>
+        </div>
+        <div class="progress-text" id="progressText">Setting up infrastructure...</div>
+      </div>
+
+      <!-- Success Status -->
+      <div id="successStatus" class="creation-status">
+        <div class="status-icon success">🎉</div>
+        <div class="status-title">Instance Created Successfully!</div>
+        <div class="status-message">
+          Your Sapphire-level ASOOS instance is ready. You now have full access to professional AI tools and automation.
+        </div>
+
+        <div class="sapphire-badge" style="margin-bottom: 30px;">
+          <div class="sapphire-icon">💎</div>
+          <div class="sapphire-text">Sapphire Professional - Full Access</div>
+        </div>
+
+        <button class="launch-button" onclick="launchInstance()">
+          Launch My ASOOS Instance
+        </button>
+
+        <div style="font-size: 12px; color: #666; margin-top: 15px;">
+          Instance ID: <span id="instanceId"></span><br>
+          Security Level: Sapphire Professional<br>
+          Authorization Level: 5 (Full Access)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="sally-port-footer">
+    Sally Port Gateway • Powered by ASOOS Symphony Operating System<br>
+    Connecting you to the future of AI-powered professional operations
+  </div>
+
+  <script>
+    // Initialize particles
+    function initializeParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 50;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.animationDuration = (12 + Math.random() * 8) + 's';
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    // Instance creation steps
+    const creationSteps = [
+      { message: "Allocating cloud resources...", duration: 1000 },
+      { message: "Setting up AI copilots...", duration: 1500 },
+      { message: "Configuring Sapphire access level...", duration: 1000 },
+      { message: "Connecting to Testament Swarm...", duration: 2000 },
+      { message: "Initializing dashboard and tools...", duration: 1200 },
+      { message: "Applying security configurations...", duration: 800 },
+      { message: "Finalizing your instance...", duration: 1000 }
+    ];
+
+    // Generate unique instance ID
+    function generateInstanceId() {
+      const timestamp = Date.now().toString(36);
+      const randomStr = Math.random().toString(36).substring(2, 8);
+      return `SAPP-${timestamp}-${randomStr}`.toUpperCase();
+    }
+
+    // Create Sapphire Instance
+    async function createSapphireInstance() {
+      const email = document.getElementById('userEmail').value;
+      const name = document.getElementById('userName').value;
+      const company = document.getElementById('companyName').value;
+
+      // Basic validation
+      if (!email || !name) {
+        alert('Please fill in all required fields');
+        return;
+      }
+
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address');
+        return;
+      }
+
+      // Hide initial form, show creating status
+      document.getElementById('initialForm').classList.remove('active');
+      document.getElementById('creatingStatus').classList.add('active');
+
+      // Generate instance ID
+      const instanceId = generateInstanceId();
+
+      // Run through creation steps
+      let currentStep = 0;
+      let totalProgress = 0;
+
+      for (const step of creationSteps) {
+        // Update message
+        document.getElementById('creatingMessage').textContent = step.message;
+        document.getElementById('progressText').textContent = step.message;
+
+        // Update progress
+        totalProgress = ((currentStep + 1) / creationSteps.length) * 100;
+        document.getElementById('progressBar').style.width = totalProgress + '%';
+
+        // Wait for step duration
+        await new Promise(resolve => setTimeout(resolve, step.duration));
+        currentStep++;
+      }
+
+      // Create instance data
+      const instanceData = {
+        instanceId: instanceId,
+        userEmail: email,
+        userName: name,
+        companyName: company || null,
+        securityLevel: 'sapphire',
+        authorizationLevel: 5,
+        accessLevel: 'professional_full',
+        createdAt: new Date().toISOString(),
+        status: 'active',
+        features: {
+          aiCopilots: true,
+          dashboard: true,
+          automation: true,
+          integrations: true,
+          testamentSwarm: true,
+          voiceInterface: true,
+          cliAccess: true
+        },
+        copilots: {
+          drLucy: { type: 'QB_RIX', status: 'active' },
+          drClaude: { type: 'SH_RIX', status: 'active' },
+          victory36: { type: 'Q_RIX', status: 'active' }
+        }
+      };
+
+      // Store instance data (in production, this would go to your backend)
+      localStorage.setItem('asoos_instance_' + instanceId, JSON.stringify(instanceData));
+      localStorage.setItem('asoos_current_user', JSON.stringify({
+        email: email,
+        name: name,
+        instanceId: instanceId,
+        securityLevel: 'sapphire',
+        authLevel: 5
+      }));
+
+      // Show success
+      document.getElementById('creatingStatus').classList.remove('active');
+      document.getElementById('successStatus').classList.add('active');
+      document.getElementById('instanceId').textContent = instanceId;
+
+      // In production, you would also:
+      // 1. Call your backend API to create the actual instance
+      // 2. Set up the user's database
+      // 3. Configure their AI copilots
+      // 4. Send welcome email
+      console.log('Sapphire Instance Created:', instanceData);
+    }
+
+    // Launch Instance
+    function launchInstance() {
+      const userData = JSON.parse(localStorage.getItem('asoos_current_user') || '{}');
+      
+      if (userData.instanceId) {
+        // In production, redirect to the user's instance
+        // For now, redirect to the main ASOOS interface
+        window.location.href = `./index.html?instance=${userData.instanceId}&level=sapphire&auth=5`;
+      } else {
+        alert('Error: Instance data not found. Please try creating again.');
+      }
+    }
+
+    // Check for existing session on load
+    window.addEventListener('DOMContentLoaded', function() {
+      initializeParticles();
+
+      // Check if user already has an active instance
+      const userData = JSON.parse(localStorage.getItem('asoos_current_user') || '{}');
+      if (userData.instanceId) {
+        // User has existing instance, show quick launch option
+        document.getElementById('initialForm').innerHTML = `
+          <div class="sapphire-badge">
+            <div class="sapphire-icon">💎</div>
+            <div class="sapphire-text">Welcome Back, ${userData.name}</div>
+          </div>
+          <div class="status-title">Your Instance is Ready</div>
+          <div class="status-message">
+            You already have an active Sapphire instance. Click below to launch it.
+          </div>
+          <button class="launch-button" onclick="launchInstance()">
+            Launch My ASOOS Instance
+          </button>
+          <div style="margin-top: 20px;">
+            <button onclick="createNewInstance()" style="background: transparent; border: 1px solid #666; color: #666; padding: 8px 16px; border-radius: 15px; cursor: pointer; font-size: 12px;">
+              Create New Instance
+            </button>
+          </div>
+        `;
+      }
+
+      // Check for referral parameters (for Opal/Onyx designation)
+      const urlParams = new URLSearchParams(window.location.search);
+      const referralCode = urlParams.get('ref');
+      const designatedLevel = urlParams.get('level');
+
+      if (referralCode && (designatedLevel === 'opal' || designatedLevel === 'onyx')) {
+        // Handle enterprise referral for Opal/Onyx
+        handleEnterpriseReferral(referralCode, designatedLevel);
+      }
+    });
+
+    // Create new instance (clears existing)
+    function createNewInstance() {
+      localStorage.removeItem('asoos_current_user');
+      location.reload();
+    }
+
+    // Handle enterprise referrals for Opal/Onyx
+    function handleEnterpriseReferral(referralCode, level) {
+      const levelInfo = {
+        opal: { name: 'Opal Enterprise', icon: '🔷', color: '#4169E1' },
+        onyx: { name: 'Onyx Team', icon: '⚫', color: '#36454F' }
+      };
+
+      const info = levelInfo[level];
+      if (info) {
+        // Update the interface for enterprise referral
+        document.querySelector('.sapphire-badge').innerHTML = `
+          <div class="sapphire-icon" style="background: ${info.color};">${info.icon}</div>
+          <div class="sapphire-text" style="color: ${info.color};">${info.name} Access</div>
+        `;
+
+        document.querySelector('.status-title').textContent = `Create Your ${info.name} Instance`;
+        document.querySelector('.create-button').textContent = `Create My ${info.name} Instance`;
+
+        // Add referral info fields
+        const extraFields = `
+          <div class="input-group">
+            <label class="input-label">Referral Code</label>
+            <input type="text" class="input-field" value="${referralCode}" readonly>
+          </div>
+        `;
+        document.querySelector('.input-group:last-of-type').insertAdjacentHTML('afterend', extraFields);
+      }
+    }
+  </script>
+</body>
+</html>

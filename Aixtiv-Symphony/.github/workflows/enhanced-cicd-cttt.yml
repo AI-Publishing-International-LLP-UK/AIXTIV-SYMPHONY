@@ -1,0 +1,468 @@
+name: Enhanced CI/CD CTTT with Self-Healing & Monitoring
+
+on:
+  push:
+    branches: [ main, develop, staging ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '*/15 * * * *'  # Self-healing health checks every 15 minutes
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Force deployment even if tests fail'
+        required: false
+        default: 'false'
+      target_environment:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  PROJECT_ID: api-for-warp-drive
+  GCR_HOSTNAME: gcr.io
+  REGION_STAGING: us-west1-b
+  REGION_PRODUCTION: us-west1-a
+  SERVICE_NAME: integration-gateway-mcp
+  NODE_VERSION: '24.7.0'
+  CLOUD_ML_REGION: us-west1
+
+jobs:
+  health-check:
+    name: Self-Healing Health Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    outputs:
+      needs_healing: ${{ steps.check.outputs.needs_healing }}
+      failed_services: ${{ steps.check.outputs.failed_services }}
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        
+      - name: Health Check Services
+        id: check
+        run: |
+          echo "Checking service health..."
+          FAILED_SERVICES=""
+          NEEDS_HEALING=false
+          
+          # Check staging environment
+          STAGING_STATUS=$(gcloud run services describe $SERVICE_NAME-uswest1-staging --region=$REGION_STAGING --format="value(status.conditions[0].type)" 2>/dev/null || echo "NotFound")
+          if [ "$STAGING_STATUS" != "Ready" ]; then
+            FAILED_SERVICES="$FAILED_SERVICES staging"
+            NEEDS_HEALING=true
+            echo "Staging service unhealthy: $STAGING_STATUS"
+          fi
+          
+          # Check production environment
+          PROD_STATUS=$(gcloud run services describe $SERVICE_NAME-uswest1-fixed --region=$REGION_PRODUCTION --format="value(status.conditions[0].type)" 2>/dev/null || echo "NotFound")
+          if [ "$PROD_STATUS" != "Ready" ]; then
+            FAILED_SERVICES="$FAILED_SERVICES production"
+            NEEDS_HEALING=true
+            echo "Production service unhealthy: $PROD_STATUS"
+          fi
+          
+          # Check API endpoints
+          for env in staging production; do
+            if [ "$env" = "staging" ]; then
+              URL="https://$SERVICE_NAME-uswest1-staging-$(echo $PROJECT_ID | tr '_' '-')-uc.a.run.app/health"
+            else
+              URL="https://$SERVICE_NAME-uswest1-fixed-$(echo $PROJECT_ID | tr '_' '-')-uc.a.run.app/health"
+            fi
+            
+            HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" "$URL" --connect-timeout 30 || echo "000")
+            if [ "$HTTP_CODE" != "200" ]; then
+              FAILED_SERVICES="$FAILED_SERVICES $env-api"
+              NEEDS_HEALING=true
+              echo "$env API endpoint unhealthy: HTTP $HTTP_CODE"
+            fi
+          done
+          
+          echo "needs_healing=$NEEDS_HEALING" >> $GITHUB_OUTPUT
+          echo "failed_services=$FAILED_SERVICES" >> $GITHUB_OUTPUT
+
+  test-and-build:
+    name: Test, Build & Security Scan
+    runs-on: ubuntu-latest
+    if: github.event_name != 'schedule' || needs.health-check.outputs.needs_healing == 'true'
+    needs: [health-check]
+    condition: always()
+    outputs:
+      image_tag: ${{ steps.build.outputs.image_tag }}
+      test_results: ${{ steps.tests.outputs.results }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: |
+          npm ci --production=false
+          npm install -g newman @postman/newman-reporter-htmlextra
+          
+      - name: Run unit tests
+        id: tests
+        run: |
+          npm test -- --reporter=json --outputFile=test-results.json
+          TEST_STATUS=$?
+          
+          if [ -f test-results.json ]; then
+            PASSED=$(jq '.stats.passes' test-results.json)
+            FAILED=$(jq '.stats.failures' test-results.json)
+            echo "results=passed:$PASSED,failed:$FAILED" >> $GITHUB_OUTPUT
+          fi
+          
+          exit $TEST_STATUS
+          
+      - name: Newman API Tests
+        run: |
+          # Create basic Postman collection if it doesn't exist
+          if [ ! -f "postman/integration-tests.json" ]; then
+            mkdir -p postman
+            cat > postman/integration-tests.json << 'EOF'
+          {
+            "info": {
+              "name": "Integration Gateway API Tests",
+              "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+            },
+            "item": [
+              {
+                "name": "Health Check",
+                "request": {
+                  "method": "GET",
+                  "header": [],
+                  "url": {
+                    "raw": "{{base_url}}/health",
+                    "host": ["{{base_url}}"],
+                    "path": ["health"]
+                  }
+                },
+                "event": [
+                  {
+                    "listen": "test",
+                    "script": {
+                      "exec": [
+                        "pm.test('Status code is 200', function () {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test('Response has status property', function () {",
+                        "    pm.expect(pm.response.json()).to.have.property('status');",
+                        "});"
+                      ],
+                      "type": "text/javascript"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+          EOF
+          fi
+          
+          # Run Newman tests against staging if available
+          echo "Running Newman API tests..."
+          newman run postman/integration-tests.json \
+            --environment postman/staging.env.json \
+            --reporters htmlextra,cli \
+            --reporter-htmlextra-export newman-results.html \
+            --suppress-exit-code || echo "Newman tests completed with issues"
+            
+      - name: Security scan
+        run: |
+          npm audit --audit-level=high
+          
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Configure Docker for GCR
+        run: |
+          gcloud auth configure-docker gcr.io
+          
+      - name: Build and push Docker image
+        id: build
+        run: |
+          IMAGE_TAG="${GCR_HOSTNAME}/${PROJECT_ID}/${SERVICE_NAME}:${GITHUB_SHA}"
+          
+          # Build with optimizations
+          docker build \
+            --build-arg NODE_ENV=production \
+            --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+            --build-arg VCS_REF=${GITHUB_SHA} \
+            --target production \
+            -t $IMAGE_TAG .
+            
+          docker push $IMAGE_TAG
+          echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+  deploy-staging:
+    name: Deploy to Staging with Auto-scaling
+    runs-on: ubuntu-latest
+    needs: [test-and-build]
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main' || needs.health-check.outputs.needs_healing == 'true'
+    environment: staging
+    outputs:
+      service_url: ${{ steps.deploy.outputs.service_url }}
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Deploy to Cloud Run Staging
+        id: deploy
+        run: |
+          SERVICE_URL=$(gcloud run deploy $SERVICE_NAME-uswest1-staging \
+            --image ${{ needs.test-and-build.outputs.image_tag }} \
+            --platform managed \
+            --region $REGION_STAGING \
+            --allow-unauthenticated \
+            --memory 4Gi \
+            --cpu 4 \
+            --min-instances 1 \
+            --max-instances 50 \
+            --concurrency 100 \
+            --timeout 300s \
+            --cpu-throttling \
+            --execution-environment gen2 \
+            --set-env-vars ENVIRONMENT=staging,REGION=$REGION_STAGING,NODE_ENV=production,INTEGRATION_MCP=enabled,MOCOA_ORCHESTRATION=enabled \
+            --format="value(status.url)")
+            
+          echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
+          echo "Deployed to: $SERVICE_URL"
+
+  deploy-production:
+    name: Deploy to Production with Enhanced Monitoring
+    runs-on: ubuntu-latest
+    needs: [test-and-build, deploy-staging]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'schedule'
+    environment: production
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Deploy to Production with Blue-Green
+        run: |
+          # Deploy new version
+          gcloud run deploy $SERVICE_NAME-uswest1-fixed \
+            --image ${{ needs.test-and-build.outputs.image_tag }} \
+            --platform managed \
+            --region $REGION_PRODUCTION \
+            --allow-unauthenticated \
+            --memory 8Gi \
+            --cpu 4 \
+            --min-instances 3 \
+            --max-instances 100 \
+            --concurrency 80 \
+            --timeout 300s \
+            --cpu-throttling \
+            --execution-environment gen2 \
+            --set-env-vars ENVIRONMENT=production,REGION=$REGION_PRODUCTION,NODE_ENV=production,INTEGRATION_MCP=enabled,MOCOA_ORCHESTRATION=enabled \
+            --no-traffic
+            
+          # Health check new revision
+          sleep 30
+          NEW_REVISION=$(gcloud run revisions list --service=$SERVICE_NAME-uswest1-fixed --region=$REGION_PRODUCTION --limit=1 --format="value(metadata.name)")
+          
+          # Gradual traffic migration
+          gcloud run services update-traffic $SERVICE_NAME-uswest1-fixed --region=$REGION_PRODUCTION --to-revisions=$NEW_REVISION=10
+          sleep 60
+          gcloud run services update-traffic $SERVICE_NAME-uswest1-fixed --region=$REGION_PRODUCTION --to-revisions=$NEW_REVISION=50
+          sleep 60
+          gcloud run services update-traffic $SERVICE_NAME-uswest1-fixed --region=$REGION_PRODUCTION --to-revisions=$NEW_REVISION=100
+
+  self-healing:
+    name: Self-Healing Actions
+    runs-on: ubuntu-latest
+    needs: [health-check]
+    if: needs.health-check.outputs.needs_healing == 'true'
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Execute Self-Healing
+        run: |
+          FAILED_SERVICES="${{ needs.health-check.outputs.failed_services }}"
+          echo "Executing self-healing for: $FAILED_SERVICES"
+          
+          for service in $FAILED_SERVICES; do
+            case $service in
+              staging)
+                echo "Restarting staging service..."
+                gcloud run services update $SERVICE_NAME-uswest1-staging --region=$REGION_STAGING --update-env-vars=RESTART_TRIGGER=$(date +%s)
+                ;;
+              production)
+                echo "Restarting production service..."
+                gcloud run services update $SERVICE_NAME-uswest1-fixed --region=$REGION_PRODUCTION --update-env-vars=RESTART_TRIGGER=$(date +%s)
+                ;;
+              *-api)
+                echo "API endpoint healing for $service..."
+                # Force revision restart by updating environment
+                ENV=$(echo $service | sed 's/-api//')
+                if [ "$ENV" = "staging" ]; then
+                  gcloud run services update $SERVICE_NAME-uswest1-staging --region=$REGION_STAGING --update-env-vars=HEAL_TRIGGER=$(date +%s)
+                else
+                  gcloud run services update $SERVICE_NAME-uswest1-fixed --region=$REGION_PRODUCTION --update-env-vars=HEAL_TRIGGER=$(date +%s)
+                fi
+                ;;
+            esac
+          done
+
+  monitoring-setup:
+    name: Setup Enhanced Monitoring
+    runs-on: ubuntu-latest
+    needs: [deploy-staging]
+    if: always()
+    steps:
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          
+      - name: Create Monitoring Dashboards
+        run: |
+          # Create custom dashboard for the service
+          cat > dashboard.json << 'EOF'
+          {
+            "displayName": "Integration Gateway MCP Monitoring",
+            "mosaicLayout": {
+              "tiles": [
+                {
+                  "width": 6,
+                  "height": 4,
+                  "widget": {
+                    "title": "Request Count",
+                    "xyChart": {
+                      "dataSets": [
+                        {
+                          "timeSeriesQuery": {
+                            "timeSeriesFilter": {
+                              "filter": "resource.type=\"cloud_run_revision\" AND resource.label.service_name=\"integration-gateway-mcp-uswest1-fixed\"",
+                              "aggregation": {
+                                "alignmentPeriod": "60s",
+                                "perSeriesAligner": "ALIGN_RATE"
+                              }
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          }
+          EOF
+          
+          # Create alerting policies
+          gcloud alpha monitoring policies create --policy-from-file=<(cat << 'EOF'
+          {
+            "displayName": "Integration Gateway High Error Rate",
+            "conditions": [
+              {
+                "displayName": "Error rate too high",
+                "conditionThreshold": {
+                  "filter": "resource.type=\"cloud_run_revision\" AND resource.label.service_name=\"integration-gateway-mcp-uswest1-fixed\"",
+                  "comparison": "COMPARISON_GREATER_THAN",
+                  "thresholdValue": 0.1,
+                  "duration": "300s"
+                }
+              }
+            ],
+            "alertStrategy": {
+              "autoClose": "1800s"
+            },
+            "enabled": true
+          }
+          EOF
+          ) || echo "Alert policy may already exist"
+
+  post-deployment-tests:
+    name: Post-Deployment Newman Testing
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always() && (needs.deploy-staging.result == 'success' || needs.deploy-production.result == 'success')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Install Newman
+        run: npm install -g newman @postman/newman-reporter-htmlextra
+        
+      - name: Run Newman against deployed services
+        run: |
+          # Test staging if deployed
+          if [ "${{ needs.deploy-staging.outputs.service_url }}" != "" ]; then
+            echo "Testing staging deployment..."
+            newman run postman/integration-tests.json \
+              --env-var "base_url=${{ needs.deploy-staging.outputs.service_url }}" \
+              --reporters htmlextra,cli \
+              --reporter-htmlextra-export newman-staging-results.html \
+              --suppress-exit-code
+          fi
+          
+          # Test production if deployed
+          if [ "${{ needs.deploy-production.result }}" == "success" ]; then
+            echo "Testing production deployment..."
+            PROD_URL="https://$SERVICE_NAME-uswest1-fixed-$(echo $PROJECT_ID | tr '_' '-')-uc.a.run.app"
+            newman run postman/integration-tests.json \
+              --env-var "base_url=$PROD_URL" \
+              --reporters htmlextra,cli \
+              --reporter-htmlextra-export newman-production-results.html \
+              --suppress-exit-code
+          fi
+          
+      - name: Upload Newman Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: newman-test-results
+          path: newman-*.html
+
+  notification:
+    name: Send Notifications
+    runs-on: ubuntu-latest
+    needs: [health-check, test-and-build, deploy-staging, deploy-production, self-healing, post-deployment-tests]
+    if: always()
+    steps:
+      - name: Send Slack/Discord Notification
+        run: |
+          STATUS="SUCCESS"
+          MESSAGE="CI/CD CTTT Pipeline completed successfully"
+          
+          if [ "${{ needs.test-and-build.result }}" != "success" ]; then
+            STATUS="FAILURE"
+            MESSAGE="Build or tests failed"
+          elif [ "${{ needs.deploy-production.result }}" == "failure" ]; then
+            STATUS="WARNING"
+            MESSAGE="Production deployment failed, but staging succeeded"
+          elif [ "${{ needs.health-check.outputs.needs_healing }}" == "true" ]; then
+            STATUS="HEALING"
+            MESSAGE="Self-healing actions were triggered for: ${{ needs.health-check.outputs.failed_services }}"
+          fi
+          
+          echo "Pipeline Status: $STATUS - $MESSAGE"
+          # Add your notification webhook here
+          # curl -X POST ${{ secrets.WEBHOOK_URL }} -d "{'text':'$MESSAGE','status':'$STATUS'}"

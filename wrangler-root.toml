@@ -1,0 +1,11 @@
+name = "asoos-main-site"
+main = "root-domain-worker.js"
+compatibility_date = "2025-08-25"
+
+[vars]
+ENVIRONMENT = "production"
+
+routes = [
+  { pattern = "2100.cool/*", zone_name = "2100.cool" },
+  { pattern = "main.2100.cool/*", zone_name = "2100.cool" }
+]

@@ -1,0 +1,50 @@
+{
+  "name": "mocoa-interface",
+  "version": "2.4.7",
+  "description": "MOCOA Enterprise Interface with Dr. Claude Quantum Orchestration and Victory36 Protection",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "victory36-scan": "node victory36-security-scan.js",
+    "quantum-health": "curl -f http://localhost:8080/api/dr-claude/health"
+  },
+  "keywords": [
+    "asoos",
+    "mocoa",
+    "pcp",
+    "interface",
+    "wfa-swarm",
+    "quantum-orchestration",
+    "dr-claude",
+    "victory36",
+    "enterprise"
+  ],
+  "author": "ASOOS WFA Swarm Team",
+  "license": "Enterprise",
+  "wfa-swarm": {
+    "phase": 7,
+    "quantum-orchestration": "2.4.7",
+    "victory36-protection": true,
+    "dr-claude-active": true,
+    "testament-swarm-connected": true,
+    "gcp-secret-manager": true,
+    "enterprise-cache": true,
+    "production-ready": true
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "http-proxy-middleware": "^3.0.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=24.5.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/asoos/mocoa-interface.git"
+  },
+  "homepage": "https://mocoa-858242575175.us-west1.run.app"
+}

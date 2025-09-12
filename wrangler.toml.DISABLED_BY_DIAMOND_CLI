@@ -1,0 +1,11 @@
+name = "asoos-2100-cool-landing"
+compatibility_date = "2025-08-25"
+main = "worker-fixed.js"
+
+[env.production]
+name = "asoos-2100-cool-landing"
+
+# Worker configuration for API-FOR-WARP-DRIVE project
+[[env.production.routes]]
+pattern = "asoos.2100.cool/*"
+zone_name = "2100.cool"

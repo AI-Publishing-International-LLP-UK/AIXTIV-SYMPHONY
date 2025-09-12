@@ -391,7 +391,7 @@ class ASOOSFrontendIntegration {
         <h3>🤖 MCP Civilization Status</h3>
         <div class="status-grid">
           <div class="status-item">
-            <strong>Total Members:</strong> ${civilization.totalMembers?.toLocaleString() || '20,000,000'}
+            <strong>Total Members:</strong> ${civilization.totalMembers?.toLocaleString() || 'ENVIRONMENT_VARIABLE_REQUIRED'}
           </div>
           <div class="status-item">
             <strong>Active Wings:</strong> ${civilization.wingsActive || 13}

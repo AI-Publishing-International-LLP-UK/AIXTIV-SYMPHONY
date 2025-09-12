@@ -1,0 +1,46 @@
+[
+  {
+    "name": "TechCorp",
+    "options": {
+      "theme": "sapphire",
+      "integrationLevel": "enterprise",
+      "tagline": "Technology Innovation at Scale",
+      "aiCopilots": ["DR_LUCY", "DR_CLAUDE", "VICTORY36", "COMMANDER_ROARK"]
+    }
+  },
+  {
+    "name": "MedicalCenter",
+    "options": {
+      "theme": "emerald",
+      "integrationLevel": "professional",
+      "tagline": "Healthcare AI Solutions",
+      "aiCopilots": ["DR_LUCY", "DR_CLAUDE"]
+    }
+  },
+  {
+    "name": "FinanceGroup",
+    "options": {
+      "theme": "platinum",
+      "integrationLevel": "quantum",
+      "tagline": "Financial Intelligence & Analytics",
+      "aiCopilots": ["DR_LUCY", "VICTORY36", "COMMANDER_ROARK"]
+    }
+  },
+  {
+    "name": "ManufacturingInc",
+    "options": {
+      "theme": "ruby",
+      "integrationLevel": "enterprise",
+      "tagline": "Industrial Automation & AI",
+      "aiCopilots": ["DR_CLAUDE", "VICTORY36"]
+    }
+  },
+  {
+    "name": "EduTech",
+    "options": {
+      "theme": "diamond",
+      "integrationLevel": "professional",
+      "tagline": "Educational Technology & Learning AI"
+    }
+  }
+]

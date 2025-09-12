@@ -1,0 +1,13 @@
+name = "asoos-2100-cool-landing"
+compatibility_date = "2025-08-25"
+
+[env.production]
+name = "asoos-2100-cool-landing"
+
+# For Pages deployment, we don't need a main script
+# The static files will be served directly from the cloudflare-pages-deployment directory
+
+# Custom domain configuration removed - allowing DNS control
+# [[env.production.routes]]
+# pattern = "asoos.2100.cool/*"
+# zone_name = "2100.cool"

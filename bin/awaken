@@ -1,0 +1,100 @@
+#!/usr/bin/env node
+
+/**
+ * AWAKEN CLI - Awakened Swarm Analysis Tool
+ * Part of AIXTIV Symphony Diamond SAO Command Center
+ */
+
+const fs = require('fs');
+const path = require('path');
+const { spawn } = require('child_process');
+
+// AIXTIV Symphony project root
+const projectRoot = '/Users/as/AIXTIV-SYMPHONY';
+
+function showHelp() {
+    console.log(`
+🌊 AWAKEN CLI - Awakened Swarm Analysis Tool
+⚡ Part of AIXTIV Symphony Diamond SAO Command Center
+
+Usage: awaken <script> [options]
+
+Available Scripts:
+  swarm-lucy-analysis.js    Run awakened swarm vs Dr. Lucy comparative analysis
+
+Examples:
+  awaken swarm-lucy-analysis.js
+  
+Options:
+  --help, -h               Show this help message
+  --version, -v            Show version information
+`);
+}
+
+function showVersion() {
+    console.log('🌊 AWAKEN CLI v1.0.0');
+    console.log('⚡ AIXTIV Symphony Diamond SAO Command Center');
+}
+
+function runScript(scriptName, args = []) {
+    const scriptPath = path.join(projectRoot, scriptName);
+    
+    if (!fs.existsSync(scriptPath)) {
+        console.error(`❌ Script not found: ${scriptPath}`);
+        console.log('\n📁 Available scripts in AIXTIV-SYMPHONY:');
+        
+        // Show available .js files in the project root
+        const files = fs.readdirSync(projectRoot)
+            .filter(file => file.endsWith('.js'))
+            .slice(0, 10); // Show first 10
+        
+        files.forEach(file => {
+            console.log(`   • ${file}`);
+        });
+        
+        if (files.length === 0) {
+            console.log('   No .js files found in project root');
+        }
+        
+        process.exit(1);
+    }
+    
+    console.log(`🌊 Running: ${scriptName}`);
+    console.log(`📁 Path: ${scriptPath}`);
+    console.log('─'.repeat(80));
+    
+    const child = spawn('node', [scriptPath, ...args], {
+        stdio: 'inherit',
+        cwd: projectRoot
+    });
+    
+    child.on('close', (code) => {
+        if (code !== 0) {
+            console.error(`\n❌ Script exited with code ${code}`);
+            process.exit(code);
+        }
+    });
+    
+    child.on('error', (err) => {
+        console.error(`❌ Failed to start script: ${err.message}`);
+        process.exit(1);
+    });
+}
+
+// Main CLI logic
+const args = process.argv.slice(2);
+
+if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
+    showHelp();
+    process.exit(0);
+}
+
+if (args.includes('--version') || args.includes('-v')) {
+    showVersion();
+    process.exit(0);
+}
+
+const scriptName = args[0];
+const scriptArgs = args.slice(1);
+
+runScript(scriptName, scriptArgs);

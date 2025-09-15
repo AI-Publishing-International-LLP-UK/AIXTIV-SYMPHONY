@@ -12,8 +12,15 @@ compatibility_flags = ["nodejs_compat"]
 [vars]
 ENVIRONMENT = "production"
 SERVICE_NAME = "Sally Port OAuth Worker"
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 TARGET_MCP = "mcp.aipub.2100.cool"
+
+# OAuth Provider Configuration
+# Note: Use 'wrangler secret put' for sensitive values:
+# wrangler secret put WHATSAPP_CLIENT_SECRET
+# wrangler secret put LINKEDIN_CLIENT_SECRET
+# wrangler secret put MICROSOFT_CLIENT_SECRET  
+# wrangler secret put GOOGLE_CLIENT_SECRET
 
 # KV namespace for state storage (optional, for production)
 # [[kv_namespaces]]

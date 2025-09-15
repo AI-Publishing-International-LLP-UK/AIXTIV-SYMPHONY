@@ -26,8 +26,8 @@ export default {
         service: 'Sally Port OAuth Worker',
         timestamp: new Date().toISOString(),
         version: '1.2.0',
-        features: 'OAuth2, LinkedIn, Microsoft, Google, WhatsApp',
-        target_endpoint: 'mocoa-owner-interface-859242575175.us-west1.run.app',
+        features: 'OAuth2, LinkedIn, Microsoft, Google, WhatsApp Business',
+        authorized_endpoints: ['mcp.aipub.2100.cool', 'mcp.asoos.2100.cool'],
         protection: 'Victory36 Shield Active'
       }), {
         headers: { 
@@ -48,7 +48,7 @@ export default {
       
       // Handle OAuth callbacks
       if (pathname.includes('/callback')) {
-        return handleOAuthCallback(provider, searchParams);
+        return handleOAuthCallback(provider, searchParams, env);
       }
       
       // Handle OAuth completion
@@ -59,7 +59,7 @@ export default {
 
     // General authentication endpoint
     if (pathname === '/auth') {
-      const redirectUri = searchParams.get('redirect') || 'https://mocoa-owner-interface-859242575175.us-west1.run.app/';
+      const redirectUri = searchParams.get('redirect') || 'https://mcp.aipub.2100.cool/';
       return new Response(`<!DOCTYPE html>
 <html>
 <head>
@@ -87,6 +87,9 @@ export default {
       <a href="/auth/google/initiate?redirect_uri=${encodeURIComponent(redirectUri)}" class="auth-btn">
         🌐 Continue with Google
       </a>
+      <a href="/auth/whatsapp/initiate?redirect_uri=${encodeURIComponent(redirectUri)}" class="auth-btn">
+        📱 Continue with WhatsApp Business
+      </a>
       <a href="/auth/email/initiate?redirect_uri=${encodeURIComponent(redirectUri)}" class="auth-btn">
         ✉️ Continue with Email
       </a>
@@ -102,14 +105,15 @@ export default {
       });
     }
 
-    // Default: Route to MCP
-    return Response.redirect('https://mocoa-owner-interface-859242575175.us-west1.run.app/', 302);
+    // Default: Route to authorized MCP
+    return Response.redirect('https://mcp.aipub.2100.cool/', 302);
   }
 };
 
 // OAuth initiation handler
 async function handleOAuthInitiate(provider, searchParams, env) {
-  const redirectUri = searchParams.get('redirect_uri') || 'https://mocoa-owner-interface-859242575175.us-west1.run.app/';
+  const requestedRedirect = searchParams.get('redirect_uri');
+  const redirectUri = validateRedirectUri(requestedRedirect) || 'https://mcp.aipub.2100.cool/';
   const state = `${provider}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
   
   // Store state for validation (in production, use KV storage)
@@ -138,6 +142,12 @@ async function handleOAuthInitiate(provider, searchParams, env) {
       client_id: env.GOOGLE_CLIENT_ID || 'demo_client_id',
       scope: 'openid profile email',
       callback_uri: 'https://sally-port.2100.cool/auth/google/callback'
+    },
+    whatsapp: {
+      authorize_url: 'https://www.facebook.com/v18.0/dialog/oauth',
+      client_id: env.WHATSAPP_CLIENT_ID || 'demo_whatsapp_client_id',
+      scope: 'whatsapp_business_management,whatsapp_business_messaging',
+      callback_uri: 'https://sally-port.2100.cool/auth/whatsapp/callback'
     },
     email: {
       // Handle email-based auth differently
@@ -199,7 +209,7 @@ async function handleOAuthInitiate(provider, searchParams, env) {
 }
 
 // OAuth callback handler
-async function handleOAuthCallback(provider, searchParams) {
+async function handleOAuthCallback(provider, searchParams, env) {
   const code = searchParams.get('code');
   const state = searchParams.get('state');
   const error = searchParams.get('error');
@@ -224,10 +234,18 @@ async function handleOAuthCallback(provider, searchParams) {
   }
 
   // In production, validate state and exchange code for tokens
-  // For now, we'll simulate successful authentication
+  // WhatsApp Business API token exchange
+  if (provider === 'whatsapp') {
+    // Exchange code for WhatsApp Business access token
+    const tokenResponse = await exchangeWhatsAppToken(code, env);
+    if (tokenResponse.success) {
+      // Store WhatsApp Business account info and redirect to authorized MCP
+      return Response.redirect(`https://mcp.aipub.2100.cool/?authenticated=true&provider=whatsapp&business_account=${tokenResponse.business_account_id}&timestamp=${Date.now()}`, 302);
+    }
+  }
   
-  // Redirect to MCP with success indication
-  return Response.redirect(`https://mocoa-owner-interface-859242575175.us-west1.run.app/?authenticated=true&provider=${provider}&timestamp=${Date.now()}`, 302);
+  // Redirect to authorized MCP with success indication
+  return Response.redirect(`https://mcp.aipub.2100.cool/?authenticated=true&provider=${provider}&timestamp=${Date.now()}`, 302);
 }
 
 // OAuth completion handler
@@ -240,4 +258,65 @@ async function handleOAuthComplete(provider, searchParams) {
   // In production, this would validate tokens and create user session
   
   return Response.redirect(`${redirectUri}?auth_complete=true&provider=${provider}`, 302);
+}
+
+// WhatsApp Business token exchange function
+async function exchangeWhatsAppToken(authCode, env) {
+  try {
+    // Exchange authorization code for access token
+    const tokenResponse = await fetch('https://graph.facebook.com/v18.0/oauth/access_token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        client_id: env.WHATSAPP_CLIENT_ID || 'demo_whatsapp_client_id',
+        client_secret: env.WHATSAPP_CLIENT_SECRET || 'demo_whatsapp_secret',
+        redirect_uri: 'https://sally-port.2100.cool/auth/whatsapp/callback',
+        code: authCode
+      })
+    });
+
+    const tokenData = await tokenResponse.json();
+    
+    if (tokenData.access_token) {
+      // Get WhatsApp Business Account info
+      const businessResponse = await fetch(`https://graph.facebook.com/v18.0/me/businesses?access_token=${tokenData.access_token}`);
+      const businessData = await businessResponse.json();
+      
+      return {
+        success: true,
+        access_token: tokenData.access_token,
+        business_account_id: businessData.data?.[0]?.id || 'unknown',
+        scope: tokenData.scope,
+        expires_in: tokenData.expires_in
+      };
+    }
+    
+    return { success: false, error: 'No access token received' };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+// Validate redirect URI against authorized domains only
+function validateRedirectUri(uri) {
+  if (!uri) return null;
+  
+  const authorizedDomains = [
+    'mcp.aipub.2100.cool',
+    'mcp.asoos.2100.cool',
+    'sallyport.2100.cool'
+  ];
+  
+  try {
+    const url = new URL(uri);
+    if (authorizedDomains.includes(url.hostname)) {
+      return uri;
+    }
+  } catch (error) {
+    // Invalid URL
+  }
+  
+  return null; // Reject unauthorized redirect URIs
 }

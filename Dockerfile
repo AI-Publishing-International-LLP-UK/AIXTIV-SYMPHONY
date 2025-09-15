@@ -1,5 +1,9 @@
-# Node.js Dockerfile for Express.js Testing
-FROM node:24-alpine
+# Node.js Dockerfile for Express.js Testing - Victory36 Secured
+FROM node:24-alpine AS base
+
+# Create non-root user for security
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S diamond -u 1001
 
 # Set working directory
 WORKDIR /app
@@ -7,12 +11,17 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies with Express 4.x
-RUN npm install
+# Install dependencies with Victory36 security
+RUN npm ci --only=production --no-audit --prefer-offline \
+    && npm cache clean --force \
+    && rm -rf /tmp/*
 
-# Copy application code
-COPY server.js ./
-COPY deploy-package/ ./deploy-package/
+# Copy application code with proper ownership
+COPY --chown=diamond:nodejs server.js ./
+COPY --chown=diamond:nodejs deploy-package/ ./deploy-package/
+
+# Switch to non-root user for Victory36 security
+USER diamond
 
 # Expose port
 EXPOSE 8080

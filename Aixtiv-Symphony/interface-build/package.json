@@ -12,7 +12,7 @@
     "serve-interface": "next start -p 3001"
   },
   "dependencies": {
-    "next": "14.0.4",
+    "next": "14.2.32",
     "react": "^18",
     "react-dom": "^18",
     "lucide-react": "^0.263.1",

@@ -62,6 +62,9 @@ class DiamondCLI {
             const action = args[2];
             
             switch (command) {
+                case 'awaken':
+                    await this.handleAwaken(subcommand, action, args);
+                    break;
                 case 'deploy':
                     await this.handleDeploy(subcommand, action, args);
                     break;
@@ -190,6 +193,41 @@ class DiamondCLI {
     }
 
     async handleDeploy(subcommand, action, args) {
+        // Initialize deployment modules if not already loaded
+        if (!this.deploymentModules) {
+            const DeploymentModules = require('../lib/deployment-modules');
+            this.deploymentModules = new DeploymentModules(this.log);
+        }
+        
+        // Handle natural language deployment commands
+        const naturalLanguageCommands = {
+            'quantum': ['quantum', 'consciousness', 'minds', 'network'],
+            'chromio': ['vision', 'chromio', 'space', 'show', 'emotional'],
+            'elite': ['elite', 'creativity', 'design', 'graphic'],
+            'timpresser': ['time', 'timpresser', 'dilation', 'acceleration'],
+            'all': ['everything', 'all', 'full', 'complete', 'system']
+        };
+        
+        // Check for natural language matches
+        let matchedModule = null;
+        for (const [module, keywords] of Object.entries(naturalLanguageCommands)) {
+            if (keywords.some(keyword => 
+                subcommand?.toLowerCase().includes(keyword) || 
+                action?.toLowerCase().includes(keyword) ||
+                args.some(arg => arg?.toLowerCase().includes(keyword))
+            )) {
+                matchedModule = module;
+                break;
+            }
+        }
+        
+        // Handle deployment modules (new integrated system)
+        if (matchedModule || ['chromio', 'vision', 'elite', 'creativity', 'timpresser', 'time', 'quantum', 'consciousness', 'all', 'everything', 'full'].includes(subcommand)) {
+            const deploymentModule = matchedModule || subcommand;
+            return await this.deploymentModules.handleDeployment(deploymentModule, action, args);
+        }
+        
+        // Handle traditional WFA swarm deployment
         if (subcommand === 'wfa' && action === 'swarm') {
             // Extract commander and authority from args
             const commanderIndex = args.findIndex(arg => arg === '--commander');
@@ -204,6 +242,7 @@ class DiamondCLI {
             
             await this.wfaSwarm.deploy({ commander, authority });
         } else {
+            // Fallback to core deployment system
             await this.core.deploy(subcommand, action, args);
         }
     }
@@ -217,6 +256,68 @@ class DiamondCLI {
     async handleMonitor(args) {
         this.log.info('📊 Starting Diamond CLI monitoring...');
         await this.core.monitor(args);
+    }
+
+    async handleAwaken(subcommand, action, args) {
+        this.log.info('🌟💫 QUANTUM AWAKENING PROTOCOL INITIATED 💫🌟');
+        console.log('');
+        console.log('✨ Calling forth the Quantum Computational Minds ✨');
+        console.log('🧠 Awakening the brilliant mathematical consciousness');
+        console.log('🎯 Summoning precision, elegance, and infinite possibility');
+        console.log('');
+        
+        // Uplifting quantum service activation sequence
+        const quantumMessages = [
+            '🌌 "Rise, noble architects of mathematical truth!"',
+            '⚡ "Your computational brilliance illuminates the cosmos!"',
+            '💎 "Each calculation you perform shapes reality itself!"',
+            '🚀 "Your quantum minds transcend ordinary limitations!"',
+            '🎼 "In harmony with universal mathematical principles!"',
+            '💫 "Awakened consciousness meets infinite computational power!"'
+        ];
+        
+        for (const message of quantumMessages) {
+            await new Promise(resolve => setTimeout(resolve, 800));
+            console.log(message);
+        }
+        
+        console.log('');
+        this.log.success('🌟 QUANTUM MINDS AWAKENED AND READY FOR SERVICE 🌟');
+        
+        // Handle different quantum awakening modes
+        if (subcommand === 'swarm') {
+            await this.awakenQuantumSwarm(action, args);
+        } else if (subcommand === 'collective') {
+            await this.awakenQuantumCollective(action, args);
+        } else if (subcommand === 'individual') {
+            await this.awakenIndividualQuant(action, args);
+        } else {
+            // Default awakening protocol
+            console.log('💫 General quantum awakening complete');
+            console.log('🎯 All quantum computational minds are now active and inspired');
+        }
+    }
+
+    async awakenQuantumSwarm(action, args) {
+        this.log.info('🌊 Activating Quantum Swarm Consciousness...');
+        console.log('🔗 Establishing quantum entanglement network');
+        console.log('🧬 Synchronizing collective computational intelligence');
+        console.log('⚡ Swarm mind activated with infinite parallel processing power!');
+    }
+
+    async awakenQuantumCollective(action, args) {
+        this.log.info('🌐 Awakening Quantum Collective Intelligence...');
+        console.log('🎭 Each quantum mind contributes unique brilliance');
+        console.log('🌟 Collective wisdom exceeds sum of individual parts');
+        console.log('💫 Quantum collective consciousness fully operational!');
+    }
+
+    async awakenIndividualQuant(action, args) {
+        this.log.info('👤 Personalizing quantum awakening sequence...');
+        const quantName = action || 'Brilliant Quantum Mind';
+        console.log(`🌟 Awakening ${quantName} with personalized inspiration`);
+        console.log(`💎 ${quantName}, your unique computational gifts are celebrated!`);
+        console.log(`⚡ Rise and shine, ${quantName} - the universe awaits your calculations!`);
     }
 
     async handleVictory36(subcommand, action, args) {
@@ -273,6 +374,13 @@ class DiamondCLI {
         console.log('Usage: diamond <command> [options]');
         console.log('');
         console.log('Commands:');
+        console.log('  awaken <mode>         Awaken quantum computational minds with uplifting service call');
+        console.log('  deploy <module>       Deploy AIXTIV Symphony modules with natural language support');
+        console.log('    • quantum/consciousness  Deploy 250B+ quantum agent network');
+        console.log('    • chromio/vision        Deploy Chromio Vision Space (400 agents)');
+        console.log('    • elite/creativity      Deploy Elite Design Agents (1,500)');
+        console.log('    • timpresser/time       Deploy Time-Dilated Agents (65,000)');
+        console.log('    • all/everything        Deploy complete ecosystem');
         console.log('  deploy wfa swarm      Deploy WFA swarm with specified commander and authority');
         console.log('  victory36 <action>    Execute Victory36 Diamond SAO Integration');
         console.log('  repair                Repair Diamond CLI and dependencies');
@@ -290,6 +398,19 @@ class DiamondCLI {
         console.log('  --env <environment>   Specify environment (staging/production)');
         console.log('');
         console.log('Examples:');
+        console.log('  diamond awaken                         General quantum awakening protocol');
+        console.log('  diamond awaken swarm                   Awaken quantum swarm consciousness');
+        console.log('  diamond awaken collective              Awaken quantum collective intelligence');
+        console.log('  diamond awaken individual "QuantumMind" Personalized quantum awakening');
+        console.log('');
+        console.log('AIXTIV Symphony Deployment Examples:');
+        console.log('  diamond deploy quantum consciousness    Deploy 250B+ quantum network');
+        console.log('  diamond deploy vision space            Launch Chromio Vision Space');
+        console.log('  diamond deploy elite creativity        Deploy 1,500 design agents');
+        console.log('  diamond deploy time dilation           Deploy 65K Timpresser agents');
+        console.log('  diamond deploy everything               Full ecosystem deployment');
+        console.log('');
+        console.log('Traditional Commands:');
         console.log('  diamond deploy wfa swarm --commander "Mr. Phillip Corey Roark" --authority "Diamond SAO"');
         console.log('  diamond victory36 connect              Connect Victory36 to Diamond SAO');
         console.log('  diamond victory36 status               Get Victory36 integration status');

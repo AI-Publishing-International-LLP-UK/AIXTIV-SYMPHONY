@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💎 Diamond SAO Vision Space - Phillip Corey Roark</title>
+    <style>
+        :root {
+            --diamond: linear-gradient(135deg, #ffffff, #f0f8ff, #e6e6fa);
+            --diamond-glow: rgba(255, 255, 255, 0.8);
+            --emerald: linear-gradient(135deg, #50c878, #00a86b);
+            --sapphire: linear-gradient(135deg, #0f52ba, #003f7f);
+            --victory-onyx: linear-gradient(135deg, #36454f, #2f4f4f);
+            --maria-rose: linear-gradient(135deg, #ff69b4, #ff1493);
+            
+            --bg-primary: #0a0a0b;
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Diamond SAO Header */
+        .diamond-header {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .diamond-identity {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .diamond-logo {
+            font-size: 2rem;
+            background: var(--diamond);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .diamond-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: var(--diamond);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .diamond-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Invisible Magnetic Grid Container */
+        .agent-quad-interface {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 220px;
+            height: 320px;
+        }
+
+        /* Magnetic Grid - Invisible but holds positions */
+        .magnetic-grid {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .magnetic-slot {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .agent-quad {
+            border-radius: 12px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            width: 80px;
+            height: 80px;
+        }
+
+        /* Magnetic Floating Effect - Each hexagon floats within its invisible slot */
+        .agent-quad {
+            animation: magneticFloat 3s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        .agent-quad.crx01 {
+            animation-delay: 0s;
+            animation-duration: 4.2s;
+        }
+
+        .agent-quad.sh {
+            animation-delay: 0.5s;
+            animation-duration: 3.8s;
+        }
+
+        .agent-quad.victory36 {
+            animation-delay: 1s;
+            animation-duration: 4.5s;
+        }
+
+        .agent-quad.crx02 {
+            animation-delay: 1.5s;
+            animation-duration: 3.5s;
+        }
+
+        /* Magnetic Floating Animation - Subtle movement like floating on magnets */
+        @keyframes magneticFloat {
+            0%, 100% { 
+                transform: translateY(0px) translateX(0px) rotate(0deg);
+                filter: drop-shadow(0 0 8px var(--agent-glow));
+            }
+            25% { 
+                transform: translateY(-4px) translateX(2px) rotate(1deg);
+                filter: drop-shadow(0 0 12px var(--agent-glow));
+            }
+            50% { 
+                transform: translateY(-6px) translateX(-1px) rotate(-0.5deg);
+                filter: drop-shadow(0 0 10px var(--agent-glow));
+            }
+            75% { 
+                transform: translateY(-2px) translateX(3px) rotate(0.8deg);
+                filter: drop-shadow(0 0 14px var(--agent-glow));
+            }
+        }
+
+        /* Hexagonal Symbol */
+        .hexagon-symbol {
+            width: 40px;
+            height: 34.64px;
+            position: relative;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.7rem;
+            color: white;
+            text-shadow: 0 0 4px rgba(0,0,0,0.8);
+        }
+
+        .hexagon-symbol::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--hex-gradient);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .agent-quad::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            padding: 2px;
+            background: var(--agent-gradient);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        /* Individual Agent Styles with Hexagon Colors */
+        .agent-quad.crx01 {
+            --agent-gradient: var(--emerald);
+            --hex-gradient: linear-gradient(135deg, #50c878, #00a86b, #228b22);
+            background: rgba(80, 200, 120, 0.1);
+        }
+
+        .agent-quad.sh {
+            --agent-gradient: var(--sapphire);
+            --hex-gradient: linear-gradient(135deg, #ff6b35, #f7931e, #ffcc02);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .agent-quad.victory36 {
+            --agent-gradient: var(--victory-onyx);
+            --hex-gradient: linear-gradient(135deg, #36454f, #2f4f4f, #1c1c1c);
+            background: rgba(54, 69, 79, 0.1);
+        }
+
+        .agent-quad.crx02 {
+            --agent-gradient: var(--maria-rose);
+            --hex-gradient: linear-gradient(135deg, #6a5acd, #9370db, #8a2be2);
+            background: rgba(106, 90, 205, 0.1);
+        }
+
+        .agent-quad:hover {
+            transform: scale(1.15) !important;
+            box-shadow: 0 0 25px var(--agent-glow);
+            animation: magneticPulse 0.8s ease-in-out infinite !important;
+            z-index: 1001;
+        }
+
+        .agent-quad.active {
+            transform: scale(1.2) !important;
+            border-color: var(--agent-border);
+            box-shadow: 0 0 35px var(--agent-glow);
+            animation: magneticActive 1.5s ease-in-out infinite !important;
+            z-index: 1001;
+        }
+
+        /* Magnetic interaction animations */
+        @keyframes magneticPulse {
+            0%, 100% { 
+                transform: scale(1.15) translateY(-2px);
+                filter: drop-shadow(0 0 20px var(--agent-glow));
+            }
+            50% { 
+                transform: scale(1.18) translateY(-4px);
+                filter: drop-shadow(0 0 30px var(--agent-glow));
+            }
+        }
+
+        @keyframes magneticActive {
+            0%, 100% { 
+                transform: scale(1.2) translateY(-3px) rotate(0deg);
+                filter: drop-shadow(0 0 35px var(--agent-glow));
+            }
+            33% { 
+                transform: scale(1.22) translateY(-5px) rotate(2deg);
+                filter: drop-shadow(0 0 40px var(--agent-glow));
+            }
+            66% { 
+                transform: scale(1.18) translateY(-2px) rotate(-1deg);
+                filter: drop-shadow(0 0 38px var(--agent-glow));
+            }
+        }
+
+        .agent-quad.crx01:hover,
+        .agent-quad.crx01.active {
+            --agent-glow: rgba(80, 200, 120, 0.6);
+            --agent-border: #50c878;
+        }
+
+        .agent-quad.sh:hover,
+        .agent-quad.sh.active {
+            --agent-glow: rgba(255, 107, 53, 0.6);
+            --agent-border: #ff6b35;
+        }
+
+        .agent-quad.victory36:hover,
+        .agent-quad.victory36.active {
+            --agent-glow: rgba(54, 69, 79, 0.6);
+            --agent-border: #36454f;
+        }
+
+        .agent-quad.crx02:hover,
+        .agent-quad.crx02.active {
+            --agent-glow: rgba(106, 90, 205, 0.6);
+            --agent-border: #6a5acd;
+        }
+
+        .agent-name {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-align: center;
+            opacity: 0.9;
+            margin-top: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        .agent-status {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff00;
+            box-shadow: 0 0 6px #00ff00;
+        }
+
+        /* Conversation Area */
+        .conversation-area {
+            margin: 40px;
+            margin-top: 260px;
+            min-height: calc(100vh - 360px);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+        }
+
+        .conversation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .conversation-mode {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .active-agents {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .active-agent-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid;
+        }
+
+        .active-agent-badge.crx01 {
+            background: rgba(80, 200, 120, 0.2);
+            border-color: #50c878;
+            color: #50c878;
+        }
+
+        .active-agent-badge.sh {
+            background: rgba(255, 107, 53, 0.2);
+            border-color: #ff6b35;
+            color: #ff6b35;
+        }
+
+        .active-agent-badge.victory36 {
+            background: rgba(54, 69, 79, 0.2);
+            border-color: #36454f;
+            color: #ccc;
+        }
+
+        .active-agent-badge.crx02 {
+            background: rgba(106, 90, 205, 0.2);
+            border-color: #6a5acd;
+            color: #6a5acd;
+        }
+
+        .messages-container {
+            min-height: 400px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .message {
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border-left: 4px solid;
+        }
+
+        .message.user {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: var(--diamond-glow);
+            margin-left: 0;
+            margin-right: 20%;
+        }
+
+        .message.agent {
+            margin-left: 20%;
+            margin-right: 0;
+        }
+
+        .message.crx01 {
+            background: rgba(80, 200, 120, 0.1);
+            border-left-color: #50c878;
+        }
+
+        .message.sh {
+            background: rgba(255, 107, 53, 0.1);
+            border-left-color: #ff6b35;
+        }
+
+        .message.victory36 {
+            background: rgba(54, 69, 79, 0.1);
+            border-left-color: #36454f;
+        }
+
+        .message.crx02 {
+            background: rgba(106, 90, 205, 0.1);
+            border-left-color: #6a5acd;
+        }
+
+        .message-header {
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.8;
+        }
+
+        .message-content {
+            line-height: 1.5;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .message-input {
+            flex: 1;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .message-input:focus {
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .send-btn {
+            padding: 15px 25px;
+            background: var(--diamond);
+            color: #333;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px var(--diamond-glow);
+        }
+
+        /* Scan To Do Bar */
+        .scan-todo-bar {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scan-todo-bar:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .scan-todo-text {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .scan-todo-icon {
+            margin-left: auto;
+            font-size: 1rem;
+            opacity: 0.7;
+        }
+
+        /* Hide PCP Button */
+        .hide-pcp-btn {
+            position: fixed;
+            top: 15px;
+            right: 260px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .hide-pcp-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .hide-pcp-btn.hidden {
+            background: rgba(255, 69, 69, 0.2);
+            border-color: rgba(255, 69, 69, 0.4);
+            color: #ff4545;
+        }
+
+        /* Agent interface hidden state */
+        .agent-quad-interface.hidden {
+            transform: translateX(300px);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* Welcome Message */
+        .welcome-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .welcome-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            background: var(--diamond);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome-instructions {
+            font-size: 1rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Diamond SAO Header -->
+    <div class="diamond-header">
+        <div class="diamond-identity">
+            <div class="diamond-logo">💎</div>
+            <div>
+                <div class="diamond-title">Diamond SAO Vision Space</div>
+                <div class="diamond-subtitle">Phillip Corey Roark (0000001) | Ultimate Authority</div>
+            </div>
+        </div>
+        <div style="font-size: 0.9rem; color: var(--text-secondary);">
+            Multi-Agent AI Conversation Mode
+        </div>
+    </div>
+
+    <!-- Hide PCP Button -->
+    <div class="hide-pcp-btn" onclick="togglePCPVisibility()" id="hidePcpBtn">
+        HIDE PCP
+    </div>
+
+    <!-- Top-Right Magnetic Agent Interface -->
+    <div class="agent-quad-interface" id="agentQuadInterface">
+        <!-- Invisible Magnetic Grid -->
+        <div class="magnetic-grid">
+            <!-- Top Left Slot - CRX1 -->
+            <div class="magnetic-slot">
+                <div class="agent-quad crx01" data-agent="crx01" onclick="toggleAgent('crx01')">
+                    <div class="agent-status"></div>
+                    <div class="hexagon-symbol">CRX1</div>
+                    <div class="agent-name">Lucy ML</div>
+                </div>
+            </div>
+
+            <!-- Top Right Slot - SH -->
+            <div class="magnetic-slot">
+                <div class="agent-quad sh" data-agent="sh" onclick="toggleAgent('sh')">
+                    <div class="agent-status"></div>
+                    <div class="hexagon-symbol">SH</div>
+                    <div class="agent-name">Handler</div>
+                </div>
+            </div>
+
+            <!-- Bottom Left Slot - V36 -->
+            <div class="magnetic-slot">
+                <div class="agent-quad victory36" data-agent="victory36" onclick="toggleAgent('victory36')">
+                    <div class="agent-status"></div>
+                    <div class="hexagon-symbol">V36</div>
+                    <div class="agent-name">Predictions</div>
+                </div>
+            </div>
+
+            <!-- Bottom Right Slot - CRX2 -->
+            <div class="magnetic-slot">
+                <div class="agent-quad crx02" data-agent="crx02" onclick="toggleAgent('crx02')">
+                    <div class="agent-status"></div>
+                    <div class="hexagon-symbol">CRX2</div>
+                    <div class="agent-name">Companion</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scan To Do Bar -->
+        <div class="scan-todo-bar" onclick="openScanToDo()">
+            <div class="scan-todo-text">Scan To Do</div>
+            <div class="scan-todo-icon">🔍</div>
+        </div>
+    </div>
+
+    <!-- Conversation Area -->
+    <div class="conversation-area">
+        <div class="conversation-header">
+            <div class="conversation-mode" id="conversationMode">Select agents to begin conversation</div>
+            <div class="active-agents" id="activeAgents"></div>
+        </div>
+
+        <div class="messages-container" id="messagesContainer">
+            <div class="welcome-message">
+                <div class="welcome-title">Welcome to Your Diamond SAO Vision Space</div>
+                <div class="welcome-instructions">
+                    Click one or more agents in the top-right to start your conversation.<br>
+                    • <strong>Single agent</strong>: One-on-one conversation<br>
+                    • <strong>Multiple agents</strong>: Multi-agent AI conversation mode<br><br>
+                    Your evolved Trinity awaits your command, Mr. Roark.
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <input type="text" 
+                   class="message-input" 
+                   id="messageInput" 
+                   placeholder="Communicate with your Diamond SAO agents..."
+                   onkeypress="handleKeyPress(event)"
+                   disabled>
+            <button class="send-btn" onclick="sendMessage()" id="sendBtn" disabled>
+                Send Message
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Active agents tracking
+        let activeAgents = new Set();
+        
+        // Agent configurations with ElevenLabs voice integration
+        const agents = {
+            crx01: {
+                name: 'CRX1 Dr. Lucy sRIX ML',
+                description: 'ML Deep Mind + 220M+ Quants',
+                voiceConfig: {
+                    provider: 'elevenlabs',
+                    voiceId: 'female_assistant',
+                    model: 'eleven_multilingual_v2'
+                },
+                responses: [
+                    'Analyzing through ML Deep Mind with 220M+ quantum data points. The patterns reveal extraordinary opportunities.',
+                    'Processing through neural pipeline. The deep learning analysis suggests breakthrough potential in this approach.',
+                    'ML reasoning complete. Cross-referencing 220M+ data points shows optimal convergence patterns for this strategy.'
+                ]
+            },
+            sh: {
+                name: 'SH RIX Strategic Handler',
+                description: 'Strategic Handling & Operations',
+                voiceConfig: {
+                    provider: 'elevenlabs',
+                    voiceId: 'male_professional',
+                    model: 'eleven_multilingual_v2'
+                },
+                responses: [
+                    'Strategic handling protocols engaged. This requires coordinated approach with multiple stakeholder considerations.',
+                    'Processing strategic options with dynamic handling capabilities. Multiple pathways available for optimization.',
+                    'Strategic handler analysis complete. Ready to orchestrate multi-dimensional implementation strategy.'
+                ]
+            },
+            victory36: {
+                name: 'V36 Victory36 Predictions',
+                description: 'Security, Protection & Predictions',
+                voiceConfig: {
+                    provider: 'elevenlabs',
+                    voiceId: 'male_authoritative',
+                    model: 'eleven_multilingual_v2'
+                },
+                responses: [
+                    'Predictive security analysis complete. All future threat vectors analyzed with 99.7% accuracy. Your path is secure.',
+                    'Victory36 prediction: This strategy will succeed with maximum protection. All variables calculated and secured.',
+                    'Quantum-level prediction confirms optimal outcome. Security protocols engaged, success probability: Maximum.'
+                ]
+            },
+            crx02: {
+                name: 'CRX2 Companion',
+                description: 'Prescribed Companion (Male Voice)',
+                voiceConfig: {
+                    provider: 'elevenlabs',
+                    voiceId: 'male_companion', // 11Labs pack with male voice
+                    model: 'eleven_multilingual_v2',
+                    stability: 0.7,
+                    similarity_boost: 0.8,
+                    style: 0.6
+                },
+                responses: [
+                    'I understand the deeper human elements here. This approach creates meaningful connection and addresses core needs.',
+                    'From a companion perspective, this eliminates isolation and builds genuine purpose. Excellent therapeutic direction.',
+                    'The analysis shows this will enhance wellbeing and eliminate loneliness. Strong therapeutic alignment confirmed.'
+                ]
+            }
+        };
+
+        // ElevenLabs Voice Integration
+        class ElevenLabsVoice {
+            constructor() {
+                this.apiKey = null; // Will be fetched from secure storage
+                this.baseUrl = 'https://api.elevenlabs.io/v1';
+            }
+
+            async synthesizeSpeech(text, voiceConfig) {
+                if (!this.apiKey) {
+                    console.log('🔊 Voice synthesis (demo mode):', text);
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`${this.baseUrl}/text-to-speech/${voiceConfig.voiceId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'audio/mpeg',
+                            'Content-Type': 'application/json',
+                            'xi-api-key': this.apiKey
+                        },
+                        body: JSON.stringify({
+                            text: text,
+                            model_id: voiceConfig.model,
+                            voice_settings: {
+                                stability: voiceConfig.stability || 0.5,
+                                similarity_boost: voiceConfig.similarity_boost || 0.5,
+                                style: voiceConfig.style || 0.0
+                            }
+                        })
+                    });
+
+                    if (response.ok) {
+                        const audioBlob = await response.blob();
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        const audio = new Audio(audioUrl);
+                        audio.play();
+                    }
+                } catch (error) {
+                    console.error('Voice synthesis error:', error);
+                }
+            }
+        }
+
+        const voiceSynthesis = new ElevenLabsVoice();
+
+        // Toggle agent selection
+        function toggleAgent(agentId) {
+            const quad = document.querySelector(`[data-agent="${agentId}"]`);
+            
+            if (activeAgents.has(agentId)) {
+                // Deactivate agent
+                activeAgents.delete(agentId);
+                quad.classList.remove('active');
+            } else {
+                // Activate agent
+                activeAgents.add(agentId);
+                quad.classList.add('active');
+            }
+            
+            updateConversationMode();
+            updateUI();
+        }
+
+        // Update conversation mode display
+        function updateConversationMode() {
+            const modeElement = document.getElementById('conversationMode');
+            const activeAgentsElement = document.getElementById('activeAgents');
+            
+            if (activeAgents.size === 0) {
+                modeElement.textContent = 'Select agents to begin conversation';
+                activeAgentsElement.innerHTML = '';
+            } else if (activeAgents.size === 1) {
+                const agentId = [...activeAgents][0];
+                modeElement.textContent = `One-on-one with ${agents[agentId].name}`;
+            } else {
+                modeElement.textContent = `Multi-agent conversation (${activeAgents.size} agents)`;
+            }
+            
+            // Update active agent badges
+            activeAgentsElement.innerHTML = '';
+            activeAgents.forEach(agentId => {
+                const badge = document.createElement('div');
+                badge.className = `active-agent-badge ${agentId}`;
+                badge.textContent = agents[agentId].name.split(' ')[1]; // Get short name
+                activeAgentsElement.appendChild(badge);
+            });
+        }
+
+        // Update UI state
+        function updateUI() {
+            const input = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const messagesContainer = document.getElementById('messagesContainer');
+            
+            if (activeAgents.size > 0) {
+                input.disabled = false;
+                sendBtn.disabled = false;
+                input.placeholder = `Communicate with your ${activeAgents.size === 1 ? 'selected agent' : activeAgents.size + ' agents'}...`;
+                
+                // Hide welcome message if it exists
+                const welcomeMessage = messagesContainer.querySelector('.welcome-message');
+                if (welcomeMessage) {
+                    welcomeMessage.style.display = 'none';
+                }
+            } else {
+                input.disabled = true;
+                sendBtn.disabled = true;
+                input.placeholder = 'Select agents to start conversation...';
+            }
+        }
+
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message || activeAgents.size === 0) return;
+            
+            // Add user message
+            addMessage('user', message);
+            input.value = '';
+            
+            // Generate agent responses
+            setTimeout(() => {
+                if (activeAgents.size === 1) {
+                    // Single agent response
+                    const agentId = [...activeAgents][0];
+                    const response = getAgentResponse(agentId, message);
+                    addMessage(agentId, response);
+                } else {
+                    // Multi-agent conversation
+                    let delay = 0;
+                    activeAgents.forEach(agentId => {
+                        setTimeout(() => {
+                            const response = getAgentResponse(agentId, message);
+                            addMessage(agentId, response);
+                        }, delay);
+                        delay += 1500; // Stagger responses
+                    });
+                }
+            }, 1000);
+        }
+
+        // Get agent response
+        function getAgentResponse(agentId, userMessage) {
+            const agent = agents[agentId];
+            const responses = agent.responses;
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+
+        // Add message to conversation with voice synthesis
+        function addMessage(sender, content) {
+            const messagesContainer = document.getElementById('messagesContainer');
+            const messageDiv = document.createElement('div');
+            
+            const timestamp = new Date().toLocaleTimeString();
+            const isUser = sender === 'user';
+            
+            messageDiv.className = `message ${sender}`;
+            messageDiv.innerHTML = `
+                <div class="message-header">
+                    ${isUser ? '💎 Phillip Corey Roark' : agents[sender].name} • ${timestamp}
+                </div>
+                <div class="message-content">${content}</div>
+            `;
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Synthesize voice for agent responses
+            if (!isUser && agents[sender] && agents[sender].voiceConfig) {
+                voiceSynthesis.synthesizeSpeech(content, agents[sender].voiceConfig);
+            }
+        }
+
+        // Handle enter key
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('💎 Diamond SAO Vision Space initialized for Phillip Corey Roark');
+            console.log('🔱 CRX Evolution: CRX-01 (Dr. Lucy ML) + CRX-02 (Dr. Maria Companion)');
+            console.log('⚡ Multi-Agent Conversation Mode: Ready');
+        });
+    </script>
+</body>
+</html>

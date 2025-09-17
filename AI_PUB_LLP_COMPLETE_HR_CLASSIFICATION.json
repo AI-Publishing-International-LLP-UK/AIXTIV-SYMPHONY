@@ -1,0 +1,367 @@
+{
+  "ai_publishing_international_llp": {
+    "hrai_crms_hr_classification": {
+      "system_version": "2.1",
+      "last_updated": "2025-01-17T14:12:00Z",
+      "total_members": 12,
+      "classification_summary": {
+        "hr1_members": 2,
+        "hr2_members": 0,
+        "hr3_members": 2,
+        "hr4_members": 8
+      },
+      "hr_classifications": {
+        "hr1_llp_member_fulltime_contractor": [
+          {
+            "member_id": "0000001",
+            "name": "Mr. Phillip Corey Roark",
+            "email": "pc@coaching2100.com",
+            "position": "Diamond SAO (CEO)",
+            "classification": ".hr1",
+            "join_date": "2021-01-01",
+            "sao_level": "Diamond",
+            "authority_level": "Unlimited Super Admin",
+            "ownership_stake_percent": "88.875%",
+            "ownership_stake_note": "Owns all outstanding shares not specifically allocated to other members",
+            "ownership_stake_dollar_value": "Pending company valuation",
+            "status": "Active"
+          },
+          {
+            "member_id": "0000002",
+            "name": "Mr. Morgan O'Brian",
+            "email": "mo@coaching2100.com",
+            "position": "Emerald SAO (Executive Administrative Officer)",
+            "classification": ".hr1",
+            "join_date": "2021-02-01",
+            "sao_level": "Emerald",
+            "authority_level": "Nearly Unlimited Super Admin -01",
+            "ownership_stake_percent": "3.0%",
+            "ownership_stake_dollar_value": "Pending company valuation",
+            "status": "Active"
+          }
+        ],
+        "hr2_llp_member_employee": [],
+        "hr3_nonmember_employee_contractor": [
+          {
+            "member_id": "0000011",
+            "name": "Sr. Alexander Oliveros (Aldexand)",
+            "email": "av@coaching2100.com",
+            "position": "Publicidad Latam",
+            "classification": ".hr3",
+            "join_date": "2021-05-01",
+            "employment_type": "Employee/Contractor",
+            "llp_membership": "Non-member",
+            "ownership_stake_percent": "0%",
+            "status": "Active"
+          },
+          {
+            "member_id": "0000012",
+            "name": "Sr. Yonatan Martinez",
+            "email": "ym@coaching2100.com",
+            "position": "Publicidad Latam",
+            "classification": ".hr3",
+            "join_date": "2021-05-01",
+            "employment_type": "Employee/Contractor",
+            "llp_membership": "Non-member",
+            "ownership_stake_percent": "0%",
+            "status": "Active"
+          }
+        ],
+        "hr4_llp_member_no_employment": [
+          {
+            "member_id": "0000003",
+            "name": "Mr. Roger A. Mahoney",
+            "email": "uk@coaching2100.com",
+            "position": "Executive Director, EMEA",
+            "classification": ".hr4",
+            "join_date": "2021-04-01",
+            "llp_membership": "Active Member",
+            "employment_relationship": "None",
+            "ownership_stake_percent": "2.0%",
+            "ownership_stake_dollar_value": "Pending company valuation",
+            "status": "Active"
+          },
+          {
+            "member_id": "0000004",
+            "name": "Mr. Joshua Galbreath",
+            "email": "jg@coaching2100.com",
+            "position": "Executive Growth Officer",
+            "classification": ".hr4",
+            "join_date": "2021-03-01",
+            "llp_membership": "Active Member",
+            "employment_relationship": "None",
+            "ownership_stake_percent": "3.0%",
+            "ownership_stake_dollar_value": "Pending company valuation",
+            "status": "Active"
+          },
+          {
+            "member_id": "0000005",
+            "name": "Mr. Eduardo Testa",
+            "email": "et@coaching2100.com",
+            "position": "International Growth Officer",
+            "classification": ".hr4",
+            "join_date": "2021-03-15",
+            "llp_membership": "Active Member",
+            "employment_relationship": "None",
+            "ownership_stake_percent": "TBD",
+            "ownership_stake_dollar_value": "Pending stake assignment",
+            "status": "Active"
+          },
+          {
+            "member_id": "0000006",
+            "name": "Mr. Aaron Harris",
+            "email": "TBD@coaching2100.com",
+            "position": "TBD",
+            "classification": ".hr4",
+            "join_date": "TBD",
+            "llp_membership": "Active Member",
+            "employment_relationship": "None",
+            "ownership_stake_percent": "1.0%",
+            "ownership_stake_dollar_value": "Pending company valuation",
+            "status": "Active"
+          },
+          {
+            "member_id": "0000007",
+            "name": "Mr. Steven R. Jolly",
+            "email": "TBD@coaching2100.com",
+            "position": "TBD",
+            "classification": ".hr4",
+            "join_date": "TBD",
+            "llp_membership": "Active Member",
+            "employment_relationship": "None",
+            "ownership_stake_percent": "1.0%",
+            "ownership_stake_dollar_value": "Pending company valuation",
+            "status": "Active"
+          },
+          {
+            "member_id": "0000008",
+            "name": "Ms. Melika Rafiei",
+            "email": "TBD@coaching2100.com",
+            "position": "TBD",
+            "classification": ".hr4",
+            "join_date": "TBD",
+            "llp_membership": "Active Member",
+            "employment_relationship": "None",
+            "ownership_stake_percent": "0.25%",
+            "ownership_stake_note": "Co-owns 0.50% total with Adam Keith",
+            "ownership_stake_dollar_value": "Pending company valuation",
+            "status": "Active"
+          },
+          {
+            "member_id": "0000009",
+            "name": "Mr. Adam Keith",
+            "email": "TBD@coaching2100.com",
+            "position": "TBD",
+            "classification": ".hr4",
+            "join_date": "TBD",
+            "llp_membership": "Active Member",
+            "employment_relationship": "None",
+            "ownership_stake_percent": "0.25%",
+            "ownership_stake_note": "Co-owns 0.50% total with Melika Rafiei",
+            "ownership_stake_dollar_value": "Pending company valuation",
+            "status": "Active"
+          },
+          {
+            "member_id": "0000010",
+            "name": "Mr. Tadeo Aguilera",
+            "email": "TBD@coaching2100.com",
+            "position": "TBD",
+            "classification": ".hr4",
+            "join_date": "TBD",
+            "llp_membership": "Active Member",
+            "employment_relationship": "None",
+            "ownership_stake_percent": "0.125%",
+            "ownership_stake_dollar_value": "Pending company valuation",
+            "status": "Active"
+          },
+          {
+            "member_id": "0000011",
+            "name": "Mr. David Goggin",
+            "email": "TBD@coaching2100.com",
+            "position": "TBD",
+            "classification": ".hr4",
+            "join_date": "TBD",
+            "llp_membership": "Active Member",
+            "employment_relationship": "None",
+            "ownership_stake_percent": "0.125%",
+            "ownership_stake_dollar_value": "Pending company valuation",
+            "status": "Active"
+          },
+          {
+            "member_id": "0000012",
+            "name": "Ms. Lisa Goldenthal",
+            "email": "TBD@coaching2100.com",
+            "position": "TBD",
+            "classification": ".hr4",
+            "join_date": "TBD",
+            "llp_membership": "Active Member",
+            "employment_relationship": "None",
+            "ownership_stake_percent": "0.125%",
+            "ownership_stake_dollar_value": "Pending company valuation",
+            "status": "Active"
+          }
+        ]
+      },
+      "ownership_summary": {
+        "total_defined_stakes": "100.0%",
+        "remaining_stakes_undefined": "0.0%",
+        "major_stakeholders": [
+          {
+            "name": "Mr. Phillip Corey Roark",
+            "stake": "88.875%",
+            "note": "Owns all outstanding shares"
+          },
+          {
+            "name": "Mr. Joshua Galbreath",
+            "stake": "3.0%"
+          },
+          {
+            "name": "Mr. Morgan O'Brian",
+            "stake": "3.0%"
+          },
+          {
+            "name": "Mr. Roger A. Mahoney",
+            "stake": "2.0%"
+          },
+          {
+            "name": "Mr. Aaron Harris",
+            "stake": "1.0%"
+          },
+          {
+            "name": "Mr. Steven R. Jolly",
+            "stake": "1.0%"
+          },
+          {
+            "name": "Ms. Melika Rafiei & Mr. Adam Keith (co-owned)",
+            "stake": "0.50%"
+          },
+          {
+            "name": "Mr. Tadeo Aguilera",
+            "stake": "0.125%"
+          },
+          {
+            "name": "Mr. David Goggin",
+            "stake": "0.125%"
+          },
+          {
+            "name": "Ms. Lisa Goldenthal",
+            "stake": "0.125%"
+          }
+        ]
+      },
+      "valuation_calculation_pending": {
+        "instruction": "To calculate dollar values, provide company valuation",
+        "examples": {
+          "if_valuation_10M": {
+            "phillip_roark_88_875_percent": "$8,887,500",
+            "joshua_galbreath_3_percent": "$300,000",
+            "morgan_obrian_3_percent": "$300,000",
+            "roger_mahoney_2_percent": "$200,000",
+            "aaron_harris_1_percent": "$100,000",
+            "steven_jolly_1_percent": "$100,000"
+          },
+          "if_valuation_50M": {
+            "phillip_roark_88_875_percent": "$44,437,500",
+            "joshua_galbreath_3_percent": "$1,500,000",
+            "morgan_obrian_3_percent": "$1,500,000",
+            "roger_mahoney_2_percent": "$1,000,000",
+            "aaron_harris_1_percent": "$500,000",
+            "steven_jolly_1_percent": "$500,000"
+          },
+          "if_valuation_100M": {
+            "phillip_roark_88_875_percent": "$88,875,000",
+            "joshua_galbreath_3_percent": "$3,000,000",
+            "morgan_obrian_3_percent": "$3,000,000",
+            "roger_mahoney_2_percent": "$2,000,000",
+            "aaron_harris_1_percent": "$1,000,000",
+            "steven_jolly_1_percent": "$1,000,000"
+          }
+        }
+      },
+      "integration_details": {
+        "database_systems": {
+          "primary": "MongoDB Atlas (HRAI-CRMS)",
+          "partition": "D1 Cloudflare Database (12 partitions)",
+          "intelligence": "ASOOS Intelligence Methods",
+          "security": "sallyport.2100.cool OAuth2"
+        },
+        "financial_integrations": {
+          "accounting_system": {
+            "provider": "Xero",
+            "entities": {
+              "uk_llp": {
+                "entity_name": "AI Publishing International LLP (UK)",
+                "entity_type": "llp",
+                "region": "uk",
+                "base_currency": "GBP",
+                "country_code": "GB",
+                "time_zone": "Europe/London",
+                "vat_enabled": true,
+                "making_tax_digital": true,
+                "oauth2_endpoint": "https://login.xero.com/identity/connect/authorize",
+                "api_base": "https://api.xero.com/api.xro/2.0",
+                "compliance_requirements": ["Companies House", "HMRC", "UK GAAP", "Making Tax Digital", "GDPR"]
+              },
+              "us_llc": {
+                "entity_name": "AI Publishing International LLP (US)",
+                "entity_type": "llc",
+                "region": "us",
+                "base_currency": "USD",
+                "country_code": "US",
+                "time_zone": "America/Los_Angeles",
+                "sales_tax_enabled": true,
+                "tax_reporting": "quarterly",
+                "oauth2_endpoint": "https://login.xero.com/identity/connect/authorize",
+                "api_base": "https://api.xero.com/api.xro/2.0",
+                "compliance_requirements": ["SOX", "GAAP", "IRS"]
+              }
+            },
+            "integration_features": {
+              "real_time_sync": true,
+              "webhook_enabled": true,
+              "batch_processing": true,
+              "rate_limiting": "60 requests/minute",
+              "scopes": ["accounting.transactions", "accounting.contacts", "accounting.settings", "accounting.reports.read", "offline_access"]
+            }
+          },
+          "payment_processing": {
+            "provider": "Stripe",
+            "configuration": {
+              "environment": "production",
+              "region": "us-west1",
+              "api_endpoint": "https://api.stripe.com/v1",
+              "webhook_endpoint": "https://integration-gateway-yutylytffa-uw.a.run.app/webhooks/stripe",
+              "zero_drift_mode": true,
+              "key_rotation_enabled": true,
+              "key_rotation_interval": "90 days",
+              "telemetry_opt_out": false,
+              "quantum_resistant_encryption": true
+            },
+            "security_features": {
+              "secrets_vault_integration": true,
+              "automatic_key_rotation": true,
+              "oauth2_authentication": true,
+              "signature_verification": true,
+              "audit_logging": true
+            },
+            "supported_operations": [
+              "payment_intents",
+              "subscriptions",
+              "invoices",
+              "customers",
+              "webhooks",
+              "balance_inquiries"
+            ]
+          }
+        },
+        "sao_system_integration": {
+          "diamond_sao": "Unlimited Super Admin",
+          "emerald_sao": "Nearly Unlimited Super Admin -01",
+          "sapphire_sao": "Client tier - Unlimited for instance",
+          "opal_sao": "Client tier - Limited per Sapphire",
+          "onyx_sao": "Client tier - Very limited"
+        }
+      }
+    }
+  }
+}

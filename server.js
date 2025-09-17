@@ -5,10 +5,10 @@
  * Cloud Run optimized with auto-scaling and health checks
  */
 
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const compression = require('compression');
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import compression from 'compression';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -60,7 +60,7 @@ app.get('/wfa/system-status', (req, res) => {
       region: process.env.CLOUD_ML_REGION || 'us-west1',
       node_version: process.version,
       memory_usage: process.memoryUsage(),
-      cpu_count: require('os').cpus().length,
+      cpu_count: process.env.CPU_COUNT || '2', // Cloud Run CPU allocation
       uptime_seconds: Math.floor(process.uptime())
     },
     environment_variables: {

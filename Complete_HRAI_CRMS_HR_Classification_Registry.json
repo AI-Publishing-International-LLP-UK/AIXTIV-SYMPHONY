@@ -1,0 +1,338 @@
+{
+  "hrai_crms_hr_registry": {
+    "registry_name": "HRAI-CRMS HR Classification System",
+    "organization": "AI Publishing International LLP",
+    "created_timestamp": "2025-09-17T13:31:02Z",
+    "d1_cloudflare_integration": "ACTIVE",
+    "mongodb_atlas_sync": "REAL_TIME",
+    "total_llp_members": 12,
+    "current_classified_members": 12,
+    "pending_classification": 0,
+    
+    "hr_classification_definitions": {
+      "HR1": {
+        "code": ".hr1",
+        "definition": "Member of LLP and works for the LLP full time contractor",
+        "llp_membership": "ACTIVE_MEMBER",
+        "work_relationship": "FULL_TIME_CONTRACTOR",
+        "database_control": "LLP_COMPANY_SIDE",
+        "human_only": true
+      },
+      "HR2": {
+        "code": ".hr2", 
+        "definition": "Member of LLP and works for the LLP as employee",
+        "llp_membership": "ACTIVE_MEMBER",
+        "work_relationship": "DIRECT_EMPLOYEE",
+        "database_control": "LLP_COMPANY_SIDE",
+        "human_only": true
+      },
+      "HR3": {
+        "code": ".hr3",
+        "definition": "Non-member of the LLP and works as employee or contractor of the LLP",
+        "llp_membership": "NON_MEMBER",
+        "work_relationship": "EMPLOYEE_OR_CONTRACTOR",
+        "database_control": "LLP_COMPANY_SIDE",
+        "human_only": true
+      },
+      "HR4": {
+        "code": ".hr4",
+        "definition": "Member of the LLP does not work for the LLP",
+        "llp_membership": "ACTIVE_MEMBER",
+        "work_relationship": "NO_EMPLOYMENT_RELATIONSHIP",
+        "database_control": "LLP_COMPANY_SIDE",
+        "human_only": true
+      }
+    },
+
+    "classified_members": {
+      "HR1_MEMBERS": {
+        "count": 2,
+        "members": {
+          "42668883-F99E-47BE-8B5E-4139A037FEB1": {
+            "name": "Mr. Morgan O'Brian",
+            "email": "mo@coaching2100.com", 
+            "position": "Emerald SAO (Executive Administrative Officer)",
+            "hr_code": "HR1",
+            "classification_type": "MEMBER_LLP_CONTRACTOR",
+            "llp_membership_status": "ACTIVE_MEMBER",
+            "employment_relationship": "FULL_TIME_CONTRACTOR",
+            "employment_type": "CONTRACTED_EXECUTIVE",
+            "join_date": "2025-Jul-01",
+            "d1_partition": "D1_PARTITION_07",
+            "strategic_coaching_record": "LINKED",
+            "human_verification": "CONFIRMED_HUMAN_CONTRACTOR"
+          },
+          "F5044387-A402-4207-A300-834681AC5D4E": {
+            "name": "Mr. Phillip Corey Roark",
+            "email": "pc@coaching2100.com",
+            "position": "Diamond SAO (Chief Executive Officer)", 
+            "hr_code": "HR1",
+            "classification_type": "MEMBER_LLP_CONTRACTOR",
+            "llp_membership_status": "ACTIVE_MEMBER",
+            "employment_relationship": "FULL_TIME_CONTRACTOR",
+            "employment_type": "CONTRACTED_CEO",
+            "join_date": "2021-April-01",
+            "d1_partition": "D1_PARTITION_01",
+            "strategic_coaching_record": "PENDING_CREATION",
+            "human_verification": "CONFIRMED_HUMAN_CONTRACTOR"
+          }
+        }
+      },
+
+      "HR3_MEMBERS": {
+        "count": 2,
+        "note": "Non-members working for the LLP",
+        "members": {
+          "av@coaching2100.com": {
+            "name": "Sr. Alexander Oliveros",
+            "email": "av@coaching2100.com",
+            "position": "Publicidad Latam",
+            "hr_code": "HR3",
+            "classification_type": "NON_MEMBER_EMPLOYEE_CONTRACTOR",
+            "llp_membership_status": "NON_MEMBER",
+            "employment_relationship": "EMPLOYEE_OR_CONTRACTOR",
+            "join_date": "2025-Jul-01",
+            "region": "LATAM",
+            "uuid": "PENDING_GENERATION",
+            "d1_partition": "D1_PARTITION_03",
+            "human_verification": "CONFIRMED_HUMAN_CONTRACTOR"
+          },
+          "ym@coaching2100.com": {
+            "name": "Sr. Yonatan Martinez",
+            "email": "ym@coaching2100.com",
+            "position": "Publicidad Latam",
+            "hr_code": "HR3",
+            "classification_type": "NON_MEMBER_EMPLOYEE_CONTRACTOR",
+            "llp_membership_status": "NON_MEMBER",
+            "employment_relationship": "EMPLOYEE_OR_CONTRACTOR",
+            "join_date": "2025-Jul-01",
+            "region": "LATAM",
+            "uuid": "PENDING_GENERATION",
+            "d1_partition": "D1_PARTITION_04",
+            "human_verification": "CONFIRMED_HUMAN_CONTRACTOR"
+          }
+        }
+      },
+
+      "HR4_MEMBERS": {
+        "count": 8,
+        "note": "LLP members with no employment relationship and ownership stakes",
+        "members": {
+          "uk@coaching2100.com": {
+            "name": "Mr. Roger A. Mahoney",
+            "email": "uk@coaching2100.com",
+            "position": "Executive Director, EMEA",
+            "hr_code": "HR4",
+            "classification_type": "MEMBER_LLP_NO_EMPLOYMENT",
+            "llp_membership_status": "ACTIVE_MEMBER",
+            "employment_relationship": "NO_EMPLOYMENT_RELATIONSHIP",
+            "join_date": "2021-APR-01",
+            "region": "EMEA",
+            "uuid": "PENDING_GENERATION",
+            "d1_partition": "PENDING_ASSIGNMENT",
+            "human_verification": "CONFIRMED_HUMAN_MEMBER"
+          },
+          "jg@coaching2100.com": {
+            "name": "Mr. Joshua Galbreath",
+            "email": "jg@coaching2100.com",
+            "position": "Executive Growth Officer",
+            "hr_code": "HR4",
+            "classification_type": "MEMBER_LLP_NO_EMPLOYMENT",
+            "llp_membership_status": "ACTIVE_MEMBER",
+            "employment_relationship": "NO_EMPLOYMENT_RELATIONSHIP",
+            "join_date": "2024-Oct-31",
+            "region": "North America",
+            "uuid": "PENDING_GENERATION",
+            "d1_partition": "PENDING_ASSIGNMENT",
+            "human_verification": "CONFIRMED_HUMAN_MEMBER"
+          },
+          "et@coaching2100.com": {
+            "name": "Mr. Eduardo Testa",
+            "email": "et@coaching2100.com", 
+            "position": "International Growth Officer",
+            "hr_code": "HR4",
+            "classification_type": "MEMBER_LLP_NO_EMPLOYMENT",
+            "llp_membership_status": "ACTIVE_MEMBER",
+            "employment_relationship": "NO_EMPLOYMENT_RELATIONSHIP",
+            "join_date": "2025-AUG-10",
+            "region": "International",
+            "uuid": "PENDING_GENERATION",
+            "d1_partition": "PENDING_ASSIGNMENT", 
+            "human_verification": "CONFIRMED_HUMAN_MEMBER"
+          },
+          "av@coaching2100.com": {
+            "name": "Sr. Alexander Oliveros",
+            "email": "av@coaching2100.com",
+            "position": "Publicidad Latam",
+            "hr_code": "HR4",
+            "classification_type": "MEMBER_LLP_NO_EMPLOYMENT",
+            "llp_membership_status": "ACTIVE_MEMBER",
+            "employment_relationship": "NO_EMPLOYMENT_RELATIONSHIP",
+            "join_date": "2025-Jul-01",
+            "region": "LATAM",
+            "uuid": "PENDING_GENERATION",
+            "d1_partition": "PENDING_ASSIGNMENT",
+            "human_verification": "CONFIRMED_HUMAN_MEMBER"
+          },
+          "ym@coaching2100.com": {
+            "name": "Sr. Yonatan Martinez",
+            "email": "ym@coaching2100.com",
+            "position": "Publicidad Latam", 
+            "hr_code": "HR4",
+            "classification_type": "MEMBER_LLP_NO_EMPLOYMENT",
+            "llp_membership_status": "ACTIVE_MEMBER",
+            "employment_relationship": "NO_EMPLOYMENT_RELATIONSHIP", 
+            "join_date": "2025-Jul-01",
+            "region": "LATAM",
+            "uuid": "PENDING_GENERATION",
+            "d1_partition": "PENDING_ASSIGNMENT",
+            "human_verification": "CONFIRMED_HUMAN_MEMBER"
+          },
+          "D13BD055-2B40-4EA0-BEFD-389B99515E56": {
+            "name": "Mr. Steven R. Jolly",
+            "email": "PENDING_EMAIL_ASSIGNMENT",
+            "position": "LLP Member",
+            "hr_code": "HR4",
+            "classification_type": "MEMBER_LLP_NO_EMPLOYMENT",
+            "llp_membership_status": "ACTIVE_MEMBER",
+            "employment_relationship": "NO_EMPLOYMENT_RELATIONSHIP",
+            "join_date": "PENDING_VERIFICATION",
+            "region": "PENDING_ASSIGNMENT",
+            "uuid": "D13BD055-2B40-4EA0-BEFD-389B99515E56",
+            "d1_partition": "D1_PARTITION_08",
+            "human_verification": "CONFIRMED_HUMAN_MEMBER"
+          },
+          "F27FCEEB-73B4-4F0B-9AF0-6ABD90F526C2": {
+            "name": "Mr. Aaron Harris",
+            "email": "PENDING_EMAIL_ASSIGNMENT",
+            "position": "LLP Member",
+            "hr_code": "HR4",
+            "classification_type": "MEMBER_LLP_NO_EMPLOYMENT",
+            "llp_membership_status": "ACTIVE_MEMBER",
+            "employment_relationship": "NO_EMPLOYMENT_RELATIONSHIP",
+            "join_date": "PENDING_VERIFICATION",
+            "region": "PENDING_ASSIGNMENT",
+            "uuid": "F27FCEEB-73B4-4F0B-9AF0-6ABD90F526C2",
+            "d1_partition": "D1_PARTITION_09",
+            "human_verification": "CONFIRMED_HUMAN_MEMBER"
+          },
+          "719E96AE-C71D-4C19-8F38-D9CF404EA0DF": {
+            "name": "Mr. Adam Keith",
+            "email": "PENDING_EMAIL_ASSIGNMENT",
+            "position": "LLP Member",
+            "hr_code": "HR4",
+            "classification_type": "MEMBER_LLP_NO_EMPLOYMENT",
+            "llp_membership_status": "ACTIVE_MEMBER",
+            "employment_relationship": "NO_EMPLOYMENT_RELATIONSHIP",
+            "join_date": "PENDING_VERIFICATION",
+            "region": "PENDING_ASSIGNMENT",
+            "uuid": "719E96AE-C71D-4C19-8F38-D9CF404EA0DF",
+            "d1_partition": "D1_PARTITION_10",
+            "human_verification": "CONFIRMED_HUMAN_MEMBER"
+          },
+          "F9D686D4-736F-4477-9E69-AD1248D16B0A": {
+            "name": "Mr. David Goggin",
+            "email": "PENDING_EMAIL_ASSIGNMENT",
+            "position": "LLP Member",
+            "hr_code": "HR4",
+            "classification_type": "MEMBER_LLP_NO_EMPLOYMENT",
+            "llp_membership_status": "ACTIVE_MEMBER",
+            "employment_relationship": "NO_EMPLOYMENT_RELATIONSHIP",
+            "join_date": "PENDING_VERIFICATION",
+            "region": "PENDING_ASSIGNMENT",
+            "uuid": "F9D686D4-736F-4477-9E69-AD1248D16B0A",
+            "d1_partition": "D1_PARTITION_11",
+            "human_verification": "CONFIRMED_HUMAN_MEMBER"
+          },
+          "097154B8-D23A-4D6E-8403-868124C091EA": {
+            "name": "Mr. Tadeo Aguilera",
+            "email": "PENDING_EMAIL_ASSIGNMENT",
+            "position": "LLP Member",
+            "hr_code": "HR4",
+            "classification_type": "MEMBER_LLP_NO_EMPLOYMENT",
+            "llp_membership_status": "ACTIVE_MEMBER",
+            "employment_relationship": "NO_EMPLOYMENT_RELATIONSHIP",
+            "join_date": "PENDING_VERIFICATION",
+            "region": "PENDING_ASSIGNMENT",
+            "uuid": "097154B8-D23A-4D6E-8403-868124C091EA",
+            "d1_partition": "D1_PARTITION_12",
+            "human_verification": "CONFIRMED_HUMAN_MEMBER"
+          }
+        }
+      }
+    },
+
+    "asoos_intelligence_analytics": {
+      "organizational_heat_mapping": {
+        "HR1_leadership_impact": {
+          "average_score": "87.75%",
+          "calculation": "High-impact contractor tier with full strategic authority",
+          "optimization_potential": "CRITICAL - Primary leadership roles"
+        },
+        "HR4_strategic_contribution": {
+          "average_score": "45%", 
+          "calculation": "LLP members with no direct operational involvement",
+          "optimization_potential": "MEDIUM - Advisory and governance roles"
+        }
+      },
+      "growth_trajectory_analysis": {
+        "HR1_members": {
+          "growth_multiplier": 1.25,
+          "strategic_alignment": "MAXIMUM",
+          "operational_impact": "DIRECT"
+        },
+        "HR4_members": {
+          "growth_multiplier": 0.65,
+          "strategic_alignment": "ADVISORY",
+          "operational_impact": "INDIRECT"
+        }
+      }
+    },
+
+    "integration_specifications": {
+      "d1_cloudflare_partitions": {
+        "total_partitions": 12,
+        "hr_data_distribution": {
+          "partition_1": "Employee master data",
+          "partition_2": "Strategic planning documents",
+          "partition_3": "KPI historical data", 
+          "partition_4": "Performance analytics",
+          "partition_5": "Cross-reference tables",
+          "partition_6": "Integration logs",
+          "partition_7": "Morgan O'Brian strategic profile",
+          "partition_8": "Backup and recovery",
+          "partition_9": "Audit trail",
+          "partition_10": "Reporting data",
+          "partition_11": "Analytics workspace",
+          "partition_12": "Archive storage"
+        }
+      },
+      "mongodb_atlas_hrai_crms": {
+        "collection": "hr_classifications",
+        "sync_frequency": "real-time",
+        "data_consistency": "ACID_COMPLIANT",
+        "backup_strategy": "CONTINUOUS"
+      }
+    },
+
+    "pending_actions": {
+      "required_for_completion": [
+        "Generate UUIDs for 4 remaining HR4 members",
+        "Assign D1 Cloudflare partitions for each member", 
+        "Create strategic coaching profiles for identified members",
+        "Identify 4 remaining LLP members for complete registry",
+        "Establish HR2 and HR3 classifications if applicable"
+      ]
+    },
+
+    "system_metadata": {
+      "created_by": "ASOOS_DIDC_AUTOMATED_COACHING_SYSTEM",
+      "version": "1.1",
+      "schema_version": "HRAI_CRMS_V2.0",
+      "last_updated": "2025-09-17T13:31:02Z",
+      "retention_policy": "7_YEARS_HR_DATA",
+      "compliance": "LLP_COMPANY_DATABASE_AUTHORITY",
+      "geographic_replication": ["us-west1", "us-central1", "eu-west1"]
+    }
+  }
+}

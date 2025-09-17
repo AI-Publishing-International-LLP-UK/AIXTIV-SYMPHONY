@@ -1,0 +1,181 @@
+{
+  "owner_subscriber_profile": {
+    "member_details": {
+      "member_id": "0000002",
+      "name": "Mr. Morgan O'Brian",
+      "email": "mo@coaching2100.com",
+      "position": "Emerald SAO (Executive Administrative Officer)",
+      "classification": ".hr1",
+      "sao_level": "Emerald",
+      "authority_level": "Nearly Unlimited Super Admin -01",
+      "ownership_stake": "3.0%",
+      "llp_membership": "Active Member",
+      "employment_relationship": "Full-time Contractor"
+    },
+    "financial_system_access": {
+      "access_level": "Administrative",
+      "xero_integration": {
+        "uk_llp_entity": {
+          "access_type": "Full Administrative",
+          "permissions": [
+            "accounting.transactions",
+            "accounting.contacts",
+            "accounting.settings",
+            "accounting.reports.read",
+            "payroll.employees",
+            "offline_access"
+          ],
+          "reporting_access": "Complete UK entity financial data",
+          "vat_management": true,
+          "making_tax_digital": true
+        },
+        "us_llc_entity": {
+          "access_type": "Administrative Oversight",
+          "permissions": [
+            "accounting.transactions",
+            "accounting.reports.read",
+            "accounting.settings"
+          ],
+          "reporting_access": "US entity administrative summaries",
+          "tax_reporting": "Quarterly oversight"
+        }
+      },
+      "stripe_integration": {
+        "access_level": "Operations Management",
+        "permissions": {
+          "payment_intents": "Full management",
+          "subscriptions": "Full management",
+          "invoices": "Generate and manage",
+          "customers": "Full lifecycle management",
+          "webhooks": "Configure and monitor",
+          "balance_inquiries": "Real-time access",
+          "dashboard_access": "Administrative view",
+          "reporting": "Comprehensive payment analytics"
+        },
+        "security_clearance": {
+          "api_key_access": "Administrative",
+          "webhook_configuration": true,
+          "audit_log_access": true,
+          "key_rotation_oversight": true
+        }
+      }
+    },
+    "hrai_crms_integration": {
+      "database_access": {
+        "mongodb_atlas": "Administrative read/write",
+        "d1_cloudflare_partitions": "Financial partition access (7 of 12)",
+        "asoos_intelligence": "Strategic insights access",
+        "sallyport_oauth2": "Executive authentication level"
+      },
+      "strategic_coaching_data": {
+        "investment_strategy_access": true,
+        "leadership_development_metrics": "Full access",
+        "organizational_effectiveness_tracking": true,
+        "kpi_management": "Executive level",
+        "financial_performance_correlation": "Advanced analytics"
+      },
+      "ai_coaching_integration": {
+        "personalized_financial_coaching": true,
+        "strategic_decision_support": true,
+        "predictive_analytics": "Executive level",
+        "automated_reporting": "Custom financial dashboards",
+        "risk_assessment": "Real-time monitoring"
+      }
+    },
+    "ownership_based_benefits": {
+      "financial_reports": {
+        "frequency": "Real-time dashboard access",
+        "detail_level": "Comprehensive administrative view",
+        "profit_sharing_calculations": "Automated 3.0% calculations",
+        "ownership_value_tracking": "Real-time valuation updates"
+      },
+      "strategic_influence": {
+        "investment_decisions": "Advisory input on major decisions",
+        "financial_planning": "Executive administrative oversight",
+        "system_architecture": "Administrative approval authority",
+        "vendor_relationships": "Oversight of financial integrations"
+      },
+      "coaching_applications": {
+        "war_room_leadership": {
+          "financial_command_center": "Full access to Diamond SAO financial modules",
+          "investment_war_room": "Executive administrative coordination",
+          "strategic_planning": "Financial systems oversight"
+        },
+        "investment_pathway_guidance": {
+          "angel_investor_preparation": "Financial system readiness",
+          "series_a_preparation": "Administrative financial oversight",
+          "due_diligence_support": "Complete financial transparency"
+        },
+        "sales_team_mobilization": {
+          "financial_incentive_tracking": "Stripe integration for commissions",
+          "performance_metrics": "Real-time payment processing data",
+          "territory_management": "Multi-currency financial reporting"
+        }
+      }
+    },
+    "system_integration_status": {
+      "xero_status": "Fully Integrated",
+      "stripe_status": "Fully Integrated",
+      "hrai_crms_sync": "Real-time",
+      "d1_cloudflare_sync": "Active",
+      "mongodb_atlas_sync": "Active",
+      "sallyport_authentication": "Executive Level Active",
+      "diamond_sao_command_center": "Financial Module Access Granted"
+    },
+    "coaching_kpis": {
+      "financial_oversight_effectiveness": {
+        "target": "95% system uptime",
+        "current": "99.2%",
+        "trend": "Exceeding target"
+      },
+      "payment_processing_efficiency": {
+        "target": "Sub-2 second transaction processing",
+        "current": "1.3 seconds average",
+        "trend": "Optimal performance"
+      },
+      "financial_reporting_accuracy": {
+        "target": "99.9% automated reconciliation",
+        "current": "99.95%",
+        "trend": "Exceptional performance"
+      },
+      "multi_entity_coordination": {
+        "target": "Daily cross-entity reconciliation",
+        "current": "Real-time synchronization",
+        "trend": "Exceeding expectations"
+      },
+      "strategic_coaching_impact": {
+        "financial_decision_support": "Advanced AI-powered insights",
+        "leadership_development": "Emerald SAO executive coaching",
+        "organizational_effectiveness": "3.0% ownership optimization",
+        "innovation_guidance": "Financial system innovation leadership"
+      }
+    },
+    "next_strategic_priorities": {
+      "immediate_30_days": [
+        "Optimize financial reporting dashboards",
+        "Implement advanced Stripe analytics",
+        "Enhance Xero multi-entity reconciliation"
+      ],
+      "short_term_90_days": [
+        "Lead investment preparation financial systems",
+        "Deploy predictive cash flow analytics",
+        "Implement advanced fraud detection"
+      ],
+      "long_term_180_days": [
+        "Guide Series A financial preparation",
+        "Lead financial system scaling architecture",
+        "Implement AI-powered financial advisory features"
+      ]
+    },
+    "integration_metadata": {
+      "record_created": "2025-01-17T15:01:12Z",
+      "last_updated": "2025-01-17T15:01:12Z",
+      "d1_partition": "7",
+      "mongodb_collection": "owner_subscriber_financial_profiles",
+      "hrai_crms_version": "2.1",
+      "financial_integration_version": "1.0",
+      "status": "Active",
+      "classification": "Executive Financial Access"
+    }
+  }
+}

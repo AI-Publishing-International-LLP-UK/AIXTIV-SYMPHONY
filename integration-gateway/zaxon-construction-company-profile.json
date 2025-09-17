@@ -1,0 +1,145 @@
+{
+  "company_profile": {
+    "company_name": "Zaxon Construction",
+    "mcp_endpoint": "mcp.zaxon.2100.cool",
+    "company_domain": "zaxonconstruction.com",
+    "created": "2025-09-17T15:18:58Z",
+    "last_updated": "2025-09-17T15:18:58Z",
+    "status": "active",
+    
+    "owner_subscriber": {
+      "uuid": "F27FCEEB-73B4-4F0B-9AF0-6ABD90F526C2",
+      "name": "Mr. Aaron Harris",
+      "email": "aaron.harris@zaxonconstruction.com",
+      "hr_classification": ".hr4",
+      "classification_type": "MEMBER_LLP_NO_EMPLOYMENT",
+      "llp_membership_status": "ACTIVE_MEMBER",
+      "employment_relationship": "NO_EMPLOYMENT_RELATIONSHIP",
+      "sao_level": "SAPPHIRE",
+      "auth_level": 5,
+      "package_level": "sapphire",
+      "access_rights": [
+        "unlimited_super_admin_company_instance",
+        "full_company_access",
+        "executive_dashboard",
+        "construction_operations",
+        "strategic_planning",
+        "team_management"
+      ],
+      "position": "Owner / Sapphire SAO",
+      "join_date": "2025-09-17",
+      "region": "Arkansas-Tennessee-Mississippi-Louisiana",
+      "d1_partition": "D1_PARTITION_ZAXON_01",
+      "human_verification": "CONFIRMED_HUMAN_MEMBER_OWNER"
+    },
+    
+    "company_details": {
+      "industry": "construction",
+      "sectors": [
+        "commercial-roofs",
+        "residential-roofs", 
+        "paving"
+      ],
+      "coverage_regions": "Arkansas-Tennessee-Mississippi-Louisiana",
+      "business_type": "Construction Services",
+      "company_size": "Small-Medium Enterprise",
+      "work_types": [
+        "Commercial Roofing",
+        "Residential Roofing", 
+        "Paving & Infrastructure"
+      ],
+      "specializations": [
+        "Roofing Systems",
+        "Paving Solutions",
+        "Construction Management",
+        "Project Planning"
+      ]
+    },
+    
+    "pcp_configuration": {
+      "pcp_name": "ZENA",
+      "pcp_type": "CRx01",
+      "model": "DR_LUCY_ML_POWERHOUSE",
+      "specialization": "Construction Operations & Management",
+      "capabilities": [
+        "Project Management",
+        "Cost Estimation",
+        "Resource Planning",
+        "Quality Control",
+        "Safety Compliance",
+        "Client Communication"
+      ],
+      "industry_focus": "construction",
+      "bid_suite_enabled": true
+    },
+    
+    "technical_configuration": {
+      "cloud_run_service": "mcp-zaxon-2100-cool",
+      "region": "us-west1",
+      "integration_gateway_url": "https://integration-gateway-mcp-859242575175.us-west1.run.app",
+      "domain": "mcp.zaxon.2100.cool",
+      "sallyport_auth": "https://sallyport.2100.cool?company=zaxon-construction",
+      "oauth2_enabled": true,
+      "victory36_protection": true
+    },
+    
+    "service_configuration": {
+      "node_env": "production",
+      "service_name": "mcp-zaxon",
+      "memory": "1Gi",
+      "cpu": "1000m",
+      "concurrency": 80,
+      "max_instances": 100,
+      "timeout": 300,
+      "port": 8080
+    },
+    
+    "hrai_crms_integration": {
+      "hr_classification": ".hr4",
+      "registry_status": "ACTIVE",
+      "mongodb_collection": "companies",
+      "sync_frequency": "real-time",
+      "data_consistency": "ACID_COMPLIANT",
+      "backup_strategy": "CONTINUOUS"
+    },
+    
+    "business_intelligence": {
+      "analytics_enabled": true,
+      "reporting_dashboard": true,
+      "roi_tracking": true,
+      "performance_metrics": [
+        "Project Completion Rate",
+        "Cost Efficiency",
+        "Client Satisfaction",
+        "Safety Record",
+        "Resource Utilization"
+      ]
+    },
+    
+    "integration_points": {
+      "sallyport_verification": "active",
+      "integration_gateway": "connected",
+      "mongodb_atlas": "synced",
+      "hrai_crms": "integrated",
+      "voice_services": "disabled_per_preference",
+      "oauth2_providers": [
+        "google",
+        "microsoft"
+      ]
+    },
+    
+    "access_control": {
+      "authentication_level": "SAPPHIRE_SAO",
+      "multi_factor_required": true,
+      "session_timeout": 8,
+      "api_access": true,
+      "admin_privileges": [
+        "user_management",
+        "system_configuration", 
+        "billing_access",
+        "data_export",
+        "integration_management"
+      ]
+    }
+  }
+}

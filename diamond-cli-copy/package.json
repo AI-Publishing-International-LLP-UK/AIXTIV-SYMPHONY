@@ -46,7 +46,16 @@
   },
   "overrides": {
     "jose": "^5.0.0",
-    "protobufjs": "^7.4.0"
+    "protobufjs": "^7.5.4",
+    "braces": "^3.0.3",
+    "minimatch": "^10.0.1",
+    "semver": "^7.7.2",
+    "node-fetch": "^2.7.0",
+    "ws": "^8.18.0",
+    "follow-redirects": "^1.15.9",
+    "axios": "^1.12.2",
+    "tar": "^7.4.3",
+    "json5": "^2.2.3"
   },
   "repository": {
     "type": "git",

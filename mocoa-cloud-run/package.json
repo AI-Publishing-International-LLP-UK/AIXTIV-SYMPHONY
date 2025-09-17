@@ -46,5 +46,17 @@
     "type": "git",
     "url": "https://github.com/asoos/mocoa-interface.git"
   },
-  "homepage": "https://mocoa-858242575175.us-west1.run.app"
+  "homepage": "https://mocoa-858242575175.us-west1.run.app",
+  "overrides": {
+    "braces": "^3.0.3",
+    "minimatch": "^10.0.1",
+    "semver": "^7.7.2",
+    "node-fetch": "^2.7.0",
+    "ws": "^8.18.0",
+    "follow-redirects": "^1.15.9",
+    "protobufjs": "^7.5.4",
+    "axios": "^1.12.2",
+    "tar": "^7.4.3",
+    "json5": "^2.2.3"
+  }
 }

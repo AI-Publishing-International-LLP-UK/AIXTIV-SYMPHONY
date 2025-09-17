@@ -34,6 +34,9 @@ class DiamondCore {
         case 'gateway':
           await this.deployGateway(action, args);
           break;
+        case 'quants':
+          await this.deployQuantsSwarm(action, args);
+          break;
         default:
           this.cli.log.warn(`Unknown service type: ${service}`);
       }
@@ -266,6 +269,45 @@ class DiamondCore {
     } catch (error) {
       this.cli.log.error(`Failed to get service status: ${error.message}`);
     }
+  }
+
+  async deployQuantsSwarm(action, args) {
+    this.cli.log.deploy(`📊 Deploying quants swarm: ${action}`);
+    
+    try {
+      // Deploy quantum analytics infrastructure
+      await this.deployQuantumAnalytics(args);
+      
+      // Setup ML swarm intelligence services
+      await this.deployMLSwarmIntelligence(args);
+      
+      // Configure mocoa-quantum-middleware
+      await this.deployService('mocoa-quantum-middleware', args);
+      
+      this.cli.log.success('✅ Quants swarm deployment completed');
+    } catch (error) {
+      this.cli.log.error(`Quants swarm deployment failed: ${error.message}`);
+      throw error;
+    }
+  }
+
+  async deployQuantumAnalytics(args) {
+    this.cli.log.info('🔬 Deploying quantum analytics infrastructure...');
+    
+    // Deploy analytics services
+    await this.deployService('ml-swarm-intelligence', args);
+    await this.deployService('quantum-speed-analytics', args);
+  }
+
+  async deployMLSwarmIntelligence(args) {
+    this.cli.log.info('🤖 Setting up ML swarm intelligence...');
+    
+    // Configure ML pipeline secrets
+    await this.ensureSecretExists('OPENAI_API_KEY');
+    await this.ensureSecretExists('ANTHROPIC_API_KEY');
+    
+    // Deploy swarm coordination services
+    await this.deployService('wfa-production-swarm', args);
   }
 }
 

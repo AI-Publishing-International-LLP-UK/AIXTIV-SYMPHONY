@@ -31,6 +31,69 @@
             color: var(--text-primary);
             min-height: 100vh;
             position: relative;
+            overflow: hidden;
+        }
+        
+        /* Green Screen & Room-Filling Illusion Background */
+        .room-illusion-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('./qrix_arc_results.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -2;
+            filter: brightness(0.3) contrast(1.2);
+        }
+        
+        /* Green Screen Overlay for Chroma Key */
+        .green-screen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(45deg, 
+                rgba(0, 255, 0, 0.05) 0%,
+                rgba(0, 0, 0, 0.8) 30%,
+                rgba(0, 0, 0, 0.9) 70%,
+                rgba(0, 255, 0, 0.05) 100%);
+            z-index: -1;
+            mix-blend-mode: multiply;
+        }
+        
+        /* Immersive Room Projection Effect */
+        .immersive-projection {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .immersive-projection::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, 
+                transparent 20%, 
+                rgba(0, 255, 255, 0.05) 40%, 
+                rgba(255, 255, 255, 0.1) 60%, 
+                rgba(0, 255, 0, 0.08) 100%);
+            animation: roomPulse 4s ease-in-out infinite;
+        }
+        
+        @keyframes roomPulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.02); }
         }
 
         /* Diamond SAO Header */
@@ -577,6 +640,11 @@
     </style>
 </head>
 <body>
+    <!-- Room-Filling Illusion Background -->
+    <div class="room-illusion-background"></div>
+    <div class="green-screen-overlay"></div>
+    <div class="immersive-projection"></div>
+    
     <!-- Diamond SAO Header -->
     <div class="diamond-header">
         <div class="diamond-identity">

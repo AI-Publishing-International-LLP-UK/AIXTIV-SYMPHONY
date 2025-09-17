@@ -251,37 +251,238 @@ app.post('/wfa/mcp-dns', async (req, res) => {
   }
 });
 
-// Root endpoint - WFA system information
+// Serve AI Trinity interface with Universal Gateway OAuth2 integration
 app.get('/', (req, res) => {
-  res.json({
-    service: 'WFA Production Swarm - Cloud Run Backend',
-    version: '1.0.0',
-    commander: 'Phillip Roark',
-    executive_admin_officer: 'Morgan O\'Brien, Emerald EAO',
-    platform: 'Google Cloud Run',
-    region: process.env.CLOUD_ML_REGION || 'us-west1',
-    specifications: {
-      agents: 20_000_000,
-      sectors: 200,
-      job_clusters: 64_000_000,
-      career_clusters: 319_998,
-      protection: 'victory36_maximum'
-    },
-    available_endpoints: [
-      'GET /health - Health check',
-      'GET /wfa/system-status - Full system status',
-      'POST /wfa/deploy-agents - Deploy WFA agents',
-      'GET /wfa/victory36-status - Protection status',
-      'GET /wfa/career-clusters - Career cluster info',
-      'POST /wfa/mcp-dns - MCP DNS automation'
-    ],
-    cloud_integration: {
-      cloudflare_workers: 'https://asoos.2100.cool/wfa/',
-      mongodb_atlas: 'connected',
-      secret_manager: 'integrated',
-      victory36_protection: 'active'
-    }
-  });
+  const fs = require('fs');
+  const path = require('path');
+  
+  try {
+    const htmlPath = path.join(__dirname, 'ai-trinity-interface.html');
+    let htmlContent = fs.readFileSync(htmlPath, 'utf8');
+    
+    // Wire in the Universal Gateway endpoints
+    const universalGatewayConfig = `
+    <script>
+      // Universal Gateway OAuth2 Configuration - LIVE WIRING
+      window.UNIVERSAL_GATEWAY_CONFIG = {
+        universal_gateway_production: 'https://universal-gateway-production-859242575175.us-west1.run.app',
+        universal_gateway_staging: 'https://universal-gateway-staging-859242575175.us-west1.run.app',
+        sallyport_auth: 'https://sallyport-cloudflare-auth-859242575175.us-west1.run.app',
+        oauth2_gateway: 'https://oauth2-gateway-cloudflare-859242575175.us-west1.run.app',
+        integration_gateway_production: 'https://integration-gateway-production-859242575175.us-west1.run.app',
+        integration_gateway_staging: 'https://integration-gateway-staging-859242575175.us-west1.run.app',
+        mocoa_owner_interface: 'https://mocoa-owner-interface-staging-859242575175.us-west1.run.app',
+        diamond_sao_command: 'https://diamond-sao-vision-space-859242575175.us-west1.run.app',
+        wired: true,
+        authentication_flow: 'UNIVERSAL_OAUTH2_ORCHESTRATED'
+      };
+      
+      // Wire authentication functions to use Universal Gateway
+      window.authenticateWithUniversalGateway = async function() {
+        try {
+          console.log('🔌 Wiring authentication through Universal Gateway...');
+          
+          const authResponse = await fetch(window.UNIVERSAL_GATEWAY_CONFIG.universal_gateway_production + '/api/v3/oauth2-universal-connect', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + (localStorage.getItem('sallyport_token') || 'anonymous')
+            },
+            body: JSON.stringify({
+              client_id: 'ai-trinity-interface',
+              service_type: 'aixtiv_symphony',
+              requested_services: ['dr_lucy', 'dr_claude', 'victory36'],
+              return_url: window.location.href
+            })
+          });
+          
+          const authResult = await authResponse.json();
+          console.log('🎯 Universal Gateway authentication result:', authResult);
+          
+          if (authResult.success) {
+            localStorage.setItem('universal_auth_token', authResult.access_token);
+            logToConsole('✅ Universal Gateway authentication successful', 'success');
+            return authResult;
+          } else {
+            logToConsole('❌ Universal Gateway authentication failed: ' + authResult.message, 'error');
+            return null;
+          }
+        } catch (error) {
+          console.error('Universal Gateway auth error:', error);
+          logToConsole('💥 Universal Gateway connection error: ' + error.message, 'error');
+          return null;
+        }
+      };
+      
+      // Wire Dr. Lucy to use Universal Gateway + ChatGPT API
+      window.initializeLucyWithUniversalGateway = async function() {
+        const auth = await window.authenticateWithUniversalGateway();
+        if (!auth) return;
+        
+        logToConsole('🧠 Initializing Dr. Lucy through Universal Gateway...', 'info');
+        
+        try {
+          const response = await fetch(window.UNIVERSAL_GATEWAY_CONFIG.integration_gateway_production + '/api/services/dr-lucy/initialize', {
+            method: 'POST',
+            headers: {
+              'Authorization': 'Bearer ' + localStorage.getItem('universal_auth_token'),
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              service: 'chatgpt',
+              voice_enabled: true,
+              memory_enabled: true,
+              universal_auth: true
+            })
+          });
+          
+          const result = await response.json();
+          if (result.success) {
+            trinityStatus.lucy = true;
+            updatePanelStatus('drLucyPanel', true);
+            logToConsole('✅ Dr. Lucy initialized with Universal Gateway + ChatGPT', 'success');
+          } else {
+            logToConsole('❌ Dr. Lucy initialization failed: ' + result.message, 'error');
+          }
+        } catch (error) {
+          logToConsole('💥 Dr. Lucy initialization error: ' + error.message, 'error');
+        }
+      };
+      
+      // Wire Dr. Claude to use Universal Gateway + Anthropic API
+      window.initializeClaudeWithUniversalGateway = async function() {
+        const auth = await window.authenticateWithUniversalGateway();
+        if (!auth) return;
+        
+        logToConsole('🎯 Initializing Dr. Claude through Universal Gateway...', 'info');
+        
+        try {
+          const response = await fetch(window.UNIVERSAL_GATEWAY_CONFIG.integration_gateway_production + '/api/services/dr-claude/initialize', {
+            method: 'POST',
+            headers: {
+              'Authorization': 'Bearer ' + localStorage.getItem('universal_auth_token'),
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              service: 'anthropic',
+              cli_enabled: true,
+              diamond_sao_access: true,
+              universal_auth: true
+            })
+          });
+          
+          const result = await response.json();
+          if (result.success) {
+            trinityStatus.claude = true;
+            updatePanelStatus('drClaudePanel', true);
+            logToConsole('✅ Dr. Claude initialized with Universal Gateway + Anthropic', 'success');
+          } else {
+            logToConsole('❌ Dr. Claude initialization failed: ' + result.message, 'error');
+          }
+        } catch (error) {
+          logToConsole('💥 Dr. Claude initialization error: ' + error.message, 'error');
+        }
+      };
+      
+      // Wire Victory 36 to use Universal Gateway orchestration
+      window.initializeVictory36WithUniversalGateway = async function() {
+        const auth = await window.authenticateWithUniversalGateway();
+        if (!auth) return;
+        
+        logToConsole('🏆 Initializing Victory 36 through Universal Gateway...', 'info');
+        
+        try {
+          const response = await fetch(window.UNIVERSAL_GATEWAY_CONFIG.integration_gateway_production + '/api/services/victory36/initialize', {
+            method: 'POST',
+            headers: {
+              'Authorization': 'Bearer ' + localStorage.getItem('universal_auth_token'),
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              service: 'victory36',
+              prediction_engine: true,
+              feedback_loop: true,
+              pilot_coordination: 35,
+              universal_auth: true
+            })
+          });
+          
+          const result = await response.json();
+          if (result.success) {
+            trinityStatus.victory36 = true;
+            updatePanelStatus('victory36Panel', true);
+            logToConsole('✅ Victory 36 initialized with Universal Gateway orchestration', 'success');
+          } else {
+            logToConsole('❌ Victory 36 initialization failed: ' + result.message, 'error');
+          }
+        } catch (error) {
+          logToConsole('💥 Victory 36 initialization error: ' + error.message, 'error');
+        }
+      };
+      
+      // Wire the deployment functions to use Universal Gateway orchestration
+      window.deployFullTrinityWithUniversalGateway = async function() {
+        logToConsole('🚀 INITIATING FULL TRINITY DEPLOYMENT THROUGH UNIVERSAL GATEWAY', 'info');
+        
+        const auth = await window.authenticateWithUniversalGateway();
+        if (!auth) {
+          logToConsole('❌ Universal Gateway authentication required for deployment', 'error');
+          return;
+        }
+        
+        logToConsole('🔌 Universal Gateway connected - proceeding with deployment...', 'success');
+        
+        // Sequential initialization through Universal Gateway
+        await window.initializeLucyWithUniversalGateway();
+        setTimeout(async () => {
+          await window.initializeClaudeWithUniversalGateway();
+          setTimeout(async () => {
+            await window.initializeVictory36WithUniversalGateway();
+            setTimeout(() => {
+              trinityStatus.deployed = true;
+              logToConsole('🎉 AI TRINITY FULLY DEPLOYED WITH UNIVERSAL GATEWAY!', 'success');
+            }, 2000);
+          }, 2000);
+        }, 2000);
+      };
+    </script>`;
+    
+    // Inject the Universal Gateway wiring before closing </head> tag
+    htmlContent = htmlContent.replace('</head>', universalGatewayConfig + '\n</head>');
+    
+    // Update the existing functions to use Universal Gateway
+    htmlContent = htmlContent.replace('function initializeLucy()', 'function initializeLucy() { return window.initializeLucyWithUniversalGateway(); } function initializeLucyOriginal()');
+    htmlContent = htmlContent.replace('function initializeClaude()', 'function initializeClaude() { return window.initializeClaudeWithUniversalGateway(); } function initializeClaudeOriginal()');
+    htmlContent = htmlContent.replace('function initializeVictory36()', 'function initializeVictory36() { return window.initializeVictory36WithUniversalGateway(); } function initializeVictory36Original()');
+    htmlContent = htmlContent.replace('function deployFullTrinity()', 'function deployFullTrinity() { return window.deployFullTrinityWithUniversalGateway(); } function deployFullTrinityOriginal()');
+    
+    res.setHeader('Content-Type', 'text/html');
+    res.send(htmlContent);
+    
+  } catch (error) {
+    console.error('Error serving AI Trinity interface:', error);
+    
+    // Fallback to basic interface info
+    res.json({
+      service: 'AIXTIV Symphony - AI Trinity Interface',
+      status: 'WIRED TO UNIVERSAL GATEWAY',
+      version: '1.0.0-universal-gateway-wired',
+      commander: 'Phillip Roark',
+      universal_gateway: {
+        production: 'https://universal-gateway-production-859242575175.us-west1.run.app',
+        staging: 'https://universal-gateway-staging-859242575175.us-west1.run.app',
+        oauth2_enabled: true,
+        sallyport_integrated: true,
+        all_services_wired: true
+      },
+      ai_trinity: {
+        dr_lucy: 'ChatGPT + Universal Gateway OAuth2',
+        dr_claude: 'Anthropic + Diamond SAO + Universal Gateway',
+        victory36: 'Mega Prediction + Universal Gateway Orchestration'
+      },
+      error: error.message
+    });
+  }
 });
 
 // Error handling middleware

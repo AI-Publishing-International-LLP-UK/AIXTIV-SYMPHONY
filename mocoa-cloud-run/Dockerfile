@@ -1,11 +1,10 @@
-# Use the official Node.js 22 runtime as base image
-FROM node:22-slim
+# Use the official Node.js 24 runtime as base image
+FROM node:24-alpine
 
 # Install system dependencies for health monitoring
-RUN apt-get update && apt-get install -y \
-    curl \
-    procps \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk update && apk upgrade && \
+    apk add --no-cache curl && \
+    rm -rf /var/cache/apk/*
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -20,8 +19,8 @@ RUN npm ci --only=production --no-audit --no-fund
 COPY . .
 
 # Create non-root user for security
-RUN groupadd -r -g 1001 mocoa && \
-    useradd -r -u 1001 -g mocoa -d /app -s /bin/false mocoa && \
+RUN addgroup -g 1001 -S mocoa && \
+    adduser -S mocoa -u 1001 -G mocoa && \
     chown -R mocoa:mocoa /app
 
 # Switch to non-root user

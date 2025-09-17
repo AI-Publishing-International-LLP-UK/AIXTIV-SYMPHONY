@@ -278,7 +278,8 @@ class SecurityFramework {
             lastAccessed: new Date().toISOString()
         });
 
-        console.log(`🔐 Security token generated: ${level.name} (Level ${level.level}) for ${userId}`);
+        // Security token generated - details logged securely
+        this.logSecurityEvent('TOKEN_GENERATED', userId, null, `${level.name} (Level ${level.level})`);
         return {
             token: fullToken,
             tokenId: tokenData.tokenId,
@@ -594,13 +595,13 @@ if (require.main === module) {
     console.log('📋 SAMPLE TOKENS:');
     
     const diamondToken = security.generateSecurityToken('admin@aipublishing.com', 'DIAMOND');
-    console.log(`   Diamond Token: ${diamondToken.tokenId}`);
+    console.log('   Diamond Token: [Generated - ID logged securely]');
     
     const sapphireToken = security.generateSecurityToken('admin@techcorp.com', 'SAPPHIRE', 'techcorp');
-    console.log(`   Sapphire Token: ${sapphireToken.tokenId}`);
+    console.log('   Sapphire Token: [Generated - ID logged securely]');
     
     const onyxToken = security.generateSecurityToken('owner@startup.com', 'ONYX', 'startup');
-    console.log(`   Onyx Token: ${onyxToken.tokenId}`);
+    console.log('   Onyx Token: [Generated - ID logged securely]');
     
     console.log('');
     console.log('✅ Security framework ready for MCP integration');

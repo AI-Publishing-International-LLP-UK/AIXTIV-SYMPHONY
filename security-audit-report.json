@@ -1,0 +1,110 @@
+{
+  "summary": {
+    "critical": 14,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "total": 14
+  },
+  "timestamp": "2025-09-17T20:08:37.523Z",
+  "findings": [
+    {
+      "severity": "CRITICAL",
+      "category": "HARDCODED_SECRET",
+      "message": "Potential hardcoded secret found: -----BEGIN PRIVATE KEY-----...",
+      "file": "scripts/security-audit-final.js",
+      "timestamp": "2025-09-17T20:08:37.497Z"
+    },
+    {
+      "severity": "CRITICAL",
+      "category": "HARDCODED_SECRET",
+      "message": "Potential hardcoded secret found: execSync(`...",
+      "file": "automated-mcp-provisioner.js",
+      "timestamp": "2025-09-17T20:08:37.504Z"
+    },
+    {
+      "severity": "CRITICAL",
+      "category": "HARDCODED_SECRET",
+      "message": "Potential hardcoded secret found: execSync(`...",
+      "file": "cloudflare-security-audit.js",
+      "timestamp": "2025-09-17T20:08:37.506Z"
+    },
+    {
+      "severity": "CRITICAL",
+      "category": "HARDCODED_SECRET",
+      "message": "Potential hardcoded secret found: execSync(`...",
+      "file": "diamond-cli-copy/lib/self-healing.js",
+      "timestamp": "2025-09-17T20:08:37.507Z"
+    },
+    {
+      "severity": "CRITICAL",
+      "category": "HARDCODED_SECRET",
+      "message": "Potential hardcoded secret found: function(...",
+      "file": "diamond-wfa-swarm-release.js",
+      "timestamp": "2025-09-17T20:08:37.508Z"
+    },
+    {
+      "severity": "CRITICAL",
+      "category": "HARDCODED_SECRET",
+      "message": "Potential hardcoded secret found: execSync(`...",
+      "file": "mcp-provisioner-enhanced.js",
+      "timestamp": "2025-09-17T20:08:37.509Z"
+    },
+    {
+      "severity": "CRITICAL",
+      "category": "HARDCODED_SECRET",
+      "message": "Potential hardcoded secret found: exec(`...",
+      "file": "quantum-speed-self-healing.js",
+      "timestamp": "2025-09-17T20:08:37.512Z"
+    },
+    {
+      "severity": "CRITICAL",
+      "category": "HARDCODED_SECRET",
+      "message": "Potential hardcoded secret found: execSync(`...",
+      "file": "sally-port-dependency-audit.js",
+      "timestamp": "2025-09-17T20:08:37.513Z"
+    },
+    {
+      "severity": "CRITICAL",
+      "category": "HARDCODED_SECRET",
+      "message": "Potential hardcoded secret found: eval(...",
+      "file": "scripts/security-audit-final.js",
+      "timestamp": "2025-09-17T20:08:37.513Z"
+    },
+    {
+      "severity": "CRITICAL",
+      "category": "HARDCODED_SECRET",
+      "message": "Potential hardcoded secret found: function(...",
+      "file": "server.js",
+      "timestamp": "2025-09-17T20:08:37.513Z"
+    },
+    {
+      "severity": "CRITICAL",
+      "category": "HARDCODED_SECRET",
+      "message": "Potential hardcoded secret found: Function(...",
+      "file": "src/quantum/AIXTIVQuantumSuperAgentConstructor.js",
+      "timestamp": "2025-09-17T20:08:37.513Z"
+    },
+    {
+      "severity": "CRITICAL",
+      "category": "HARDCODED_SECRET",
+      "message": "Potential hardcoded secret found: function(...",
+      "file": "user-instance-manager.js",
+      "timestamp": "2025-09-17T20:08:37.513Z"
+    },
+    {
+      "severity": "CRITICAL",
+      "category": "HARDCODED_SECRET",
+      "message": "Potential hardcoded secret found: http://...",
+      "file": ".github/workflows/deploy-cloudflare.yml",
+      "timestamp": "2025-09-17T20:08:37.514Z"
+    },
+    {
+      "severity": "CRITICAL",
+      "category": "HARDCODED_SECRET",
+      "message": "Potential hardcoded secret found: http://...",
+      "file": ".github/workflows/deploy-github-pages.yml",
+      "timestamp": "2025-09-17T20:08:37.514Z"
+    }
+  ]
+}

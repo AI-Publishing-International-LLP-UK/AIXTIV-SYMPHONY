@@ -4,7 +4,7 @@
 # Multi-stage build for optimal production image size
 
 # Build stage
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS builder
 
 # Set working directory
 WORKDIR /app
@@ -17,14 +17,15 @@ RUN npm install --only=production --no-audit --no-fund && \
     npm cache clean --force
 
 # Production stage
-FROM node:22-alpine AS production
+FROM node:24-alpine AS production
 
 # Install security updates and required tools
 RUN apk update && \
     apk upgrade && \
     apk add --no-cache \
         dumb-init \
-        ca-certificates && \
+        ca-certificates \
+        curl && \
     rm -rf /var/cache/apk/* && \
     addgroup -g 1001 -S wfa && \
     adduser -S wfa -u 1001
@@ -53,7 +54,7 @@ ENV UV_THREADPOOL_SIZE=32
 
 # Health check for container orchestration
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
+    CMD curl -f http://localhost:8080/health || exit 1
 
 # Expose port
 EXPOSE 8080

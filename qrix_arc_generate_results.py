@@ -8,6 +8,7 @@ import json
 import numpy as np
 from pathlib import Path
 import time
+import os
 
 def qrix_solver(train_pairs, test_input):
     """Enhanced qRIX solver - same logic as in the notebook"""
@@ -62,8 +63,12 @@ def generate_evaluation_results():
     print("🎯 Generating ARC Evaluation Results with Enhanced qRIX Solver...")
     print("=" * 60)
     
-    # Load evaluation challenges
-    with open('arc-agi_evaluation-challenges.json', 'r') as f:
+    # Load evaluation challenges with validation
+    challenges_file = 'arc-agi_evaluation-challenges.json'
+    if not os.path.isfile(challenges_file):
+        raise FileNotFoundError(f"Challenges file not found: {challenges_file}")
+    
+    with open(challenges_file, 'r', encoding='utf-8') as f:
         challenges = json.load(f)
     
     print(f"📊 Processing {len(challenges)} evaluation tasks...")
@@ -108,9 +113,10 @@ def generate_evaluation_results():
         **results
     }
     
-    # Save results
-    with open('arc-agi_evaluation-results.json', 'w') as f:
-        json.dump(evaluation_results, f, indent=2)
+    # Save results with validation
+    output_file = 'arc-agi_evaluation-results.json'
+    with open(output_file, 'w', encoding='utf-8') as f:
+        json.dump(evaluation_results, f, indent=2, ensure_ascii=False)
     
     elapsed = time.time() - start_time
     print(f"\n✅ Results generated successfully!")

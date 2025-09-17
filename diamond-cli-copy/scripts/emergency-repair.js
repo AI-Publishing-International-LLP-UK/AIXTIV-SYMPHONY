@@ -7,7 +7,8 @@
  * 🌐 WFA Swarm coordination for critical failures
  */
 
-const { execSync } = require('child_process');
+const { execSync, spawn } = require('child_process');
+const { promisify } = require('util');
 const fs = require('fs');
 const path = require('path');
 
@@ -30,6 +31,26 @@ class EmergencyRepair {
     const logEntry = `🚨 [${timestamp}] EMERGENCY: ${level} ${message}`;
     console.log(logEntry);
     this.repairLog.push(logEntry);
+  }
+
+  async executeDockerCommand(command, args) {
+    return new Promise((resolve, reject) => {
+      const child = spawn('docker', [command, ...args], {
+        stdio: 'inherit'
+      });
+
+      child.on('close', (code) => {
+        if (code === 0) {
+          resolve();
+        } else {
+          reject(new Error(`Docker ${command} failed with code ${code}`));
+        }
+      });
+
+      child.on('error', (error) => {
+        reject(error);
+      });
+    });
   }
 
   async executeEmergencyRepair() {
@@ -105,7 +126,7 @@ class EmergencyRepair {
       // Create test directories and basic test files
       const testDir = '/Users/as/asoos/aixtiv-symphony/tests';
       if (!fs.existsSync(testDir)) {
-        execSync(`mkdir -p ${testDir}`);
+        fs.mkdirSync(testDir, { recursive: true });
 
         // Create basic test file
         const basicTest = `
@@ -157,11 +178,15 @@ CMD ["node", "server.js"]
         try {
           this.log('INFO', `🔨 Building image for ${service}...`);
 
-          const buildCommand = `docker build --platform=linux/amd64 -f ${tempDockerfile} -t gcr.io/${this.gcpProject}/${service}:emergency-repair /tmp`;
+          await this.executeDockerCommand('build', [
+            '--platform=linux/amd64',
+            '-f', tempDockerfile,
+            '-t', `gcr.io/${this.gcpProject}/${service}:emergency-repair`,
+            '/tmp'
+          ]);
           execSync(buildCommand, { stdio: 'inherit' });
 
-          const pushCommand = `docker push gcr.io/${this.gcpProject}/${service}:emergency-repair`;
-          execSync(pushCommand, { stdio: 'inherit' });
+          await this.executeDockerCommand('push', [`gcr.io/${this.gcpProject}/${service}:emergency-repair`]);
 
           this.log('SUCCESS', `✅ Built and pushed emergency image for ${service}`);
         } catch (error) {

@@ -172,7 +172,7 @@ jobs:
           echo "📊 Total site size: $TOTAL_SIZE"
 
       - name: Upload GitHub Pages Artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: ./dist
 

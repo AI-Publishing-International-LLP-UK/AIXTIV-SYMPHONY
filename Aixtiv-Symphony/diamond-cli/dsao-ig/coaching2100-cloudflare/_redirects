@@ -1,0 +1,23 @@
+# Coaching 2100 Redirects Configuration
+# Force HTTPS for security compliance
+
+# Authentication redirects to SallyPort
+/auth https://sallyport.2100.cool 301
+/login https://sallyport.2100.cool 301
+/signup https://sallyport.2100.cool 301
+
+# Service redirects
+/services /index.html#services 200
+/about /index.html#about 200
+/contact /index.html#contact 200
+
+# Legacy routes
+/get-started https://sallyport.2100.cool 301
+/schedule https://sallyport.2100.cool 301
+/book https://sallyport.2100.cool 301
+
+# Main page
+/ /index.html 200
+
+# Fallback for all other routes
+/* /index.html 200

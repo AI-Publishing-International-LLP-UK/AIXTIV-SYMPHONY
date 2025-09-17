@@ -1,0 +1,67 @@
+# 🚀 AIXTIV Symphony - Production Docker Image (Optimized)
+# Using Ubuntu base for better reliability
+
+FROM node:22-slim AS production
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    wget \
+    git \
+    bash \
+    ca-certificates \
+    dumb-init \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
+# Create non-root user for security
+RUN groupadd -r aixtiv && useradd -r -g aixtiv aixtiv
+
+# Copy package files and install dependencies
+COPY package*.json ./
+RUN npm ci --only=production --no-audit --no-fund
+
+# Copy Diamond CLI package files if they exist
+COPY diamond-cli/package*.json ./diamond-cli/ 2>/dev/null || true
+RUN if [ -d "diamond-cli" ]; then cd diamond-cli && npm ci --only=production --no-audit --no-fund; fi
+
+# Copy application files
+COPY . .
+
+# Make scripts executable
+RUN chmod +x diamond-cli/bin/diamond 2>/dev/null || true
+RUN chmod +x *.sh 2>/dev/null || true
+
+# Create symlink for Diamond CLI if it exists
+RUN if [ -f "diamond-cli/bin/diamond" ]; then ln -s /app/diamond-cli/bin/diamond /usr/local/bin/diamond; fi
+
+# Create necessary directories and set ownership
+RUN mkdir -p /app/logs /app/tmp && \
+    chown -R aixtiv:aixtiv /app
+
+# Set environment variables
+ENV NODE_ENV=production \
+    PORT=8080 \
+    GCP_PROJECT=api-for-warp-drive \
+    CLOUD_ML_REGION=us-west1 \
+    INTEGRATION_MCP=enabled \
+    MOCOA_ORCHESTRATION=enabled
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8080/api/health || exit 1
+
+# Switch to non-root user
+USER aixtiv
+
+# Expose port
+EXPOSE 8080
+
+# Use dumb-init for proper signal handling
+ENTRYPOINT ["dumb-init", "--"]
+
+# Start the application
+CMD ["node", "server.js"]

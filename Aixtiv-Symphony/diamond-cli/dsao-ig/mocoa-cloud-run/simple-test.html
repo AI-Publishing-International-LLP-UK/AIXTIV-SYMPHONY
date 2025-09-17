@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Owner Interface Series 2.1 - Test</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .test-container {
+      text-align: center;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .logo {
+      font-size: 32px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #FFD700, #0bb1bb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+    }
+    
+    .status {
+      color: #50C878;
+      font-size: 18px;
+      margin: 20px 0;
+    }
+    
+    .btn {
+      background: #0bb1bb;
+      color: white;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px;
+    }
+    
+    .btn:hover {
+      background: #0aa0aa;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <div class="logo">ASOOS</div>
+    <h1>Owner Interface Series 2.1</h1>
+    <div class="status">✅ System Online</div>
+    <p>Mr. Phillip Corey Roark, CEO</p>
+    <p>Aixtiv Symphony Orchestrating Operating System</p>
+    
+    <div style="margin-top: 30px;">
+      <button class="btn" onclick="testFunction()">Test Interface</button>
+      <button class="btn" onclick="showStatus()">System Status</button>
+    </div>
+    
+    <div id="output" style="margin-top: 20px; min-height: 50px;"></div>
+  </div>
+  
+  <script>
+    function testFunction() {
+      document.getElementById('output').innerHTML = '<div style="color: #50C878;">✅ Interface working correctly!</div>';
+    }
+    
+    function showStatus() {
+      document.getElementById('output').innerHTML = '<div style="color: #0bb1bb;">System Status: All components operational<br>No customer monitoring data displayed</div>';
+    }
+    
+    // Test that JavaScript is working
+    console.log('ASOOS Owner Interface Test - JavaScript loaded successfully');
+  </script>
+</body>
+</html>

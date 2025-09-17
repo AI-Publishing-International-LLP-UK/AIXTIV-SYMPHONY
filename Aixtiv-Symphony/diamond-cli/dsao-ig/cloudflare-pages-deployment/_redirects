@@ -1,0 +1,6 @@
+# DEPRECATED: /auth route removed - redirects to SallyPort
+/auth https://sallyport.2100.cool 302
+/interface https://asoos.2100.cool/interface 200
+
+# Fallback to main page
+/* /index.html 200

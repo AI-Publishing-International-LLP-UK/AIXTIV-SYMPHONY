@@ -1,0 +1,12 @@
+# Cloudflare Pages Redirects Configuration
+# Victory36 Protected Routes
+
+# CRITICAL: /auth route MUST redirect to SallyPort
+/auth https://sallyport.2100.cool 301
+/auth/* https://sallyport.2100.cool 301
+
+# Default redirects - main page
+/ /index.html 200
+
+# Fallback - everything else goes to main page
+/* /index.html 200

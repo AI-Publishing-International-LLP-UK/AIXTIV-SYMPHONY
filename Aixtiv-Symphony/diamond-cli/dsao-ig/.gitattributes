@@ -1,0 +1,17 @@
+# Explicitly declare text files to prevent LFS confusion
+*.js text
+*.ts text
+*.tsx text
+*.json text
+*.md text
+*.yml text
+*.yaml text
+*.sh text
+
+# Binary files handled by Git LFS
+
+# Model files and datasets
+
+# Archive files
+
+# Executables and libraries

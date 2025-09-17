@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transform Your Business with AI | 2100.Cool ASOOS Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="../secrets-manager.js"></script>
+  <script src="js/subscription-integration.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    
+    /* Animations */
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+      }
+      33% {
+        transform: translateY(-10px) translateX(5px) rotate(5deg);
+      }
+      66% {
+        transform: translateY(5px) translateX(-5px) rotate(-5deg);
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+    
+    @keyframes breathe {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.02);
+      }
+    }
+    
+    /* Particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: rgba(32, 201, 151, 0.6);
+      border-radius: 50%;
+      animation: float 8s infinite ease-in-out;
+    }
+    
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    nav.scrolled {
+      background: rgba(0, 0, 0, 0.95);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 10px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 28px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #17a2b8, #20c997, #40E0D0, #00CED1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+      animation: breathe 3s infinite;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 30px;
+      align-items: center;
+    }
+    
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s;
+      position: relative;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #17a2b8, #20c997);
+      transition: width 0.3s;
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .cta-button {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      border: none;
+      border-radius: 25px;
+      color: black;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(255, 193, 7, 0.5);
+    }
+    
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 10;
+      padding: 50px 20px;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, rgba(32, 201, 151, 0.1) 0%, transparent 70%);
+      animation: pulse 20s linear infinite;
+    }
+    
+    .hero-content {
+      text-align: center;
+      max-width: 1000px;
+      animation: fadeInUp 1s ease;
+      position: relative;
+    }
+    
+    .hero-title {
+      font-size: clamp(40px, 8vw, 80px);
+      font-weight: 900;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #17a2b8, #20c997, #40E0D0, #00CED1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+      line-height: 1.1;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .hero-title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #17a2b8, transparent);
+      animation: shimmer 3s infinite;
+    }
+    
+    .hero-subtitle {
+      font-size: clamp(18px, 3vw, 28px);
+      color: #aaa;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+    
+    .hero-description {
+      font-size: 18px;
+      color: #ccc;
+      margin-bottom: 50px;
+      line-height: 1.6;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    /* Pricing Section */
+    .pricing-section {
+      padding: 80px 20px;
+      background: rgba(255, 255, 255, 0.02);
+      position: relative;
+      z-index: 100;
+    }
+    
+    .pricing-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .pricing-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    
+    .pricing-title {
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #17a2b8, #20c997);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .pricing-subtitle {
+      font-size: 20px;
+      color: #aaa;
+    }
+    
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 40px;
+      margin-bottom: 60px;
+    }
+    
+    .pricing-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      transition: all 0.3s;
+      animation: fadeInUp 1s ease;
+      position: relative;
+      z-index: 10;
+    }
+    
+    .pricing-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(32, 201, 151, 0.3);
+      border-color: rgba(32, 201, 151, 0.5);
+    }
+    
+    .pricing-card.featured {
+      border: 2px solid #20c997;
+      background: rgba(32, 201, 151, 0.05);
+    }
+    
+    .pricing-card.featured:hover {
+      border-color: #17a2b8;
+      box-shadow: 0 20px 40px rgba(23, 162, 184, 0.3);
+    }
+    
+    .card-header {
+      margin-bottom: 30px;
+    }
+    
+    .card-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #20c997;
+    }
+    
+    .card-subtitle {
+      font-size: 16px;
+      color: #aaa;
+    }
+    
+    .card-price {
+      font-size: 48px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #17a2b8, #20c997);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+    
+    .card-period {
+      font-size: 16px;
+      color: #888;
+      margin-bottom: 30px;
+    }
+    
+    .features-list {
+      list-style: none;
+      margin-bottom: 40px;
+      text-align: left;
+    }
+    
+    .features-list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      color: #ccc;
+    }
+    
+    .features-list .check {
+      color: #20c997;
+      font-size: 18px;
+    }
+    
+    .pricing-button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #17a2b8, #20c997);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .pricing-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(32, 201, 151, 0.5);
+    }
+    
+    /* Individual Section */
+    .individual-section {
+      padding: 80px 20px;
+      position: relative;
+      z-index: 90;
+    }
+    
+    .individual-container {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    
+    .individual-title {
+      font-size: 36px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #17a2b8, #20c997);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .individual-description {
+      font-size: 18px;
+      color: #aaa;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    
+    .individual-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 40px;
+      margin-bottom: 40px;
+    }
+    
+    /* Form Section */
+    .form-section {
+      padding: 80px 20px;
+      background: rgba(255, 255, 255, 0.02);
+      position: relative;
+      z-index: 80;
+    }
+    
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 40px;
+    }
+    
+    .form-group {
+      margin-bottom: 25px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #20c997;
+    }
+    
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+      color: white;
+      font-size: 16px;
+      transition: all 0.3s;
+    }
+    
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: #20c997;
+      box-shadow: 0 0 10px rgba(32, 201, 151, 0.3);
+    }
+    
+    .submit-button {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #17a2b8, #20c997);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .submit-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(32, 201, 151, 0.5);
+    }
+    
+    /* Footer */
+    .footer {
+      padding: 40px 20px;
+      background: rgba(10, 10, 10, 0.95);
+      border-top: 1px solid rgba(32, 201, 151, 0.3);
+      position: relative;
+      z-index: 70;
+      text-align: center;
+    }
+    
+    .footer-text {
+      color: #ccc;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      
+      .pricing-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* Scroll animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+    
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Particles Background -->
+  <div class="particles" id="particles"></div>
+  
+  <!-- Navigation -->
+  <nav id="navbar">
+    <div class="nav-container">
+      <div class="logo">2100.Cool</div>
+      <div class="nav-links">
+        <a href="#pricing" class="nav-link">Pricing</a>
+        <a href="#trial" class="nav-link">Free Trial</a>
+        <a href="#contact" class="nav-link">Contact</a>
+        <a href="index.html" class="cta-button">Join Competition</a>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">Transform Your Business</h1>
+      <p class="hero-subtitle">With 100 Million AI Agents at Your Command</p>
+      <p class="hero-description">
+        Imagine having a workforce of 100 million AI agents working for your business 24/7. 
+        No training costs. No sick days. No turnover. Just pure, focused productivity 
+        that scales infinitely with your ambitions.
+      </p>
+      <div style="margin-top: 40px;">
+        <button class="pricing-button" onclick="document.getElementById('value').scrollIntoView({behavior: 'smooth'})" 
+                style="max-width: 300px; margin: 0 auto; display: block;">
+          🔥 Start Free 3-Day Trial
+        </button>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Transformation Section -->
+  <section class="pricing-section" id="transformation">
+    <div class="pricing-container">
+      <div class="pricing-header">
+        <h2 class="pricing-title reveal">The AI Revolution Starts With You</h2>
+        <p class="pricing-subtitle reveal">We've done all the hard work. Now become a beneficiary immediately.</p>
+      </div>
+      
+      <div class="transformation-content" style="max-width: 900px; margin: 0 auto; text-align: center;">
+        <div class="pricing-card reveal" style="margin-bottom: 40px; padding: 50px;">
+          <h3 style="color: #20c997; font-size: 32px; margin-bottom: 25px;">🚀 The Speed of Takeoff</h3>
+          <p style="color: #ccc; font-size: 20px; line-height: 1.7; margin-bottom: 30px;">
+            We've spent years building the infrastructure, training the agents, and perfecting the system. 
+            You get to skip all of that and go straight to <strong style="color: #20c997;">implementation, adoption, and operation</strong>.
+          </p>
+          
+          <div style="background: rgba(32, 201, 151, 0.1); border-radius: 15px; padding: 30px; margin: 30px 0;">
+            <h4 style="color: #20c997; font-size: 24px; margin-bottom: 20px;">⚡ Zero to Hero Timeline</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
+              <div>
+                <div style="font-size: 28px; color: #20c997; font-weight: bold;">Day 1</div>
+                <div style="color: #ccc;">System Setup</div>
+              </div>
+              <div>
+                <div style="font-size: 28px; color: #20c997; font-weight: bold;">Day 3</div>
+                <div style="color: #ccc;">First Results</div>
+              </div>
+              <div>
+                <div style="font-size: 28px; color: #20c997; font-weight: bold;">Week 1</div>
+                <div style="color: #ccc;">Full Operation</div>
+              </div>
+              <div>
+                <div style="font-size: 28px; color: #20c997; font-weight: bold;">Month 1</div>
+                <div style="color: #ccc;">Transformation Complete</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="pricing-card reveal" style="padding: 50px;">
+          <h3 style="color: #20c997; font-size: 32px; margin-bottom: 25px;">🧠 Human Amplification, Not Replacement</h3>
+          <p style="color: #ccc; font-size: 20px; line-height: 1.7; margin-bottom: 30px;">
+            AI is here to amplify humans. We reorganize your organization and work processes 
+            to make you <strong style="color: #20c997;">exponentially more effective and productive</strong>.
+          </p>
+          
+          <div style="background: rgba(255, 215, 0, 0.1); border-radius: 15px; padding: 30px; margin: 30px 0;">
+            <h4 style="color: #FFD700; font-size: 24px; margin-bottom: 20px;">🎯 The New Reality</h4>
+            <p style="color: #ccc; font-size: 18px; line-height: 1.6; text-align: left;">
+              Yes, everyone from top to bottom will need to evolve. You'll learn to work differently, 
+              think bigger, and have higher expectations of what's possible. 
+              <br><br>
+              <strong style="color: #FFD700;">Why?</strong> Because we've created the ability to empower you and your organization 
+              to achieve things you only dreamed of. Your new mindset needs to be more visionary than ever before.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Trial Section -->
+  <section class="individual-section" id="trial">
+    <div class="individual-container reveal">
+      <h2 class="individual-title">Start Your Free 3-Day Trial</h2>
+      <p class="individual-description">
+        Experience the power of ASOOS risk-free. See immediate results in your business operations 
+        within 72 hours, or walk away with no obligation.
+      </p>
+      
+      <div class="trial-options" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin: 40px 0;">
+        <div class="pricing-card featured" style="text-align: center;">
+          <div style="font-size: 36px; margin-bottom: 15px;">🎯</div>
+          <h3 style="color: #20c997; margin-bottom: 15px;">Group Trial</h3>
+          <p style="color: #ccc; margin-bottom: 20px;">Join with other businesses in a cohort</p>
+          <div style="font-size: 32px; color: #20c997; margin-bottom: 10px;"><strong>FREE</strong></div>
+          <p style="color: #888; margin-bottom: 20px;">3 days • No commitment</p>
+          <ul style="text-align: left; color: #ccc; margin-bottom: 25px;">
+            <li>✓ Shared learning experience</li>
+            <li>✓ Group implementation support</li>
+            <li>✓ Peer networking opportunities</li>
+            <li>✓ Lower ongoing costs</li>
+          </ul>
+          <button class="pricing-button" onclick="selectTrial('group')">Start Group Trial</button>
+        </div>
+        
+        <div class="pricing-card" style="text-align: center;">
+          <div style="font-size: 36px; margin-bottom: 15px;">⭐</div>
+          <h3 style="color: #20c997; margin-bottom: 15px;">VIP Trial</h3>
+          <p style="color: #ccc; margin-bottom: 20px;">Personal concierge service & priority access</p>
+          <div style="font-size: 32px; color: #20c997; margin-bottom: 10px;"><strong>FREE</strong></div>
+          <p style="color: #888; margin-bottom: 20px;">3 days • Premium support</p>
+          <ul style="text-align: left; color: #ccc; margin-bottom: 25px;">
+            <li>⭐ Personal onboarding specialist</li>
+            <li>⭐ Custom implementation plan</li>
+            <li>⭐ Priority technical support</li>
+            <li>⭐ Advanced features access</li>
+          </ul>
+          <button class="pricing-button" onclick="selectTrial('vip')">Start VIP Trial</button>
+        </div>
+      </div>
+      
+      <div class="trial-guarantee" style="background: rgba(32, 201, 151, 0.1); border: 1px solid rgba(32, 201, 151, 0.3); border-radius: 15px; padding: 30px; margin-top: 40px; text-align: center;">
+        <h4 style="color: #20c997; margin-bottom: 15px; font-size: 20px;">🛡️ 100% Risk-Free Guarantee</h4>
+        <p style="color: #ccc; line-height: 1.6;">
+          Try ASOOS for 3 days completely free. If you don't see immediate value and productivity gains, 
+          simply walk away. No contracts, no hidden fees, no questions asked.
+        </p>
+      </div>
+    </div>
+  </section>
+  
+  <!-- Form Section -->
+  <section class="form-section" id="contact">
+    <div class="form-container">
+      <h3 style="text-align: center; margin-bottom: 30px; color: #20c997; font-size: 28px;">Get Started Today</h3>
+      <form id="subscriptionForm">
+        <div class="form-group">
+          <label for="planType">Subscription Type *</label>
+          <select id="planType" required>
+            <option value="">Select Subscription Type</option>
+            <option value="cohort">Cohort Member ($2,997)</option>
+            <option value="individual">Individual Subscriber ($9,997)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="companyName">Company Name *</label>
+          <input type="text" id="companyName" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="contactName">Contact Name *</label>
+          <input type="text" id="contactName" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input type="email" id="email" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone">
+        </div>
+        
+        <div class="form-group">
+          <label for="industry">Industry Sector *</label>
+          <select id="industry" required>
+            <option value="">Select Your Industry</option>
+            <option value="healthcare">Healthcare & Life Sciences</option>
+            <option value="financial">Financial Services</option>
+            <option value="manufacturing">Manufacturing & Industry</option>
+            <option value="technology">Technology & Software</option>
+            <option value="retail">Retail & E-commerce</option>
+            <option value="education">Education & Training</option>
+            <option value="government">Government & Public Sector</option>
+            <option value="energy">Energy & Utilities</option>
+            <option value="consulting">Consulting & Professional Services</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        
+        <button type="submit" class="submit-button">🚀 Start Subscription Process</button>
+      </form>
+    </div>
+  </section>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-text">
+      © 2025 2100.Cool - Premium AI Implementation Subscriptions<br>
+      <strong>AI Publishing International LLP - All Rights Reserved</strong><br>
+      <strong>Aixtiv Symphony Orchestrating Operating System®</strong>
+    </div>
+  </footer>
+  
+  <script>
+    // Create particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      for (let i = 0; i < 50; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 8 + 's';
+        particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
+        particlesContainer.appendChild(particle);
+      }
+    }
+    
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+    
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        
+        if (href === '#' || href === '') {
+          return;
+        }
+        
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+    
+    // Reveal animations on scroll
+    function reveal() {
+      const reveals = document.querySelectorAll('.reveal');
+      
+      reveals.forEach(element => {
+        const windowHeight = window.innerHeight;
+        const elementTop = element.getBoundingClientRect().top;
+        const elementVisible = 150;
+        
+        if (elementTop < windowHeight - elementVisible) {
+          element.classList.add('active');
+        }
+      });
+    }
+    
+    window.addEventListener('scroll', reveal);
+    reveal(); // Check on load
+    
+    // Trial selection
+    function selectTrial(trialType) {
+      const planSelect = document.getElementById('planType');
+      if (trialType === 'group') {
+        planSelect.value = 'cohort';
+      } else if (trialType === 'vip') {
+        planSelect.value = 'individual';
+      }
+      
+      // Scroll to form
+      document.getElementById('contact').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+    
+    // Plan selection (backwards compatibility)
+    function selectPlan(planType) {
+      const planSelect = document.getElementById('planType');
+      if (planType === 'cohort') {
+        planSelect.value = 'cohort';
+      } else if (planType === 'individual') {
+        planSelect.value = 'individual';
+      }
+      
+      // Scroll to form
+      document.getElementById('contact').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+    
+    // Form submission with enterprise backend integration
+    document.getElementById('subscriptionForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // Show loading state
+      const submitButton = this.querySelector('button[type="submit"]');
+      const originalText = submitButton.textContent;
+      submitButton.disabled = true;
+      submitButton.textContent = '🔄 Processing Subscription...';
+      
+      try {
+        // Collect form data
+        const formData = {
+          planType: document.getElementById('planType').value,
+          companyName: document.getElementById('companyName').value,
+          contactName: document.getElementById('contactName').value,
+          email: document.getElementById('email').value,
+          phone: document.getElementById('phone').value,
+          industry: document.getElementById('industry').value
+        };
+        
+        const planName = formData.planType === 'cohort' ? 'Cohort Member ($2,997)' : 'Individual Subscriber ($9,997)';
+        
+        // Process subscription through enterprise backend
+        if (window.subscriptionIntegration) {
+          console.log('Processing subscription with enterprise backend...');
+          const result = await window.subscriptionIntegration.processSubscription(formData);
+          
+          if (result.success) {
+            // Success - show comprehensive message with dual delivery
+            alert(`🎉 Thank you for your subscription to ${planName}!\n\n✅ **Subscription Processed Successfully**\n• Subscription ID: ${result.subscriptionId}\n• Status: Active\n\nWithin 24 hours, you'll receive:\n\n📋 **Traditional Legal Agreement**\n• Professional PandaDoc contract for legal/compliance\n• Familiar business process your team trusts\n• Full terms and conditions protection\n\n🎨 **Exclusive Queen Mint NFT**\n• Digital ownership proof of membership\n• Future utility and exclusive access\n• Permanent 2100.Cool ecosystem participation\n\n🚀 **Next Steps:**\n• Check your email for confirmation\n• Account setup and onboarding\n• Implementation planning session\n• Access to AI agent platform\n\nWelcome to the future of business transformation!`);
+            
+            // Reset form
+            this.reset();
+          } else {
+            // Error handling
+            console.error('Subscription processing failed:', result.error);
+            alert(`❌ Subscription Processing Failed\n\n${result.message}\n\nPlease try again or contact our support team for assistance.`);
+          }
+        } else {
+          // Fallback to basic processing if integration not loaded
+          console.log('Using fallback processing...');
+          alert(`🎉 Thank you for your interest in ${planName}!\n\nWithin 24 hours, you'll receive:\n\n📋 **Traditional Legal Agreement**\n• Professional PandaDoc contract for legal/compliance\n• Familiar business process your team trusts\n• Full terms and conditions protection\n\n🎨 **Exclusive NFT Membership Proof**\n• Queen Mint NFT confirming your membership\n• Digital ownership with future utility\n• Permanent proof of 2100.Cool ecosystem participation\n\n🚀 **Next Steps:**\n• Account setup and onboarding\n• Implementation planning session\n• Access to AI agent platform\n\nGet ready to transform your business with AI!`);
+          
+          // Reset form
+          this.reset();
+        }
+      } catch (error) {
+        console.error('Form submission error:', error);
+        alert(`❌ An unexpected error occurred\n\n${error.message}\n\nPlease try again or contact support.`);
+      } finally {
+        // Restore button state
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+      }
+    });
+    
+    // Initialize everything
+    createParticles();
+  </script>
+</body>
+</html>

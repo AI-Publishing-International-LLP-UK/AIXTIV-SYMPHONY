@@ -1,0 +1,5 @@
+Contact: mailto:security@2100.cool
+Expires: 
+Preferred-Languages: en
+Canonical: https://2100.cool/.well-known/security.txt
+Policy: https://2100.cool/security-policy

@@ -1,0 +1,2 @@
+tensorflow/tensorflow:nightly-jupyter
+tensorflow/tensorflow:latest

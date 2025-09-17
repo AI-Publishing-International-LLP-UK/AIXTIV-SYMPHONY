@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Debug</title>
+</head>
+<body>
+    <h1>JavaScript Test</h1>
+    <button onclick="testClick()">Test Button</button>
+    <div id="output"></div>
+    
+    <script>
+        console.log('Script is running');
+        document.getElementById('output').innerHTML = 'Script loaded at ' + new Date().toISOString();
+        
+        function testClick() {
+            alert('Button works!');
+            console.log('Button clicked');
+        }
+        
+        window.testClick = testClick;
+        console.log('testClick assigned to window');
+    </script>
+</body>
+</html>

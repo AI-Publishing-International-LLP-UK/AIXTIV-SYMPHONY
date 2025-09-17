@@ -1,0 +1,113 @@
+version: 2
+updates:
+  # Enable updates for NPM packages in root directory
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 15
+    reviewers:
+      - "AI-Publishing-International-LLP-UK"
+    assignees:
+      - "AI-Publishing-International-LLP-UK"
+    commit-message:
+      prefix: "🔒"
+      include: "scope"
+    labels:
+      - "security"
+      - "dependencies"
+    allow:
+      - dependency-type: "all"
+    
+  # Enable updates for NPM packages in diamond-cli-copy
+  - package-ecosystem: "npm"
+    directory: "/diamond-cli-copy"
+    schedule:
+      interval: "weekly"
+      day: "monday" 
+      time: "09:30"
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "AI-Publishing-International-LLP-UK"
+    assignees:
+      - "AI-Publishing-International-LLP-UK"
+    commit-message:
+      prefix: "🔒 diamond-cli"
+      include: "scope"
+    labels:
+      - "security"
+      - "dependencies"
+      - "diamond-cli"
+    allow:
+      - dependency-type: "all"
+
+  # Enable updates for NPM packages in mocoa-cloud-run
+  - package-ecosystem: "npm" 
+    directory: "/mocoa-cloud-run"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "10:00" 
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "AI-Publishing-International-LLP-UK"
+    assignees:
+      - "AI-Publishing-International-LLP-UK"
+    commit-message:
+      prefix: "🔒 mocoa"
+      include: "scope"
+    labels:
+      - "security"
+      - "dependencies"
+      - "mocoa"
+    allow:
+      - dependency-type: "all"
+
+  # Enable updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "AI-Publishing-International-LLP-UK"
+    assignees:
+      - "AI-Publishing-International-LLP-UK"
+    commit-message:
+      prefix: "🔒 actions"
+      include: "scope"
+    labels:
+      - "security"
+      - "github-actions"
+    allow:
+      - dependency-type: "all"
+
+  # Enable updates for Docker base images
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"  
+      day: "wednesday"
+      time: "09:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "AI-Publishing-International-LLP-UK"
+    assignees:
+      - "AI-Publishing-International-LLP-UK"
+    commit-message:
+      prefix: "🔒 docker"
+      include: "scope"
+    labels:
+      - "security"
+      - "docker"
+    allow:
+      - dependency-type: "all"

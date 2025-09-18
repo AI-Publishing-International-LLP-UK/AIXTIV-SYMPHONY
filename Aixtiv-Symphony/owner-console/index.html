@@ -1,0 +1,1969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diamond SAO Owner Console | Warp Drive Terminal</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+      background: #0D1117;
+      color: #C9D1D9;
+      height: 100vh;
+      overflow: hidden;
+      font-size: 10pt;
+    }
+
+    .console-container {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Left Sidebar - Expandable */
+    .sidebar {
+      background: #161B22;
+      border-right: 1px solid rgba(48, 54, 61, 0.3);
+      transition: width 0.3s ease;
+      width: 60px;
+      min-width: 60px;
+      position: relative;
+      z-index: 100;
+    }
+
+    .sidebar.expanded {
+      width: 320px;
+    }
+
+    .sidebar-toggle {
+      position: absolute;
+      top: 12px;
+      right: -12px;
+      width: 24px;
+      height: 24px;
+      background: rgba(33, 38, 45, 0.7);
+      border: 1px solid rgba(48, 54, 61, 0.2);
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(125, 133, 144, 0.8);
+      font-size: 12px;
+      z-index: 101;
+    }
+
+    .sidebar-toggle:hover {
+      background: #30363D;
+      color: #C9D1D9;
+    }
+
+    .sidebar-header {
+      padding: 16px;
+      border-bottom: 1px solid rgba(48, 54, 61, 0.2);
+      display: flex;
+      align-items: center;
+    }
+
+    .diamond-icon {
+      width: 28px;
+      height: 28px;
+      margin-right: 12px;
+      font-size: 10pt;
+      background: linear-gradient(135deg, #58A6FF, #8B5CF6);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+
+    .sidebar-title {
+      font-weight: 600;
+      opacity: 0;
+      white-space: nowrap;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar.expanded .sidebar-title {
+      opacity: 1;
+    }
+
+    .nav-section {
+      padding: 16px 0;
+    }
+
+    .nav-section-title {
+      padding: 0 12px 6px;
+      font-size: 8pt;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: rgba(125, 133, 144, 0.6);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar.expanded .nav-section-title {
+      opacity: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      position: relative;
+      font-size: 9pt;
+    }
+
+    .nav-item:hover {
+      background: #21262D;
+    }
+
+    .nav-item.active {
+      background: #1F6FEB;
+      color: white;
+    }
+
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: #58A6FF;
+    }
+
+    .nav-icon {
+      width: 16px;
+      height: 16px;
+      margin-right: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8pt;
+      background: rgba(125, 133, 144, 0.2);
+      border-radius: 3px;
+      color: #7D8590;
+    }
+
+    .nav-text {
+      opacity: 0;
+      white-space: nowrap;
+      transition: opacity 0.3s ease;
+      flex: 1;
+    }
+
+    .sidebar.expanded .nav-text {
+      opacity: 1;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-left: auto;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar.expanded .status-dot {
+      opacity: 1;
+    }
+
+    .status-dot.healthy { background: #3FB950; }
+    .status-dot.warning { background: #D29922; }
+    .status-dot.error { background: #F85149; }
+
+    /* Main Content Area */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #0D1117;
+    }
+
+    /* Tab System */
+    .tab-bar {
+      background: #161B22;
+      border-bottom: 1px solid rgba(48, 54, 61, 0.3);
+      display: flex;
+      align-items: center;
+      padding: 0;
+      min-height: 36px;
+    }
+
+    .tab-list {
+      display: flex;
+      flex: 1;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .tab-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab {
+      background: rgba(22, 27, 34, 0.8);
+      border-right: 1px solid rgba(48, 54, 61, 0.2);
+      padding: 8px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: rgba(201, 209, 217, 0.7);
+      transition: all 0.2s ease;
+      min-width: 120px;
+      max-width: 200px;
+      position: relative;
+      white-space: nowrap;
+    }
+
+    .tab.active {
+      background: #0D1117;
+      color: #C9D1D9;
+      border-bottom: 2px solid #58A6FF;
+    }
+
+    .tab:hover {
+      background: rgba(33, 38, 45, 0.6);
+      color: #C9D1D9;
+    }
+
+    .tab-icon {
+      margin-right: 6px;
+      font-size: 11px;
+    }
+
+    .tab-title {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tab-close {
+      margin-left: 8px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: transparent;
+      color: rgba(125, 133, 144, 0.6);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .tab-close:hover {
+      background: rgba(248, 81, 73, 0.2);
+      color: #F85149;
+    }
+
+    .tab-add {
+      background: transparent;
+      border: none;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: rgba(125, 133, 144, 0.7);
+      font-size: 16px;
+      transition: all 0.2s ease;
+      margin: 0 4px;
+      border-radius: 4px;
+    }
+
+    .tab-add:hover {
+      background: rgba(33, 38, 45, 0.6);
+      color: #C9D1D9;
+    }
+
+    /* Progress Tracking Bar */
+    .progress-bar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 3px;
+      height: 100vh;
+      background: rgba(48, 54, 61, 0.1);
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    .progress-fill {
+      width: 100%;
+      height: 0%;
+      background: #4A5568;
+      transition: all 0.5s ease;
+      box-shadow: 0 0 6px rgba(74, 85, 104, 0.4);
+    }
+
+    /* Work State Colors - Emotive Palette */
+    .progress-fill.initializing {
+      background: linear-gradient(to bottom, #6B73FF, #4338CA);
+      box-shadow: 0 0 8px rgba(107, 115, 255, 0.4);
+    }
+
+    .progress-fill.processing {
+      background: linear-gradient(to bottom, #06B6D4, #0891B2);
+      box-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+    }
+
+    .progress-fill.warning {
+      background: linear-gradient(to bottom, #F59E0B, #D97706);
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+    }
+
+    .progress-fill.error {
+      background: linear-gradient(to bottom, #EF4444, #DC2626);
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    }
+
+    .progress-fill.success {
+      background: linear-gradient(to bottom, #10B981, #059669);
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+    }
+
+    .progress-fill.complete {
+      background: linear-gradient(to bottom, #8B5CF6, #7C3AED);
+      box-shadow: 0 0 12px rgba(139, 92, 246, 0.5);
+    }
+
+    .progress-fill.pulsing {
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; box-shadow: 0 0 15px currentColor; }
+    }
+
+    /* Flexible Block System */
+    .workspace {
+      flex: 1;
+      background: transparent;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 16px;
+      padding-bottom: 60px; /* Space for command bar */
+    }
+
+    /* Conversation Area */
+    .conversation-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .conversation-message {
+      background: rgba(22, 27, 34, 0.6);
+      border: 1px solid rgba(48, 54, 61, 0.2);
+      border-radius: 8px;
+      padding: 12px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+
+    .message-user {
+      align-self: flex-end;
+      background: rgba(88, 166, 255, 0.1);
+      border-color: rgba(88, 166, 255, 0.2);
+    }
+
+    .message-ai {
+      align-self: flex-start;
+      background: rgba(139, 92, 246, 0.1);
+      border-color: rgba(139, 92, 246, 0.2);
+    }
+
+    /* Status Indicators */
+    .status-indicators {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 6pt;
+      opacity: 0.7;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 6px;
+      background: rgba(48, 54, 61, 0.2);
+      border-radius: 3px;
+    }
+
+    .breathing-hexagon {
+      animation: breathe 2s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
+    }
+
+    .conversation-block {
+      position: absolute;
+      background: rgba(22, 27, 34, 0.8);
+      border: 1px solid rgba(48, 54, 61, 0.3);
+      border-radius: 8px;
+      min-width: 300px;
+      min-height: 200px;
+      resize: both;
+      overflow: auto;
+      cursor: move;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .conversation-block:hover {
+      border-color: rgba(88, 166, 255, 0.4);
+      box-shadow: 0 4px 24px rgba(88, 166, 255, 0.1);
+    }
+
+    .block-header {
+      background: rgba(48, 54, 61, 0.4);
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(48, 54, 61, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: grab;
+      font-size: 9pt;
+      color: rgba(201, 209, 217, 0.8);
+    }
+
+    .block-header:active {
+      cursor: grabbing;
+    }
+
+    .block-content {
+      padding: 12px;
+      font-size: 9pt;
+      line-height: 1.4;
+      color: #C9D1D9;
+    }
+
+    .block-controls {
+      display: flex;
+      gap: 4px;
+    }
+
+    .block-btn {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      transition: all 0.2s ease;
+    }
+
+    .block-btn.minimize { background: #D29922; }
+    .block-btn.maximize { background: #3FB950; }
+    .block-btn.close { background: #F85149; }
+
+    .block-btn:hover {
+      opacity: 0.8;
+      transform: scale(1.1);
+    }
+
+    /* Command Bar */
+    .command-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(22, 27, 34, 0.95);
+      border-top: 1px solid rgba(48, 54, 61, 0.3);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(12px);
+      z-index: 600;
+    }
+
+    .command-input {
+      flex: 1;
+      background: rgba(13, 17, 23, 0.9);
+      border: 1px solid rgba(48, 54, 61, 0.4);
+      border-radius: 6px;
+      padding: 10px 12px;
+      color: #C9D1D9;
+      font-family: inherit;
+      font-size: 10pt;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .command-input:focus {
+      border-color: #58A6FF;
+      box-shadow: 0 0 8px rgba(88, 166, 255, 0.2);
+    }
+
+    .command-input::placeholder {
+      color: rgba(125, 133, 144, 0.6);
+    }
+
+    .command-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .cmd-icon {
+      width: 24px;
+      height: 24px;
+      background: transparent;
+      border: none;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 6pt;
+      color: rgba(125, 133, 144, 0.6);
+      transition: all 0.2s ease;
+      position: relative;
+      opacity: 0.6;
+    }
+
+    .cmd-icon:hover {
+      opacity: 0.9;
+      color: rgba(88, 166, 255, 0.8);
+      transform: scale(1.1);
+    }
+
+    .cmd-icon.active {
+      opacity: 1;
+      color: #58A6FF;
+    }
+
+    .cmd-icon.pcp-active {
+      background: linear-gradient(135deg, #8B5CF6, #06B6D4);
+      border-color: #8B5CF6;
+      color: white;
+      animation: pulse-glow 2s infinite;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 8px rgba(139, 92, 246, 0.3); }
+      50% { box-shadow: 0 0 16px rgba(139, 92, 246, 0.6); }
+    }
+
+    /* PCP Hexagon in command bar */
+    .pcp-hexagon {
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, #8B5CF6, #06B6D4);
+      clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
+    }
+
+    .cmd-separator {
+      width: 1px;
+      height: 24px;
+      background: rgba(48, 54, 61, 0.4);
+      margin: 0 4px;
+    }
+
+    /* Branding Column */
+    .branding-column {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 40px;
+      background: rgba(13, 17, 23, 0.8);
+      border-left: 1px solid rgba(48, 54, 61, 0.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 0;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar.expanded .branding-column {
+      opacity: 1;
+    }
+
+    .brand-logo {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: 8pt;
+      font-weight: 300;
+      color: rgba(125, 133, 144, 0.6);
+      letter-spacing: 2px;
+      transform: rotate(180deg);
+    }
+
+    .theme-selector {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .theme-option {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid rgba(48, 54, 61, 0.3);
+    }
+
+    .theme-option.dark {
+      background: #0D1117;
+    }
+
+    .theme-option.light {
+      background: #FFFFFF;
+    }
+
+    .theme-option:hover {
+      transform: scale(1.1);
+      border-color: rgba(88, 166, 255, 0.6);
+    }
+
+    .theme-option.active {
+      border-color: #58A6FF;
+      box-shadow: 0 0 8px rgba(88, 166, 255, 0.3);
+    }
+
+    .copyright {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      font-size: 6pt;
+      font-weight: 200;
+      color: rgba(125, 133, 144, 0.4);
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .copyright-text {
+      margin: 2px 0;
+    }
+
+    /* Feedback System */
+    .feedback-controls {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+      justify-content: center;
+    }
+
+    .feedback-btn {
+      width: 20px;
+      height: 20px;
+      background: transparent;
+      border: 1px solid rgba(48, 54, 61, 0.3);
+      border-radius: 3px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8pt;
+      transition: all 0.2s ease;
+      opacity: 0.6;
+    }
+
+    .feedback-btn:hover {
+      opacity: 1;
+      transform: scale(1.05);
+    }
+
+    .feedback-btn.thumbs-up {
+      color: rgba(16, 185, 129, 0.7);
+    }
+
+    .feedback-btn.thumbs-up:hover,
+    .feedback-btn.thumbs-up.active {
+      background: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.4);
+      color: #10B981;
+    }
+
+    .feedback-btn.thumbs-down {
+      color: rgba(239, 68, 68, 0.7);
+    }
+
+    .feedback-btn.thumbs-down:hover,
+    .feedback-btn.thumbs-down.active {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #EF4444;
+    }
+
+    /* Right Control Panel */
+    .right-panel {
+      position: fixed;
+      top: 40px;
+      right: 16px;
+      width: 320px;
+      max-height: calc(100vh - 120px);
+      background: rgba(22, 27, 34, 0.95);
+      border: 1px solid rgba(48, 54, 61, 0.3);
+      border-radius: 8px;
+      backdrop-filter: blur(12px);
+      overflow-y: auto;
+      z-index: 500;
+      font-size: 9pt;
+    }
+
+    .panel-section {
+      padding: 12px;
+      border-bottom: 1px solid rgba(48, 54, 61, 0.2);
+    }
+
+    .panel-section:last-child {
+      border-bottom: none;
+    }
+
+    .panel-header {
+      font-size: 10pt;
+      font-weight: 600;
+      color: #C9D1D9;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .copilot-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .copilot-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      background: rgba(48, 54, 61, 0.2);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .copilot-item:hover {
+      background: rgba(88, 166, 255, 0.2);
+    }
+
+    .copilot-avatar {
+      width: 20px;
+      height: 20px;
+      background: linear-gradient(135deg, #8B5CF6, #06B6D4);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 7pt;
+      font-weight: 600;
+      color: white;
+    }
+
+    .copilot-info {
+      flex: 1;
+    }
+
+    .copilot-name {
+      font-size: 9pt;
+      font-weight: 500;
+      color: #C9D1D9;
+    }
+
+    .copilot-status {
+      font-size: 7pt;
+      color: rgba(125, 133, 144, 0.8);
+    }
+
+    .scan-approve-btn {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .scan-approve-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .hot-topic {
+      padding: 8px;
+      background: rgba(48, 54, 61, 0.2);
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .topic-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .topic-time {
+      font-size: 7pt;
+      color: rgba(125, 133, 144, 0.6);
+    }
+
+    .topic-title {
+      font-size: 9pt;
+      font-weight: 500;
+      color: #C9D1D9;
+    }
+
+    .topic-description {
+      font-size: 8pt;
+      color: rgba(125, 133, 144, 0.8);
+      line-height: 1.3;
+    }
+
+    .proposal-item {
+      background: rgba(48, 54, 61, 0.2);
+      border-radius: 4px;
+      padding: 8px;
+      margin-bottom: 8px;
+    }
+
+    .proposal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .proposal-status {
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-size: 7pt;
+      font-weight: 600;
+    }
+
+    .status-pending {
+      background: rgba(245, 158, 11, 0.2);
+      color: #F59E0B;
+    }
+
+    .status-approved {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10B981;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .metric-card {
+      background: rgba(48, 54, 61, 0.2);
+      border-radius: 4px;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 14pt;
+      font-weight: 600;
+      color: #58A6FF;
+    }
+
+    .metric-label {
+      font-size: 7pt;
+      color: rgba(125, 133, 144, 0.8);
+      text-transform: uppercase;
+    }
+
+    /* Workspace Styling */
+    .workspace {
+      flex: 1;
+      background: transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Command Bar */
+    .command-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(22, 27, 34, 0.95);
+      border-top: 1px solid rgba(48, 54, 61, 0.3);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(8px);
+      z-index: 500;
+    }
+
+    .command-input {
+      flex: 1;
+      background: rgba(13, 17, 23, 0.8);
+      border: 1px solid rgba(48, 54, 61, 0.4);
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: #C9D1D9;
+      font-family: inherit;
+      font-size: 10pt;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .command-input:focus {
+      border-color: #58A6FF;
+      box-shadow: 0 0 8px rgba(88, 166, 255, 0.2);
+    }
+
+    .command-input::placeholder {
+      color: rgba(125, 133, 144, 0.6);
+    }
+
+    .command-actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .command-btn {
+      width: 28px;
+      height: 28px;
+      background: rgba(48, 54, 61, 0.3);
+      border: 1px solid rgba(48, 54, 61, 0.2);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 8pt;
+      color: rgba(125, 133, 144, 0.8);
+      transition: all 0.2s ease;
+    }
+
+    .command-btn:hover {
+      background: rgba(88, 166, 255, 0.2);
+      border-color: rgba(88, 166, 255, 0.4);
+      color: #58A6FF;
+    }
+
+    .command-btn.active {
+      background: rgba(88, 166, 255, 0.3);
+      border-color: #58A6FF;
+      color: #58A6FF;
+    }
+
+    /* PCP Hexagon */
+    .pcp-connector {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      width: 24px;
+      height: 24px;
+      background: linear-gradient(135deg, #8B5CF6, #06B6D4);
+      clip-path: polygon(50% 0%, 93.3% 25%, 93.3% 75%, 50% 100%, 6.7% 75%, 6.7% 25%);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 600;
+    }
+
+    .pcp-connector:hover {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 0 12px rgba(139, 92, 246, 0.5);
+    }
+
+    .terminal-header {
+      background: #161B22;
+      border-bottom: 1px solid rgba(48, 54, 61, 0.3);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: between;
+    }
+
+    .terminal-title {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .terminal-controls {
+      display: flex;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .control-btn {
+      padding: 4px 12px;
+      background: rgba(33, 38, 45, 0.5);
+      border: 1px solid rgba(48, 54, 61, 0.2);
+      border-radius: 6px;
+      color: rgba(201, 209, 217, 0.9);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .control-btn:hover {
+      background: rgba(48, 54, 61, 0.4);
+      border-color: rgba(48, 54, 61, 0.4);
+    }
+
+    .terminal-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .dashboard-card {
+      background: #161B22;
+      border: 1px solid rgba(48, 54, 61, 0.2);
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: between;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .card-status {
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .status-healthy { background: #1A7F37; color: #3FB950; }
+    .status-warning { background: #7C3D00; color: #D29922; }
+    .status-error { background: #8E1538; color: #F85149; }
+
+    .metric {
+      display: flex;
+      justify-content: between;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(48, 54, 61, 0.15);
+    }
+
+    .metric:last-child {
+      border-bottom: none;
+    }
+
+    .metric-label {
+      color: #7D8590;
+      font-size: 12px;
+    }
+
+    .metric-value {
+      font-weight: 600;
+    }
+
+    .terminal-output {
+      background: #0D1117;
+      border: 1px solid rgba(48, 54, 61, 0.25);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'SF Mono', 'Monaco', monospace;
+      font-size: 13px;
+      line-height: 1.4;
+      overflow-x: auto;
+    }
+
+    .command-line {
+      color: #58A6FF;
+      margin-bottom: 8px;
+    }
+
+    .output-line {
+      margin-bottom: 4px;
+    }
+
+    .success { color: #3FB950; }
+    .error { color: #F85149; }
+    .warning { color: #D29922; }
+  </style>
+</head>
+<body>
+  <div class="console-container">
+    <!-- Expandable Left Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-toggle" id="sidebarToggle">▶</div>
+      
+      <div class="sidebar-header">
+        <div class="diamond-icon">DS</div>
+        <div class="sidebar-title">Diamond SAO</div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">1. Automated Communication</div>
+        <div class="nav-item active" onclick="openSection('comm')">
+          <div class="nav-icon">AC</div>
+          <div class="nav-text">Communication Hub</div>
+          <div class="status-dot healthy"></div>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">2. Growth Revenues</div>
+        <div class="nav-item" onclick="openSection('revenue')">
+          <div class="nav-icon">GR</div>
+          <div class="nav-text">Revenue Growth</div>
+          <div class="status-dot healthy"></div>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">3. Services Client Innovations</div>
+        <div class="nav-item" onclick="openSection('services')">
+          <div class="nav-icon">CI</div>
+          <div class="nav-text">Client Innovation</div>
+          <div class="status-dot healthy"></div>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">4. Automated Workflows</div>
+        <div class="nav-item" onclick="openSection('workflows')">
+          <div class="nav-icon">AW</div>
+          <div class="nav-text">Workflow Automation</div>
+          <div class="status-dot healthy"></div>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">5. ROI Dashboard</div>
+        <div class="nav-item" onclick="openSection('roi')">
+          <div class="nav-icon">RD</div>
+          <div class="nav-text">ROI Analytics</div>
+          <div class="status-dot healthy"></div>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">6. Wish</div>
+        <div class="nav-item" onclick="openSection('wish')">
+          <div class="nav-icon">WI</div>
+          <div class="nav-text">Wish Management</div>
+          <div class="status-dot healthy"></div>
+        </div>
+      </div>
+
+      <!-- UTILITIES SECTION -->
+      <div class="nav-section">
+        <div class="nav-section-title">Utilities</div>
+        <div class="nav-item" onclick="openSection('pilots-lounge')">
+          <div class="nav-icon">PL</div>
+          <div class="nav-text">Pilots' Lounge</div>
+          <div class="status-dot healthy"></div>
+        </div>
+        <div class="nav-item" onclick="openSection('gift-shop')">
+          <div class="nav-icon">GS</div>
+          <div class="nav-text">Gift Shop</div>
+          <div class="status-dot healthy"></div>
+        </div>
+        <div class="nav-item" onclick="openSection('settings')">
+          <div class="nav-icon">ST</div>
+          <div class="nav-text">Settings</div>
+          <div class="status-dot healthy"></div>
+        </div>
+        <div class="nav-item" onclick="openSection('integration-gateway')">
+          <div class="nav-icon">IG</div>
+          <div class="nav-text">Integration Gateway</div>
+          <div class="status-dot warning"></div>
+        </div>
+        <div class="nav-item" onclick="openSection('uspto')">
+          <div class="nav-icon">US</div>
+          <div class="nav-text">USPTO System</div>
+          <div class="status-dot healthy"></div>
+        </div>
+      </div>
+
+      <!-- MCP SERVICES SECTION (Bottom) -->
+      <div class="nav-section">
+        <div class="nav-section-title">MCP Services</div>
+        <div class="nav-item" onclick="openSection('mcp-main')">
+          <div class="nav-icon">MC</div>
+          <div class="nav-text">mcp.mycompany.2100.cool</div>
+          <div class="status-dot healthy"></div>
+        </div>
+        <div class="nav-item" onclick="openSection('mcp-hr')">
+          <div class="nav-icon">HR</div>
+          <div class="nav-text">mcp.hr.2100.cool</div>
+          <div class="status-dot healthy"></div>
+        </div>
+        <div class="nav-item" onclick="openSection('mcp-finance')">
+          <div class="nav-icon">FN</div>
+          <div class="nav-text">mcp.finance.2100.cool</div>
+          <div class="status-dot healthy"></div>
+        </div>
+        <div class="nav-item" onclick="openSection('mcp-tech')">
+          <div class="nav-icon">TK</div>
+          <div class="nav-text">mcp.tech.2100.cool</div>
+          <div class="status-dot healthy"></div>
+        </div>
+      </div>
+          <div class="nav-icon">SP</div>
+          <div class="nav-text">SallyPort Auth</div>
+          <div class="status-dot healthy"></div>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">AI Copilots</div>
+        <div class="nav-item">
+          <div class="nav-icon">🤖</div>
+          <div class="nav-text">Dr. Lucy</div>
+          <div class="status-dot healthy"></div>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon">🧠</div>
+          <div class="nav-text">Dr. Claude</div>
+          <div class="status-dot healthy"></div>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon">🎯</div>
+          <div class="nav-text">Victory36</div>
+          <div class="status-dot healthy"></div>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon">🎼</div>
+          <div class="nav-text">Maestro</div>
+          <div class="status-dot healthy"></div>
+        </div>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-title">Operations</div>
+        <div class="nav-item">
+          <div class="nav-icon">💎</div>
+          <div class="nav-text">Diamond CLI</div>
+          <div class="status-dot healthy"></div>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon">🔧</div>
+          <div class="nav-text">Self-Healing</div>
+          <div class="status-dot warning"></div>
+        </div>
+        <div class="nav-item">
+          <div class="nav-icon">📋</div>
+          <div class="nav-text">Logs</div>
+          <div class="status-dot healthy"></div>
+        </div>
+      </div>
+      
+      <!-- Subtle Branding Column -->
+      <div class="branding-column">
+        <div class="brand-logo">ASOOS</div>
+        <div class="theme-selector">
+          <div class="theme-option dark active" title="Dark Theme" onclick="setTheme('dark')"></div>
+          <div class="theme-option light" title="Light Theme" onclick="setTheme('light')"></div>
+        </div>
+        <div class="copyright">
+          <div class="copyright-text">© 2025</div>
+          <div class="copyright-text">ASOOS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress Tracking Bar -->
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <div class="tab-bar">
+        <div class="tab-list" id="tabList">
+          <div class="tab active" data-tab-id="main">
+            <span class="tab-icon">💎</span>
+            <span class="tab-title">Diamond Console</span>
+            <span class="tab-close" onclick="closeTab('main')">×</span>
+          </div>
+        </div>
+        <button class="tab-add" onclick="addNewTab()" title="Add new tab">+</button>
+      </div>
+
+      <div class="terminal-header">
+        <div class="terminal-title">💎 Diamond SAO Command Center | Owner Console</div>
+        <div class="terminal-controls">
+          <div class="control-btn">Deploy</div>
+          <div class="control-btn">Heal</div>
+          <div class="control-btn">Monitor</div>
+        </div>
+      </div>
+
+      <div class="terminal-content">
+        <!-- Diamond SAO Complete Workspace -->
+        <div class="workspace" id="workspace">
+          <!-- Conversation Area - Scrolls up, command bar stays fixed -->
+          <div class="conversation-area" id="conversationArea">
+            <!-- Sample conversation to show the interface -->
+            <div class="conversation-message message-ai">
+              <div class="message-header">
+                <span class="message-author">Dr. Claude (sRIX)</span>
+                <span class="message-time">2 min ago</span>
+              </div>
+              <div class="message-content">
+                Welcome to your Diamond SAO Command Center. I have access to all 6 activated business systems and the 12-partition intelligence framework. How can I assist with your strategic operations today?
+              </div>
+            </div>
+            
+            <div class="conversation-message message-user">
+              <div class="message-header">
+                <span class="message-author">You</span>
+                <span class="message-time">1 min ago</span>
+              </div>
+              <div class="message-content">
+                Show me the current status of our automated communication systems
+              </div>
+            </div>
+            
+            <div class="conversation-message message-ai">
+              <div class="message-header">
+                <span class="message-author">Dr. Claude (sRIX)</span>
+                <span class="message-time">30 sec ago</span>
+              </div>
+              <div class="message-content">
+                Accessing Partition 1 (Automated Communication):<br><br>
+                • <strong>Active Campaigns:</strong> 47 running across 12 channels<br>
+                • <strong>Response Rate:</strong> +23% above baseline<br>
+                • <strong>AI Agents:</strong> 320K operational in communication squadrons<br>
+                • <strong>Dream Commander Status:</strong> Processing 375M daily interactions<br><br>
+                Would you like me to open a detailed analysis block, or scan-to-approve pending communication strategies?
+              </div>
+            </div>
+          </div>
+          
+          <!-- Video/Collaboration Overlay Areas (initially hidden) -->
+          <div class="video-overlay" id="videoOverlay" style="display: none;">
+            <!-- Daily.co video integration will go here -->
+            <div class="video-controls">
+              <div class="video-title">Vision Space Meeting</div>
+              <div class="video-participants">3 participants + PCP</div>
+              <div class="video-actions">
+                <button class="video-btn">Share Screen</button>
+                <button class="video-btn">Invite Participants</button>
+                <button class="video-btn">Academy Broadcast</button>
+                <button class="video-btn">End Meeting</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Flexible Block System for Multi-tasking -->
+          <!-- Blocks will be dynamically created here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Control Panel -->
+    <div class="right-panel" id="rightPanel">
+      <!-- AI Copilots Section -->
+      <div class="panel-section">
+        <div class="panel-header">Your AI Copilots</div>
+        <div class="copilot-list">
+          <div class="copilot-item">
+            <div class="copilot-avatar">QB</div>
+            <div class="copilot-info">
+              <div class="copilot-name">Dr. Lucy</div>
+              <div class="copilot-status">sRIX</div>
+            </div>
+          </div>
+          <div class="copilot-item">
+            <div class="copilot-avatar">SH</div>
+            <div class="copilot-info">
+              <div class="copilot-name">Dr. Claude</div>
+              <div class="copilot-status">sRIX</div>
+            </div>
+          </div>
+          <div class="copilot-item">
+            <div class="copilot-avatar">V36</div>
+            <div class="copilot-info">
+              <div class="copilot-name">Victory36</div>
+              <div class="copilot-status">Active</div>
+            </div>
+          </div>
+          <div class="copilot-item">
+            <div class="copilot-avatar">MA</div>
+            <div class="copilot-info">
+              <div class="copilot-name">Maestro</div>
+              <div class="copilot-status">QB RIX Active</div>
+            </div>
+          </div>
+        </div>
+        <div class="scan-approve-btn">SCAN TO APPROVE</div>
+      </div>
+
+      <!-- Today's Hot Topics -->
+      <div class="panel-section">
+        <div class="panel-header">Today's Hot Topics</div>
+        <div class="hot-topic">
+          <div class="topic-header">
+            <span>Trending</span>
+            <span class="topic-time">2h ago</span>
+          </div>
+          <div class="topic-title">Vision Lake Integration Complete</div>
+          <div class="topic-description">320,000 agents operational across squadrons</div>
+        </div>
+        <div class="hot-topic">
+          <div class="topic-header">
+            <span>Growth</span>
+            <span class="topic-time">4h ago</span>
+          </div>
+          <div class="topic-title">Revenue Pipeline +47%</div>
+          <div class="topic-description">Q2 projections exceeding targets by 23%</div>
+        </div>
+        <div class="feedback-controls">
+          <div class="feedback-btn thumbs-up" onclick="sendFeedback('performance', 'up')" title="Helpful insight">👍</div>
+          <div class="feedback-btn thumbs-down" onclick="sendFeedback('performance', 'down')" title="Needs improvement">👎</div>
+        </div>
+      </div>
+
+      <!-- Today's Proposals -->
+      <div class="panel-section">
+        <div class="panel-header">Today's Proposals</div>
+        <div class="proposal-item">
+          <div class="proposal-header">
+            <div class="proposal-title">Multi-Tenant Gateway Enhancement</div>
+            <div class="proposal-status status-pending">PENDING</div>
+          </div>
+          <div class="topic-description">Advanced tenant isolation & scaling capabilities</div>
+          <div class="topic-description">Est. ROI: +$1.2M annually</div>
+        </div>
+        <div class="proposal-item">
+          <div class="proposal-header">
+            <div class="proposal-title">AI Copilot Expansion</div>
+            <div class="proposal-status status-approved">APPROVED</div>
+          </div>
+          <div class="topic-description">Deploy 6 additional RIX specialists</div>
+          <div class="topic-description">Budget: $450K Q3-Q4</div>
+        </div>
+      </div>
+
+      <!-- Projects in Progress -->
+      <div class="panel-section">
+        <div class="panel-header">Projects in Progress</div>
+        <div class="proposal-item">
+          <div class="proposal-header">
+            <div class="proposal-title">V99 Interface Deployment</div>
+            <div class="proposal-status status-approved">87%</div>
+          </div>
+          <div class="topic-description">Production rollout to 47 enterprise clients</div>
+        </div>
+        <div class="proposal-item">
+          <div class="proposal-header">
+            <div class="proposal-title">Security Audit Compliance</div>
+            <div class="proposal-status status-pending">62%</div>
+          </div>
+          <div class="topic-description">SOC2 Type II certification process</div>
+        </div>
+      </div>
+
+      <!-- Growth Metrics -->
+      <div class="panel-section">
+        <div class="panel-header">How You're Growing</div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-value">+340%</div>
+            <div class="metric-label">User Engagement</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">+127%</div>
+            <div class="metric-label">Revenue Growth</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">95.2%</div>
+            <div class="metric-label">Client Retention</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">142</div>
+            <div class="metric-label">Enterprise Clients</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Career Development -->
+      <div class="panel-section">
+        <div class="panel-header">Support Your Career</div>
+        <div class="hot-topic">
+          <div class="topic-title">Recommended Training</div>
+          <div class="topic-description">• Executive Leadership Certification (8 weeks)</div>
+          <div class="topic-description">• Enterprise Architecture Mastery</div>
+          <div class="topic-description">• Board Presentation Skills Workshop</div>
+        </div>
+        <div class="hot-topic">
+          <div class="topic-title">Career Advancement</div>
+          <div class="topic-description">Next role: Chief Technology Officer</div>
+          <div class="topic-description">Target timeline: Q4 2025</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right 12-Partition Control Panel -->
+    <div class="right-panel" id="rightPanel">
+      <!-- AI Copilots Section -->
+      <div class="panel-section">
+        <div class="panel-header">Your AI Copilots</div>
+        <div class="copilot-list">
+          <div class="copilot-item">
+            <div class="copilot-avatar">QB</div>
+            <div class="copilot-info">
+              <div class="copilot-name">Dr. Lucy</div>
+              <div class="copilot-status">sRIX</div>
+            </div>
+          </div>
+          <div class="copilot-item">
+            <div class="copilot-avatar">SH</div>
+            <div class="copilot-info">
+              <div class="copilot-name">Dr. Claude</div>
+              <div class="copilot-status">sRIX</div>
+            </div>
+          </div>
+          <div class="copilot-item">
+            <div class="copilot-avatar">V36</div>
+            <div class="copilot-info">
+              <div class="copilot-name">Victory36</div>
+              <div class="copilot-status">Active</div>
+            </div>
+          </div>
+          <div class="copilot-item">
+            <div class="copilot-avatar">MA</div>
+            <div class="copilot-info">
+              <div class="copilot-name">Maestro</div>
+              <div class="copilot-status">QB RIX Active</div>
+            </div>
+          </div>
+        </div>
+        <div class="scan-approve-btn" onclick="scanToApprove()">SCAN TO APPROVE</div>
+      </div>
+
+      <!-- VISIBLE PARTITIONS (1-6) - Public Company Intelligence -->
+      <div class="panel-section">
+        <div class="panel-header">Today's Performance Intelligence</div>
+        <div class="hot-topic">
+          <div class="topic-header">
+            <span>Trending</span>
+            <span class="topic-time">2h ago</span>
+          </div>
+          <div class="topic-title">Vision Lake Integration Complete</div>
+          <div class="topic-description">320,000 agents operational across squadrons</div>
+        </div>
+        <div class="hot-topic">
+          <div class="topic-header">
+            <span>Growth</span>
+            <span class="topic-time">4h ago</span>
+          </div>
+          <div class="topic-title">Revenue Pipeline +47%</div>
+          <div class="topic-description">Q2 projections exceeding targets by 23%</div>
+        </div>
+      </div>
+
+      <!-- PARTITION 1-2: KPIs & Career Plans (Visible) -->
+      <div class="panel-section">
+        <div class="panel-header">Executive Overview</div>
+        <div class="metric-grid">
+          <div class="metric-card">
+            <div class="metric-value">+340%</div>
+            <div class="metric-label">User Engagement</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">+127%</div>
+            <div class="metric-label">Revenue Growth</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">95.2%</div>
+            <div class="metric-label">Client Retention</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value">142</div>
+            <div class="metric-label">Enterprise Clients</div>
+          </div>
+        </div>
+        <div class="feedback-controls">
+          <div class="feedback-btn thumbs-up" onclick="sendFeedback('executive', 'up')" title="Great metrics">👍</div>
+          <div class="feedback-btn thumbs-down" onclick="sendFeedback('executive', 'down')" title="Need different metrics">👎</div>
+        </div>
+      </div>
+
+      <!-- PARTITION 3-4: Functional & Sector Intelligence (Visible) -->
+      <div class="panel-section">
+        <div class="panel-header">Industry Position</div>
+        <div class="proposal-item">
+          <div class="proposal-header">
+            <div class="proposal-title">Multi-Tenant Gateway Enhancement</div>
+            <div class="proposal-status status-pending">PENDING</div>
+          </div>
+          <div class="topic-description">Advanced tenant isolation & scaling capabilities</div>
+          <div class="topic-description">Est. ROI: +$1.2M annually</div>
+        </div>
+        <div class="proposal-item">
+          <div class="proposal-header">
+            <div class="proposal-title">AI Copilot Expansion</div>
+            <div class="proposal-status status-approved">APPROVED</div>
+          </div>
+          <div class="topic-description">Deploy 6 additional RIX specialists</div>
+          <div class="topic-description">Budget: $450K Q3-Q4</div>
+        </div>
+      </div>
+
+      <!-- PARTITION 5-6: Performance & Context (Visible) -->
+      <div class="panel-section">
+        <div class="panel-header">Team Development</div>
+        <div class="hot-topic">
+          <div class="topic-title">Q2 Strategic Priorities</div>
+          <div class="topic-description">• Enterprise scalability (Banking sector)</div>
+          <div class="topic-description">• Multi-tenant architecture completion</div>
+          <div class="topic-description">• Regulatory compliance (SOX, GDPR)</div>
+        </div>
+        <div class="hot-topic">
+          <div class="topic-title">Career Advancement</div>
+          <div class="topic-description">Next role: Chief Technology Officer</div>
+          <div class="topic-description">Target timeline: Q4 2025</div>
+        </div>
+      </div>
+
+      <!-- SECRET PARTITION INDICATOR - Only visible to Diamond/Emerald SAO -->
+      <div class="panel-section" style="border-top: 2px solid rgba(139, 92, 246, 0.3);">
+        <div class="panel-header" style="color: rgba(139, 92, 246, 0.8); font-size: 8pt;">Strategic Intelligence (D1 Secured)</div>
+        <div class="metric-grid">
+          <div class="metric-card" style="background: rgba(139, 92, 246, 0.1);">
+            <div class="metric-value" style="color: #8B5CF6;">12</div>
+            <div class="metric-label">Active Partitions</div>
+          </div>
+          <div class="metric-card" style="background: rgba(139, 92, 246, 0.1);">
+            <div class="metric-value" style="color: #8B5CF6;">375M</div>
+            <div class="metric-label">Daily Transactions</div>
+          </div>
+        </div>
+        <div class="hot-topic" style="background: rgba(139, 92, 246, 0.1);">
+          <div class="topic-description" style="font-size: 7pt; color: rgba(139, 92, 246, 0.9);">Private intelligence active • Cloudflare D1 secured</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Command Bar -->
+    <div class="command-bar">
+      <div class="command-actions">
+        <!-- Context Indicators -->
+        <div class="status-indicators">
+          <div class="status-indicator">
+            <div class="cmd-icon breathing-hexagon" title="PCP Active - Speak with Fn key">
+              <div class="pcp-hexagon" style="width: 8px; height: 8px;"></div>
+            </div>
+            <span id="activeContext">Dr. Claude</span>
+          </div>
+          <div class="status-indicator">
+            <span>DIR:</span>
+            <span id="currentDir">~/symphony</span>
+          </div>
+          <div class="status-indicator">
+            <span>MOD:</span>
+            <span id="currentMode">chat</span>
+          </div>
+        </div>
+        
+        <div class="cmd-separator"></div>
+        
+        <!-- Ultra-minimal Tools -->
+        <div class="cmd-icon" title="ElevenLabs Voice Mode" onclick="toggleElevenLabs()">
+          ELV
+        </div>
+        <div class="cmd-icon" title="Daily.co Video Call" onclick="startVideoCall()">
+          VID
+        </div>
+        <div class="cmd-icon" title="Screen Share" onclick="shareScreen()">
+          SCR
+        </div>
+        <div class="cmd-icon" title="Vision Space Meeting" onclick="startVisionSpace()">
+          VIS
+        </div>
+        <div class="cmd-icon" title="Academy Broadcast" onclick="startBroadcast()">
+          BRD
+        </div>
+        <div class="cmd-icon" title="PipeCat Stream" onclick="togglePipeCat()">
+          PIP
+        </div>
+      </div>
+      
+      <input type="text" class="command-input" 
+             placeholder="💬 Chat with Dr. Claude • Press Fn to speak • Use @ for smart search" 
+             id="commandInput" 
+             onkeypress="handleCommand(event)"
+             onfocus="updateInputMode()">
+      
+      <div class="command-actions">
+        <!-- Scan Actions (appear contextually) -->
+        <div class="cmd-icon" id="scanTodo" title="Scan-to-do" onclick="scanTodo()" style="display: none;">
+          SCN
+        </div>
+        <div class="cmd-icon" id="scanApprove" title="Scan-to-approve" onclick="scanApprove()" style="display: none;">
+          APP
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sidebar toggle functionality
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('expanded');
+      sidebarToggle.textContent = sidebar.classList.contains('expanded') ? '◀' : '▶';
+    });
+
+    // Navigation item click handlers
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navItems.forEach(nav => nav.classList.remove('active'));
+        item.classList.add('active');
+        
+        // Here you would load different content based on selection
+        console.log('Navigation item clicked:', item.querySelector('.nav-text').textContent);
+      });
+    });
+
+    // Progress Bar Functionality
+    const progressFill = document.getElementById('progressFill');
+    const terminalContent = document.querySelector('.terminal-content');
+
+    function updateProgressBar() {
+      if (!terminalContent) return;
+      
+      const scrollTop = terminalContent.scrollTop;
+      const scrollHeight = terminalContent.scrollHeight - terminalContent.clientHeight;
+      const scrollPercentage = (scrollTop / scrollHeight) * 100;
+      
+      progressFill.style.height = `${Math.min(scrollPercentage, 100)}%`;
+      
+      // Add glowing effect when actively scrolling
+      progressFill.classList.add('glowing');
+      clearTimeout(progressFill.glowTimeout);
+      progressFill.glowTimeout = setTimeout(() => {
+        progressFill.classList.remove('glowing');
+      }, 500);
+    }
+
+    // Add scroll listener to terminal content
+    if (terminalContent) {
+      terminalContent.addEventListener('scroll', updateProgressBar);
+    }
+
+    // Tab System Functionality
+    let tabCounter = 1;
+    const tabs = new Map();
+    const MAX_TABS = 7;
+
+    function addNewTab() {
+      // Check if we've reached the maximum number of tabs
+      if (tabs.size >= MAX_TABS - 1) { // -1 because main tab counts
+        console.log(`Maximum ${MAX_TABS} tabs allowed`);
+        // Flash the add button to indicate limit reached
+        const addBtn = document.querySelector('.tab-add');
+        addBtn.style.background = 'rgba(245, 158, 11, 0.3)';
+        setTimeout(() => {
+          addBtn.style.background = 'transparent';
+        }, 500);
+        return;
+      }
+
+      tabCounter++;
+      const tabId = `tab-${tabCounter}`;
+      const tabName = `Console ${tabCounter}`;
+      
+      // Create new tab element
+      const newTab = document.createElement('div');
+      newTab.className = 'tab';
+      newTab.setAttribute('data-tab-id', tabId);
+      newTab.innerHTML = `
+        <span class="tab-icon">🔧</span>
+        <span class="tab-title">${tabName}</span>
+        <span class="tab-close" onclick="closeTab('${tabId}')">×</span>
+      `;
+      
+      // Add click handler for tab switching
+      newTab.addEventListener('click', (e) => {
+        if (!e.target.classList.contains('tab-close')) {
+          switchToTab(tabId);
+        }
+      });
+      
+      // Insert before the add button
+      const tabList = document.getElementById('tabList');
+      tabList.appendChild(newTab);
+      
+      // Store tab data with initial work state
+      tabs.set(tabId, {
+        element: newTab,
+        name: tabName,
+        content: `<div class="terminal-output"><div class="command-line">$ # New ${tabName} ready</div><div class="output-line success">✓ Console initialized</div></div>`,
+        workState: 'initializing',
+        progress: 0
+      });
+      
+      // Switch to the new tab
+      switchToTab(tabId);
+      
+      // Update progress bar for new tab
+      updateWorkProgress(tabId, 'initializing', 10);
+    }
+
+    function closeTab(tabId) {
+      const tab = tabs.get(tabId);
+      if (!tab || tabId === 'main') return; // Don't close main tab
+      
+      // Remove tab element
+      tab.element.remove();
+      tabs.delete(tabId);
+      
+      // If this was the active tab, switch to main
+      if (tab.element.classList.contains('active')) {
+        switchToTab('main');
+      }
+    }
+
+    function switchToTab(tabId) {
+      // Remove active class from all tabs
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Add active class to selected tab
+      const selectedTab = document.querySelector(`[data-tab-id="${tabId}"]`);
+      if (selectedTab) {
+        selectedTab.classList.add('active');
+      }
+      
+      // Here you would load different content based on tab selection
+      console.log('Switched to tab:', tabId);
+    }
+
+    // Work Progress Tracking
+    let currentWorkState = 'initializing';
+    let currentProgress = 15;
+
+    function updateWorkProgress(tabId, state, progress) {
+      currentWorkState = state;
+      currentProgress = Math.min(Math.max(progress, 0), 100);
+      
+      // Update progress bar visual state
+      progressFill.className = `progress-fill ${state}`;
+      progressFill.style.height = `${currentProgress}%`;
+      
+      // Add pulsing effect for active states
+      if (state === 'processing' || state === 'warning') {
+        progressFill.classList.add('pulsing');
+      } else {
+        progressFill.classList.remove('pulsing');
+      }
+      
+      // Update tab data if it exists
+      if (tabs.has(tabId)) {
+        const tab = tabs.get(tabId);
+        tab.workState = state;
+        tab.progress = progress;
+      }
+      
+      console.log(`Work Progress: ${tabId} - ${state} (${progress}%)`);
+    }
+
+    // Simulate work progress states (for demo)
+    function simulateWorkflow() {
+      const activeTab = document.querySelector('.tab.active');
+      if (!activeTab) return;
+      
+      const tabId = activeTab.getAttribute('data-tab-id');
+      const states = ['initializing', 'processing', 'warning', 'success', 'complete'];
+      const currentStateIndex = states.indexOf(currentWorkState);
+      
+      // Progress through states
+      if (currentProgress < 100) {
+        let nextProgress = currentProgress + Math.random() * 15;
+        let nextState = currentWorkState;
+        
+        // State transitions based on progress
+        if (nextProgress > 20 && currentWorkState === 'initializing') {
+          nextState = 'processing';
+        } else if (nextProgress > 50 && Math.random() > 0.7) {
+          nextState = 'warning'; // Random warning state
+        } else if (nextProgress > 80 && currentWorkState !== 'error') {
+          nextState = Math.random() > 0.8 ? 'error' : 'success';
+        } else if (nextProgress >= 95) {
+          nextState = 'complete';
+          nextProgress = 100;
+        }
+        
+        updateWorkProgress(tabId, nextState, nextProgress);
+      }
+    }
+
+    // Add click handler to main tab
+    document.querySelector('[data-tab-id="main"]').addEventListener('click', (e) => {
+      if (!e.target.classList.contains('tab-close')) {
+        switchToTab('main');
+      }
+    });
+
+    // Initialize main tab with current system state
+    updateWorkProgress('main', 'warning', 68); // 15 issues = warning state
+
+    // Auto-update status dots and metrics (simulated)
+    setInterval(() => {
+      // This would connect to real APIs to update status
+      console.log('Status update check...');
+      
+      // Simulate workflow progress
+      if (Math.random() > 0.7) {
+        simulateWorkflow();
+      }
+    }, 5000); // Check every 5 seconds for more responsive demo
+
+    // Initialize progress bar
+    updateProgressBar();
+  </script>
+</body>
+</html>

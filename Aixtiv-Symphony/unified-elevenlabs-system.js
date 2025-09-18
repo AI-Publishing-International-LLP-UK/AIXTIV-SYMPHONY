@@ -40,7 +40,7 @@
  * @date 2025-09-06
  */
 
-import { ElevenLabs } from '@elevenlabs/elevenlabs-js';
+import ElevenLabs from '@elevenlabs/elevenlabs-js';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';

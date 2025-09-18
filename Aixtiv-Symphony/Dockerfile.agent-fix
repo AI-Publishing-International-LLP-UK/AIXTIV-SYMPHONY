@@ -1,0 +1,32 @@
+
+FROM node:24-alpine
+
+# Install dependencies for computational agent healing
+RUN apk add --no-cache curl git
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+RUN npm ci --only=production
+
+# Copy application with fixes
+COPY . .
+
+# Copy the computational agent fixes
+COPY mocoa-owner-interface-static.html /app/public/
+COPY utils/promiseHandler.js /app/utils/
+COPY patches/comprehensive-agent-fix.html /app/patches/
+
+# Set environment variables for self-healing
+ENV NODE_OPTIONS="--require ./utils/promiseHandler.js"
+ENV COMPUTATIONAL_AGENT_HEALING_ENABLED=true
+ENV ELEVENLABS_POPUP_PREVENTION=true
+ENV GCP_PROJECT_ID=api-for-warp-drive
+
+# Health check for computational agents
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3   CMD curl -f http://localhost:8080/health || exit 1
+
+EXPOSE 8080
+
+CMD ["node", "index.js"]

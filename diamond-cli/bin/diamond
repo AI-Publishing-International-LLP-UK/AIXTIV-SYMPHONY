@@ -12,27 +12,28 @@
  * @author Victory36 + Diamond SAO Operational Center
  */
 
+import { spawn } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { Buffer } from 'buffer';
+
 // Node.js v24+ compatibility fixes
 try {
-  const fs = require('fs');
   if (fs.F_OK && !fs.constants) {
     fs.constants = { F_OK: fs.F_OK, R_OK: fs.R_OK, W_OK: fs.W_OK, X_OK: fs.X_OK };
   }
-  global.Buffer = global.Buffer || require('buffer').Buffer;
+  global.Buffer = global.Buffer || Buffer;
 } catch (e) {
   // Continue with fallback
 }
-
-const { spawn } = require('child_process');
-const fs = require('fs');
-const path = require('path');
 
 console.log('✅ Node.js v24+ compatibility fix applied');
 
 // Import CTTT integration if available
 let DiamondCLICTTTIntegration;
 try {
-  DiamondCLICTTTIntegration = require('../../diamond-cli-cttt-integration.js');
+  const ctttModule = await import('../../diamond-cli-cttt-integration.js');
+  DiamondCLICTTTIntegration = ctttModule.default || ctttModule;
 } catch (e) {
   // Create minimal CTTT stub
   DiamondCLICTTTIntegration = class {
@@ -95,7 +96,6 @@ class DiamondCLI {
     
     try {
       // Check if we're in the AIXTIV-SYMPHONY repository
-      const { spawn } = require('child_process');
       const gitProcess = spawn('git', ['remote', 'get-url', 'origin'], {
         stdio: 'pipe',
         cwd: process.cwd()
@@ -358,9 +358,8 @@ async function main() {
   }
 }
 
-// Run if called directly
-if (require.main === module) {
-  main();
-}
+// Run the CLI
+main();
 
-module.exports = DiamondCLI;
+// Export for potential imports
+export default DiamondCLI;

@@ -1,0 +1,27 @@
+{
+  "name": "diamond-cli",
+  "version": "1.0.1-aixtiv-symphony",
+  "type": "module",
+  "description": "💎 DIAMOND CLI - AIXTIV SYMPHONY Command Center",
+  "main": "bin/diamond",
+  "bin": {
+    "diamond": "bin/diamond"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AI-Publishing-International-LLP-UK/AIXTIV-SYMPHONY.git"
+  },
+  "author": "Diamond SAO Command Center",
+  "license": "PROPRIETARY",
+  "keywords": [
+    "diamond",
+    "cli",
+    "aixtiv",
+    "symphony",
+    "gcp",
+    "mcp"
+  ]
+}

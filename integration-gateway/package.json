@@ -28,13 +28,19 @@
   "license": "PROPRIETARY",
   "private": true,
   "dependencies": {
+    "@google-cloud/firestore": "^7.11.4",
+    "@pinecone-database/pinecone": "^6.1.2",
+    "axios": "^1.12.2",
     "compression": "^1.8.1",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
     "express": "^4.21.2",
     "googleapis": "^159.0.0",
     "helmet": "^8.1.0",
     "mongodb": "^6.19.0",
     "path-to-regexp": "^6.2.1",
+    "uuid": "^13.0.0",
+    "vector": "^0.0.4",
     "winston": "^3.17.0"
   },
   "engines": {

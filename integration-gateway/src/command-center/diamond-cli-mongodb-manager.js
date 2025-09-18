@@ -1,5 +1,5 @@
 const { MongoClient } = require('mongodb');
-const admin = require('firebase-admin');
+const { SecretManagerServiceClient } = require('@google-cloud/secret-manager');
 
 /**
  * Diamond CLI MongoDB Manager
@@ -21,26 +21,20 @@ class DiamondCLIMongoDBManager {
     this.connectionString = process.env.MONGODB_CONNECTION_STRING;
     this.defaultDatabase = process.env.MONGODB_DEFAULT_DATABASE || 'diamond_sao';
         
-    // Initialize Firebase for Diamond SAO integration
-    this.initializeFirebase();
+    // Initialize GCP Secret Manager for Diamond SAO integration
+    this.initializeSecretManager();
         
     // Connect to MongoDB
     this.connectToMongoDB();
   }
 
-  async initializeFirebase() {
+  async initializeSecretManager() {
     try {
-      if (!admin.apps.length) {
-        const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-        admin.initializeApp({
-          credential: admin.credential.cert(serviceAccount),
-          projectId: process.env.FIREBASE_PROJECT_ID
-        });
-      }
-      this.firestore = admin.firestore();
-      console.log('💎 Diamond SAO Firestore initialized for MongoDB operations');
+      this.secretManager = new SecretManagerServiceClient();
+      this.projectId = process.env.GCLOUD_PROJECT || 'api-for-warp-drive';
+      console.log('💎 Diamond SAO Secret Manager initialized for MongoDB operations');
     } catch (error) {
-      console.error('Failed to initialize Firebase:', error);
+      console.error('Failed to initialize Secret Manager:', error);
     }
   }
 
@@ -77,8 +71,8 @@ class DiamondCLIMongoDBManager {
       // Execute operations
       const executionResult = await this.executeMongoDBOperations(mongoOperations);
             
-      // Log to Diamond SAO Firestore
-      await this.logOperationToFirestore({
+      // Log to Diamond SAO via GCP logging
+      console.log('💎 Diamond SAO MongoDB Operation:', {
         input: naturalLanguageInput,
         intent: mongoIntent,
         operations: mongoOperations,

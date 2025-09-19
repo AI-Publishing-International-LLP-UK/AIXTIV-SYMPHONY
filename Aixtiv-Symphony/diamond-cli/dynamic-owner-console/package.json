@@ -1,0 +1,34 @@
+{
+  "name": "dynamic-diamond-sao-owner-console",
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Dynamic Diamond SAO Owner Console with real-time monitoring and control",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "build": "echo 'No build step required for this application'",
+    "health": "curl http://localhost:8080/health"
+  },
+  "dependencies": {
+    "@google-cloud/secret-manager": "^5.6.0",
+    "axios": "^1.7.7",
+    "express": "^4.21.1",
+    "socket.io": "^4.8.1",
+    "winston": "^3.14.2"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "author": "AI Publishing International LLP",
+  "license": "PROPRIETARY",
+  "keywords": [
+    "diamond-sao",
+    "owner-console",
+    "real-time",
+    "monitoring",
+    "mcp",
+    "wfa-swarm",
+    "victory36"
+  ]
+}

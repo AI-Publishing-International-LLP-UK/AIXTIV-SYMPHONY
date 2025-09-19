@@ -1,0 +1,60 @@
+{
+  "steps": [
+    {
+      "name": "gcr.io/cloud-builders/docker",
+      "args": [
+        "build",
+        "-t",
+        "gcr.io/api-for-warp-drive/diamond-sao-owner-interface:2025-09-19T16-14-13-668Z",
+        "-t",
+        "gcr.io/api-for-warp-drive/diamond-sao-owner-interface:latest",
+        "."
+      ]
+    },
+    {
+      "name": "gcr.io/cloud-builders/docker",
+      "args": [
+        "push",
+        "gcr.io/api-for-warp-drive/diamond-sao-owner-interface:2025-09-19T16-14-13-668Z"
+      ]
+    },
+    {
+      "name": "gcr.io/cloud-builders/docker",
+      "args": [
+        "push",
+        "gcr.io/api-for-warp-drive/diamond-sao-owner-interface:latest"
+      ]
+    },
+    {
+      "name": "gcr.io/google.com/cloudsdktool/cloud-sdk",
+      "entrypoint": "gcloud",
+      "args": [
+        "run",
+        "deploy",
+        "diamond-sao-owner-interface",
+        "--image",
+        "gcr.io/api-for-warp-drive/diamond-sao-owner-interface:2025-09-19T16-14-13-668Z",
+        "--platform",
+        "managed",
+        "--region",
+        "us-west1",
+        "--allow-unauthenticated",
+        "--memory",
+        "2Gi",
+        "--cpu",
+        "2",
+        "--max-instances",
+        "100",
+        "--min-instances",
+        "1",
+        "--set-env-vars",
+        "NODE_ENV=production,ZONE=us-west1-a",
+        "--tag",
+        "diamond-sao-2025-09-19T16-14-13-668Z"
+      ]
+    }
+  ],
+  "options": {
+    "logging": "CLOUD_LOGGING_ONLY"
+  }
+}

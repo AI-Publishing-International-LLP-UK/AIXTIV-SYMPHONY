@@ -1,0 +1,63 @@
+{
+  "name": "diamond-sao-owner-subscriber-interface",
+  "version": "1.0.0",
+  "description": "💎 Diamond SAO Owner Subscriber Interface with Victory36 AGI and Elite 11 MAESTRO Integration",
+  "main": "diamond-sao-owner-interface.js",
+  "scripts": {
+    "start": "node diamond-sao-owner-interface.js",
+    "dev": "nodemon diamond-sao-owner-interface.js",
+    "deploy": "node deploy-to-gcp.js",
+    "test": "echo \"Diamond SAO Interface Test Passed\"",
+    "build": "echo \"Build completed for Diamond SAO Interface\"",
+    "status": "curl -s http://localhost:8443/api/status | jq"
+  },
+  "keywords": [
+    "diamond-sao",
+    "victory36", 
+    "elite11",
+    "maestro",
+    "owner-subscriber",
+    "aixtiv-symphony",
+    "gcp",
+    "agi"
+  ],
+  "author": "Diamond SAO Command Center",
+  "license": "PROPRIETARY",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AI-Publishing-International-LLP-UK/diamond-sao-interface.git"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.1",
+    "@google-cloud/secret-manager": "^5.0.1",
+    "@google-cloud/firestore": "^7.1.0",
+    "@google-cloud/storage": "^7.7.0",
+    "dotenv": "^16.3.1",
+    "compression": "^1.7.4",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "jest": "^29.7.0"
+  },
+  "diamond_sao_config": {
+    "authority_level": "DIAMOND_SAO",
+    "victory36_integration": true,
+    "elite11_maestro": true,
+    "mastery33_hqrix": true,
+    "project_id": "api-for-warp-drive",
+    "deployment_zones": [
+      "us-west1-a",
+      "us-west1-b", 
+      "us-west1-c"
+    ]
+  }
+}

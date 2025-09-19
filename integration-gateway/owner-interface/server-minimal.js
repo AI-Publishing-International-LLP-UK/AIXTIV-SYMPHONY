@@ -297,6 +297,40 @@ app.get('/api/cli/help', (req, res) => {
   });
 });
 
+// Service Account Authentication endpoint
+app.post('/api/auth/service-account', async (req, res) => {
+  try {
+    console.log('🔐 Service account authentication request received');
+    
+    // Simulate OAuth2 service account token generation
+    const accessToken = 'ya29.c.mock_' + Math.random().toString(36).slice(2, 15) + '_' + Date.now();
+    const refreshToken = 'refresh_' + Math.random().toString(36).slice(2, 15);
+    
+    // Return OAuth2 tokens (matching expected format)
+    const response = {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      token_type: 'Bearer',
+      expires_in: 3600,
+      scope: 'https://www.googleapis.com/auth/cloud-platform',
+      issued_at: Math.floor(Date.now() / 1000),
+      service_account: 'mocoa-cloud-run-sa@api-for-warp-drive.iam.gserviceaccount.com',
+      project_id: projectId
+    };
+    
+    console.log('✅ Service account tokens generated successfully');
+    res.json(response);
+    
+  } catch (error) {
+    console.error('❌ Service account authentication error:', error);
+    res.status(500).json({ 
+      error: 'Authentication failed', 
+      message: error.message,
+      code: 'SERVICE_ACCOUNT_AUTH_ERROR'
+    });
+  }
+});
+
 // -------------------------------------------------------------------
 
 const port = process.env.PORT || 8080;

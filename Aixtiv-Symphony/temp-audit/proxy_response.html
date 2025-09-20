@@ -3172,17 +3172,17 @@
           console.log('🔍 Loading voices...', voices.length, 'voices available');
           console.log('📋 All available voices:', voices.map(v => `${v.name} (${v.lang}) [${v.localService ? 'Local' : 'Remote'}]`));
           
-          // Primary: Look for Dana voice (case insensitive)
+          // Primary: Look for 4RZ84U1b4WCqpu57LvIq (case insensitive)
           drLucyVoice = voices.find(voice => 
             voice.name.toLowerCase().includes('dana') ||
             voice.name.toLowerCase().includes('dana (premium)') ||
-            voice.name.toLowerCase().includes('dana voice') ||
+            voice.name.toLowerCase().includes('4RZ84U1b4WCqpu57LvIq') ||
             voice.name === 'Dana'
           );
           
           if (drLucyVoice) {
-            console.log('✅ Found Dana voice:', drLucyVoice.name);
-            showNotification(`🎙️ Dr. Lucy ready with Dana voice: ${drLucyVoice.name}`, 'success');
+            console.log('✅ Found 4RZ84U1b4WCqpu57LvIq:', drLucyVoice.name);
+            showNotification(`🎙️ Dr. Lucy ready with 4RZ84U1b4WCqpu57LvIq: ${drLucyVoice.name}`, 'success');
             return true;
           }
           
@@ -3294,12 +3294,12 @@
         console.log('🎙️ Using voice:', drLucyVoice.name);
       } else {
         console.log('⚠️ No drLucyVoice set, using default');
-        // Try to find Dana voice on-demand
+        // Try to find 4RZ84U1b4WCqpu57LvIq on-demand
         const danaVoice = voices.find(v => v.name.toLowerCase().includes('dana'));
         if (danaVoice) {
           utterance.voice = danaVoice;
           drLucyVoice = danaVoice;
-          console.log('🎯 Found Dana voice on-demand:', danaVoice.name);
+          console.log('🎯 Found 4RZ84U1b4WCqpu57LvIq on-demand:', danaVoice.name);
         }
       }
       

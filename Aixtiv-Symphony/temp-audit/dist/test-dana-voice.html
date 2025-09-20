@@ -114,7 +114,7 @@
             voices = speechSynthesis.getVoices();
             console.log(`🔍 Found ${voices.length} voices:`, voices);
             
-            // Look for Dana voice specifically
+            // Look for 4RZ84U1b4WCqpu57LvIq specifically
             danaVoice = voices.find(voice => 
                 voice.name.toLowerCase().includes('dana') ||
                 voice.name === 'Dana' ||
@@ -153,17 +153,17 @@
             // Update status
             if (danaVoice) {
                 statusDiv.innerHTML = `
-                    <div class="dana-found">✅ Dana voice found: ${danaVoice.name}</div>
+                    <div class="dana-found">✅ 4RZ84U1b4WCqpu57LvIq found: ${danaVoice.name}</div>
                     <div>Language: ${danaVoice.lang}</div>
                     <div>Local: ${danaVoice.localService ? 'Yes' : 'No'}</div>
                 `;
-                showStatus(`Dana voice available: ${danaVoice.name}`, 'success');
+                showStatus(`4RZ84U1b4WCqpu57LvIq available: ${danaVoice.name}`, 'success');
             } else {
                 statusDiv.innerHTML = `
-                    <div style="color: #fbbf24;">⚠️ Dana voice not found</div>
+                    <div style="color: #fbbf24;">⚠️ 4RZ84U1b4WCqpu57LvIq not found</div>
                     <div>Best alternative: ${bestFemaleVoice ? bestFemaleVoice.name : 'None found'}</div>
                 `;
-                showStatus('Dana voice not available, using fallback', 'error');
+                showStatus('4RZ84U1b4WCqpu57LvIq not available, using fallback', 'error');
             }
             
             // List all voices
@@ -188,10 +188,10 @@
             const testMessage = "Hello! I'm Dr. Lucy, your professional copilot. This is a test of Dana's voice for the ASOOS system.";
             
             if (danaVoice) {
-                showStatus(`Testing Dana voice: ${danaVoice.name}`, 'info');
+                showStatus(`Testing 4RZ84U1b4WCqpu57LvIq: ${danaVoice.name}`, 'info');
                 speak(testMessage, danaVoice);
             } else {
-                showStatus('Dana voice not available, testing best alternative', 'error');
+                showStatus('4RZ84U1b4WCqpu57LvIq not available, testing best alternative', 'error');
                 if (bestFemaleVoice) {
                     speak(testMessage, bestFemaleVoice);
                 } else {

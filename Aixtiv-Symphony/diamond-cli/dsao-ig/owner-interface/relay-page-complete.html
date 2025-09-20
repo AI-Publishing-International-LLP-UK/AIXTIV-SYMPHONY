@@ -4745,7 +4745,7 @@ Your automation is now active!`;
       project_number: '859242575175',
       service_token: 'use_gcp_application_default_credentials',
       elevenlabs_api_key: 'projects/api-for-warp-drive/secrets/elevenlabs-api-key/versions/latest',
-      voice_id: 'pNInz6obpgDQGcFmaJgB',
+      voice_id: '4RZ84U1b4WCqpu57LvIq',
       provider: 'elevenlabs',
       full_authentication: true,
       q_rix_enabled: true,
@@ -5555,17 +5555,17 @@ ${planItems.join('\n')}
           console.log('🔍 Loading voices...', voices.length, 'voices available');
           console.log('📋 All available voices:', voices.map(v => `${v.name} (${v.lang}) [${v.localService ? 'Local' : 'Remote'}]`));
           
-          // Primary: Look for Dana voice (case insensitive)
+          // Primary: Look for 4RZ84U1b4WCqpu57LvIq (case insensitive)
           drLucyVoice = voices.find(voice => 
             voice.name.toLowerCase().includes('dana') ||
             voice.name.toLowerCase().includes('dana (premium)') ||
-            voice.name.toLowerCase().includes('dana voice') ||
+            voice.name.toLowerCase().includes('4RZ84U1b4WCqpu57LvIq') ||
             voice.name === 'Dana'
           );
           
           if (drLucyVoice) {
-            console.log('✅ Found Dana voice:', drLucyVoice.name);
-            showNotification(`🎙️ Dr. Lucy ready with Dana voice: ${drLucyVoice.name}`, 'success');
+            console.log('✅ Found 4RZ84U1b4WCqpu57LvIq:', drLucyVoice.name);
+            showNotification(`🎙️ Dr. Lucy ready with 4RZ84U1b4WCqpu57LvIq: ${drLucyVoice.name}`, 'success');
             return true;
           }
           
@@ -5753,7 +5753,7 @@ ${planItems.join('\n')}
       }
     }
     
-    // Stop current speech (for OpenAI TTS Dana voice)
+    // Stop current speech (for OpenAI TTS 4RZ84U1b4WCqpu57LvIq)
     function stopSpeaking() {
       console.log('🛑 Stopping current speech...');
       
@@ -6290,7 +6290,7 @@ ${planItems.join('\n')}
         }
       },
       'Q': {
-        voice_id: 'pNInz6obpgDQGcFmaJgB', // French accent English speaker, age 45
+        voice_id: '4RZ84U1b4WCqpu57LvIq', // French accent English speaker, age 45
         name: 'Victory36',
         profile: 'French accent English speaker, age 45, sophisticated international tone',
         settings: {

@@ -56,7 +56,7 @@
 ## 🗣️ Voice System Tests
 
 ### Text-to-Speech (Dr. Lucy)
-- [ ] OpenAI Dana voice works (primary)
+- [ ] OpenAI 4RZ84U1b4WCqpu57LvIq works (primary)
 - [ ] 11 Labs fallback works
 - [ ] Browser TTS fallback works
 - [ ] Voice quality is clear

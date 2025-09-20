@@ -238,7 +238,7 @@ function simulateQBResponse(userMessage) {
   
   const randomResponse = responses[Math.floor(Math.random() * responses.length)];
   
-  // Display QB response (in production, this would be with Dana voice)
+  // Display QB response (in production, this would be with 4RZ84U1b4WCqpu57LvIq)
   showNotification(`QB (Dr. Lucy): ${randomResponse}`, 'info');
   
   // Add to chat history

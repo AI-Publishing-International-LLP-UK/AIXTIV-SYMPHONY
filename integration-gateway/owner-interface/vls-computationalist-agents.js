@@ -153,8 +153,8 @@ const createQuantumBusinessComputationalist = async () => {
       // VLS Integration Configuration
       vls_integration: {
         voice_synthesis: {
-          primary_voice: 'Dana - Enterprise Professional (Multilingual)',
-          voice_id: 'pNInz6obpgDQGcFmaJgB', 
+          primary_voice: 'Dr. Lucy sRIX',
+          voice_id: '4RZ84U1b4WCqpu57LvIq',
           synthesis_model: 'eleven_multilingual_v2',
           settings: {
             stability: 0.85,
@@ -306,8 +306,8 @@ const createStrategicHybridComputationalist = async () => {
       // VLS Integration for Strategic Communication
       vls_integration: {
         voice_synthesis: {
-          primary_voice: 'Professional Strategic Advisor',
-          voice_id: '21m00Tcm4TlvDq8ikWAM',
+          primary_voice: 'Dr. Claude sRIX',
+          voice_id: '1nQX17jSn2RXlK251b8y',
           synthesis_model: 'eleven_turbo_v2_5', 
           settings: {
             stability: 0.9,
@@ -453,8 +453,8 @@ const createSecurityAnalyticsComputationalist = async () => {
       // VLS Integration for Security Communication  
       vls_integration: {
         voice_synthesis: {
-          primary_voice: 'Authoritative Security Advisor',
-          voice_id: 'ErXwobaYiN019PkySvjV',
+          primary_voice: 'Victory36',
+          voice_id: 'RILOU7YmBhvwJGDGjNmP',
           synthesis_model: 'eleven_turbo_v2_5',
           settings: {
             stability: 0.85,
@@ -529,7 +529,7 @@ const initializeWorldClassComputationalists = async () => {
           name: 'Dr. Lucy',
           specialization: 'Quantum Business Intelligence + ML Deep Mind',
           computational_class: 'QUANTUM_BUSINESS_COMPUTATIONALIST',
-          vls_voice: 'Dana - Enterprise Professional',
+          vls_voice: 'Dr. Lucy sRIX',
           iq_level: 'Beyond human-scale analytical capability'
         },
         
@@ -538,7 +538,7 @@ const initializeWorldClassComputationalists = async () => {
           name: 'Dr. Claude',
           specialization: 'Strategic Hybrid Reasoning + Advanced Analysis',
           computational_class: 'STRATEGIC_HYBRID_COMPUTATIONALIST', 
-          vls_voice: 'Professional Strategic Advisor',
+          vls_voice: 'Dr. Claude sRIX',
           iq_level: 'Beyond human-scale strategic reasoning'
         },
         
@@ -547,7 +547,7 @@ const initializeWorldClassComputationalists = async () => {
           name: 'Victory36', 
           specialization: 'Security Analytics + Predictive Threat Modeling',
           computational_class: 'SECURITY_ANALYTICS_COMPUTATIONALIST',
-          vls_voice: 'Authoritative Security Advisor',
+          vls_voice: 'Victory36',
           iq_level: 'Beyond human-scale threat analysis'
         }
       },
@@ -556,7 +556,7 @@ const initializeWorldClassComputationalists = async () => {
       vls_integration: {
         synthesis_system: 'VLS/SOLUTION Voice Synthesis',
         voice_quality: 'Enterprise-grade multilingual synthesis',
-        dana_voice_system: 'Integrated with existing Dana voice configuration',
+        dr_lucy_voice_system: 'Integrated with Dr. Lucy sRIX voice configuration',
         real_time_synthesis: 'Sub-second voice generation for all agents'
       },
       

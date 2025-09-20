@@ -51,11 +51,11 @@ function loadS2DOData(pcpData) {
   
   // Simulated S2DO prompts - In production, these come from Dream Commander
   const s2doPrompts = [
-    "Complete quarterly KPI review and identify top 3 improvement areas",
-    "Schedule 1-on-1 meetings with direct reports for career development",
-    "Review and optimize main business process workflow",
-    "Analyze customer feedback trends and create action plan", 
-    "Update team training materials for new procedures"
+    'Complete quarterly KPI review and identify top 3 improvement areas',
+    'Schedule 1-on-1 meetings with direct reports for career development',
+    'Review and optimize main business process workflow',
+    'Analyze customer feedback trends and create action plan', 
+    'Update team training materials for new procedures'
   ];
   
   // Display S2DO prompts in the interface
@@ -79,11 +79,11 @@ function loadHotTips(pcpData) {
   
   // Simulated hot tips - In production, these come from Dream Commander feedback loop
   const hotTips = [
-    "Focus on automation to increase efficiency by 30%",
-    "Team communication improved 15% with daily standup meetings",
-    "Customer satisfaction scores highest when response time < 2 hours",
-    "Project completion rate increases with smaller, daily milestones",
-    "Performance reviews show 25% improvement with weekly check-ins"
+    'Focus on automation to increase efficiency by 30%',
+    'Team communication improved 15% with daily standup meetings',
+    'Customer satisfaction scores highest when response time < 2 hours',
+    'Project completion rate increases with smaller, daily milestones',
+    'Performance reviews show 25% improvement with weekly check-ins'
   ];
   
   const hotTipsContainer = document.getElementById('hot-tips-container') || createHotTipsContainer();
@@ -106,10 +106,10 @@ function loadPerformanceRankings(pcpData) {
   // Simulated performance data - In production, this comes from Dream Commander analysis
   const performanceData = {
     score: 87,
-    rank: "Top 15%",
-    trend: "↗ Improving",
-    kpiStatus: "Meeting 4/5 targets",
-    feedback: "Strong performance in project delivery. Focus on team communication for improvement."
+    rank: 'Top 15%',
+    trend: '↗ Improving',
+    kpiStatus: 'Meeting 4/5 targets',
+    feedback: 'Strong performance in project delivery. Focus on team communication for improvement.'
   };
   
   const performanceContainer = document.getElementById('performance-container') || createPerformanceContainer();
@@ -215,7 +215,7 @@ function sendPCPMessage() {
   const input = document.getElementById('pcp-input');
   const message = input.value.trim();
   
-  if (!message) return;
+  if (!message) {return;}
   
   console.log(`💬 Sending message to QB: ${message}`);
   
@@ -229,16 +229,16 @@ function sendPCPMessage() {
 function simulateQBResponse(userMessage) {
   // Simulate QB (Dr. Lucy sRIX) response
   const responses = [
-    "I understand your question about business optimization. Let me analyze your current KPIs and suggest improvements.",
-    "Based on your performance data, I recommend focusing on the top 3 priority areas for maximum impact.",
+    'I understand your question about business optimization. Let me analyze your current KPIs and suggest improvements.',
+    'Based on your performance data, I recommend focusing on the top 3 priority areas for maximum impact.',
     "Great question! I'll connect this to your daily S2DO goals and provide actionable insights.",
-    "Let me review the feedback from other PCPs and provide you with relevant hot tips for this situation.",
+    'Let me review the feedback from other PCPs and provide you with relevant hot tips for this situation.',
     "Excellent! This aligns perfectly with your career development objectives. Here's my recommendation..."
   ];
   
   const randomResponse = responses[Math.floor(Math.random() * responses.length)];
   
-  // Display QB response (in production, this would be with Dana voice)
+  // Display QB response (in production, this would be with 4RZ84U1b4WCqpu57LvIq)
   showNotification(`QB (Dr. Lucy): ${randomResponse}`, 'info');
   
   // Add to chat history

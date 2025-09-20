@@ -69,7 +69,7 @@ router.post('/assign', async (req, res) => {
  */
 router.post('/synthesize', async (req, res) => {
   try {
-    const { text, voiceProfile = 'dana', quality = 'high' } = req.body;
+    const { text, voiceProfile = '4RZ84U1b4WCqpu57LvIq', quality = 'high' } = req.body;
         
     if (!text) {
       return res.status(400).json({
@@ -129,22 +129,31 @@ router.get('/profiles', async (req, res) => {
 
     const profiles = [
       {
-        id: 'dana',
-        name: 'Dana',
-        provider: 'openai',
-        model: 'tts-hd',
+        id: '4RZ84U1b4WCqpu57LvIq',
+        pilot: 'Dr. Lucy sRIX',
+        provider: 'elevenlabs',
+        model: 'eleven_multilingual_v2',
         language: 'en-US',
         quality: 'enterprise',
         latency: 'ultra-low'
       },
       {
-        id: 'claude-voice',
-        name: 'Claude Voice',
-        provider: 'anthropic',
-        model: 'claude-voice-3',
-        language: 'en-US',
+        id: '1nQX17jSn2RXlK251b8y',
+        pilot: 'Dr. Claude sRIX',
+        provider: 'elevenlabs',
+        model: 'eleven_turbo_v2_5',
+        language: 'en-GB',
         quality: 'premium',
         latency: 'low'
+      },
+      {
+        id: 'RILOU7YmBhvwJGDGjNmP',
+        pilot: 'Victory36',
+        provider: 'elevenlabs',
+        model: 'eleven_turbo_v2_5',
+        language: 'en-US',
+        quality: 'enterprise',
+        latency: 'ultra-low'
       }
     ];
 
@@ -183,7 +192,7 @@ router.get('/pilot/:pilotId/status', async (req, res) => {
     // Retrieve pilot voice status (implement your database logic here)
     const status = {
       pilotId,
-      voiceProfile: 'dana',
+      voiceProfile: '4RZ84U1b4WCqpu57LvIq',
       status: 'active',
       assignedAt: new Date().toISOString(),
       lastUsed: new Date().toISOString(),

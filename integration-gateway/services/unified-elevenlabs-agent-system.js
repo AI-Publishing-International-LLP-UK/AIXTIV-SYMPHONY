@@ -107,7 +107,7 @@ class UnifiedElevenLabsAgentSystem {
       
       // Owner Interface Voices
       ownerInterface: {
-        voiceId: 'pNInz6obpgDQGcFmaJgB', // Adam - Authoritative
+        voiceId: '4RZ84U1b4WCqpu57LvIq', // Adam - Authoritative
         name: 'Adam',
         description: 'Owner Interface Professional Voice',
         settings: {
@@ -168,7 +168,7 @@ class UnifiedElevenLabsAgentSystem {
         name: 'Dr. Lucy',
         title: 'Quantum Business Computationalist',
         role: 'World-Class ML Deep Mind + Quantum Business Intelligence',
-        voiceId: 'pNInz6obpgDQGcFmaJgB', // Dana - Enterprise Professional
+        voiceId: '4RZ84U1b4WCqpu57LvIq', // Dana - Enterprise Professional
         classification: 'ELITE_QUANTUM_COMPUTATIONALIST',
         capabilities: [
           'Quantum-enhanced machine learning algorithms',

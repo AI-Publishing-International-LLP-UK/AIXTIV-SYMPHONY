@@ -28,7 +28,7 @@ const pilots = new SharedArray('pilots', function () {
   return pilotData;
 });
 
-const voiceProfiles = ['dana', 'claude-voice', 'enterprise-voice', 'premium-voice'];
+const voiceProfiles = ['4RZ84U1b4WCqpu57LvIq', '1nQX17jSn2RXlK251b8y', 'RILOU7YmBhvwJGDGjNmP'];
 const testTexts = [
   'Welcome to Aixtiv Symphony. How can I assist you today?',
   'Processing your request. Please stand by.',
@@ -38,7 +38,7 @@ const testTexts = [
 ];
 
 // K6 test configuration
-export let options = {
+export const options = {
   stages: [
     { duration: config.loadTest.rampUpTime, target: config.loadTest.concurrentUsers },
     { duration: config.loadTest.testDuration, target: config.loadTest.concurrentUsers },

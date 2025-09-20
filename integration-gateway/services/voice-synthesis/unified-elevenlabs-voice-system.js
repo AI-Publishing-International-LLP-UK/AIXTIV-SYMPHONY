@@ -192,7 +192,7 @@ class IntegratedElevenLabsVoiceSystem {
       },
       
       squadronX: {
-        voiceId: 'pNInz6obpgDQGcFmaJgB', // Adam - Elite Operations
+        voiceId: '4RZ84U1b4WCqpu57LvIq', // Adam - Elite Operations
         name: 'Adam',
         description: 'SquadronX Elite Operations Voice',
         authority: 'OPERATIONAL',
@@ -320,7 +320,7 @@ class IntegratedElevenLabsVoiceSystem {
         name: 'Victory36',
         title: 'Security Analytics & Predictive Threat Modeling',
         role: 'Security Intelligence & Protection Specialist',
-        voiceId: 'pNInz6obpgDQGcFmaJgB', // Adam
+        voiceId: '4RZ84U1b4WCqpu57LvIq', // Adam
         classification: 'SECURITY_INTELLIGENCE_SPECIALIST',
         settlementWings: ['SquadronX', 'Diamond SAO', 'DIDC'],
         capabilities: [

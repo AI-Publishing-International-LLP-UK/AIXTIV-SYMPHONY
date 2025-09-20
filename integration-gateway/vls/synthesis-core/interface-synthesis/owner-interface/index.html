@@ -1226,7 +1226,6 @@
     console.log('🛡️ Loading ElevenLabs Popup Elimination v34...');
     
     // Block all ElevenLabs API key prompts immediately
-    const originalPrompt = window.prompt;
     window.prompt = function(message, defaultValue) {
       if (message && (
         message.toLowerCase().includes('api key') ||
@@ -1237,14 +1236,16 @@
         console.log('🚫 ElevenLabs API key prompt blocked:', message);
         return null;
       }
-      return originalPrompt ? originalPrompt.call(this, message, defaultValue) : null;
+      return window.originalPrompt ? window.originalPrompt.call(this, message, defaultValue) : null;
     };
     
-    // Block API key property access
-    Object.defineProperty(window, 'ELEVENLABS_API_KEY', {
-      get: () => { console.log('🚫 API key access blocked'); return null; },
-      set: () => { console.log('🚫 API key setting blocked'); }
-    });
+    // Block API key property access (check if already defined)
+    if (!window.hasOwnProperty('ELEVENLABS_API_KEY')) {
+      Object.defineProperty(window, 'ELEVENLABS_API_KEY', {
+        get: () => { console.log('🚫 API key access blocked'); return null; },
+        set: () => { console.log('🚫 API key setting blocked'); }
+      });
+    }
     
     // Enhanced TTS with OAuth2 fallback
     window.optimizedTTS = function(text) {
@@ -1282,7 +1283,6 @@
     window.OAUTH2_ENABLED = true;
     console.log('🔐 OAuth2 mode: ENABLED');
     console.log('🚫 API key popups: DISABLED');
-    });
   </script>
 </head>
 <body>
@@ -3297,7 +3297,7 @@
           return `${result.response}\n\n⚠️ This request requires S2DO approval through Dream Commander workflow.`;
         }
         
-        return result.response || result.message || 'Request received. Following proper workflow channels...';
+        return await Promise.resolve(result.response || result.message || 'Request received. Following proper workflow channels...');
         
       } catch (error) {
         return processWorkflowFallback(query);
@@ -4469,7 +4469,7 @@ Your automation is now active!`;
       project_number: '859242575175',
       service_token: 'use_gcp_application_default_credentials',
       elevenlabs_api_key: 'projects/api-for-warp-drive/secrets/elevenlabs-api-key/versions/latest',
-      voice_id: 'pNInz6obpgDQGcFmaJgB',
+      voice_id: '4RZ84U1b4WCqpu57LvIq',
       provider: 'elevenlabs',
       full_authentication: true,
       q_rix_enabled: true,
@@ -4522,6 +4522,21 @@ Your automation is now active!`;
     
     // RIX Voice Configuration with Enhanced AI Capabilities
     const rixVoiceConfig = {
+      'QB': {
+        name: 'Dr. Lucy ML Powerhouse',
+        title: 'QB - Dr. Lucy ML Powerhouse Model', 
+        service_account: drLucyServiceAccount,
+        voice_id: 'EXAVITQu4vr4xnSDxMaL',
+        provider: 'elevenlabs',
+        model: 'eleven_multilingual_v2',
+        capabilities: {
+          description: 'QB - Dr. Lucy ML Powerhouse: Quantum Business Computationalist with owner subscriber greeting',
+          memory: '2 years ChatGPT-level memory',
+          pilots: '20 million connected pilots',
+          model_type: 'CRx01 - Dr. Lucy ML Powerhouse',
+          specialties: ['Owner Subscriber Greeting', 'Business Growth', 'Predictive Analytics', 'ML Processing']
+        }
+      },
       'sRIX': {
         name: 'Dr. Lucy ML Powerhouse',
         title: 'sRIX CRx01 - Dr. Lucy ML Powerhouse Model',
@@ -5279,73 +5294,24 @@ ${planItems.join('\n')}
     let drLucyVoice = null;
     let conversationMode = false;
     
-    // Initialize Speech Synthesis for Dr. Lucy's Voice (Dana Voice)
+    // Initialize Speech Synthesis for Dr. Lucy's Voice
     function initializeDrLucyVoice() {
       if ('speechSynthesis' in window) {
         
         function selectDrLucyVoice() {
           const voices = speechSynthesis.getVoices();
           console.log('🔍 Loading voices...', voices.length, 'voices available');
-          console.log('📋 All available voices:', voices.map(v => `${v.name} (${v.lang}) [${v.localService ? 'Local' : 'Remote'}]`));
           
-          // Primary: Look for Dana voice (case insensitive)
-          drLucyVoice = voices.find(voice => 
-            voice.name.toLowerCase().includes('dana') ||
-            voice.name.toLowerCase().includes('dana (premium)') ||
-            voice.name.toLowerCase().includes('dana voice') ||
-            voice.name === 'Dana'
-          );
-          
-          if (drLucyVoice) {
-            console.log('✅ Found Dana voice:', drLucyVoice.name);
-            showNotification(`🎙️ Dr. Lucy ready with Dana voice: ${drLucyVoice.name}`, 'success');
-            return true;
-          }
-          
-          // Secondary: Look for high-quality female voices
-          const femaleVoices = [
-            'Allison', 'Samantha', 'Victoria', 'Susan', 'Karen', 'Ava', 'Serena', 'Zoe',
-            'Fiona', 'Moira', 'Tessa', 'Veena', 'Alex (Female)', 'Google UK English Female',
-            'Microsoft Zira', 'Microsoft Hazel', 'Google US English', 'Whisper'
-          ];
-          
-          for (const voiceName of femaleVoices) {
-            drLucyVoice = voices.find(voice => 
-              voice.name.includes(voiceName) ||
-              voice.name.toLowerCase().includes(voiceName.toLowerCase())
-            );
-            if (drLucyVoice) {
-              console.log('✅ Selected premium female voice:', drLucyVoice.name);
-              showNotification(`🎙️ Dr. Lucy ready with ${drLucyVoice.name} voice`, 'success');
-              return true;
-            }
-          }
-          
-          // Fallback: Any English female voice
-          drLucyVoice = voices.find(voice => 
-            voice.lang.startsWith('en') && 
-            (voice.name.toLowerCase().includes('female') || 
-             voice.gender === 'female' ||
-             voice.name.toLowerCase().includes('woman'))
-          );
-          
-          if (drLucyVoice) {
-            console.log('⚡ Selected English female voice:', drLucyVoice.name);
-            showNotification(`🎙️ Dr. Lucy ready with ${drLucyVoice.name}`, 'success');
-            return true;
-          }
-          
-          // Final fallback: Best available English voice
+          // Use any available voice for now - focus on computational agents working
           drLucyVoice = voices.find(voice => voice.lang.startsWith('en')) || voices[0];
           
           if (drLucyVoice) {
-            console.log('🔧 Fallback voice selected:', drLucyVoice.name);
-            showNotification(`🎙️ Dr. Lucy ready with fallback voice: ${drLucyVoice.name}`, 'success');
+            console.log('✅ Voice selected:', drLucyVoice.name);
+            showNotification(`🎤 Dr. Lucy voice ready`, 'success');
             return true;
           }
           
-          console.error('❌ No suitable voice found!');
-          showNotification('⚠️ No voice available for Dr. Lucy', 'error');
+          console.error('❌ No voice found!');
           return false;
         }
         
@@ -5376,9 +5342,9 @@ ${planItems.join('\n')}
       }
     }
     
-    // Dr. Lucy speaks a message using OpenAI Dana voice (primary)
+    // Dr. Lucy speaks - FOCUS ON COMPUTATIONAL AGENTS NOT VOICE
     function speakMessage(text) {
-      console.log('🗣️ speakMessage called with:', text, 'using OpenAI Dana voice');
+      console.log('🗣️ speakMessage called with:', text);
       
       if (isSpeaking) {
         console.log('⚠️ Already speaking, stopping current speech');
@@ -5387,23 +5353,32 @@ ${planItems.join('\n')}
         return;
       }
       
-      // Use OpenAI Dana voice (primary for Dr. Lucy)
       isSpeaking = true;
       
-      // Call Cloudflare Voice Synthesis Service
-      fetch('https://voice.asoos2100.cool/api/synthesize', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: text,
-          voice: 'dana',
-          provider: 'openai',
-          model: 'tts-hd',
-          quality: 'enterprise'
-        })
-      })
+      // Simple browser TTS for now - computational agents are priority
+      if (drLucyVoice && speechSynthesis) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.voice = drLucyVoice;
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+        
+        utterance.onend = () => {
+          isSpeaking = false;
+          if (conversationMode && recognition && !isListening) {
+            startListening();
+          }
+        };
+        
+        utterance.onerror = () => {
+          isSpeaking = false;
+        };
+        
+        speechSynthesis.speak(utterance);
+      } else {
+        // No voice available - just continue
+        isSpeaking = false;
+      }
       .then(response => {
         if (!response.ok) {
           throw new Error(`OpenAI TTS API error: ${response.status}`);
@@ -5416,15 +5391,15 @@ ${planItems.join('\n')}
         
         audio.onloadstart = () => {
           console.log('🎙️ Dr. Lucy (OpenAI Dana) voice loading...');
-          showNotification('🎙️ Dr. Lucy speaking with Dana voice...', 'success');
+          showNotification('🎙️ Dr. Lucy speaking with 4RZ84U1b4WCqpu57LvIq...', 'success');
         };
         
         audio.onplay = () => {
-          console.log('✅ OpenAI Dana voice playing');
+          console.log('✅ OpenAI 4RZ84U1b4WCqpu57LvIq playing');
         };
         
         audio.onended = () => {
-          console.log('✅ OpenAI Dana voice finished');
+          console.log('✅ OpenAI 4RZ84U1b4WCqpu57LvIq finished');
           isSpeaking = false;
           URL.revokeObjectURL(audioUrl);
           if (conversationMode && recognition && !isListening) {
@@ -5433,7 +5408,7 @@ ${planItems.join('\n')}
         };
         
         audio.onerror = (error) => {
-          console.error('❌ OpenAI Dana voice playback error:', error);
+          console.error('❌ OpenAI 4RZ84U1b4WCqpu57LvIq playback error:', error);
           isSpeaking = false;
           URL.revokeObjectURL(audioUrl);
           // Fallback to 11 Labs if OpenAI Dana fails
@@ -5456,7 +5431,7 @@ ${planItems.join('\n')}
       console.log('🔄 Using 11 Labs TTS fallback for:', text);
       
       // Call 11 Labs TTS API as fallback
-      fetch('https://api.elevenlabs.io/v1/text-to-speech/pNInz6obpgDQGcFmaJgB', {
+      fetch('https://api.elevenlabs.io/v1/text-to-speech/4RZ84U1b4WCqpu57LvIq', {
         method: 'POST',
         headers: {
           'Accept': 'audio/mpeg',
@@ -5525,7 +5500,7 @@ ${planItems.join('\n')}
     function speakMessageOpenAIFallback(text) {
       console.log('🔄 Using OpenAI TTS fallback for:', text);
       
-      // Call OpenAI TTS API with Dana voice as fallback
+      // Call OpenAI TTS API with 4RZ84U1b4WCqpu57LvIq as fallback
       fetch('/api/speech/tts', {
         method: 'POST',
         headers: {
@@ -5550,16 +5525,16 @@ ${planItems.join('\n')}
         const audio = new Audio(audioUrl);
         
         audio.onloadstart = () => {
-          console.log('🎙️ OpenAI Dana voice loading...');
+          console.log('🎙️ OpenAI 4RZ84U1b4WCqpu57LvIq loading...');
           showNotification('🎙️ Dr. Lucy speaking via OpenAI Dana...', 'success');
         };
         
         audio.onplay = () => {
-          console.log('✅ OpenAI Dana voice playing');
+          console.log('✅ OpenAI 4RZ84U1b4WCqpu57LvIq playing');
         };
         
         audio.onended = () => {
-          console.log('✅ OpenAI Dana voice finished');
+          console.log('✅ OpenAI 4RZ84U1b4WCqpu57LvIq finished');
           isSpeaking = false;
           URL.revokeObjectURL(audioUrl);
           if (conversationMode && recognition && !isListening) {
@@ -5568,7 +5543,7 @@ ${planItems.join('\n')}
         };
         
         audio.onerror = (error) => {
-          console.error('❌ OpenAI Dana voice playback error:', error);
+          console.error('❌ OpenAI 4RZ84U1b4WCqpu57LvIq playback error:', error);
           isSpeaking = false;
           URL.revokeObjectURL(audioUrl);
           // Final fallback to browser TTS
@@ -5666,7 +5641,7 @@ ${planItems.join('\n')}
       }
     }
     
-    // Stop current speech (for OpenAI TTS Dana voice)
+    // Stop current speech (for OpenAI TTS 4RZ84U1b4WCqpu57LvIq)
     function stopSpeaking() {
       console.log('🛑 Stopping current speech...');
       
@@ -5932,21 +5907,17 @@ ${planItems.join('\n')}
       }, 1000);
     });
     
-    // WebSpeech API Voice System (Browser-Compatible)
-    class WebSpeechVoiceSystem {
+    // ElevenLabs-only Voice System (NO BROWSER/MAC VOICES)
+    class ElevenLabsVoiceSystem {
       constructor() {
-        this.synth = window.speechSynthesis;
-        this.voices = [];
-        this.availableVoices = false;
-        this.preferredVoices = {
-          female: ['Google US English Female', 'Microsoft Zira', 'Samantha', 'Victoria', 'Google UK English Female', 'Karen', 'Moira', 'Tessa'],
-          male: ['Google US English Male', 'Microsoft David', 'Daniel', 'Google UK English Male', 'Tom', 'Nathan']
-        };
-        this.defaultVoice = null;
-        this.femaleVoice = null;
-        this.maleVoice = null;
-        this.initialized = false;
-        this.initializeVoices();
+        console.log('🚫 WebSpeech/Mac voices BLOCKED - Using ElevenLabs only');
+        this.voices = ELEVENLABS_AGENT_VOICES;
+        this.availableVoices = true;
+        this.defaultVoice = ELEVENLABS_AGENT_VOICES.drLucy;
+        this.femaleVoice = ELEVENLABS_AGENT_VOICES.drLucy;
+        this.maleVoice = ELEVENLABS_AGENT_VOICES.drClaude;
+        this.initialized = true;
+        console.log('✅ ElevenLabs voice system initialized with', Object.keys(this.voices).length, 'agent voices');
       }
 
       initializeVoices() {
@@ -6146,7 +6117,7 @@ ${planItems.join('\n')}
         }
       },
       'Q': {
-        voice_id: 'pNInz6obpgDQGcFmaJgB', // French accent English speaker, age 45
+        voice_id: '4RZ84U1b4WCqpu57LvIq', // French accent English speaker, age 45
         name: 'Victory36',
         profile: 'French accent English speaker, age 45, sophisticated international tone',
         settings: {

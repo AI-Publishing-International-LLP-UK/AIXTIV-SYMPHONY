@@ -1,0 +1,70 @@
+{
+  "compilationTarget": "seven-services-interface",
+  "version": "1.0.0",
+  "buildSystem": "sallyport-compiler",
+  "architecture": "dynamic-module-loading",
+  
+  "modules": {
+    "orchestrator": {
+      "entry": "./seven-services-orchestrator.js",
+      "type": "core-service",
+      "dependencies": ["winston", "events"],
+      "compile": true,
+      "minify": true
+    },
+    
+    "service-panels": {
+      "entry": "./services/",
+      "type": "dynamic-components", 
+      "modules": [
+        "communications-panel.js",
+        "bidsuite-panel.js", 
+        "customer-services-panel.js",
+        "workflows-panel.js",
+        "roi-tracking-panel.js",
+        "wish-vision-panel.js",
+        "academy-panel.js"
+      ],
+      "loadStrategy": "on-demand"
+    },
+    
+    "ui-standards": {
+      "entry": "./UI-DESIGN-STANDARDS.md",
+      "type": "design-spec",
+      "compileAssets": true
+    },
+    
+    "right-panel-details": {
+      "entry": "./details/",
+      "type": "expandable-components",
+      "loadStrategy": "lazy-load-on-click"
+    },
+    
+    "storage-adapters": {
+      "entry": "./storage/",
+      "type": "data-layer",
+      "partitions": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      "loadStrategy": "connection-pool"
+    }
+  },
+  
+  "compilation": {
+    "target": "sallyport-module",
+    "outputDir": "./compiled/",
+    "bundling": "per-service",
+    "caching": "aggressive",
+    "hotReload": true
+  },
+  
+  "deployment": {
+    "method": "dynamic-injection",
+    "loadPoint": "owner-interface-ready",
+    "fallback": "graceful-degradation"
+  },
+  
+  "performance": {
+    "maxBundleSize": "50KB",
+    "lazyLoadThreshold": "viewport-trigger",
+    "cacheStrategy": "service-worker"
+  }
+}

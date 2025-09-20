@@ -11,9 +11,9 @@ async function testElevenLabsConnection() {
     console.log(`✅ ElevenLabs API connected. Found ${voices.voices.length} voices available.`);
     
     // Check for specific voices we're using
-    const danaVoice = voices.voices.find(v => v.voice_id === 'pNInz6obpgDQGcFmaJgB');
+    const danaVoice = voices.voices.find(v => v.voice_id === '4RZ84U1b4WCqpu57LvIq');
     if (danaVoice) {
-      console.log(`🎙️ Dana voice found: ${danaVoice.name}`);
+      console.log(`🎙️ 4RZ84U1b4WCqpu57LvIq found: ${danaVoice.name}`);
     }
     
     return true;

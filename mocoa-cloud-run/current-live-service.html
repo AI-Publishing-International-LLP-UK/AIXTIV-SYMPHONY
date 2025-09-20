@@ -3172,17 +3172,17 @@
           console.log('🔍 Loading voices...', voices.length, 'voices available');
           console.log('📋 All available voices:', voices.map(v => `${v.name} (${v.lang}) [${v.localService ? 'Local' : 'Remote'}]`));
           
-          // Primary: Look for Dana voice (case insensitive)
+          // Primary: Look for 4RZ84U1b4WCqpu57LvIq (case insensitive)
           drLucyVoice = voices.find(voice => 
             voice.name.toLowerCase().includes('dana') ||
             voice.name.toLowerCase().includes('dana (premium)') ||
-            voice.name.toLowerCase().includes('dana voice') ||
+            voice.name.toLowerCase().includes('4RZ84U1b4WCqpu57LvIq') ||
             voice.name === 'Dana'
           );
           
           if (drLucyVoice) {
-            console.log('✅ Found Dana voice:', drLucyVoice.name);
-            showNotification(`🎙️ Dr. Lucy ready with Dana voice: ${drLucyVoice.name}`, 'success');
+            console.log('✅ Found 4RZ84U1b4WCqpu57LvIq:', drLucyVoice.name);
+            showNotification(`🎙️ Dr. Lucy ready with 4RZ84U1b4WCqpu57LvIq: ${drLucyVoice.name}`, 'success');
             return true;
           }
           
@@ -3260,9 +3260,9 @@
       }
     }
     
-    // Dr. Lucy speaks a message using OpenAI Dana voice (primary)
+    // Dr. Lucy speaks a message using OpenAI 4RZ84U1b4WCqpu57LvIq (primary)
     function speakMessage(text) {
-      console.log('🗣️ speakMessage called with:', text, 'using OpenAI Dana voice');
+      console.log('🗣️ speakMessage called with:', text, 'using OpenAI 4RZ84U1b4WCqpu57LvIq');
       
       if (isSpeaking) {
         console.log('⚠️ Already speaking, stopping current speech');
@@ -3271,10 +3271,10 @@
         return;
       }
       
-      // Use OpenAI Dana voice (primary for Dr. Lucy)
+      // Use OpenAI 4RZ84U1b4WCqpu57LvIq (primary for Dr. Lucy)
       isSpeaking = true;
       
-      // Call OpenAI TTS API with Dana voice
+      // Call OpenAI TTS API with 4RZ84U1b4WCqpu57LvIq
       fetch('/api/speech/tts', {
         method: 'POST',
         headers: {
@@ -3300,15 +3300,15 @@
         
         audio.onloadstart = () => {
           console.log('🎙️ Dr. Lucy (OpenAI Dana) voice loading...');
-          showNotification('🎙️ Dr. Lucy speaking with Dana voice...', 'success');
+          showNotification('🎙️ Dr. Lucy speaking with 4RZ84U1b4WCqpu57LvIq...', 'success');
         };
         
         audio.onplay = () => {
-          console.log('✅ OpenAI Dana voice playing');
+          console.log('✅ OpenAI 4RZ84U1b4WCqpu57LvIq playing');
         };
         
         audio.onended = () => {
-          console.log('✅ OpenAI Dana voice finished');
+          console.log('✅ OpenAI 4RZ84U1b4WCqpu57LvIq finished');
           isSpeaking = false;
           URL.revokeObjectURL(audioUrl);
           if (conversationMode && recognition && !isListening) {
@@ -3317,7 +3317,7 @@
         };
         
         audio.onerror = (error) => {
-          console.error('❌ OpenAI Dana voice playback error:', error);
+          console.error('❌ OpenAI 4RZ84U1b4WCqpu57LvIq playback error:', error);
           isSpeaking = false;
           URL.revokeObjectURL(audioUrl);
           // Fallback to 11 Labs if OpenAI Dana fails
@@ -3339,7 +3339,7 @@
     function speakMessageOpenAIFallback(text) {
       console.log('🔄 Using OpenAI TTS fallback for:', text);
       
-      // Call OpenAI TTS API with Dana voice as fallback
+      // Call OpenAI TTS API with 4RZ84U1b4WCqpu57LvIq as fallback
       fetch('/api/speech/tts', {
         method: 'POST',
         headers: {
@@ -3364,16 +3364,16 @@
         const audio = new Audio(audioUrl);
         
         audio.onloadstart = () => {
-          console.log('🎙️ OpenAI Dana voice loading...');
+          console.log('🎙️ OpenAI 4RZ84U1b4WCqpu57LvIq loading...');
           showNotification('🎙️ Dr. Lucy speaking via OpenAI Dana...', 'success');
         };
         
         audio.onplay = () => {
-          console.log('✅ OpenAI Dana voice playing');
+          console.log('✅ OpenAI 4RZ84U1b4WCqpu57LvIq playing');
         };
         
         audio.onended = () => {
-          console.log('✅ OpenAI Dana voice finished');
+          console.log('✅ OpenAI 4RZ84U1b4WCqpu57LvIq finished');
           isSpeaking = false;
           URL.revokeObjectURL(audioUrl);
           if (conversationMode && recognition && !isListening) {
@@ -3382,7 +3382,7 @@
         };
         
         audio.onerror = (error) => {
-          console.error('❌ OpenAI Dana voice playback error:', error);
+          console.error('❌ OpenAI 4RZ84U1b4WCqpu57LvIq playback error:', error);
           isSpeaking = false;
           URL.revokeObjectURL(audioUrl);
           // Final fallback to browser TTS
@@ -3436,7 +3436,7 @@
         if (bestVoice) {
           utterance.voice = bestVoice;
           drLucyVoice = danaVoice;
-          console.log('🎯 Found Dana voice on-demand:', danaVoice.name);
+          console.log('🎯 Found 4RZ84U1b4WCqpu57LvIq on-demand:', danaVoice.name);
         }
       }
       
@@ -3480,7 +3480,7 @@
       }
     }
     
-    // Stop current speech (for OpenAI TTS Dana voice)
+    // Stop current speech (for OpenAI TTS 4RZ84U1b4WCqpu57LvIq)
     function stopSpeaking() {
       console.log('🛑 Stopping current speech...');
       

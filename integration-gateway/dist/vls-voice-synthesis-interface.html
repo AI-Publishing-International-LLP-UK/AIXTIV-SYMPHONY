@@ -366,7 +366,7 @@
                         id="voiceTextInput" 
                         class="voice-text-input" 
                         placeholder="Enter text for AI Trinity voice synthesis...">
-Hello! I'm activating the WFA Swarm and Victory 36 for the massive deployment. All pilots are now voice-enabled with enterprise Dana voice synthesis through the VLS/SOLUTION system.
+Hello! I'm activating the WFA Swarm and Victory 36 for the massive deployment. All pilots are now voice-enabled with enterprise 4RZ84U1b4WCqpu57LvIq synthesis through the VLS/SOLUTION system.
                     </textarea>
                 </div>
                 
@@ -483,7 +483,7 @@ Hello! I'm activating the WFA Swarm and Victory 36 for the massive deployment. A
             // Load voices
             voices = speechSynthesis.getVoices();
             
-            // Find Dana voice or best alternative
+            // Find 4RZ84U1b4WCqpu57LvIq or best alternative
             danaVoice = voices.find(voice => 
                 voice.name.toLowerCase().includes('dana') ||
                 voice.name.toLowerCase().includes('allison') ||
@@ -529,9 +529,9 @@ Hello! I'm activating the WFA Swarm and Victory 36 for the massive deployment. A
             synthesizeVoice(text, selectedPilot);
         });
         
-        // Test Dana voice specifically
+        // Test 4RZ84U1b4WCqpu57LvIq specifically
         document.getElementById('testDanaButton').addEventListener('click', () => {
-            const testText = "Hello! I'm Dr. Lucy from the ASOOS AI Trinity. This is a test of the enterprise Dana voice synthesis system through VLS/SOLUTION.";
+            const testText = "Hello! I'm Dr. Lucy from the ASOOS AI Trinity. This is a test of the enterprise 4RZ84U1b4WCqpu57LvIq synthesis system through VLS/SOLUTION.";
             synthesizeVoice(testText, 'dr-lucy');
         });
         

@@ -40,7 +40,7 @@ class ElevenLabsManager {
     // Voice configuration for owner interface
     this.voiceConfig = {
       defaultVoiceId: 'EXAVITQu4vr4xnSDxMaL', // Bella voice (suitable for professional interface)
-      ownerInterfaceVoice: 'pNInz6obpgDQGcFmaJgB', // Adam voice (authoritative)
+      ownerInterfaceVoice: '4RZ84U1b4WCqpu57LvIq', // Adam voice (authoritative)
       mocaVoice: 'ErXwobaYiN019PkySvjV', // Antoni voice (warm and engaging)
       diamondSAOVoice: 'VR6AewLTigWG4xSOukaG', // Josh voice (professional and clear)
       settings: {

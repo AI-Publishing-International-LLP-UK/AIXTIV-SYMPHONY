@@ -117,7 +117,7 @@ const createQBRixAgent = async () => {
       // Voice and Interaction Configuration
       voice_config: {
         primary_voice: {
-          id: 'pNInz6obpgDQGcFmaJgB',
+          id: '4RZ84U1b4WCqpu57LvIq',
           name: 'Dana - Multilingual Professional',
           characteristics: 'Warm, authoritative, multilingual capability',
           model: 'eleven_multilingual_v2',

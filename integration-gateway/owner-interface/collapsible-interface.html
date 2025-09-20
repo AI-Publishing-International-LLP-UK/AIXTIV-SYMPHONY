@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASOOS • Collapsible Interface</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .interface {
+            display: grid;
+            grid-template-columns: var(--left-width, 300px) 1fr var(--right-width, 300px);
+            height: 100vh;
+            transition: grid-template-columns 0.1s ease;
+        }
+        
+        .interface.left-collapsed {
+            grid-template-columns: 12px 1fr var(--right-width, 300px);
+        }
+        
+        .interface.right-collapsed {
+            grid-template-columns: var(--left-width, 300px) 1fr 12px;
+        }
+        
+        .interface.both-collapsed {
+            grid-template-columns: 12px 1fr 12px;
+        }
+        
+        .left-panel, .right-panel {
+            background: #111;
+            border: 1px solid #333;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.1s ease;
+        }
+        
+        .center-panel {
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: #666;
+        }
+        
+        .panel-content {
+            padding: 20px;
+            opacity: 1;
+            transition: opacity 0.05s ease;
+        }
+        
+        .collapsed .panel-content {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        /* Arrow Tips - Super Subtle */
+        .arrow-tip {
+            position: absolute;
+            top: 12px;
+            width: 0;
+            height: 0;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.2s ease;
+            opacity: 0.4;
+        }
+        
+        .arrow-tip:hover {
+            opacity: 0.8;
+        }
+        
+        /* Left arrow tip - ON the border line */
+        .left-arrow {
+            right: -4px;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            z-index: 1000;
+        }
+        
+        .left-arrow.pointing-left {
+            border-right: 8px solid #666;
+        }
+        
+        .left-arrow.pointing-right {
+            border-left: 8px solid #666;
+        }
+        
+        /* Right arrow tip - ON the border line */
+        .right-arrow {
+            left: -4px;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            z-index: 1000;
+        }
+        
+        .right-arrow.pointing-right {
+            border-left: 8px solid #666;
+        }
+        
+        .right-arrow.pointing-left {
+            border-right: 8px solid #666;
+        }
+        
+        /* Content styling */
+        .panel-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #fff;
+            opacity: 1;
+            transition: opacity 0.2s ease;
+        }
+        
+        .panel-item {
+            background: #222;
+            border: 1px solid #333;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            opacity: 1;
+        }
+        
+        .panel-item:hover {
+            background: #333;
+            border-color: #555;
+            color: #fff;
+        }
+        
+        /* When panels are collapsed, hide content immediately */
+        .collapsed .panel-title,
+        .collapsed .panel-item {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+    </style>
+</head>
+<body>
+    <div class="interface" id="interface">
+        <!-- Left Panel -->
+        <div class="left-panel" id="leftPanel">
+            <div class="arrow-tip left-arrow pointing-left" id="leftArrow"></div>
+            <div class="panel-content">
+                <div class="panel-title">Commands</div>
+                <div class="panel-item">🗣️ Voice Synthesis</div>
+                <div class="panel-item">📝 Content Creation</div>
+                <div class="panel-item">🎥 Video Studio</div>
+                <div class="panel-item">🚀 Deploy Pipeline</div>
+                <div class="panel-item">📊 Analytics</div>
+                <div class="panel-item">🎙️ Podcast Manager</div>
+                <div class="panel-item">⚖️ Legal Automation</div>
+                <div class="panel-item">💰 Revenue Streams</div>
+            </div>
+        </div>
+        
+        <!-- Center Panel -->
+        <div class="center-panel">
+            <div>
+                Main Workspace<br>
+                <span style="font-size: 12px; color: #444;">
+                    Click arrow tips to collapse panels
+                </span>
+            </div>
+        </div>
+        
+        <!-- Right Panel -->
+        <div class="right-panel" id="rightPanel">
+            <div class="arrow-tip right-arrow pointing-right" id="rightArrow"></div>
+            <div class="panel-content">
+                <div class="panel-title">Live Tools</div>
+                <div class="panel-item">🔴 System Status</div>
+                <div class="panel-item">📈 Performance</div>
+                <div class="panel-item">🌐 Network</div>
+                <div class="panel-item">💾 Storage</div>
+                <div class="panel-item">🔐 Security</div>
+                <div class="panel-item">📡 Integrations</div>
+                <div class="panel-item">⚡ Quantswarm</div>
+                <div class="panel-item">🎯 Quick Actions</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class CollapsibleInterface {
+            constructor() {
+                this.leftCollapsed = false;
+                this.rightCollapsed = false;
+                this.init();
+            }
+            
+            init() {
+                this.setupArrowTips();
+            }
+            
+            setupArrowTips() {
+                const leftArrow = document.getElementById('leftArrow');
+                const rightArrow = document.getElementById('rightArrow');
+                
+                leftArrow.addEventListener('click', () => {
+                    this.toggleLeftPanel();
+                });
+                
+                rightArrow.addEventListener('click', () => {
+                    this.toggleRightPanel();
+                });
+            }
+            
+            toggleLeftPanel() {
+                const interface = document.getElementById('interface');
+                const leftPanel = document.getElementById('leftPanel');
+                const leftArrow = document.getElementById('leftArrow');
+                
+                this.leftCollapsed = !this.leftCollapsed;
+                
+                if (this.leftCollapsed) {
+                    leftPanel.classList.add('collapsed');
+                    leftArrow.className = 'arrow-tip left-arrow pointing-right';
+                } else {
+                    leftPanel.classList.remove('collapsed');
+                    leftArrow.className = 'arrow-tip left-arrow pointing-left';
+                }
+                
+                this.updateInterfaceClass();
+            }
+            
+            toggleRightPanel() {
+                const interface = document.getElementById('interface');
+                const rightPanel = document.getElementById('rightPanel');
+                const rightArrow = document.getElementById('rightArrow');
+                
+                this.rightCollapsed = !this.rightCollapsed;
+                
+                if (this.rightCollapsed) {
+                    rightPanel.classList.add('collapsed');
+                    rightArrow.className = 'arrow-tip right-arrow pointing-left';
+                } else {
+                    rightPanel.classList.remove('collapsed');
+                    rightArrow.className = 'arrow-tip right-arrow pointing-right';
+                }
+                
+                this.updateInterfaceClass();
+            }
+            
+            updateInterfaceClass() {
+                const interface = document.getElementById('interface');
+                
+                // Remove all collapse classes
+                interface.classList.remove('left-collapsed', 'right-collapsed', 'both-collapsed');
+                
+                // Add appropriate class
+                if (this.leftCollapsed && this.rightCollapsed) {
+                    interface.classList.add('both-collapsed');
+                } else if (this.leftCollapsed) {
+                    interface.classList.add('left-collapsed');
+                } else if (this.rightCollapsed) {
+                    interface.classList.add('right-collapsed');
+                }
+            }
+        }
+        
+        // Initialize the interface
+        document.addEventListener('DOMContentLoaded', () => {
+            new CollapsibleInterface();
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === '[' && (e.metaKey || e.ctrlKey)) {
+                document.getElementById('leftArrow').click();
+                e.preventDefault();
+            }
+            if (e.key === ']' && (e.metaKey || e.ctrlKey)) {
+                document.getElementById('rightArrow').click();
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

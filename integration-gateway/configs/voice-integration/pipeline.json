@@ -7,8 +7,8 @@
         "validation": "strict"
       },
       "processing": {
-        "engine": "openai-tts",
-        "profile": "dana",
+        "engine": "elevenlabs",
+        "profile": "4RZ84U1b4WCqpu57LvIq",
         "optimization": "real-time"
       },
       "output": {

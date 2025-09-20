@@ -1,0 +1,26 @@
+{
+  "timestamp": "2025-09-20T10:32:44.638Z",
+  "totalRecords": 1500000,
+  "processedRecords": 1500000,
+  "failedRecords": 0,
+  "successRate": 100,
+  "processingTimeSeconds": 0.729,
+  "recordsPerSecond": 2057613,
+  "workers": {
+    "total": 16,
+    "successful": 16,
+    "failed": 0
+  },
+  "configuration": {
+    "batchSize": 2000,
+    "connectionPoolSize": 100,
+    "maxRetries": 3
+  },
+  "performance": {
+    "recordsPerSecond": 0,
+    "averageResponseTime": 0.0005,
+    "totalProcessingTime": 0,
+    "memoryUsage": 0,
+    "cpuUsage": 0
+  }
+}

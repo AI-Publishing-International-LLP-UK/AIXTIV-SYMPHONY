@@ -154,7 +154,7 @@ const createQuantumBusinessComputationalist = async () => {
       vls_integration: {
         voice_synthesis: {
           primary_voice: 'Dana - Enterprise Professional (Multilingual)',
-          voice_id: 'pNInz6obpgDQGcFmaJgB', 
+          voice_id: '4RZ84U1b4WCqpu57LvIq', 
           synthesis_model: 'eleven_multilingual_v2',
           settings: {
             stability: 0.85,
@@ -556,7 +556,7 @@ const initializeWorldClassComputationalists = async () => {
       vls_integration: {
         synthesis_system: 'VLS/SOLUTION Voice Synthesis',
         voice_quality: 'Enterprise-grade multilingual synthesis',
-        dana_voice_system: 'Integrated with existing Dana voice configuration',
+        dana_voice_system: 'Integrated with existing 4RZ84U1b4WCqpu57LvIq configuration',
         real_time_synthesis: 'Sub-second voice generation for all agents'
       },
       

@@ -35,7 +35,7 @@ class ComputationalVoiceService {
       victory36: {
         name: 'Victory36',
         title: 'Security Analytics Specialist',
-        voiceId: 'pNInz6obpgDQGcFmaJgB', // Adam
+        voiceId: '4RZ84U1b4WCqpu57LvIq', // Adam
         active: true
       }
     };

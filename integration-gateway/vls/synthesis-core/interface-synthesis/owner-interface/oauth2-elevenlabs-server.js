@@ -56,7 +56,7 @@ app.use(helmet({
 app.use(cors({
   origin: function(origin, callback) {
     // Allow requests with no origin (mobile apps, etc.)
-    if (!origin) return callback(null, true);
+    if (!origin) {return callback(null, true);}
     
     const allowedOrigins = [
       'http://localhost:3000',
@@ -68,8 +68,8 @@ app.use(cors({
     ];
     
     const isAllowed = allowedOrigins.some(allowed => {
-      if (typeof allowed === 'string') return origin === allowed;
-      if (allowed instanceof RegExp) return allowed.test(origin);
+      if (typeof allowed === 'string') {return origin === allowed;}
+      if (allowed instanceof RegExp) {return allowed.test(origin);}
       return false;
     });
     
@@ -293,7 +293,7 @@ app.get('/api/tts/voices',
       // Return configured voices based on authority level
       const voiceConfig = {
         default: { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Bella', description: 'Professional female voice' },
-        owner_interface: { id: 'pNInz6obpgDQGcFmaJgB', name: 'Adam', description: 'Authoritative male voice' },
+        owner_interface: { id: '4RZ84U1b4WCqpu57LvIq', name: 'Adam', description: 'Authoritative male voice' },
         moca: { id: 'ErXwobaYiN019PkySvjV', name: 'Antoni', description: 'Warm and engaging voice' },
         diamond_sao: { id: 'VR6AewLTigWG4xSOukaG', name: 'Josh', description: 'Diamond SAO authority voice' }
       };

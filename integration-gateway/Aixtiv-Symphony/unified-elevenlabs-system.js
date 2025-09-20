@@ -107,7 +107,7 @@ class UnifiedElevenLabsAgentSystem {
       
       // Owner Interface Voices
       ownerInterface: {
-        voiceId: 'pNInz6obpgDQGcFmaJgB', // Adam - Authoritative
+        voiceId: '4RZ84U1b4WCqpu57LvIq', // Adam - Authoritative
         name: 'Adam',
         description: 'Owner Interface Professional Voice',
         settings: {
@@ -690,17 +690,17 @@ class UnifiedElevenLabsAgentSystem {
       
       const criticalMessages = [
         {
-          text: "Diamond SAO Command Center online. All systems operational.",
+          text: 'Diamond SAO Command Center online. All systems operational.',
           voiceProfile: 'diamondSAO',
           filename: 'diamond-sao-startup'
         },
         {
-          text: "Authentication confirmed. Maximum authority granted.",
+          text: 'Authentication confirmed. Maximum authority granted.',
           voiceProfile: 'ownerInterface', 
           filename: 'auth-confirmed'
         },
         {
-          text: "Security alert detected. Diamond SAO intervention required.",
+          text: 'Security alert detected. Diamond SAO intervention required.',
           voiceProfile: 'diamondSAO',
           filename: 'security-alert'
         }
@@ -756,7 +756,7 @@ class UnifiedElevenLabsAgentSystem {
       const audio = await this.primaryClient.generate({
         voice: profile.voiceId,
         text: text,
-        model_id: options.model || "eleven_multilingual_v2",
+        model_id: options.model || 'eleven_multilingual_v2',
         voice_settings: {
           ...profile.settings,
           ...options.settings
@@ -932,19 +932,19 @@ class UnifiedElevenLabsAgentSystem {
   generateComputationalistResponse(agent, query) {
     const responses = {
       'qb-computationalist-dr-lucy': [
-        "Based on my quantum-enhanced analysis of the data patterns, I recommend implementing a multi-dimensional optimization strategy.",
-        "My machine learning models indicate a 94.7% probability of success with the proposed business intelligence approach.",
-        "Cross-referencing global market data and quantum pattern recognition suggests an emerging opportunity in the next quarter."
+        'Based on my quantum-enhanced analysis of the data patterns, I recommend implementing a multi-dimensional optimization strategy.',
+        'My machine learning models indicate a 94.7% probability of success with the proposed business intelligence approach.',
+        'Cross-referencing global market data and quantum pattern recognition suggests an emerging opportunity in the next quarter.'
       ],
       'sh-strategic-dr-claude': [
-        "Strategic analysis reveals three critical pathways forward, each with distinct risk-reward profiles.",
-        "The hybrid reasoning model suggests a cascading implementation approach would minimize systemic risk.",
-        "Advanced analysis indicates this decision tree optimizes for both short-term gains and long-term strategic positioning."
+        'Strategic analysis reveals three critical pathways forward, each with distinct risk-reward profiles.',
+        'The hybrid reasoning model suggests a cascading implementation approach would minimize systemic risk.',
+        'Advanced analysis indicates this decision tree optimizes for both short-term gains and long-term strategic positioning.'
       ],
       'v36-security-victory36': [
-        "Security assessment complete. Threat vector analysis shows elevated risk in the specified parameters.",
-        "Predictive threat modeling indicates potential vulnerabilities that require immediate attention.",
-        "Security intelligence systems recommend implementing enhanced protection protocols."
+        'Security assessment complete. Threat vector analysis shows elevated risk in the specified parameters.',
+        'Predictive threat modeling indicates potential vulnerabilities that require immediate attention.',
+        'Security intelligence systems recommend implementing enhanced protection protocols.'
       ]
     };
     

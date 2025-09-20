@@ -1,0 +1,97 @@
+{
+  "id": "production-env",
+  "name": "MCP Production Environment",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "https://mcp.asoos.2100.cool",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "auth_url",
+      "value": "https://sallyport.2100.cool",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "client_id",
+      "value": "{{OAUTH_CLIENT_ID}}",
+      "enabled": true,
+      "type": "secret"
+    },
+    {
+      "key": "client_secret",
+      "value": "{{OAUTH_CLIENT_SECRET}}",
+      "enabled": true,
+      "type": "secret"
+    },
+    {
+      "key": "template_version",
+      "value": "1.0.0",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "test_timeout",
+      "value": "60000",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "primary_region",
+      "value": "us-west1",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "secondary_region",
+      "value": "us-central1",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "eu_region",
+      "value": "eu-west1",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "gcp_project",
+      "value": "api-for-warp-drive",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "dr_memoria_endpoint",
+      "value": "{{base_url}}/api/powerhouse/dr-memoria-anthology-{{secondary_region}}",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "dr_lucy_primary_endpoint",
+      "value": "{{base_url}}/api/powerhouse/dr-lucy-{{primary_region}}",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "dr_lucy_secondary_endpoint",
+      "value": "{{base_url}}/api/powerhouse/dr-lucy-{{secondary_region}}",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "civilization_ai_endpoint",
+      "value": "{{base_url}}/api/civilization/civilization-ai-{{secondary_region}}",
+      "enabled": true,
+      "type": "default"
+    },
+    {
+      "key": "mocorix2_settlement_endpoint",
+      "value": "{{base_url}}/api/settlement/mocorix2-{{secondary_region}}",
+      "enabled": true,
+      "type": "default"
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}

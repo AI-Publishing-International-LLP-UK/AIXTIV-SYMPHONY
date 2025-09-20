@@ -1,0 +1,328 @@
+name: MCP Promise Infrastructure Tests
+
+on:
+  push:
+    branches: [ main, development ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run tests every 6 hours to monitor Promise infrastructure health
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      test_environment:
+        description: 'Environment to test (production/staging)'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+        - production
+        - staging
+      run_stress_tests:
+        description: 'Include stress tests'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  GCP_PROJECT: api-for-warp-drive
+  CLOUD_ML_REGION: us-west1
+  NODE_VERSION: '22'
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      test-environment: ${{ steps.env-setup.outputs.test-environment }}
+      stress-tests: ${{ steps.env-setup.outputs.stress-tests }}
+    
+    steps:
+    - name: Setup Test Environment
+      id: env-setup
+      run: |
+        if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+          echo "test-environment=${{ github.event.inputs.test_environment }}" >> $GITHUB_OUTPUT
+          echo "stress-tests=${{ github.event.inputs.run_stress_tests }}" >> $GITHUB_OUTPUT
+        elif [ "${{ github.ref }}" == "refs/heads/main" ]; then
+          echo "test-environment=production" >> $GITHUB_OUTPUT
+          echo "stress-tests=true" >> $GITHUB_OUTPUT
+        else
+          echo "test-environment=staging" >> $GITHUB_OUTPUT
+          echo "stress-tests=false" >> $GITHUB_OUTPUT
+        fi
+
+  promise-infrastructure-tests:
+    needs: setup
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    
+    strategy:
+      matrix:
+        test-suite:
+          - health-checks
+          - dr-memoria-anthology
+          - dr-lucy
+          - civilization-ai
+          - settlements
+          - auto-discovery
+        include:
+          - test-suite: stress-tests
+            run-condition: ${{ needs.setup.outputs.stress-tests == 'true' }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ env.GCP_PROJECT }}
+
+    - name: Install Newman and dependencies
+      run: |
+        npm install -g newman newman-reporter-htmlextra newman-reporter-json-summary
+        npm install
+
+    - name: Fetch OAuth credentials from Secret Manager
+      id: fetch-secrets
+      run: |
+        OAUTH_CLIENT_ID=$(gcloud secrets versions access latest --secret="oauth-client-id" --project=${{ env.GCP_PROJECT }})
+        OAUTH_CLIENT_SECRET=$(gcloud secrets versions access latest --secret="oauth-client-secret" --project=${{ env.GCP_PROJECT }})
+        
+        # Mask secrets in logs
+        echo "::add-mask::$OAUTH_CLIENT_ID"
+        echo "::add-mask::$OAUTH_CLIENT_SECRET"
+        
+        # Set as environment variables
+        echo "OAUTH_CLIENT_ID=$OAUTH_CLIENT_ID" >> $GITHUB_ENV
+        echo "OAUTH_CLIENT_SECRET=$OAUTH_CLIENT_SECRET" >> $GITHUB_ENV
+
+    - name: Skip stress tests if not required
+      if: matrix.test-suite == 'stress-tests' && needs.setup.outputs.stress-tests != 'true'
+      run: |
+        echo "Skipping stress tests as they are not required for this run"
+        exit 0
+
+    - name: Run Newman Promise Infrastructure Tests
+      id: newman-tests
+      env:
+        ENVIRONMENT: ${{ needs.setup.outputs.test-environment }}
+      run: |
+        # Create results directory
+        mkdir -p test-results
+        
+        # Determine collection folder based on test suite
+        case "${{ matrix.test-suite }}" in
+          "health-checks")
+            FOLDER_NAME="Promise Infrastructure Health Checks"
+            ;;
+          "dr-memoria-anthology")
+            FOLDER_NAME="Dr. Memoria Anthology Promise Tests"
+            ;;
+          "dr-lucy")
+            FOLDER_NAME="Dr. Lucy Promise Tests"
+            ;;
+          "civilization-ai")
+            FOLDER_NAME="Civilization AI Promise Tests"
+            ;;
+          "settlements")
+            FOLDER_NAME="Settlement Promise Tests"
+            ;;
+          "auto-discovery")
+            FOLDER_NAME="Auto-Discovery Promise Tests"
+            ;;
+          "stress-tests")
+            FOLDER_NAME="Stress Tests"
+            ;;
+          *)
+            echo "Unknown test suite: ${{ matrix.test-suite }}"
+            exit 1
+            ;;
+        esac
+        
+        # Run Newman with the specific folder
+        newman run tests/newman/mcp-template-promise-tests.postman_collection.json \
+          --environment tests/newman/environments/${ENVIRONMENT}.json \
+          --folder "$FOLDER_NAME" \
+          --reporters cli,htmlextra,json-summary \
+          --reporter-htmlextra-export test-results/promise-tests-${{ matrix.test-suite }}-report.html \
+          --reporter-json-summary-export test-results/promise-tests-${{ matrix.test-suite }}-summary.json \
+          --timeout-request 120000 \
+          --timeout-script 60000 \
+          --bail \
+          --color on \
+          --verbose
+      continue-on-error: true
+
+    - name: Check test results
+      run: |
+        if [ -f "test-results/promise-tests-${{ matrix.test-suite }}-summary.json" ]; then
+          # Parse Newman summary for failures
+          FAILURES=$(cat test-results/promise-tests-${{ matrix.test-suite }}-summary.json | jq -r '.run.stats.tests.failed // 0')
+          ERRORS=$(cat test-results/promise-tests-${{ matrix.test-suite }}-summary.json | jq -r '.run.stats.requests.failed // 0')
+          
+          echo "Test failures: $FAILURES"
+          echo "Request errors: $ERRORS"
+          
+          if [ "$FAILURES" -gt "0" ] || [ "$ERRORS" -gt "0" ]; then
+            echo "❌ Promise Infrastructure Tests Failed for ${{ matrix.test-suite }}"
+            echo "failures=$FAILURES" >> $GITHUB_OUTPUT
+            echo "errors=$ERRORS" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "✅ Promise Infrastructure Tests Passed for ${{ matrix.test-suite }}"
+            echo "failures=0" >> $GITHUB_OUTPUT
+            echo "errors=0" >> $GITHUB_OUTPUT
+          fi
+        else
+          echo "❌ No test summary found - tests may have crashed"
+          exit 1
+        fi
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: promise-tests-${{ matrix.test-suite }}-${{ needs.setup.outputs.test-environment }}
+        path: test-results/
+        retention-days: 30
+
+    - name: Comment PR with test results
+      uses: actions/github-script@v7
+      if: github.event_name == 'pull_request' && always()
+      with:
+        script: |
+          const fs = require('fs');
+          const testSuite = '${{ matrix.test-suite }}';
+          const environment = '${{ needs.setup.outputs.test-environment }}';
+          
+          try {
+            const summaryPath = `test-results/promise-tests-${testSuite}-summary.json`;
+            if (fs.existsSync(summaryPath)) {
+              const summary = JSON.parse(fs.readFileSync(summaryPath, 'utf8'));
+              
+              const totalTests = summary.run.stats.tests.total || 0;
+              const passedTests = summary.run.stats.tests.passed || 0;
+              const failedTests = summary.run.stats.tests.failed || 0;
+              const totalRequests = summary.run.stats.requests.total || 0;
+              const failedRequests = summary.run.stats.requests.failed || 0;
+              
+              const status = failedTests === 0 && failedRequests === 0 ? '✅' : '❌';
+              
+              const comment = `## ${status} MCP Promise Infrastructure Tests - ${testSuite}
+              
+              **Environment:** ${environment}
+              **Test Suite:** ${testSuite}
+              
+              ### Results Summary:
+              - **Tests:** ${passedTests}/${totalTests} passed
+              - **Requests:** ${totalRequests - failedRequests}/${totalRequests} successful
+              - **Duration:** ${Math.round(summary.run.timings.completed / 1000)}s
+              
+              ${failedTests > 0 ? `### ⚠️ Failed Tests: ${failedTests}` : ''}
+              ${failedRequests > 0 ? `### ⚠️ Failed Requests: ${failedRequests}` : ''}
+              `;
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+            }
+          } catch (error) {
+            console.log('Error posting comment:', error);
+          }
+
+  notification:
+    needs: [setup, promise-infrastructure-tests]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Notify Diamond SAO Command Center
+      if: needs.setup.outputs.test-environment == 'production'
+      run: |
+        # Send notification to Diamond SAO Command Center
+        # This would integrate with your existing monitoring dashboard
+        
+        STATUS="success"
+        if [ "${{ needs.promise-infrastructure-tests.result }}" != "success" ]; then
+          STATUS="failure"
+        fi
+        
+        echo "Sending Promise Infrastructure Test notification:"
+        echo "Status: $STATUS"
+        echo "Environment: ${{ needs.setup.outputs.test-environment }}"
+        echo "Trigger: ${{ github.event_name }}"
+        
+        # In a real implementation, this would send a webhook/API call
+        # to your Diamond SAO Command Center monitoring system
+        curl -X POST https://mocoa.owner.interface.diamond.sao/api/notifications \
+          -H "Content-Type: application/json" \
+          -H "Authorization: Bearer ${{ secrets.DIAMOND_SAO_API_TOKEN }}" \
+          -d "{
+            \"type\": \"promise-infrastructure-test\",
+            \"status\": \"$STATUS\",
+            \"environment\": \"${{ needs.setup.outputs.test-environment }}\",
+            \"workflow\": \"${{ github.workflow }}\",
+            \"run_id\": \"${{ github.run_id }}\",
+            \"commit\": \"${{ github.sha }}\",
+            \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+          }" || echo "Failed to notify Diamond SAO Command Center"
+
+  auto-heal-infrastructure:
+    needs: [setup, promise-infrastructure-tests]
+    runs-on: ubuntu-latest
+    if: failure() && needs.setup.outputs.test-environment == 'production'
+    
+    steps:
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: ${{ env.GCP_PROJECT }}
+
+    - name: Attempt Auto-Healing
+      run: |
+        echo "🔧 Promise Infrastructure Tests failed - attempting auto-healing"
+        
+        # Restart Promise infrastructure components
+        echo "Restarting MCP Universal Template service..."
+        gcloud run services update mcp-universal-template \
+          --region=${{ env.CLOUD_ML_REGION }} \
+          --project=${{ env.GCP_PROJECT }} \
+          --update-env-vars="PROMISE_INFRASTRUCTURE_RESTART=$(date +%s)" || echo "Failed to restart service"
+        
+        # Clear Promise handler caches
+        echo "Clearing Promise handler caches..."
+        gcloud run jobs execute promise-cache-clear \
+          --region=${{ env.CLOUD_ML_REGION }} \
+          --project=${{ env.GCP_PROJECT }} \
+          --wait || echo "Failed to clear caches"
+        
+        # Wait for services to stabilize
+        echo "Waiting 60 seconds for services to stabilize..."
+        sleep 60
+        
+        # Re-run critical health checks
+        echo "Re-running critical health checks..."
+        curl -f -X GET "https://mcp.asoos.2100.cool/health" \
+          -H "Content-Type: application/json" || echo "Health check still failing"
+        
+        echo "Auto-healing attempt completed"

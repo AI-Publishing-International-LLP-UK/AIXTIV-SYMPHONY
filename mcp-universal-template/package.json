@@ -1,0 +1,132 @@
+{
+  "name": "mcp-universal-template",
+  "version": "1.0.0",
+  "description": "Universal MCP Template System with Supreme Promise Infrastructure for 10,000 customers and 20M agents",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "build": "echo 'No build step required for Node.js'",
+    "test": "./scripts/run-promise-tests.sh -e staging",
+    "test:prod": "./scripts/run-promise-tests.sh -e production",
+    "test:stress": "./scripts/run-promise-tests.sh --stress",
+    "lint": "eslint src/ --fix",
+    "format": "prettier --write src/",
+    "health-check": "curl -f http://localhost:8080/health || exit 1",
+    "deploy:staging": "./scripts/deploy-staging.sh",
+    "deploy:production": "./scripts/deploy-production.sh",
+    "docker:build": "docker build -t mcp-universal-template:latest .",
+    "docker:run": "docker run -p 8080:8080 mcp-universal-template:latest",
+    "logs": "gcloud logging read 'resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"mcp-universal-template\"' --limit 50 --format json",
+    "metrics": "gcloud monitoring metrics list --filter='metric.type:\"run.googleapis.com/container/*\"'",
+    "secrets:sync": "gcloud secrets versions access latest --secret='mcp-config' > .env"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "promise-infrastructure",
+    "dr-memoria-anthology",
+    "dr-lucy",
+    "civilization-ai",
+    "aixtiv-symphony",
+    "diamond-sao",
+    "gcp",
+    "cloud-run",
+    "newman-testing"
+  ],
+  "author": "AI Publishing International LLP",
+  "license": "PRIVATE",
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "winston": "^3.11.0",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4",
+    "express-rate-limit": "^7.1.5",
+    "body-parser": "^1.20.2",
+    "morgan": "^1.10.0",
+    "@google-cloud/secret-manager": "^5.0.1",
+    "@google-cloud/logging": "^10.5.0",
+    "@google-cloud/monitoring": "^4.0.0",
+    "@google-cloud/storage": "^7.7.0",
+    "axios": "^1.6.2",
+    "jsonwebtoken": "^9.0.2",
+    "bcrypt": "^5.1.1",
+    "uuid": "^9.0.1",
+    "dotenv": "^16.3.1",
+    "joi": "^17.11.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
+    "prom-client": "^15.1.0",
+    "nodemailer": "^6.9.7",
+    "redis": "^4.6.10",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.0.3",
+    "bull": "^4.12.0",
+    "ioredis": "^5.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "eslint": "^8.55.0",
+    "eslint-config-node": "^4.1.0",
+    "prettier": "^3.1.0",
+    "newman": "^6.0.0",
+    "newman-reporter-htmlextra": "^1.23.1",
+    "newman-reporter-json-summary": "^1.0.0",
+    "@types/node": "^20.10.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AI-Publishing-International-LLP-UK/AIXTIV-SYMPHONY.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AI-Publishing-International-LLP-UK/AIXTIV-SYMPHONY/issues"
+  },
+  "homepage": "https://mcp.asoos.2100.cool",
+  "config": {
+    "port": 8080,
+    "nodeEnv": "production",
+    "gcpProject": "api-for-warp-drive",
+    "region": "us-west1",
+    "serviceName": "mcp-universal-template"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coverageDirectory": "coverage",
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/server.js"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*.js",
+      "**/?(*.)+(spec|test).js"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "eslint:recommended",
+      "node"
+    ],
+    "env": {
+      "node": true,
+      "es2022": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 2022,
+      "sourceType": "module"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2
+  }
+}

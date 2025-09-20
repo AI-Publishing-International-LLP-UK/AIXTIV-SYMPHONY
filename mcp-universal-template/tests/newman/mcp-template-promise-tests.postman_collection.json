@@ -1,0 +1,757 @@
+{
+  "info": {
+    "name": "MCP Universal Template Promise Infrastructure Tests",
+    "description": "Newman test collection for validating Promise infrastructure across all MCP implementations including Dr. Memoria Anthology, Dr. Lucy, Civilization AI, and all settlements",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "clientId",
+        "value": "{{client_id}}",
+        "type": "string"
+      },
+      {
+        "key": "clientSecret",
+        "value": "{{client_secret}}",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "{{auth_url}}/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "grantType",
+        "value": "client_credentials",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://mcp.asoos.2100.cool"
+    },
+    {
+      "key": "template_version",
+      "value": "1.0.0"
+    },
+    {
+      "key": "test_timeout",
+      "value": "30000"
+    }
+  ],
+  "item": [
+    {
+      "name": "Promise Infrastructure Health Checks",
+      "item": [
+        {
+          "name": "Universal Template Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Universal Template System is healthy', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.status).to.eql('healthy');",
+                  "    pm.expect(response.templateSystem).to.eql('operational');",
+                  "    pm.expect(response.promiseInfrastructure).to.eql('operational');",
+                  "});",
+                  "",
+                  "pm.test('Promise Infrastructure is operational across all regions', function () {",
+                  "    const response = pm.response.json();",
+                  "    const regions = ['us-central1', 'us-west1', 'eu-west1'];",
+                  "    ",
+                  "    regions.forEach(region => {",
+                  "        pm.expect(response.regions[region]).to.be.an('object');",
+                  "        pm.expect(response.regions[region].status).to.eql('healthy');",
+                  "    });",
+                  "});",
+                  "",
+                  "pm.test('Auto-discovery is active', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.autoDiscovery).to.eql('active');",
+                  "});",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Promise Statistics Validation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Promise statistics are available', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    pm.expect(response).to.have.property('totalTemplates');",
+                  "    pm.expect(response).to.have.property('totalSettlements');",
+                  "    pm.expect(response).to.have.property('templatesByRegion');",
+                  "    pm.expect(response).to.have.property('templatesByType');",
+                  "    pm.expect(response).to.have.property('promiseInfrastructureStats');",
+                  "});",
+                  "",
+                  "pm.test('Promise infrastructure statistics are healthy', function () {",
+                  "    const response = pm.response.json();",
+                  "    const promiseStats = response.promiseInfrastructureStats;",
+                  "    ",
+                  "    pm.expect(promiseStats).to.have.property('activePromises');",
+                  "    pm.expect(promiseStats).to.have.property('activeTimeouts');",
+                  "    pm.expect(promiseStats.longRunningPromises).to.be.a('number');",
+                  "});",
+                  "",
+                  "pm.test('Templates exist for all required powerhouses', function () {",
+                  "    const response = pm.response.json();",
+                  "    ",
+                  "    // Check for Dr. Memoria Anthology",
+                  "    pm.expect(response.templatesByType).to.have.property('powerhouse');",
+                  "    pm.expect(response.templatesByType.powerhouse).to.be.above(0);",
+                  "    ",
+                  "    // Check regional distribution",
+                  "    pm.expect(response.templatesByRegion).to.have.property('us-central1');",
+                  "    pm.expect(response.templatesByRegion).to.have.property('us-west1');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/templates/statistics",
+              "host": ["{{base_url}}"],
+              "path": ["api", "templates", "statistics"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dr. Memoria Anthology Promise Tests",
+      "item": [
+        {
+          "name": "Dr. Memoria Anthology Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Dr. Memoria Anthology is operational', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.status).to.eql('operational');",
+                  "    pm.expect(response.region).to.eql('us-central1');",
+                  "});",
+                  "",
+                  "pm.test('Promise infrastructure is configured for anthology processing', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.promiseInfrastructure).to.be.an('object');",
+                  "    pm.expect(response.promiseInfrastructure.timeout).to.be.above(60000); // > 1 minute",
+                  "    pm.expect(response.promiseInfrastructure.batchProcessing).to.eql(true);",
+                  "});",
+                  "",
+                  "pm.test('Anthology capabilities are available', function () {",
+                  "    const response = pm.response.json();",
+                  "    const expectedCapabilities = [",
+                  "        'literary-processing',",
+                  "        'creative-content-generation',",
+                  "        'anthology-management'",
+                  "    ];",
+                  "    ",
+                  "    expectedCapabilities.forEach(capability => {",
+                  "        pm.expect(response.capabilities).to.include(capability);",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/powerhouse/dr-memoria-anthology-us-central1/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "powerhouse", "dr-memoria-anthology-us-central1", "health"]
+            }
+          }
+        },
+        {
+          "name": "Dr. Memoria Promise Handling Test",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Promise handling test completes successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.eql(true);",
+                  "    pm.expect(response.promiseResolved).to.eql(true);",
+                  "});",
+                  "",
+                  "pm.test('No [object Promise] errors in response', function () {",
+                  "    const responseText = pm.response.text();",
+                  "    pm.expect(responseText).to.not.include('[object Promise]');",
+                  "    pm.expect(responseText).to.not.include('Promise@');",
+                  "});",
+                  "",
+                  "pm.test('Anthology processing timeout is respected', function () {",
+                  "    // Should complete within 2 minutes for anthology processing",
+                  "    pm.expect(pm.response.responseTime).to.be.below(120000);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operation\": \"test-promise-handling\",\n  \"context\": \"dr-memoria-anthology-test\",\n  \"timeout\": 60000,\n  \"testData\": {\n    \"content\": \"Sample anthology content for Promise testing\",\n    \"metadata\": {\n      \"author\": \"Test Author\",\n      \"genre\": \"Testing\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/powerhouse/dr-memoria-anthology-us-central1/test-promise",
+              "host": ["{{base_url}}"],
+              "path": ["api", "powerhouse", "dr-memoria-anthology-us-central1", "test-promise"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dr. Lucy Promise Tests",
+      "item": [
+        {
+          "name": "Dr. Lucy us-west1 Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Dr. Lucy us-west1 is operational', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.status).to.eql('operational');",
+                  "    pm.expect(response.region).to.eql('us-west1');",
+                  "});",
+                  "",
+                  "pm.test('Cross-region failover is configured', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.promiseInfrastructure.crossRegionFailover).to.eql('us-central1');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/powerhouse/dr-lucy-us-west1/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "powerhouse", "dr-lucy-us-west1", "health"]
+            }
+          }
+        },
+        {
+          "name": "Dr. Lucy us-central1 Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Dr. Lucy us-central1 is operational', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.status).to.eql('operational');",
+                  "    pm.expect(response.region).to.eql('us-central1');",
+                  "});",
+                  "",
+                  "pm.test('High concurrency Promise handling is configured', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.promiseInfrastructure.concurrency).to.be.above(25);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/powerhouse/dr-lucy-us-central1/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "powerhouse", "dr-lucy-us-central1", "health"]
+            }
+          }
+        },
+        {
+          "name": "Dr. Lucy Cross-Region Promise Test",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Cross-region Promise coordination works', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.eql(true);",
+                  "    pm.expect(response.regionsInvolved).to.include.members(['us-west1', 'us-central1']);",
+                  "});",
+                  "",
+                  "pm.test('No Promise serialization errors across regions', function () {",
+                  "    const responseText = pm.response.text();",
+                  "    pm.expect(responseText).to.not.include('[object Promise]');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operation\": \"cross-region-promise-test\",\n  \"primaryRegion\": \"us-west1\",\n  \"failoverRegion\": \"us-central1\",\n  \"testScenario\": \"load-balancing\",\n  \"concurrency\": 10\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/powerhouse/dr-lucy/test-cross-region-promise",
+              "host": ["{{base_url}}"],
+              "path": ["api", "powerhouse", "dr-lucy", "test-cross-region-promise"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Civilization AI Promise Tests",
+      "item": [
+        {
+          "name": "Civilization AI Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Civilization AI is operational', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.status).to.eql('operational');",
+                  "    pm.expect(response.type).to.eql('civilization-orchestrator');",
+                  "});",
+                  "",
+                  "pm.test('Long-running operations are supported', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.promiseInfrastructure.longRunningOperations).to.eql(true);",
+                  "    pm.expect(response.promiseInfrastructure.timeout).to.be.above(180000); // > 3 minutes",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/civilization/civilization-ai-us-central1/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "civilization", "civilization-ai-us-central1", "health"]
+            }
+          }
+        },
+        {
+          "name": "Settlement Coordination Promise Test",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Settlement coordination Promise handling works', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.eql(true);",
+                  "    pm.expect(response.settlementsCoordinated).to.be.above(0);",
+                  "});",
+                  "",
+                  "pm.test('Batch processing completes without Promise errors', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.batchProcessingResult.errors).to.eql(0);",
+                  "    pm.expect(response.batchProcessingResult.successCount).to.be.above(0);",
+                  "});",
+                  "",
+                  "pm.test('Long-running civilization operations timeout appropriately', function () {",
+                  "    // Should complete within 5 minutes for civilization processing",
+                  "    pm.expect(pm.response.responseTime).to.be.below(300000);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operation\": \"coordinate-settlements\",\n  \"settlements\": [\n    \"mocorix2-us-central1\",\n    \"settlement-alpha-us-central1\",\n    \"primary-settlement-us-west1\"\n  ],\n  \"coordinationType\": \"resource-allocation\",\n  \"batchSize\": 3,\n  \"timeout\": 120000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/civilization/civilization-ai-us-central1/coordinate-settlements",
+              "host": ["{{base_url}}"],
+              "path": ["api", "civilization", "civilization-ai-us-central1", "coordinate-settlements"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Settlement Promise Tests",
+      "item": [
+        {
+          "name": "MOCORIX2 Settlement Health Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('MOCORIX2 settlement is operational', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.status).to.eql('active');",
+                  "    pm.expect(response.promiseHandlerActive).to.eql(true);",
+                  "});",
+                  "",
+                  "pm.test('Settlement networking Promise infrastructure is configured', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.promiseInfrastructure.settlementNetworking).to.eql(true);",
+                  "    pm.expect(response.promiseInfrastructure.civilizationAIIntegration).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/settlement/mocorix2-us-central1/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "settlement", "mocorix2-us-central1", "health"]
+            }
+          }
+        },
+        {
+          "name": "Inter-Settlement Communication Promise Test",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Inter-settlement communication Promise handling works', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.eql(true);",
+                  "    pm.expect(response.communicationResults.length).to.be.above(0);",
+                  "});",
+                  "",
+                  "pm.test('Settlement Promise coordination is error-free', function () {",
+                  "    const response = pm.response.json();",
+                  "    response.communicationResults.forEach(result => {",
+                  "        pm.expect(result.promiseResolved).to.eql(true);",
+                  "        pm.expect(result.errors).to.eql(0);",
+                  "    });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operation\": \"test-inter-settlement-communication\",\n  \"sourceSettlement\": \"mocorix2-us-central1\",\n  \"targetSettlements\": [\n    \"settlement-alpha-us-central1\",\n    \"primary-settlement-us-west1\"\n  ],\n  \"messageType\": \"resource-sharing\",\n  \"timeout\": 30000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/settlement/test-inter-settlement-communication",
+              "host": ["{{base_url}}"],
+              "path": ["api", "settlement", "test-inter-settlement-communication"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auto-Discovery Promise Tests",
+      "item": [
+        {
+          "name": "Auto-Discovery Status Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Auto-discovery is operational', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.autoDiscovery.enabled).to.eql(true);",
+                  "    pm.expect(response.autoDiscovery.scanInterval).to.be.above(0);",
+                  "});",
+                  "",
+                  "pm.test('Discovery patterns are configured for all implementation types', function () {",
+                  "    const response = pm.response.json();",
+                  "    const patterns = response.autoDiscovery.discoveryPatterns;",
+                  "    pm.expect(patterns.length).to.be.above(3);",
+                  "    ",
+                  "    // Check for doctor pattern",
+                  "    const hasDoctorPattern = patterns.some(p => p.includes('dr-'));",
+                  "    pm.expect(hasDoctorPattern).to.eql(true);",
+                  "    ",
+                  "    // Check for settlement pattern",
+                  "    const hasSettlementPattern = patterns.some(p => p.includes('settlement'));",
+                  "    pm.expect(hasSettlementPattern).to.eql(true);",
+                  "    ",
+                  "    // Check for civilization pattern",
+                  "    const hasCivilizationPattern = patterns.some(p => p.includes('civilization'));",
+                  "    pm.expect(hasCivilizationPattern).to.eql(true);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auto-discovery/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auto-discovery", "status"]
+            }
+          }
+        },
+        {
+          "name": "New Implementation Promise Registration Test",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('New implementation registration succeeds', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.eql(true);",
+                  "    pm.expect(response.implementationId).to.be.a('string');",
+                  "});",
+                  "",
+                  "pm.test('Promise infrastructure is automatically configured', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.deploymentResult.promiseInfrastructure).to.be.an('object');",
+                  "    pm.expect(response.deploymentResult.promiseInfrastructure.enabled).to.eql(true);",
+                  "});",
+                  "",
+                  "pm.test('Template is correctly assigned', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.template).to.be.a('string');",
+                  "    pm.expect(response.template.length).to.be.above(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"test-powerhouse\",\n  \"name\": \"Test Implementation\",\n  \"region\": \"us-west1\",\n  \"capabilities\": [\"test-processing\", \"mock-operations\"],\n  \"promiseOverrides\": {\n    \"timeout\": 45000,\n    \"concurrency\": 5\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/implementations/create",
+              "host": ["{{base_url}}"],
+              "path": ["api", "implementations", "create"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stress Tests",
+      "item": [
+        {
+          "name": "High-Concurrency Promise Stress Test",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('High-concurrency Promise handling succeeds', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.success).to.eql(true);",
+                  "    pm.expect(response.concurrentOperations).to.be.above(50);",
+                  "});",
+                  "",
+                  "pm.test('No Promise timeout errors under load', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.timeoutErrors).to.eql(0);",
+                  "    pm.expect(response.promiseRejections).to.eql(0);",
+                  "});",
+                  "",
+                  "pm.test('Memory usage remains stable under Promise load', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response.memoryLeakDetected).to.eql(false);",
+                  "    pm.expect(response.activePromisesAfterCleanup).to.be.below(10);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"testType\": \"high-concurrency-stress\",\n  \"concurrency\": 100,\n  \"duration\": 60000,\n  \"operations\": [\n    \"promise-creation\",\n    \"promise-resolution\",\n    \"promise-chaining\",\n    \"batch-processing\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/test/stress/promises",
+              "host": ["{{base_url}}"],
+              "path": ["api", "test", "stress", "promises"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set dynamic variables for testing",
+          "pm.globals.set('test_run_id', Date.now());",
+          "pm.globals.set('correlation_id', 'newman-' + Math.random().toString(36).substr(2, 9));"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global test for all requests",
+          "pm.test('Response time is reasonable', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(parseInt(pm.variables.get('test_timeout')));",
+          "});",
+          "",
+          "pm.test('No server errors', function () {",
+          "    pm.expect(pm.response.code).to.not.be.oneOf([500, 502, 503, 504]);",
+          "});",
+          "",
+          "// Check for Promise-related errors in any response",
+          "pm.test('No Promise serialization errors detected', function () {",
+          "    const responseText = pm.response.text();",
+          "    pm.expect(responseText).to.not.include('[object Promise]');",
+          "    pm.expect(responseText).to.not.include('Promise@');",
+          "    pm.expect(responseText).to.not.include('UnhandledPromiseRejection');",
+          "});"
+        ]
+      }
+    }
+  ]
+}

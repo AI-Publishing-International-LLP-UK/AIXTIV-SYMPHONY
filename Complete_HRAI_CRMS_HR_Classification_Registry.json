@@ -8,7 +8,7 @@
     "total_llp_members": 12,
     "current_classified_members": 12,
     "pending_classification": 0,
-    
+
     "hr_classification_definitions": {
       "HR1": {
         "code": ".hr1",
@@ -19,7 +19,7 @@
         "human_only": true
       },
       "HR2": {
-        "code": ".hr2", 
+        "code": ".hr2",
         "definition": "Member of LLP and works for the LLP as employee",
         "llp_membership": "ACTIVE_MEMBER",
         "work_relationship": "DIRECT_EMPLOYEE",
@@ -50,7 +50,7 @@
         "members": {
           "42668883-F99E-47BE-8B5E-4139A037FEB1": {
             "name": "Mr. Morgan O'Brian",
-            "email": "mo@coaching2100.com", 
+            "email": "mo@coaching2100.com",
             "position": "Emerald SAO (Executive Administrative Officer)",
             "hr_code": "HR1",
             "classification_type": "MEMBER_LLP_CONTRACTOR",
@@ -65,7 +65,7 @@
           "F5044387-A402-4207-A300-834681AC5D4E": {
             "name": "Mr. Phillip Corey Roark",
             "email": "pc@coaching2100.com",
-            "position": "Diamond SAO (Chief Executive Officer)", 
+            "position": "Diamond SAO (Chief Executive Officer)",
             "hr_code": "HR1",
             "classification_type": "MEMBER_LLP_CONTRACTOR",
             "llp_membership_status": "ACTIVE_MEMBER",
@@ -148,7 +148,7 @@
           },
           "et@coaching2100.com": {
             "name": "Mr. Eduardo Testa",
-            "email": "et@coaching2100.com", 
+            "email": "et@coaching2100.com",
             "position": "International Growth Officer",
             "hr_code": "HR4",
             "classification_type": "MEMBER_LLP_NO_EMPLOYMENT",
@@ -157,7 +157,7 @@
             "join_date": "2025-AUG-10",
             "region": "International",
             "uuid": "PENDING_GENERATION",
-            "d1_partition": "PENDING_ASSIGNMENT", 
+            "d1_partition": "PENDING_ASSIGNMENT",
             "human_verification": "CONFIRMED_HUMAN_MEMBER"
           },
           "av@coaching2100.com": {
@@ -177,11 +177,11 @@
           "ym@coaching2100.com": {
             "name": "Sr. Yonatan Martinez",
             "email": "ym@coaching2100.com",
-            "position": "Publicidad Latam", 
+            "position": "Publicidad Latam",
             "hr_code": "HR4",
             "classification_type": "MEMBER_LLP_NO_EMPLOYMENT",
             "llp_membership_status": "ACTIVE_MEMBER",
-            "employment_relationship": "NO_EMPLOYMENT_RELATIONSHIP", 
+            "employment_relationship": "NO_EMPLOYMENT_RELATIONSHIP",
             "join_date": "2025-Jul-01",
             "region": "LATAM",
             "uuid": "PENDING_GENERATION",
@@ -270,7 +270,7 @@
           "optimization_potential": "CRITICAL - Primary leadership roles"
         },
         "HR4_strategic_contribution": {
-          "average_score": "45%", 
+          "average_score": "45%",
           "calculation": "LLP members with no direct operational involvement",
           "optimization_potential": "MEDIUM - Advisory and governance roles"
         }
@@ -289,22 +289,195 @@
       }
     },
 
+    "mocoa_v34_console_architecture": {
+      "service_url": "https://mocoa-owner-interface-v34-859242575175.us-west1.run.app/",
+      "universal_interface": {
+        "description": "Single unified interface for all user tiers from Diamond SAO to Onyx new hire",
+        "access_hierarchy": {
+          "DIAMOND_SAO": {
+            "permissions": "UNLIMITED_SUPER_ADMIN",
+            "scope": "ALL_20M_AGENTS_10K_COMPANIES",
+            "revenue_dashboard": "FULL_ACCESS",
+            "vls_control": "COMPLETE_ORCHESTRATION",
+            "d1_partitions": ["D1_PARTITION_01"]
+          },
+          "EMERALD_SAO": {
+            "permissions": "NEARLY_UNLIMITED_MINUS_01",
+            "scope": "CROSS_TENANT_VISIBILITY",
+            "analytics": "MULTI_COMPANY_INSIGHTS",
+            "d1_partitions": ["D1_PARTITION_07"]
+          },
+          "SAPPHIRE_SAO": {
+            "permissions": "UNLIMITED_SUPER_ADMIN_INSTANCE",
+            "scope": "SINGLE_COMPANY_FULL_CONTROL",
+            "interface_customization": "COMPLETE",
+            "d1_partitions": ["D1_PARTITION_ASSIGNED_PER_CLIENT"]
+          },
+          "OPAL_SAO": {
+            "permissions": "LIMITED_BY_SAPPHIRE_SAO",
+            "scope": "DEPARTMENT_LEVEL_ACCESS",
+            "workflow_permissions": "SPECIFIC_ASSIGNED",
+            "d1_partitions": ["INHERITED_FROM_SAPPHIRE"]
+          },
+          "ONYX_SAO": {
+            "permissions": "BASIC_WITH_TRAINING_WHEELS",
+            "scope": "NEW_HIRE_CONSTRAINED",
+            "interface_features": "LIMITED_BY_SAPPHIRE",
+            "d1_partitions": ["READ_ONLY_ASSIGNED"]
+          }
+        },
+        "interface_components": {
+          "left_sidebar": {
+            "component_type": "COLLAPSIBLE_ICON_PANEL",
+            "icons": [
+              "CHAT_EXECUTE_CODE",
+              "AI_COPILOTS_SRIX",
+              "VLS_SOLUTIONS_ACCESS",
+              "ACADEMY_VISION_SPACE",
+              "DIDC_ARCHIVES",
+              "S2DO_PROCESSING",
+              "PROJECT_PLANNING",
+              "ROI_ANALYTICS",
+              "SETTINGS_OVERLAY"
+            ],
+            "hidden_panel_feature": "DISCUSSED_IMPLEMENTATION",
+            "full_collapse_capability": "REQUIRED_FOR_MAIN_WORKSPACE"
+          },
+          "right_column": {
+            "component_type": "CLOSABLE_DATA_PANEL",
+            "current_widgets": [
+              "HOT_TOPICS_DREAM_COMMANDER",
+              "PROPOSALS_MULTI_TENANT_GATEWAY",
+              "PROJECTS_IN_PROGRESS",
+              "GROWTH_METRICS_DASHBOARD"
+            ],
+            "close_all_way_feature": "NEEDED_FOR_FULL_SCREEN",
+            "purpose": "VIEWING_SIDE_AUDIT_S2DO_SCAN_APPROVE"
+          },
+          "main_workspace": {
+            "component_type": "DYNAMIC_WORK_AREA",
+            "primary_use": "PCP_S2DO_PROCESSING",
+            "functions": [
+              "PROJECT_PLANNING_WITH_PCP",
+              "ROI_CALCULATION_ANALYSIS",
+              "VLS_SOLUTIONS_VIEWING_AUDIT",
+              "S2DO_SCAN_TO_APPROVE",
+              "CREATIVE_FULL_SCREEN_SUPPORT"
+            ],
+            "academy_vision_space": {
+              "description": "Multi-media visual studio for creative users",
+              "full_screen_capability": "REQUIRED",
+              "pcp_support": "INTEGRATED"
+            }
+          }
+        }
+      },
+      "dream_commander_pcp_integration": {
+        "d1_partition_architecture": {
+          "secret_data_compartments": {
+            "partition_6": {
+              "type": "SECRET_DATA_FOR_DREAM_COMMANDER_PCP",
+              "purpose": "OWNER_SUBSCRIBER_ASSISTANCE",
+              "access_level": "DIAMOND_EMERALD_SAPPHIRE_ONLY"
+            },
+            "daily_input_partitions": {
+              "partitions_1_through_5": "DAILY_INPUT_FROM_DREAM_COMMANDER_PCP",
+              "partition_7_through_12": "ADDITIONAL_DAILY_PCP_INPUT"
+            }
+          },
+          "fluidity_improvement_needed": {
+            "current_status": "NOT_AS_FLUID_AS_SHOULD_BE",
+            "identified_issue": "HEART_OF_DAILY_PROJECT_WORK",
+            "priority": "CRITICAL_FOR_OPTIMIZATION"
+          }
+        },
+        "workflow_integration": {
+          "s2do_processing": {
+            "scan_to_approve": "LIKE_WARP_APP_BROWSER_BASED",
+            "didc_archives_workflow": "ARCHIVE_S2DO_MILLISECOND_PRODUCTION",
+            "anticipate_workflow_automation": "CORE_PRODUCTIVITY_FEATURE"
+          },
+          "vls_solutions_display": {
+            "when_shown_via_pcp": "REQUIRES_VIEWING_SIDE",
+            "audit_requirement": "MANDATORY_S2DO_SCAN",
+            "approval_process": "INTEGRATED_WITH_MAIN_WORKFLOW"
+          }
+        }
+      },
+      "diamond_cli_natural_language": {
+        "paradigm_shift": "FROM_HEAVY_CLI_TO_NATURAL_LANGUAGE",
+        "core_principle": "ONE_PLACE_TO_ENGAGE_ASOOS_UNDERSTANDS_ALL",
+        "intelligence_engine": {
+          "automatic_detection": {
+            "code_vs_language": "ASOOS_AUTO_DISTINGUISHES",
+            "context_awareness": "FULL_INTENT_UNDERSTANDING",
+            "support_routing": "INTELLIGENT_AUTOMATED"
+          },
+          "unified_interface": {
+            "description": "Single natural language input handles everything",
+            "examples": [
+              "Deploy Tesla MCP to us-west1 with enterprise features",
+              "Show me the Dream Commander stats for Q3",
+              "Fix the Universal Gateway deployment issue",
+              "Generate ROI report for multi-tenant gateway",
+              "Update MongoDB URI in secrets manager"
+            ],
+            "no_heavy_cli_needed": "TRADITIONAL_COMMANDS_ELIMINATED"
+          }
+        },
+        "asoos_intelligence_capabilities": {
+          "natural_language_processing": "ADVANCED_INTENT_RECOGNITION",
+          "code_detection": "AUTOMATIC_SYNTAX_ANALYSIS",
+          "context_retention": "CONVERSATION_MEMORY",
+          "multi_modal_support": "TEXT_VOICE_VISUAL",
+          "intelligent_routing": {
+            "development_tasks": "AUTO_ROUTE_TO_CODE_EXECUTION",
+            "business_queries": "AUTO_ROUTE_TO_ANALYTICS",
+            "deployment_requests": "AUTO_ROUTE_TO_INFRASTRUCTURE",
+            "user_management": "AUTO_ROUTE_TO_HR_CRMS"
+          }
+        },
+        "diamond_sao_experience": {
+          "single_input_field": "NATURAL_LANGUAGE_COMMAND_CENTER",
+          "no_memorizing_commands": "SPEAK_NATURALLY_ASOOS_UNDERSTANDS",
+          "contextual_suggestions": "PREDICTIVE_NEXT_ACTIONS",
+          "voice_integration": "SPEAK_OR_TYPE_SEAMLESSLY"
+        }
+      },
+
+      "mobile_app_strategy": {
+        "current_status": "BROWSER_BASED_NO_APP_DOWNLOAD_YET",
+        "ios_android_apps": "AVAILABLE_FOR_LAUNCH",
+        "post_tonight_launch": {
+          "target_product": "WARP_LIKE_EXPERIENCE",
+          "interface": "MICRO_ICONS_STREAMLINED_TOOLS",
+          "primary_interaction": "NATURAL_LANGUAGE_DIAMOND_CLI",
+          "priority": "HIGH_USER_DEMAND"
+        }
+      }
+    },
+
     "integration_specifications": {
       "d1_cloudflare_partitions": {
         "total_partitions": 12,
         "hr_data_distribution": {
-          "partition_1": "Employee master data",
-          "partition_2": "Strategic planning documents",
-          "partition_3": "KPI historical data", 
-          "partition_4": "Performance analytics",
-          "partition_5": "Cross-reference tables",
-          "partition_6": "Integration logs",
-          "partition_7": "Morgan O'Brian strategic profile",
-          "partition_8": "Backup and recovery",
-          "partition_9": "Audit trail",
-          "partition_10": "Reporting data",
-          "partition_11": "Analytics workspace",
-          "partition_12": "Archive storage"
+          "partition_1": "Employee master data + Daily PCP Input",
+          "partition_2": "Strategic planning documents + Daily PCP Input",
+          "partition_3": "KPI historical data + Daily PCP Input",
+          "partition_4": "Performance analytics + Daily PCP Input",
+          "partition_5": "Cross-reference tables + Daily PCP Input",
+          "partition_6": "SECRET DATA COMPARTMENTS - Dream Commander/PCP Owner Assistance",
+          "partition_7": "Morgan O'Brian strategic profile + Daily PCP Input",
+          "partition_8": "Backup and recovery + Daily PCP Input",
+          "partition_9": "Audit trail + Daily PCP Input",
+          "partition_10": "Reporting data + Daily PCP Input",
+          "partition_11": "Analytics workspace + Daily PCP Input",
+          "partition_12": "Archive storage + Daily PCP Input"
+        },
+        "pcp_integration": {
+          "secret_compartments": "PARTITION_6_ONLY",
+          "daily_input_distribution": "PARTITIONS_1_5_7_12",
+          "fluidity_optimization_target": "ALL_PARTITIONS"
         }
       },
       "mongodb_atlas_hrai_crms": {
@@ -318,7 +491,7 @@
     "pending_actions": {
       "required_for_completion": [
         "Generate UUIDs for 4 remaining HR4 members",
-        "Assign D1 Cloudflare partitions for each member", 
+        "Assign D1 Cloudflare partitions for each member",
         "Create strategic coaching profiles for identified members",
         "Identify 4 remaining LLP members for complete registry",
         "Establish HR2 and HR3 classifications if applicable"

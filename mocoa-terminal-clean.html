@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASOOS Terminal</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e);
+      color: #fff;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Left Terminal Panel */
+    .left-panel {
+      width: 400px;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .left-panel.collapsed {
+      width: 0;
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+
+    .left-toggle {
+      position: absolute;
+      right: -15px;
+      top: 20px;
+      width: 30px;
+      height: 30px;
+      background: rgba(11, 177, 187, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+
+    .left-toggle:hover {
+      background: rgba(11, 177, 187, 1);
+      transform: scale(1.1);
+    }
+
+    .terminal-area {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .terminal-output {
+      font-size: 12px;
+      line-height: 1.4;
+      color: #e6e6e6;
+      min-height: 200px;
+    }
+
+    .terminal-line {
+      margin-bottom: 4px;
+    }
+
+    .prompt {
+      color: #50C878;
+    }
+
+    .path {
+      color: #4ECDC4;
+    }
+
+    .cursor {
+      color: #0bb1bb;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* Main Content Area */
+    .main-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .workspace {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Right Panel */
+    .right-panel {
+      width: 350px;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .right-panel.collapsed {
+      width: 0;
+      opacity: 0;
+      transform: translateX(100%);
+    }
+
+    .right-toggle {
+      position: absolute;
+      left: -15px;
+      top: 20px;
+      width: 30px;
+      height: 30px;
+      background: rgba(11, 177, 187, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+
+    .right-toggle:hover {
+      background: rgba(11, 177, 187, 1);
+      transform: scale(1.1);
+    }
+
+    .panel-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    /* Smart Input Bar */
+    .input-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .smart-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px 20px;
+      border-radius: 25px;
+      color: white;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+      font-family: 'Monaco', 'Menlo', monospace;
+    }
+
+    .smart-input:focus {
+      border-color: rgba(11, 177, 187, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 20px rgba(11, 177, 187, 0.2);
+    }
+
+    .smart-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .voice-btn {
+      width: 50px;
+      height: 50px;
+      background: rgba(11, 177, 187, 0.2);
+      border: 1px solid rgba(11, 177, 187, 0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .voice-btn:hover {
+      background: rgba(11, 177, 187, 0.4);
+      transform: scale(1.1);
+    }
+
+    .voice-btn.active {
+      background: rgba(255, 69, 87, 0.4);
+      border-color: rgba(255, 69, 87, 0.5);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 69, 87, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(255, 69, 87, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 69, 87, 0); }
+    }
+
+    .context-indicator {
+      font-size: 10px;
+      color: rgba(11, 177, 187, 0.8);
+      margin-right: 10px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .left-panel, .right-panel {
+        position: fixed;
+        height: 100vh;
+        z-index: 90;
+      }
+      
+      .left-panel {
+        left: 0;
+        top: 0;
+      }
+      
+      .right-panel {
+        right: 0;
+        top: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left Terminal Panel -->
+    <div class="left-panel" id="leftPanel">
+      <div class="left-toggle" onclick="toggleLeftPanel()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+          <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+        </svg>
+      </div>
+      
+      <div class="terminal-area">
+        <div class="terminal-output" id="terminalOutput">
+          <div class="terminal-line">
+            <span class="prompt">asoos@terminal</span><span style="color: #0bb1bb;">:</span><span class="path">~</span><span style="color: #e6e6e6;">$ </span><span class="cursor">_</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-area">
+      <div class="workspace" id="workspace">
+        Ready for natural language interaction...
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="right-panel" id="rightPanel">
+      <div class="right-toggle" onclick="toggleRightPanel()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
+          <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+        </svg>
+      </div>
+      
+      <div class="panel-content">
+        <div style="color: rgba(255,255,255,0.6); font-size: 14px;">
+          Context-aware assistance
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Smart Input Bar -->
+  <div class="input-bar">
+    <div class="context-indicator" id="contextIndicator">Natural</div>
+    <input type="text" class="smart-input" id="smartInput" placeholder="Type naturally or speak..." onkeypress="handleInput(event)" oninput="detectContext(this.value)">
+    <div class="voice-btn" id="voiceBtn" onclick="toggleVoice()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="rgba(11, 177, 187, 0.8)">
+        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+        <line x1="12" y1="19" x2="12" y2="23"/>
+        <line x1="8" y1="23" x2="16" y2="23"/>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    let leftPanelOpen = true;
+    let rightPanelOpen = true;
+    let voiceActive = false;
+    let recognition = null;
+
+    // Panel toggles
+    function toggleLeftPanel() {
+      const panel = document.getElementById('leftPanel');
+      leftPanelOpen = !leftPanelOpen;
+      panel.classList.toggle('collapsed', !leftPanelOpen);
+    }
+
+    function toggleRightPanel() {
+      const panel = document.getElementById('rightPanel');
+      rightPanelOpen = !rightPanelOpen;
+      panel.classList.toggle('collapsed', !rightPanelOpen);
+    }
+
+    // Smart context detection
+    function detectContext(input) {
+      const indicator = document.getElementById('contextIndicator');
+      const trimmed = input.trim().toLowerCase();
+      
+      if (!trimmed) {
+        indicator.textContent = 'Natural';
+        return;
+      }
+
+      // Code detection patterns
+      if (trimmed.includes('function ') || trimmed.includes('class ') || trimmed.includes('def ') || 
+          trimmed.includes('var ') || trimmed.includes('let ') || trimmed.includes('const ') ||
+          trimmed.includes('public ') || trimmed.includes('private ') || trimmed.includes('using ')) {
+        indicator.textContent = 'Code';
+      }
+      // Command detection
+      else if (trimmed.startsWith('sudo ') || trimmed.startsWith('cd ') || trimmed.startsWith('ls ') ||
+               trimmed.startsWith('git ') || trimmed.startsWith('npm ') || trimmed.startsWith('docker ') ||
+               trimmed.startsWith('kubectl ') || trimmed.startsWith('gcloud ')) {
+        indicator.textContent = 'Command';
+      }
+      // SQL detection
+      else if (trimmed.startsWith('select ') || trimmed.startsWith('update ') || 
+               trimmed.startsWith('insert ') || trimmed.startsWith('delete ')) {
+        indicator.textContent = 'SQL';
+      }
+      // Config detection
+      else if (trimmed.includes('{') && trimmed.includes('}') || 
+               trimmed.includes('apiVersion:') || trimmed.includes('kind:')) {
+        indicator.textContent = 'Config';
+      }
+      else {
+        indicator.textContent = 'Natural';
+      }
+    }
+
+    // Handle input
+    function handleInput(event) {
+      if (event.key === 'Enter') {
+        const input = event.target.value;
+        if (input.trim()) {
+          processInput(input);
+          event.target.value = '';
+          detectContext('');
+        }
+      }
+    }
+
+    // Process smart input
+    function processInput(input) {
+      const output = document.getElementById('terminalOutput');
+      const workspace = document.getElementById('workspace');
+      
+      // Add to terminal
+      const line = document.createElement('div');
+      line.className = 'terminal-line';
+      line.innerHTML = `<span class="prompt">asoos@terminal</span><span style="color: #0bb1bb;">:</span><span class="path">~</span><span style="color: #e6e6e6;">$ </span>${input}`;
+      
+      // Remove cursor from last line
+      const lastCursor = output.querySelector('.cursor');
+      if (lastCursor) lastCursor.remove();
+      
+      output.appendChild(line);
+      
+      // Add new cursor line
+      const cursorLine = document.createElement('div');
+      cursorLine.className = 'terminal-line';
+      cursorLine.innerHTML = `<span class="prompt">asoos@terminal</span><span style="color: #0bb1bb;">:</span><span class="path">~</span><span style="color: #e6e6e6;">$ </span><span class="cursor">_</span>`;
+      output.appendChild(cursorLine);
+      
+      // Update workspace
+      workspace.innerHTML = `Processing: ${input}...`;
+      
+      // Scroll terminal
+      output.scrollTop = output.scrollHeight;
+      
+      // Simulate response (replace with actual API call)
+      setTimeout(() => {
+        const response = document.createElement('div');
+        response.className = 'terminal-line';
+        response.style.color = '#50C878';
+        response.textContent = `✓ Understood: "${input}"`;
+        output.insertBefore(response, cursorLine);
+        
+        workspace.innerHTML = 'Ready for natural language interaction...';
+      }, 1000);
+    }
+
+    // Voice functionality
+    function toggleVoice() {
+      const btn = document.getElementById('voiceBtn');
+      const input = document.getElementById('smartInput');
+      
+      if (!voiceActive) {
+        startVoiceRecognition();
+        btn.classList.add('active');
+        input.placeholder = 'Listening...';
+        voiceActive = true;
+      } else {
+        stopVoiceRecognition();
+        btn.classList.remove('active');
+        input.placeholder = 'Type naturally or speak...';
+        voiceActive = false;
+      }
+    }
+
+    function startVoiceRecognition() {
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+        
+        recognition.onresult = function(event) {
+          const transcript = event.results[0][0].transcript;
+          const input = document.getElementById('smartInput');
+          input.value = transcript;
+          detectContext(transcript);
+          processInput(transcript);
+          input.value = '';
+          toggleVoice();
+        };
+        
+        recognition.onerror = function(event) {
+          console.error('Speech recognition error:', event.error);
+          toggleVoice();
+        };
+        
+        recognition.start();
+      }
+    }
+
+    function stopVoiceRecognition() {
+      if (recognition) {
+        recognition.stop();
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      // Focus input on load
+      document.getElementById('smartInput').focus();
+      
+      // Keyboard shortcuts
+      document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 'l') {
+          e.preventDefault();
+          toggleLeftPanel();
+        }
+        if (e.ctrlKey && e.key === 'r') {
+          e.preventDefault();
+          toggleRightPanel();
+        }
+        if (e.ctrlKey && e.key === ' ') {
+          e.preventDefault();
+          toggleVoice();
+        }
+      });
+    });
+  </script>
+</body>
+</html>

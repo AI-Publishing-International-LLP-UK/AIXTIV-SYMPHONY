@@ -568,22 +568,335 @@
       display: none;
     }
 
-    /* Panel Controls - On Panel Border */
-    .panel-controls {
-      position: absolute;
-      left: -20px;
-      top: 50%;
-      transform: translateY(-50%);
+    /* Learning Terminal Sidebar */
+    .learning-sidebar {
+      width: 350px;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(15px);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      z-index: 150;
-      background: rgba(0, 0, 0, 0.9);
-      padding: 4px 2px;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .learning-sidebar.collapsed {
+      width: 0;
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+
+    .learning-toggle {
+      position: absolute;
+      right: -15px;
+      top: 20px;
+      width: 30px;
+      height: 30px;
+      background: rgba(11, 177, 187, 0.8);
+      border-radius: 50%;
+      display: flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .learning-toggle:hover {
+      background: rgba(11, 177, 187, 1);
+      transform: scale(1.1);
+    }
+
+    .learning-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .learning-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .learning-title {
+      color: #0bb1bb;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .learning-terminal {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      border: 1px solid rgba(11, 177, 187, 0.2);
+    }
+
+    .learning-benefits {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #ccc;
+      padding: 6px 0;
+    }
+
+    /* Right Panel Toggle */
+    .right-panel-toggle {
+      position: absolute;
+      left: -15px;
+      top: 20px;
+      width: 30px;
+      height: 30px;
+      background: rgba(11, 177, 187, 0.8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .right-panel-toggle:hover {
+      background: rgba(11, 177, 187, 1);
+      transform: scale(1.1);
+    }
+
+    .right-panel.collapsed {
+      width: 0;
+      opacity: 0;
+      transform: translateX(100%);
+    }
+
+    /* PCP Communicators - Fixed at top right */
+    .pcp-communicators {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 6px;
+      z-index: 200;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 6px 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .pcp-hex {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      opacity: 0.6;
+    }
+
+    .pcp-hex:hover {
+      opacity: 0.9;
+      transform: scale(1.1);
+    }
+
+    .pcp-hex.speaking {
+      opacity: 1;
+      animation: pcpPulse 1.5s infinite;
+    }
+
+    @keyframes pcpPulse {
+      0%, 100% { 
+        opacity: 1; 
+        transform: scale(1.0); 
+        filter: brightness(1.2);
+      }
+      50% { 
+        opacity: 0.8; 
+        transform: scale(1.15); 
+        filter: brightness(1.5);
+      }
+    }
+
+    /* Dynamic Scan to Approve button in main content */
+    .scan-approve-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(11, 177, 187, 0.9);
+      padding: 12px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: none;
+      z-index: 100;
+    }
+
+    .scan-approve-overlay.active {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scan-approve-overlay:hover {
+      background: rgba(11, 177, 187, 1);
+      transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    /* Active PCP Status in Right Panel */
+    .active-pcp-status {
+      padding: 15px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 15px;
+    }
+
+    .pcp-status-title {
+      font-size: 10px;
+      color: #888;
+      font-weight: 600;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .pcp-badge {
+      background: rgba(11, 177, 187, 0.2);
+      border: 1px solid rgba(11, 177, 187, 0.3);
+      padding: 6px 12px;
+      border-radius: 6px;
+      color: #0bb1bb;
+      font-size: 11px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    /* PCP Communicators - Fixed at top */
+    .pcp-communicators {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      gap: 8px;
+      z-index: 200;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .pcp-hex {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      opacity: 0.7;
+    }
+
+    .pcp-hex:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .pcp-hex.speaking {
+      opacity: 1;
+      animation: pcpPulse 1.5s infinite;
+      transform: scale(1.2);
+    }
+
+    @keyframes pcpPulse {
+      0%, 100% { opacity: 1; transform: scale(1.2); }
+      50% { opacity: 0.8; transform: scale(1.3); }
+    }
+
+    /* Main content adjustments for collapsible panels */
+    .main-content {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Bottom input bar */
+    .bottom-input-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(15px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 150;
+    }
+
+    .context-indicator {
+      background: rgba(11, 177, 187, 0.2);
+      color: #0bb1bb;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 600;
+      min-width: 60px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .main-input {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 13px;
+      outline: none;
+      font-family: 'Monaco', 'Menlo', monospace;
+    }
+
+    .main-input:focus {
+      border-color: rgba(11, 177, 187, 0.5);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .voice-toggle {
+      background: rgba(255, 107, 53, 0.2);
+      border: 1px solid rgba(255, 107, 53, 0.4);
+      color: #ff6b35;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .voice-toggle:hover {
+      background: rgba(255, 107, 53, 0.3);
+    }
+
+    .voice-toggle.active {
+      background: rgba(255, 107, 53, 0.8);
+      animation: voicePulse 1s infinite;
+    }
+
+    @keyframes voicePulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
     }
 
     .panel-lock {
@@ -1286,153 +1599,96 @@
 
     <!-- Main Page -->
     <div id="mainPage" class="page active">
-      <!-- Sidebar with Squadron Icons -->
-      <div class="sidebar">
-        <div class="sidebar-icons">
-          <div class="sidebar-icon active" onclick="selectIcon(this, 'Communication', '01')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="1.8">
-              <circle cx="12" cy="12" r="10" fill="none" />
-              <path d="M9 11l2 2 4-4" stroke="white" stroke-width="1.5" fill="none"/>
-            </svg>
-            <div class="icon-tooltip">
-              <strong>Communication</strong><br>
-              <small>Automated Communication</small>
+      
+      <!-- Small PCP Communicators - Fixed at top right -->
+      <div class="pcp-communicators">
+        <div class="pcp-hex" data-pcp="QB" onclick="activateSRIX('QB', 'Dr. Lucy')" title="Dr. Lucy (QB RIX)">
+          <svg viewBox="0 0 60 60" style="width: 22px; height: 22px;">
+            <defs>
+              <linearGradient id="qbSmallGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#0bb1bb;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#qbSmallGradient)" stroke="#FFD700" stroke-width="1" opacity="0.9" />
+            <text x="30" y="32" text-anchor="middle" fill="white" font-size="8" font-weight="800">QB</text>
+          </svg>
+        </div>
+        
+        <div class="pcp-hex" data-pcp="SH" onclick="activateSRIX('SH', 'Dr. Claude')" title="Dr. Claude (SH RIX)">
+          <svg viewBox="0 0 60 60" style="width: 22px; height: 22px;">
+            <defs>
+              <linearGradient id="shSmallGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#shSmallGradient)" stroke="#4ECDC4" stroke-width="1" opacity="0.9" />
+            <text x="30" y="32" text-anchor="middle" fill="white" font-size="8" font-weight="800">SH</text>
+          </svg>
+        </div>
+        
+        <div class="pcp-hex" data-pcp="V36" onclick="activateVICTORY36('V36', 'Victory36')" title="Victory36 (MAESTRO)">
+          <svg viewBox="0 0 60 60" style="width: 22px; height: 22px;">
+            <defs>
+              <linearGradient id="v36SmallGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#50C878;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#c7b299;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#v36SmallGradient)" stroke="#50C878" stroke-width="1" opacity="0.9" />
+            <text x="30" y="32" text-anchor="middle" fill="white" font-size="6" font-weight="800">V36</text>
+          </svg>
+        </div>
+      </div>
+      <!-- Learning Terminal Sidebar -->
+      <div class="learning-sidebar" id="learningSidebar">
+        <!-- Toggle Button -->
+        <div class="learning-toggle" onclick="toggleLearningSidebar()" title="Toggle Learning Terminal">
+          <svg class="enterprise-icon" style="width: 14px; height: 14px; fill: rgba(11, 177, 187, 0.8);">
+            <use href="#icon-terminal"></use>
+          </svg>
+        </div>
+        
+        <!-- Learning Content -->
+        <div class="learning-content" id="learningContent">
+          <div class="learning-header">
+            <div class="learning-title">Learning Terminal</div>
+            <div class="learning-status">
+              <span style="color: #50C878; font-size: 8px;">●</span>
+              <span style="color: #888; font-size: 10px; margin-left: 4px;">Active</span>
             </div>
           </div>
           
-          <div class="sidebar-icon" onclick="selectIcon(this, 'Growth', '01')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#4ECDC4" stroke-width="1.8">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 8v4l3 3" stroke="white" stroke-width="1.5"/>
-            </svg>
-            <div class="icon-tooltip">
-              <strong>Growth</strong><br>
-              <small>Growth Revenues</small>
+          <!-- Terminal Output Area -->
+          <div class="learning-terminal" id="learningTerminal">
+            <div class="terminal-line">
+              <span style="color: #50C878;">asoos@learning</span><span style="color: #0bb1bb;">:</span><span style="color: #4ECDC4;">~</span><span style="color: #e6e6e6;">$ </span><span style="color: #fff;">ready for natural interaction</span>
+            </div>
+            <div class="terminal-line" style="margin-top: 10px; color: #888; font-size: 10px;">
+              Context-aware • Smart detection • Adaptive learning
             </div>
           </div>
           
-          <div class="sidebar-icon" onclick="selectIcon(this, 'Services', '03')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#45B7D1" stroke-width="1.8">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M8 12h8M12 8v8" stroke="white" stroke-width="1.5"/>
-            </svg>
-            <div class="icon-tooltip">
-              <strong>Services</strong><br>
-              <small>Client Services Innovation</small>
+          <!-- Learning Benefits Section -->
+          <div class="learning-benefits">
+            <div class="benefit-item">
+              <svg class="enterprise-icon" style="width: 12px; height: 12px; fill: #50C878;">
+                <use href="#icon-bolt"></use>
+              </svg>
+              <span>Auto-detects code, commands, SQL</span>
             </div>
-          </div>
-          
-          <div class="sidebar-icon" onclick="selectIcon(this, 'Automation', '02')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#96CEB4" stroke-width="1.8">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M12 6v6l4 2" stroke="white" stroke-width="1.5"/>
-            </svg>
-            <div class="icon-tooltip">
-              <strong>Automation</strong><br>
-              <small>Organizational Automation</small>
+            <div class="benefit-item">
+              <svg class="enterprise-icon" style="width: 12px; height: 12px; fill: #4ECDC4;">
+                <use href="#icon-cog"></use>
+              </svg>
+              <span>Natural language processing</span>
             </div>
-          </div>
-          
-          <div class="sidebar-icon" onclick="selectIcon(this, 'ROI', '02')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#FECA57" stroke-width="1.8">
-              <circle cx="12" cy="12" r="10" />
-              <circle cx="12" cy="12" r="3" stroke="white" fill="none" stroke-width="1.5"/>
-            </svg>
-            <div class="icon-tooltip">
-              <strong>ROI</strong><br>
-              <small>ROI Dashboard</small>
-            </div>
-          </div>
-          
-          <div class="sidebar-icon" onclick="selectIcon(this, 'Wish', '04')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#DDA0DD" stroke-width="1.8">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M7 12h10M7 8h10M7 16h10" stroke="white" stroke-width="1.5"/>
-            </svg>
-            <div class="icon-tooltip">
-              <strong>Wish</strong><br>
-              <small>Your Wish</small>
-            </div>
-          </div>
-          
-          <div class="sidebar-icon" onclick="toggleAcademy(this)">
-            <svg viewBox="0 0 24 24" fill="none" stroke="url(#turquoiseGradient)" stroke-width="1.8">
-              <defs>
-                <linearGradient id="turquoiseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#00CED1" />
-                  <stop offset="33%" stop-color="#40E0D0" />
-                  <stop offset="66%" stop-color="#48D1CC" />
-                  <stop offset="100%" stop-color="#0891a0" />
-                </linearGradient>
-              </defs>
-              <path d="M12 2L22 20H2L12 2z" fill="url(#turquoiseGradient)" fill-opacity="0.15" />
-            </svg>
-            <div class="icon-tooltip">
-              <strong>Academy</strong><br>
-              <small>Learning & Training</small>
-            </div>
-          </div>
-          
-          <!-- Gap before special features -->
-          <div style="height: 30px;"></div>
-          
-          <!-- Pilots Icon - More Commercial Design -->
-          <div class="sidebar-icon" onclick="openPilotsLounge()" style="display: flex;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="url(#pilotsGradient)" stroke-width="1.6">
-              <defs>
-                <linearGradient id="pilotsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#8B5CF6" />
-                  <stop offset="50%" stop-color="#EC4899" />
-                  <stop offset="100%" stop-color="#F59E0B" />
-                </linearGradient>
-              </defs>
-              <path d="M12 2l2.5 5 5.5 1-4 4 1 5.5-5-2.5-5 2.5 1-5.5-4-4 5.5-1z" fill="url(#pilotsGradient)" fill-opacity="0.2" stroke="url(#pilotsGradient)"/>
-              <circle cx="12" cy="10" r="2" fill="none" stroke="white" stroke-width="1"/>
-              <path d="M12 14c-2 0-3 1-3 2" stroke="white" stroke-width="1" fill="none"/>
-            </svg>
-            <div class="icon-tooltip">
-              <strong>Pilots' Lounge</strong><br>
-              <small>Elite Features</small>
-            </div>
-          </div>
-          
-          <!-- Gift Shop Icon - More Commercial Design -->
-          <div class="sidebar-icon" onclick="openGiftShop()" style="display: flex;">
-            <svg viewBox="0 0 24 24" fill="none" stroke="url(#giftGradient)" stroke-width="1.6">
-              <defs>
-                <linearGradient id="giftGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#FFD700" />
-                  <stop offset="50%" stop-color="#FF6B35" />
-                  <stop offset="100%" stop-color="#FF1744" />
-                </linearGradient>
-              </defs>
-              <path d="M12 2l2.5 5 5.5 1-4 4 1 5.5-5-2.5-5 2.5 1-5.5-4-4 5.5-1z" fill="url(#giftGradient)" fill-opacity="0.2" stroke="url(#giftGradient)"/>
-              <rect x="8" y="9" width="8" height="6" fill="none" stroke="white" stroke-width="1"/>
-              <path d="M12 9v6M8 12h8" stroke="white" stroke-width="1"/>
-            </svg>
-            <div class="icon-tooltip">
-              <strong>Gift Shop</strong><br>
-              <small>Premium Features</small>
-            </div>
-          </div>
-          
-          <!-- Settings Icon - Always Last -->
-          <div class="sidebar-icon settings-icon" onclick="openSettings()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="url(#settingsGradient)" stroke-width="1.8">
-              <defs>
-                <linearGradient id="settingsGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#FFD700" />
-                  <stop offset="25%" stop-color="#FF6B6B" />
-                  <stop offset="50%" stop-color="#4ECDC4" />
-                  <stop offset="75%" stop-color="#50C878" />
-                  <stop offset="100%" stop-color="#0bb1bb" />
-                </linearGradient>
-              </defs>
-              <path d="M12 2l3 7 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z" fill="url(#settingsGradient)" fill-opacity="0.2" />
-            </svg>
-            <div class="icon-tooltip">
-              <strong>Settings & Configuration</strong><br>
-              <small>Diamond SAO</small>
+            <div class="benefit-item">
+              <svg class="enterprise-icon" style="width: 12px; height: 12px; fill: #FFD700;">
+                <use href="#icon-comments"></use>
+              </svg>
+              <span>Contextual understanding</span>
             </div>
           </div>
         </div>
@@ -1739,92 +1995,18 @@
           
           <!-- Right Panel (Automated) -->
           <div class="right-panel" id="rightPanel">
-            <!-- Always Visible Panel Controls (On Panel Border) -->
-            <div class="panel-controls">
-              <button class="panel-toggle-btn" onclick="toggleRightPanelSize()" title="Expand/Collapse Panel">
-                <svg class="enterprise-icon" id="panelToggleIcon" fill="rgba(255, 255, 255, 0.7)" style="width: 12px; height: 12px;">
-                  <use href="#icon-bars"></use>
-                </svg>
-              </button>
-              <button class="panel-lock" id="panelLock" onclick="togglePanelLock(this)" title="Lock/Unlock Panel">
-                <svg class="enterprise-icon" fill="rgba(255, 255, 255, 0.7)" style="width: 12px; height: 12px;">
-                  <use href="#icon-lock"></use>
-                </svg>
-              </button>
+            <!-- Simple Close/Open Button -->
+            <div class="right-panel-toggle" onclick="toggleRightPanel()" title="Close/Open Panel">
+              <svg class="enterprise-icon" style="width: 14px; height: 14px; fill: rgba(11, 177, 187, 0.8);">
+                <use href="#icon-times"></use>
+              </svg>
             </div>
-            <!-- Copilot Section (Always at Top) -->
-            <div class="copilot-section">
-              <div class="copilot-title">YOUR AI COPILOTS</div>
-              <div class="copilot-hex-container">
-                <div class="copilot-hex-item active" onclick="activateSRIX('QB', 'Dr. Lucy')">
-                  <div class="copilot-hex">
-                    <svg viewBox="0 0 60 60" style="width: 45px; height: 45px;">
-                      <defs>
-                        <linearGradient id="qbGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
-                          <stop offset="100%" style="stop-color:#0bb1bb;stop-opacity:1" />
-                        </linearGradient>
-                      </defs>
-                      <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#qbGradient)" stroke="#FFD700" stroke-width="2" opacity="0.9" />
-                      <text x="30" y="26" text-anchor="middle" fill="white" font-size="12" font-weight="800">QB</text>
-                      
-                    </svg>
-                    <div class="copilot-status"></div>
-                  </div>
-                  <div class="copilot-name">Dr. Lucy</div>
-                  <div class="copilot-title">sRIX</div>
-                </div>
-                
-                <div class="copilot-hex-item" onclick="activateSRIX('SH', 'Dr. Claude')" id="shRix">
-                  <div class="copilot-hex">
-                    <svg viewBox="0 0 60 60" style="width: 50px; height: 50px;">
-                      <defs>
-                        <linearGradient id="shGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
-                          <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
-                        </linearGradient>
-                      </defs>
-                      <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#shGradient)" stroke="#4ECDC4" stroke-width="2" opacity="0.9" />
-                      <text x="30" y="26" text-anchor="middle" fill="white" font-size="12" font-weight="800">SH</text>
-                     
-                    </svg>
-                    <div class="copilot-status"></div>
-                  </div>
-                  <div class="copilot-name">Dr. Claude</div>
-                  <div class="copilot-title">sRIX</div>
-                </div>
-                
-                <div class="copilot-hex-item" onclick="activateVICTORY36('V36', 'Victory36')" id="mRix">
-                  <div class="copilot-hex">
-                    <svg viewBox="0 0 60 60" style="width: 50px; height: 50px;">
-                      <defs>
-                        <linearGradient id="mGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" style="stop-color:#50C878;stop-opacity:1" />
-                          <stop offset="100%" style="stop-color:#c7b299;stop-opacity:1" />
-                        </linearGradient>
-                      </defs>
-                      <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#mGradient)" stroke="#50C878" stroke-width="2" opacity="0.9" />
-                      <text x="30" y="32" text-anchor="middle" fill="#888" font-size="8" font-weight="600">V36</text>
-                    </svg>
-                    <div class="copilot-status"></div>
-                  </div>
-                  <div class="copilot-name">Victory36</div>
-                  <div class="copilot-title">MAESTRO</div>
-                </div>
-              </div>
-              <div class="active-copilot-display">
-                <div class="copilot-badge">
-                  <span id="activeRixDisplay">QB RIX Active</span>
-                </div>
-                <div class="scan-approve-btn" onclick="toggleScanToApprove(this)">
-                  <div class="scan-approve-content">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <path d="M3 9V5a2 2 0 0 1 2-2h4M3 15v4a2 2 0 0 0 2 2h4M15 3h4a2 2 0 0 1 2 2v4M15 21h4a2 2 0 0 0 2-2v-4"/>
-                      <path d="M9 12h6M12 9v6"/>
-                    </svg>
-                    <span>SCAN TO APPROVE</span>
-                  </div>
-                </div>
+            
+            <!-- Active PCP Status -->
+            <div class="active-pcp-status">
+              <div class="pcp-status-title">ACTIVE PCP</div>
+              <div class="pcp-badge">
+                <span id="activeRixDisplay">QB RIX Active</span>
               </div>
             </div>
 
@@ -6810,6 +6992,275 @@ console.log('   • No more ElevenLabs popups');
 console.log('   • Promise errors automatically healed');
 console.log('   • Self-healing API key management');
 console.log('   • OAuth integration ready');
+
+// Enhanced Panel System Functions
+function toggleLearningSidebar() {
+  const sidebar = document.getElementById('learning-sidebar');
+  const mainContent = document.querySelector('.main-content');
+  
+  if (sidebar && mainContent) {
+    sidebar.classList.toggle('collapsed');
+    // Adjust main content width when sidebar collapses
+    if (sidebar.classList.contains('collapsed')) {
+      mainContent.style.marginLeft = '0';
+    } else {
+      mainContent.style.marginLeft = '350px';
+    }
+  }
+}
+
+function toggleRightPanel() {
+  const panel = document.getElementById('rightPanel');
+  const mainContent = document.querySelector('.main-content');
+  const pcpCommunicators = document.querySelector('.pcp-communicators');
+  
+  if (panel && mainContent) {
+    panel.classList.toggle('collapsed');
+    // PCP communicators stay visible even when panel is collapsed
+    if (pcpCommunicators) {
+      pcpCommunicators.style.display = 'flex';
+    }
+    
+    // Adjust main content width when right panel collapses
+    if (panel.classList.contains('collapsed')) {
+      mainContent.style.marginRight = '60px'; // Space for PCP communicators only
+    } else {
+      mainContent.style.marginRight = '380px';
+    }
+  }
+}
+
+// Smart Input System with @ Menu
+let atMenuActive = false;
+let atMenuPosition = { x: 0, y: 0 };
+
+function handleSmartInput(event) {
+  const input = event.target;
+  const value = input.value;
+  const cursorPos = input.selectionStart;
+  
+  // Detect @ symbol for contextual menu
+  if (event.key === '@') {
+    showAtMenu(input);
+    atMenuActive = true;
+  } else if (atMenuActive && (event.key === 'Escape' || event.key === ' ')) {
+    hideAtMenu();
+    atMenuActive = false;
+  }
+  
+  // Smart context detection
+  detectInputContext(value);
+}
+
+function showAtMenu(input) {
+  const rect = input.getBoundingClientRect();
+  const menu = document.getElementById('at-menu') || createAtMenu();
+  
+  menu.style.left = rect.left + 'px';
+  menu.style.top = (rect.top - menu.offsetHeight) + 'px';
+  menu.style.display = 'block';
+}
+
+function hideAtMenu() {
+  const menu = document.getElementById('at-menu');
+  if (menu) {
+    menu.style.display = 'none';
+  }
+}
+
+function createAtMenu() {
+  const menu = document.createElement('div');
+  menu.id = 'at-menu';
+  menu.className = 'at-menu';
+  menu.innerHTML = `
+    <div class="at-menu-item" onclick="insertAtCommand('@my-team')">
+      <svg width="12" height="12" fill="#0bb1bb"><use href="#icon-comments"></use></svg>
+      @my-team
+    </div>
+    <div class="at-menu-item" onclick="insertAtCommand('@my-department')">
+      <svg width="12" height="12" fill="#0bb1bb"><use href="#icon-lightbulb"></use></svg>
+      @my-department
+    </div>
+    <div class="at-menu-item" onclick="insertAtCommand('@recent-changes')">
+      <svg width="12" height="12" fill="#0bb1bb"><use href="#icon-chart-line"></use></svg>
+      @recent-changes
+    </div>
+    <div class="at-menu-item" onclick="insertAtCommand('@help')">
+      <svg width="12" height="12" fill="#0bb1bb"><use href="#icon-bullseye"></use></svg>
+      @help
+    </div>
+  `;
+  
+  // Add CSS for the menu
+  const style = document.createElement('style');
+  style.textContent = `
+    .at-menu {
+      position: fixed;
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid rgba(11, 177, 187, 0.3);
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: none;
+      min-width: 180px;
+    }
+    .at-menu-item {
+      padding: 8px 12px;
+      color: #ccc;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      transition: all 0.2s;
+    }
+    .at-menu-item:hover {
+      background: rgba(11, 177, 187, 0.2);
+      color: #0bb1bb;
+    }
+  `;
+  
+  document.head.appendChild(style);
+  document.body.appendChild(menu);
+  return menu;
+}
+
+function insertAtCommand(command) {
+  const input = document.querySelector('.main-input') || document.getElementById('cliInput');
+  if (input) {
+    input.value += command + ' ';
+    input.focus();
+  }
+  hideAtMenu();
+  atMenuActive = false;
+}
+
+function detectInputContext(value) {
+  const contextIndicator = document.querySelector('.context-indicator');
+  if (!contextIndicator) return;
+  
+  let context = 'natural';
+  let color = '#0bb1bb';
+  
+  if (value.startsWith('$') || value.startsWith('cd ') || value.startsWith('ls ')) {
+    context = 'shell';
+    color = '#50C878';
+  } else if (value.includes('function') || value.includes('const ') || value.includes('import ')) {
+    context = 'code';
+    color = '#8b5cf6';
+  } else if (value.includes('<?') || value.includes('<html') || value.includes('<!DOCTYPE')) {
+    context = 'markup';
+    color = '#ff6b35';
+  } else if (value.startsWith('@')) {
+    context = 'contextual';
+    color = '#FFD700';
+  }
+  
+  contextIndicator.textContent = context.toUpperCase();
+  contextIndicator.style.color = color;
+}
+
+// PCP Communicator Functions
+function lightUpPCP(pcpId, duration = 2000) {
+  const pcp = document.querySelector(`[data-pcp="${pcpId}"]`);
+  if (pcp) {
+    pcp.classList.add('speaking');
+    setTimeout(() => {
+      pcp.classList.remove('speaking');
+    }, duration);
+  }
+}
+
+// Dynamic Scan to Approve functionality
+function showScanToApprove(projectData) {
+  const overlay = document.querySelector('.scan-approve-overlay') || createScanOverlay();
+  overlay.classList.add('active');
+  overlay.setAttribute('data-project', JSON.stringify(projectData));
+}
+
+function hideScanToApprove() {
+  const overlay = document.querySelector('.scan-approve-overlay');
+  if (overlay) {
+    overlay.classList.remove('active');
+  }
+}
+
+function createScanOverlay() {
+  const overlay = document.createElement('div');
+  overlay.className = 'scan-approve-overlay';
+  overlay.innerHTML = `
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M3 9V5a2 2 0 0 1 2-2h4M3 15v4a2 2 0 0 0 2 2h4M15 3h4a2 2 0 0 1 2 2v4M15 21h4a2 2 0 0 0 2-2v-4"/>
+      <path d="M9 12h6M12 9v6"/>
+    </svg>
+    <span>SCAN TO APPROVE</span>
+  `;
+  
+  overlay.addEventListener('click', function() {
+    const projectData = JSON.parse(this.getAttribute('data-project') || '{}');
+    handleProjectApproval(projectData);
+    hideScanToApprove();
+  });
+  
+  document.querySelector('.main-content').appendChild(overlay);
+  return overlay;
+}
+
+function handleProjectApproval(projectData) {
+  console.log('📋 Project Approved:', projectData);
+  lightUpPCP(activeRIX || 'QB', 1000);
+  // Here you would integrate with your project management system
+  // Update project status, notify team members, log to historical record
+}
+
+// Project Management Integration
+function updateProjectStatus(projectId, phase, status) {
+  // This will integrate with your real project data
+  const projectUpdate = {
+    id: projectId,
+    phase: phase,
+    status: status,
+    timestamp: new Date().toISOString(),
+    approver: 'Diamond SAO'
+  };
+  
+  console.log('📊 Project Status Updated:', projectUpdate);
+  // Send to your project management backend
+}
+
+function logHistoricalWork(workData) {
+  // Log completed work to historical record
+  const historicalEntry = {
+    ...workData,
+    completedAt: new Date().toISOString(),
+    completedBy: 'Diamond SAO Command Center'
+  };
+  
+  console.log('📚 Work Logged to Historical Record:', historicalEntry);
+}
+
+// Initialize enhanced features on load
+document.addEventListener('DOMContentLoaded', function() {
+  // Add event listeners for smart input
+  const inputs = document.querySelectorAll('input[type="text"], textarea');
+  inputs.forEach(input => {
+    input.addEventListener('keydown', handleSmartInput);
+  });
+  
+  // Create scan overlay container
+  const mainContent = document.querySelector('.main-content');
+  if (mainContent && mainContent.style.position !== 'relative') {
+    mainContent.style.position = 'relative';
+  }
+  
+  console.log('✅ Enhanced Panel System Initialized');
+  console.log('   • Learning Terminal with collapsible sidebar');
+  console.log('   • Smart @ menu system');
+  console.log('   • Context-aware input detection');
+  console.log('   • PCP communicator lighting system');
+  console.log('   • Dynamic project approval system');
+  console.log('   • Historical work logging');
+});
 
 </script>
 </body>

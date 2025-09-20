@@ -73,6 +73,7 @@ COPY --from=dependencies --chown=mcpuser:nodejs /app/node_modules ./node_modules
 # Copy application code
 COPY --chown=mcpuser:nodejs src/ ./src/
 COPY --chown=mcpuser:nodejs scripts/ ./scripts/
+COPY --chown=mcpuser:nodejs config/ ./config/
 COPY --chown=mcpuser:nodejs package*.json ./
 
 # Create necessary directories

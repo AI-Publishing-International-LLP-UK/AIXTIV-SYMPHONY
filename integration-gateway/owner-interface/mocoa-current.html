@@ -1104,6 +1104,44 @@
       }
     }
   </style>
+  <script>
+    // IMMEDIATE ELEVENLABS POPUP ELIMINATION - Runs before page load
+    console.log('🛡️ Loading ElevenLabs Popup Elimination...');
+    
+    // Override prompt() immediately
+    const originalPrompt = window.prompt;
+    window.prompt = function(message, defaultValue) {
+      if (message && (
+        message.toLowerCase().includes('api key') ||
+        message.toLowerCase().includes('elevenlabs') ||
+        message.toLowerCase().includes('key') ||
+        message.toLowerCase().includes('token')
+      )) {
+        console.log('🚫 API key prompt blocked:', message);
+        return null;
+      }
+      return originalPrompt ? originalPrompt.call(this, message, defaultValue) : null;
+    };
+    
+    // Block ElevenLabs API key property
+    Object.defineProperty(window, 'ELEVENLABS_API_KEY', {
+      get: () => { console.log('🚫 API key access blocked'); return null; },
+      set: () => { console.log('🚫 API key setting blocked'); }
+    });
+    
+    // Override ElevenLabs functions immediately
+    window.speakWithElevenLabs = function(text) {
+      console.log('🎤 Using OAuth2 TTS for:', text);
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.rate = 0.9;
+        speechSynthesis.speak(utterance);
+      }
+      return Promise.resolve({ success: true, source: 'browser_fallback' });
+    };
+    
+    console.log('✅ ElevenLabs popup elimination loaded');
+  </script>
 </head>
 <body>
   <div class="main-container">

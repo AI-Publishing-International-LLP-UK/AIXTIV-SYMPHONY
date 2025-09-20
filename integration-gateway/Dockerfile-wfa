@@ -1,3 +1,15 @@
+
+# Security Note: Sensitive environment variables are set at runtime
+# Use Docker secrets or runtime environment injection:
+# docker run -e ELEVENLABS_AUTH_MODE=oauth2 -e DISABLE_API_KEY_POPUPS=true <image>
+
+# Security Note: Sensitive environment variables are set at runtime
+# Use Docker secrets or runtime environment injection:
+# docker run -e ELEVENLABS_AUTH_MODE=oauth2 -e DISABLE_API_KEY_POPUPS=true <image>
+
+# Security Note: Sensitive environment variables are set at runtime
+# Use Docker secrets or runtime environment injection:
+# docker run -e ELEVENLABS_AUTH_MODE=oauth2 -e DISABLE_API_KEY_POPUPS=true <image>
 # WFA PRODUCTION SWARM - CLOUD RUN DOCKERFILE
 # Optimized for 20M agents, 200 sectors, Victory36 protection
 # Commander: Phillip Corey Roark

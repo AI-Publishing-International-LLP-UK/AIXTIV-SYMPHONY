@@ -244,9 +244,42 @@ class ElevenLabsSelfHealer {
   }
 
   /**
+   * Find an available port starting from the given port
+   */
+  async findAvailablePort(startPort = 8081) {
+    const net = await import('net');
+    
+    return new Promise((resolve, reject) => {
+      const server = net.createServer();
+      
+      server.listen(startPort, (err) => {
+        if (err) {
+          server.close();
+          if (startPort < 8090) {
+            // Try the next port
+            this.findAvailablePort(startPort + 1).then(resolve).catch(reject);
+          } else {
+            reject(new Error(`No available ports found between 8081-8090`));
+          }
+        } else {
+          const port = server.address().port;
+          server.close(() => {
+            resolve(port);
+          });
+        }
+      });
+    });
+  }
+
+  /**
    * Start HTTP server for Cloud Run health checks
    */
-  startHttpServer(port = 8080) {
+  async startHttpServer(port = null) {
+    // If no port specified, find an available one starting from 8081
+    if (!port) {
+      port = await this.findAvailablePort();
+    }
+    
     const server = http.createServer(async (req, res) => {
       try {
         if (req.url === '/health' && req.method === 'GET') {
@@ -267,7 +300,8 @@ class ElevenLabsSelfHealer {
             uptime: process.uptime(),
             timestamp: new Date().toISOString(),
             oauth2Enabled: this.oauth2Enabled,
-            lastValidation: this.keyValidationTimestamp ? new Date(this.keyValidationTimestamp).toISOString() : null
+            lastValidation: this.keyValidationTimestamp ? new Date(this.keyValidationTimestamp).toISOString() : null,
+            port: port
           }));
         } else {
           res.writeHead(404, { 'Content-Type': 'application/json' });
@@ -280,13 +314,24 @@ class ElevenLabsSelfHealer {
       }
     });
 
-    server.listen(port, '0.0.0.0', () => {
-      logger.info(`🌐 HTTP server listening on port ${port}`);
-      logger.info(`📍 Health endpoint: http://0.0.0.0:${port}/health`);
-      logger.info(`📍 Status endpoint: http://0.0.0.0:${port}/status`);
+    return new Promise((resolve, reject) => {
+      server.listen(port, '0.0.0.0', (err) => {
+        if (err) {
+          logger.error(`❌ Failed to start server on port ${port}:`, err.message);
+          reject(err);
+        } else {
+          logger.info(`🌐 HTTP server listening on port ${port}`);
+          logger.info(`📍 Health endpoint: http://0.0.0.0:${port}/health`);
+          logger.info(`📍 Status endpoint: http://0.0.0.0:${port}/status`);
+          resolve(server);
+        }
+      });
+      
+      server.on('error', (err) => {
+        logger.error('❌ HTTP server error:', err.message);
+        reject(err);
+      });
     });
-
-    return server;
   }
 
   /**
@@ -333,7 +378,7 @@ if (isMainModule) {
     try {
       if (args.includes('--start-monitoring')) {
         healer.startSelfMonitoring();
-        healer.startHttpServer();
+        await healer.startHttpServer();
       } else if (args.includes('--health-check')) {
         const result = await healer.performHealthCheck();
         console.log('Health check result:', JSON.stringify(result, null, 2));

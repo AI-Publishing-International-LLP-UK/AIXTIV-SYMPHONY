@@ -641,28 +641,100 @@ class LoadBalancer {
   async performHealthChecks() {
     for (const endpoint of this.endpoints) {
       try {
+        // Skip health check for endpoints that are known to be missing
+        if (endpoint.skipHealthCheck) {
+          endpoint.healthy = false;
+          endpoint.lastHealthCheck = Date.now();
+          console.info(`⚠️  Skipping health check for ${endpoint.url} - service not deployed`);
+          continue;
+        }
+
         const start = performance.now();
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+        
         const response = await fetch(`${endpoint.url}/health`, {
           method: 'GET',
-          timeout: 5000
+          signal: controller.signal,
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': 'CTTT-HealthChecker/1.0'
+          }
         });
         
+        clearTimeout(timeoutId);
         const responseTime = performance.now() - start;
         endpoint.responseTime.push(responseTime);
         endpoint.responseTime = endpoint.responseTime.slice(-10); // Keep last 10
         endpoint.healthy = response.ok;
         endpoint.lastHealthCheck = Date.now();
         
+        if (response.ok) {
+          console.log(`✅ Health check passed for ${endpoint.url} (${Math.round(responseTime)}ms)`);
+        } else {
+          console.warn(`⚠️  Health check failed for ${endpoint.url}: HTTP ${response.status}`);
+        }
+        
       } catch (error) {
         endpoint.healthy = false;
         endpoint.lastHealthCheck = Date.now();
-        console.warn(`Health check failed for ${endpoint.url}:`, error.message);
+        
+        // Handle specific error types
+        if (error.name === 'AbortError') {
+          console.warn(`⏱️  Health check timeout for ${endpoint.url}`);
+        } else if (error.message.includes('Failed to fetch') || error.message.includes('fetch')) {
+          console.warn(`🚫 Service unavailable: ${endpoint.url} - marking for deployment`);
+          endpoint.needsDeployment = true;
+        } else {
+          console.warn(`❌ Health check failed for ${endpoint.url}:`, error.message);
+        }
       }
     }
+    
+    // Trigger auto-deployment for missing services
+    this.handleMissingServices();
   }
 
   getActiveConnections() {
     return this.endpoints.reduce((total, e) => total + e.connections, 0);
+  }
+
+  handleMissingServices() {
+    const missingServices = this.endpoints.filter(e => e.needsDeployment);
+    if (missingServices.length > 0) {
+      console.log(`🚀 Found ${missingServices.length} services that need deployment:`);
+      missingServices.forEach(service => {
+        console.log(`   - ${service.url}`);
+        this.deployMissingService(service);
+      });
+    }
+  }
+
+  async deployMissingService(service) {
+    try {
+      // Extract service name from URL
+      const serviceName = service.url.replace('https://', '').split('.')[0];
+      console.log(`🔧 Auto-deploying missing service: ${serviceName}`);
+      
+      // Trigger CI/CD deployment via webhook or API
+      const deploymentResponse = await fetch('/api/deploy-service', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          serviceName: serviceName,
+          region: 'us-west1',
+          priority: 'high-speed'
+        })
+      });
+      
+      if (deploymentResponse.ok) {
+        console.log(`✅ Deployment triggered for ${serviceName}`);
+        service.needsDeployment = false;
+        service.deploymentTriggered = Date.now();
+      }
+    } catch (error) {
+      console.error(`❌ Failed to trigger deployment for ${service.url}:`, error.message);
+    }
   }
 
   optimizeRouting() {

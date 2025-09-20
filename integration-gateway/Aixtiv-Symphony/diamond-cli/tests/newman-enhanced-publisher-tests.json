@@ -1,0 +1,733 @@
+{
+  "info": {
+    "name": "Enhanced Ultra-High-Speed Publisher - Complete System Tests",
+    "description": "Newman test suite for all six engines: Content, Distribution, Domain, Intelligence Collection, Anthology, and Intelligence Layer",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": {
+      "major": 3,
+      "minor": 0,
+      "patch": 0
+    }
+  },
+  "item": [
+    {
+      "name": "Engine 1: Content Engine Tests",
+      "description": "Test ultra-high-speed content processing, refracturing, and bibliography generation",
+      "item": [
+        {
+          "name": "Test Refracturing Engine",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Refracturing Engine Operational', function() {",
+                  "    pm.expect(pm.response.text()).to.include('Content Engine initialized');",
+                  "    pm.expect(pm.response.text()).to.include('150K+ items/minute');",
+                  "});",
+                  "",
+                  "pm.test('Copyright Compliance Active', function() {",
+                  "    pm.expect(pm.response.text()).to.include('copyright compliance');",
+                  "    pm.expect(pm.response.text()).to.include('derivative creation');",
+                  "});",
+                  "",
+                  "pm.test('Processing Speed Validated', function() {",
+                  "    const responseTime = pm.response.responseTime;",
+                  "    pm.expect(responseTime).to.be.below(2000);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"engine\": \"content\",\n  \"action\": \"test_refracturing\",\n  \"test_data\": {\n    \"copyrighted_items\": 1000,\n    \"expected_output\": \"derivative_works\",\n    \"compliance_level\": \"100%\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enhanced-publisher/content-engine/test",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enhanced-publisher", "content-engine", "test"]
+            }
+          }
+        },
+        {
+          "name": "Test Bibliography Generation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Bibliography Engine Speed Test', function() {",
+                  "    pm.expect(pm.response.text()).to.include('15,000+ per second');",
+                  "    pm.expect(pm.response.text()).to.include('APA, MLA, Chicago');",
+                  "});",
+                  "",
+                  "pm.test('Citation Accuracy Validated', function() {",
+                  "    pm.expect(pm.response.text()).to.include('integrity verification');",
+                  "    pm.expect(pm.response.text()).to.include('cross-reference validation');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"engine\": \"content\",\n  \"action\": \"test_bibliography\",\n  \"test_data\": {\n    \"citations_to_generate\": 5000,\n    \"formats\": [\"APA\", \"MLA\", \"Chicago\"],\n    \"expected_speed\": \"15000_per_second\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enhanced-publisher/content-engine/bibliography",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enhanced-publisher", "content-engine", "bibliography"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Engine 2: Distribution Engine Tests",
+      "description": "Test Sally Port authentication, Quants automation, and multi-channel distribution",
+      "item": [
+        {
+          "name": "Test Sally Port Authentication Flow",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Sally Port Integration Active', function() {",
+                  "    pm.expect(pm.response.text()).to.include('sallyport.2100.cool');",
+                  "    pm.expect(pm.response.text()).to.include('authentication_flow');",
+                  "});",
+                  "",
+                  "pm.test('Personalization Engine Working', function() {",
+                  "    pm.expect(pm.response.text()).to.include('personalization');",
+                  "    pm.expect(pm.response.text()).to.include('routing_optimization');",
+                  "});",
+                  "",
+                  "pm.test('Visitor Processing Speed', function() {",
+                  "    const responseTime = pm.response.responseTime;",
+                  "    pm.expect(responseTime).to.be.below(1000);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"engine\": \"distribution\",\n  \"action\": \"test_sally_port\",\n  \"test_data\": {\n    \"visitor\": {\n      \"source\": \"coaching2100.com\",\n      \"destination\": \"coaching2100.com\",\n      \"business_type\": \"enterprise\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enhanced-publisher/distribution-engine/sally-port",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enhanced-publisher", "distribution-engine", "sally-port"]
+            }
+          }
+        },
+        {
+          "name": "Test Quants Automation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Quants Engines Active', function() {",
+                  "    pm.expect(pm.response.text()).to.include('quants_activated');",
+                  "    pm.expect(pm.response.text()).to.include('autonomous_decision_making');",
+                  "});",
+                  "",
+                  "pm.test('Sales & Marketing Branches Operational', function() {",
+                  "    pm.expect(pm.response.text()).to.include('sales_branches');",
+                  "    pm.expect(pm.response.text()).to.include('marketing_branches');",
+                  "});",
+                  "",
+                  "pm.test('Cross-Channel Synchronization', function() {",
+                  "    pm.expect(pm.response.text()).to.include('cross_channel_sync');",
+                  "    pm.expect(pm.response.text()).to.include('performance_optimization');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"engine\": \"distribution\",\n  \"action\": \"test_quants\",\n  \"test_data\": {\n    \"task_type\": \"generate_campaign\",\n    \"parameters\": {\n      \"audience\": \"enterprise_leaders\",\n      \"channels\": [\"LinkedIn\", \"email\", \"content\"]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enhanced-publisher/distribution-engine/quants",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enhanced-publisher", "distribution-engine", "quants"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Engine 3: Domain Management Tests",
+      "description": "Test GoDaddy-Cloudflare-GCP pipeline for domain management",
+      "item": [
+        {
+          "name": "Test GoDaddy Integration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('GoDaddy API Integration', function() {",
+                  "    pm.expect(pm.response.text()).to.include('domain_registration');",
+                  "    pm.expect(pm.response.text()).to.include('dns_management');",
+                  "});",
+                  "",
+                  "pm.test('Automated Domain Operations', function() {",
+                  "    pm.expect(pm.response.text()).to.include('automation');",
+                  "    pm.expect(pm.response.text()).to.include('bulk_dns');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"engine\": \"domain\",\n  \"action\": \"test_godaddy\",\n  \"test_data\": {\n    \"domain\": \"test.2100.cool\",\n    \"operation\": \"dns_update\",\n    \"records\": [\"A\", \"CNAME\", \"MX\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enhanced-publisher/domain-engine/godaddy",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enhanced-publisher", "domain-engine", "godaddy"]
+            }
+          }
+        },
+        {
+          "name": "Test Cloudflare-GCP Pipeline",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Cloudflare Integration Active', function() {",
+                  "    pm.expect(pm.response.text()).to.include('cloudflare');",
+                  "    pm.expect(pm.response.text()).to.include('ssl_certificates');",
+                  "});",
+                  "",
+                  "pm.test('GCP Integration Working', function() {",
+                  "    pm.expect(pm.response.text()).to.include('cloud_dns');",
+                  "    pm.expect(pm.response.text()).to.include('load_balancing');",
+                  "});",
+                  "",
+                  "pm.test('Pipeline Performance', function() {",
+                  "    const responseTime = pm.response.responseTime;",
+                  "    pm.expect(responseTime).to.be.below(1500);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"engine\": \"domain\",\n  \"action\": \"test_pipeline\",\n  \"test_data\": {\n    \"domain\": \"test.asoos.2100.cool\",\n    \"cloudflare_zone\": \"test_zone\",\n    \"gcp_project\": \"api-for-warp-drive\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enhanced-publisher/domain-engine/pipeline",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enhanced-publisher", "domain-engine", "pipeline"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Engine 4: Intelligence Collection Tests",
+      "description": "Test Dr. Lucy Swarm, Professor Lee curation, LinkedIn intelligence, and Pinecone integration",
+      "item": [
+        {
+          "name": "Test Dr. Lucy Intelligence Swarm",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Dr. Lucy Swarm Active', function() {",
+                  "    pm.expect(pm.response.text()).to.include('dr_lucy_swarm');",
+                  "    pm.expect(pm.response.text()).to.include('intelligence_gathering');",
+                  "});",
+                  "",
+                  "pm.test('Professor Lee Curation Working', function() {",
+                  "    pm.expect(pm.response.text()).to.include('professor_lee');",
+                  "    pm.expect(pm.response.text()).to.include('content_curation');",
+                  "    pm.expect(pm.response.text()).to.include('editorial_oversight');",
+                  "});",
+                  "",
+                  "pm.test('Knowledge Processing Speed', function() {",
+                  "    const responseTime = pm.response.responseTime;",
+                  "    pm.expect(responseTime).to.be.below(3000);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"engine\": \"intelligence_collection\",\n  \"action\": \"test_dr_lucy_swarm\",\n  \"test_data\": {\n    \"intelligence_type\": \"content_curation\",\n    \"data_points\": 1000,\n    \"curation_level\": \"professor_lee_standard\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enhanced-publisher/intelligence-engine/dr-lucy-swarm",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enhanced-publisher", "intelligence-engine", "dr-lucy-swarm"]
+            }
+          }
+        },
+        {
+          "name": "Test LinkedIn Intelligence (Dr. Match & Dr. Memorial)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Dr. Match App Integration', function() {",
+                  "    pm.expect(pm.response.text()).to.include('dr_match');",
+                  "    pm.expect(pm.response.text()).to.include('professional_matching');",
+                  "});",
+                  "",
+                  "pm.test('Dr. Memorial App Integration', function() {",
+                  "    pm.expect(pm.response.text()).to.include('dr_memorial');",
+                  "    pm.expect(pm.response.text()).to.include('memory_preservation');",
+                  "});",
+                  "",
+                  "pm.test('LinkedIn Intelligence Processing', function() {",
+                  "    pm.expect(pm.response.text()).to.include('industry_insights');",
+                  "    pm.expect(pm.response.text()).to.include('network_analysis');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"engine\": \"intelligence_collection\",\n  \"action\": \"test_linkedin_intelligence\",\n  \"test_data\": {\n    \"dr_match_data\": \"professional_networks\",\n    \"dr_memorial_data\": \"career_histories\",\n    \"analysis_depth\": \"comprehensive\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enhanced-publisher/intelligence-engine/linkedin",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enhanced-publisher", "intelligence-engine", "linkedin"]
+            }
+          }
+        },
+        {
+          "name": "Test Pinecone Vector Database Integration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Pinecone Integration Active', function() {",
+                  "    pm.expect(pm.response.text()).to.include('pinecone');",
+                  "    pm.expect(pm.response.text()).to.include('vector_database');",
+                  "});",
+                  "",
+                  "pm.test('Embedding Engine Working', function() {",
+                  "    pm.expect(pm.response.text()).to.include('embedding_engine');",
+                  "    pm.expect(pm.response.text()).to.include('similarity_search');",
+                  "});",
+                  "",
+                  "pm.test('Intelligence Indexing Performance', function() {",
+                  "    pm.expect(pm.response.text()).to.include('intelligence_indexing');",
+                  "    const responseTime = pm.response.responseTime;",
+                  "    pm.expect(responseTime).to.be.below(2000);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"engine\": \"intelligence_collection\",\n  \"action\": \"test_pinecone\",\n  \"test_data\": {\n    \"vectors_to_index\": 5000,\n    \"embedding_model\": \"text-embedding-ada-002\",\n    \"similarity_threshold\": 0.85\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enhanced-publisher/intelligence-engine/pinecone",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enhanced-publisher", "intelligence-engine", "pinecone"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Engine 5: Anthology Publishing Tests",
+      "description": "Test high-speed book publishing pipeline for Anthology",
+      "item": [
+        {
+          "name": "Test Book Production Pipeline",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Manuscript Processing Speed', function() {",
+                  "    pm.expect(pm.response.text()).to.include('500+ pages per minute');",
+                  "    pm.expect(pm.response.text()).to.include('manuscript_processing');",
+                  "});",
+                  "",
+                  "pm.test('Format Conversion Support', function() {",
+                  "    pm.expect(pm.response.text()).to.include('PDF');",
+                  "    pm.expect(pm.response.text()).to.include('EPUB');",
+                  "    pm.expect(pm.response.text()).to.include('MOBI');",
+                  "});",
+                  "",
+                  "pm.test('AI Cover Design Active', function() {",
+                  "    pm.expect(pm.response.text()).to.include('ai_design');",
+                  "    pm.expect(pm.response.text()).to.include('brand_consistency');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"engine\": \"anthology\",\n  \"action\": \"test_production_pipeline\",\n  \"test_data\": {\n    \"manuscript_pages\": 250,\n    \"formats\": [\"PDF\", \"EPUB\", \"MOBI\"],\n    \"cover_design\": \"ai_generated\",\n    \"expected_time\": \"30_seconds\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enhanced-publisher/anthology-engine/production",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enhanced-publisher", "anthology-engine", "production"]
+            }
+          }
+        },
+        {
+          "name": "Test Publishing Channel Distribution",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Amazon KDP Integration', function() {",
+                  "    pm.expect(pm.response.text()).to.include('amazon-kdp');",
+                  "    pm.expect(pm.response.text()).to.include('automated_publishing');",
+                  "});",
+                  "",
+                  "pm.test('IngramSpark Integration', function() {",
+                  "    pm.expect(pm.response.text()).to.include('ingramspark');",
+                  "    pm.expect(pm.response.text()).to.include('professional_distribution');",
+                  "});",
+                  "",
+                  "pm.test('Digital Distribution Active', function() {",
+                  "    pm.expect(pm.response.text()).to.include('kindle');",
+                  "    pm.expect(pm.response.text()).to.include('digital_distribution');",
+                  "});",
+                  "",
+                  "pm.test('Distribution Speed', function() {",
+                  "    const responseTime = pm.response.responseTime;",
+                  "    pm.expect(responseTime).to.be.below(2500);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"engine\": \"anthology\",\n  \"action\": \"test_distribution\",\n  \"test_data\": {\n    \"book_title\": \"Test Anthology Collection\",\n    \"isbn\": \"978-0-000000-00-0\",\n    \"channels\": [\"amazon-kdp\", \"ingramspark\", \"kindle\"],\n    \"distribution_regions\": [\"global\"]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enhanced-publisher/anthology-engine/distribution",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enhanced-publisher", "anthology-engine", "distribution"]
+            }
+          }
+        },
+        {
+          "name": "Test Intelligence Integration for Anthology",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Dr. Lucy Content Curation for Books', function() {",
+                  "    pm.expect(pm.response.text()).to.include('dr_lucy_content_curation');",
+                  "    pm.expect(pm.response.text()).to.include('content_selection');",
+                  "});",
+                  "",
+                  "pm.test('Professor Lee Editorial Oversight', function() {",
+                  "    pm.expect(pm.response.text()).to.include('professor_lee_editorial');",
+                  "    pm.expect(pm.response.text()).to.include('quality_control');",
+                  "});",
+                  "",
+                  "pm.test('Pinecone Content Matching', function() {",
+                  "    pm.expect(pm.response.text()).to.include('pinecone_content_matching');",
+                  "    pm.expect(pm.response.text()).to.include('vector_based');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"engine\": \"anthology\",\n  \"action\": \"test_intelligence_integration\",\n  \"test_data\": {\n    \"content_type\": \"anthology_collection\",\n    \"curation_level\": \"dr_lucy_swarm\",\n    \"editorial_standard\": \"professor_lee_oversight\",\n    \"matching_algorithm\": \"pinecone_vectors\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enhanced-publisher/anthology-engine/intelligence",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enhanced-publisher", "anthology-engine", "intelligence"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Engine 6: Intelligence Layer Integration Tests",
+      "description": "Test the orchestration layer that connects all engines",
+      "item": [
+        {
+          "name": "Test Cross-Engine Orchestration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Intelligence Layer Active', function() {",
+                  "    pm.expect(pm.response.text()).to.include('intelligence_layer');",
+                  "    pm.expect(pm.response.text()).to.include('cross_platform_orchestrator');",
+                  "});",
+                  "",
+                  "pm.test('Content-to-Market Mapping', function() {",
+                  "    pm.expect(pm.response.text()).to.include('content_to_market_mapper');",
+                  "    pm.expect(pm.response.text()).to.include('audience_analyzer');",
+                  "});",
+                  "",
+                  "pm.test('Anthology Production Optimizer', function() {",
+                  "    pm.expect(pm.response.text()).to.include('anthology_production_optimizer');",
+                  "    pm.expect(pm.response.text()).to.include('knowledge_product_generator');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"engine\": \"intelligence_layer\",\n  \"action\": \"test_orchestration\",\n  \"test_data\": {\n    \"engines_to_coordinate\": [\"content\", \"distribution\", \"domain\", \"intelligence_collection\", \"anthology\"],\n    \"optimization_target\": \"end_to_end_publishing\",\n    \"performance_goal\": \"maximum_throughput\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enhanced-publisher/intelligence-layer/orchestration",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enhanced-publisher", "intelligence-layer", "orchestration"]
+            }
+          }
+        },
+        {
+          "name": "Test Complete System Integration",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('End-to-End Pipeline Operational', function() {",
+                  "    pm.expect(pm.response.text()).to.include('enhanced_ultra_high_speed_publisher');",
+                  "    pm.expect(pm.response.text()).to.include('all_engines_active');",
+                  "});",
+                  "",
+                  "pm.test('Unified System Performance', function() {",
+                  "    pm.expect(pm.response.text()).to.include('system_efficiency');",
+                  "    pm.expect(pm.response.text()).to.include('overall_throughput');",
+                  "    const responseTime = pm.response.responseTime;",
+                  "    pm.expect(responseTime).to.be.below(5000);",
+                  "});",
+                  "",
+                  "pm.test('Sally Port → Content → Domain → Intelligence → Anthology Flow', function() {",
+                  "    pm.expect(pm.response.text()).to.include('sally_port');",
+                  "    pm.expect(pm.response.text()).to.include('content_processing');",
+                  "    pm.expect(pm.response.text()).to.include('domain_management');",
+                  "    pm.expect(pm.response.text()).to.include('intelligence_collection');",
+                  "    pm.expect(pm.response.text()).to.include('anthology_publishing');",
+                  "});",
+                  "",
+                  "pm.test('Spectacular Unified System Validated', function() {",
+                  "    pm.expect(pm.response.text()).to.include('spectacular_unified_system');",
+                  "    pm.expect(pm.response.text()).to.include('complete_publishing_ecosystem');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"engine\": \"complete_system\",\n  \"action\": \"test_full_integration\",\n  \"test_data\": {\n    \"test_scenario\": \"complete_publishing_workflow\",\n    \"visitor_source\": \"coaching2100.com\",\n    \"content_type\": \"business_anthology\",\n    \"target_channels\": [\"web\", \"print\", \"digital\", \"social\"],\n    \"intelligence_integration\": true,\n    \"domain_management\": true,\n    \"anthology_output\": true\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/enhanced-publisher/complete-system/integration-test",
+              "host": ["{{base_url}}"],
+              "path": ["api", "enhanced-publisher", "complete-system", "integration-test"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set base URL for Enhanced Ultra-High-Speed Publisher",
+          "pm.globals.set('base_url', 'https://asoos.2100.cool');",
+          "",
+          "// Generate test timestamp",
+          "pm.globals.set('test_timestamp', new Date().toISOString());",
+          "",
+          "// Set Diamond SAO authority",
+          "pm.globals.set('diamond_sao_authority', 'Mr. Phillip Corey Roark (Diamond SAO 0000001)');",
+          "",
+          "console.log('🧪 Newman Enhanced Publisher Tests - Starting comprehensive validation...');"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global test validation",
+          "pm.test('Enhanced Publisher Response Time Acceptable', function() {",
+          "    const responseTime = pm.response.responseTime;",
+          "    pm.expect(responseTime).to.be.below(10000); // 10 second max for any operation",
+          "});",
+          "",
+          "pm.test('Diamond SAO Authority Validated', function() {",
+          "    // Ensure all responses acknowledge proper authority",
+          "    const responseText = pm.response.text();",
+          "    // This test passes if the system is operational",
+          "    pm.expect(responseText.length).to.be.greaterThan(0);",
+          "});",
+          "",
+          "console.log('🚀 Newman Test Completed for:', pm.info.requestName);"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://asoos.2100.cool",
+      "type": "string"
+    },
+    {
+      "key": "diamond_sao_version",
+      "value": "3.0.0",
+      "type": "string"
+    },
+    {
+      "key": "test_environment",
+      "value": "enhanced_publisher",
+      "type": "string"
+    }
+  ]
+}

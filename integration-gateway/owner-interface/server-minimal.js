@@ -187,7 +187,7 @@ app.get('/api/gcp/secrets/:secretName', async (req, res) => {
   }
 });
 
-// Secure ElevenLabs TTS proxy endpoint
+// Secure ElevenLabs TTS proxy endpoint with OAuth2 authentication
 app.post('/api/elevenlabs/tts', async (req, res) => {
   try {
     const { text, voice_id, model_id, voice_settings } = req.body;
@@ -200,17 +200,26 @@ app.post('/api/elevenlabs/tts', async (req, res) => {
       });
     }
     
-    // Get ElevenLabs API key securely from GCP Secret Manager
-    console.log('🔐 Retrieving ElevenLabs API key for TTS request...');
-    let elevenlabsApiKey;
+    // Get ElevenLabs OAuth2 token from GCP Secret Manager
+    console.log('🔐 Retrieving ElevenLabs OAuth2 token for TTS request...');
+    let elevenlabsToken;
     try {
-      elevenlabsApiKey = await getSecretFromGCP('11_labs');
+      // Try OAuth2 token first
+      elevenlabsToken = await getSecretFromGCP('elevenlabs-oauth2-token');
+      console.log('✅ Using ElevenLabs OAuth2 token from Secret Manager');
     } catch (error) {
-      console.error('Failed to retrieve ElevenLabs API key from Secret Manager:', error.message);
-      // Fallback to environment variable
-      elevenlabsApiKey = process.env.ELEVENLABS_API_KEY;
-      if (!elevenlabsApiKey) {
-        return res.status(500).json({ error: 'ElevenLabs API key not available' });
+      console.warn('OAuth2 token not found, trying API key fallback:', error.message);
+      
+      // Fallback to API key if OAuth2 token not available
+      try {
+        elevenlabsToken = await getSecretFromGCP('11_labs');
+        console.log('🔄 Using ElevenLabs API key as fallback');
+      } catch (keyError) {
+        console.error('Failed to retrieve any ElevenLabs credentials:', keyError.message);
+        return res.status(500).json({ 
+          error: 'ElevenLabs authentication not available', 
+          message: 'Neither OAuth2 token nor API key found' 
+        });
       }
     }
     
@@ -228,19 +237,44 @@ app.post('/api/elevenlabs/tts', async (req, res) => {
     
     console.log(`🎤 Making TTS request to ElevenLabs for voice: ${voice_id}`);
     
+    // Determine authentication method based on token format
+    const isOAuth2Token = elevenlabsToken.startsWith('Bearer ') || elevenlabsToken.includes('.');
+    const headers = {
+      'Accept': 'audio/mpeg',
+      'Content-Type': 'application/json'
+    };
+    
+    if (isOAuth2Token) {
+      // Use OAuth2 Bearer token
+      headers['Authorization'] = elevenlabsToken.startsWith('Bearer ') ? elevenlabsToken : `Bearer ${elevenlabsToken}`;
+      console.log('🔐 Using OAuth2 Bearer token authentication');
+    } else {
+      // Use legacy API key
+      headers['xi-api-key'] = elevenlabsToken;
+      console.log('🔑 Using API key authentication (fallback)');
+    }
+    
     const response = await fetch(ttsUrl, {
       method: 'POST',
-      headers: {
-        'Accept': 'audio/mpeg',
-        'Content-Type': 'application/json',
-        'xi-api-key': elevenlabsApiKey
-      },
+      headers: headers,
       body: JSON.stringify(requestBody)
     });
     
     if (!response.ok) {
       const errorText = await response.text();
       console.error('ElevenLabs API error:', response.status, errorText);
+      
+      // If OAuth2 failed, try to refresh token or fallback
+      if (response.status === 401 && isOAuth2Token) {
+        console.log('🔄 OAuth2 token may be expired, attempting to refresh...');
+        // TODO: Implement token refresh logic here
+        return res.status(401).json({ 
+          error: 'ElevenLabs OAuth2 token expired', 
+          message: 'Please refresh OAuth2 token',
+          needsRefresh: true
+        });
+      }
+      
       return res.status(response.status).json({ 
         error: 'ElevenLabs API error', 
         message: errorText 
@@ -254,7 +288,7 @@ app.post('/api/elevenlabs/tts', async (req, res) => {
     // Pipe the response stream directly to the client
     response.body.pipe(res);
     
-    console.log('✅ TTS audio streamed successfully to client');
+    console.log('✅ TTS audio streamed successfully to client (OAuth2)');
     
   } catch (error) {
     console.error('TTS endpoint error:', error);

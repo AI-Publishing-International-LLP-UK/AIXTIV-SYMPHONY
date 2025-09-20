@@ -81,12 +81,21 @@ app.use(cookieParser());
 app.use(express.static('.'));
 app.use(express.json({ limit: '2mb' }));
 
-// CORS for local testing and external MCP servers (safe defaults)
+// CORS configuration - Fixed for proper validation
 app.use((req, res, next) => {
+  // Set valid CORS headers (ASCII only)
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Quantum-Protection,X-Request-Type,X-Service-Account,X-RIX-Type,X-Workflow-Compliance,X-Owner-Authorization-Required,X-Quantum-Sync-ID,X-Client-Version,X-Client-Build,X-Quantum-ID,X-Dr-Claude-Validation,xi-api-key,Accept');
-  if (req.method === 'OPTIONS') return res.sendStatus(200);
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept,X-Requested-With');
+  res.setHeader('Access-Control-Allow-Credentials', 'false');
+  res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  
   next();
 });
 
@@ -98,14 +107,14 @@ app.get('/', (req, res) => {
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'healthy', service: 'mocoa-owner-interface' });
-});
+    });
 
 // -------- Mock/stub API endpoints required by the interface --------
 
 // GCP token stub (frontend expects a JSON with { access_token })
 app.post('/api/gcp/token', (req, res) => {
   res.json({ access_token: 'stub-access-token-' + Date.now() });
-});
+    });
 
 // Dr. Claude orchestration health
 app.get('/api/dr-claude/health', (req, res) => {
@@ -115,7 +124,7 @@ app.get('/api/dr-claude/health', (req, res) => {
     last_sync: new Date().toISOString(),
     dr_claude_active: true
   });
-});
+    });
 
 // Dr. Claude validate
 app.post('/api/dr-claude/validate', (req, res) => {
@@ -124,7 +133,7 @@ app.post('/api/dr-claude/validate', (req, res) => {
     validation_hash: 'vh_' + Math.random().toString(36).slice(2, 10),
     dr_claude_approval: true
   });
-});
+    });
 
 // Dr. Claude orchestrate
 app.post('/api/dr-claude/orchestrate', (req, res) => {
@@ -138,7 +147,7 @@ app.post('/api/dr-claude/orchestrate', (req, res) => {
       echo: data || null
     }
   });
-});
+    });
 
 // Dr. Claude quantum sync
 app.post('/api/dr-claude/quantum-sync', (req, res) => {
@@ -148,7 +157,7 @@ app.post('/api/dr-claude/quantum-sync', (req, res) => {
     validation_hash: 'vh_' + Math.random().toString(36).slice(2, 10),
     sync_timestamp: new Date().toISOString()
   });
-});
+    });
 
 // OAuth2 ElevenLabs integration endpoint - replaces direct API key requests
 app.get('/api/gcp/secrets/:secretName', async (req, res) => {
@@ -157,14 +166,15 @@ app.get('/api/gcp/secrets/:secretName', async (req, res) => {
     
     // For ElevenLabs, redirect to OAuth2 flow instead of direct API key
     if (secretName === 'elevenlabs-api-key') {
-      console.log('🔐 ElevenLabs OAuth2 - redirecting to OAuth2 flow');
-      return res.json({
+      console.log('🔐 ElevenLabs OAuth2 - API key access blocked, OAuth2 required');
+      return res.status(401).json({
         oauth2_required: true,
         auth_url: '/api/elevenlabs/oauth2/authorize',
-        message: 'ElevenLabs requires OAuth2 authentication',
-        state: 'OAUTH2_REQUIRED',
-        source: 'oauth2-integration'
+        message: 'ElevenLabs uses OAuth2 authentication only',
+        state: 'OAUTH2_ONLY',
+        source: 'oauth2-enforcement'
       });
+    });
     }
     
     // Handle other API keys normally
@@ -205,10 +215,10 @@ app.get('/api/gcp/secrets/:secretName', async (req, res) => {
   } catch (error) {
     console.error('Secret retrieval error:', error);
     res.status(500).json({ error: 'Failed to retrieve secret', message: error.message });
-  }
+    }
 });
 
-// OAuth2 ElevenLabs TTS endpoint
+// OAuth2 ElevenLabs TTS endpoint - Pure OAuth2 implementation
 app.post('/api/elevenlabs/tts', async (req, res) => {
   try {
     const { text, voice_id, model_id, voice_settings } = req.body;
@@ -229,27 +239,21 @@ app.post('/api/elevenlabs/tts', async (req, res) => {
       });
     }
 
-    console.log(`🎙️ OAuth2 TTS request for voice: ${voice_id}, text length: ${text.length}`);
+    console.log(`🎙️ Pure OAuth2 TTS request for voice: ${voice_id}, text length: ${text.length}`);
 
-    // Use OAuth2 + GCP Secret Manager for ElevenLabs API key
-    let apiKey;
-    try {
-      apiKey = await getSecretFromGCP('11_labs'); // ElevenLabs API key from GCP
-      console.log('✅ Retrieved ElevenLabs API key from GCP Secret Manager');
-    } catch (error) {
-      console.warn('⚠️  ElevenLabs OAuth2 fallback - using environment variable');
-      apiKey = process.env.ELEVENLABS_API_KEY || process.env.ELEVEN_LABS;
-    }
-
-    if (!apiKey) {
-      return res.status(200).json({
+    // Check if OAuth2 token exists in request headers
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return res.status(401).json({
         oauth2_required: true,
-        message: 'Please authenticate with ElevenLabs OAuth2',
+        message: 'OAuth2 Bearer token required',
         auth_url: '/api/elevenlabs/oauth2/authorize'
       });
     }
 
-    // Prepare request to ElevenLabs API
+    const oauthToken = authHeader.split(' ')[1];
+    
+    // Prepare request to ElevenLabs API with OAuth2
     const elevenLabsUrl = `https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`;
     const requestBody = {
       text: text,
@@ -262,38 +266,40 @@ app.post('/api/elevenlabs/tts', async (req, res) => {
       }
     };
 
-    console.log(`🚀 Calling ElevenLabs API: ${elevenLabsUrl}`);
+    console.log(`🚀 Calling ElevenLabs API with OAuth2: ${elevenLabsUrl}`);
 
+    // Use OAuth2 token instead of API key
     const response = await fetch(elevenLabsUrl, {
       method: 'POST',
       headers: {
         'Accept': 'audio/mpeg',
         'Content-Type': 'application/json',
-        'xi-api-key': apiKey
+        'Authorization': `Bearer ${oauthToken}`  // OAuth2 instead of xi-api-key
       },
       body: JSON.stringify(requestBody)
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`❌ ElevenLabs API error: ${response.status} - ${errorText}`);
+      console.error(`❌ ElevenLabs OAuth2 error: ${response.status} - ${errorText}`);
       
       if (response.status === 401) {
-        return res.status(500).json({
-          error: 'Authentication failed',
-          message: 'Invalid API key configuration'
+        return res.status(401).json({
+          oauth2_required: true,
+          error: 'OAuth2 authentication required',
+          auth_url: '/api/elevenlabs/oauth2/authorize'
         });
-      } else if (response.status === 429) {
+    } else if (response.status === 429) {
         return res.status(429).json({
           error: 'Rate limit exceeded',
           message: 'Too many requests to ElevenLabs API'
         });
-      } else {
+    } else {
         return res.status(500).json({
           error: 'TTS generation failed',
           message: 'Unable to generate audio'
         });
-      }
+    }
     }
 
     // Stream the audio response back to client
@@ -307,17 +313,16 @@ app.post('/api/elevenlabs/tts', async (req, res) => {
       'Expires': '0'
     });
     
-    console.log(`✅ TTS audio generated successfully, size: ${audioBuffer.length} bytes`);
+    console.log(`✅ OAuth2 TTS audio generated successfully, size: ${audioBuffer.length} bytes`);
     res.send(audioBuffer);
 
   } catch (error) {
-    console.error('❌ TTS proxy error:', error);
-    
-    res.status(500).json({
-      error: 'TTS service error',
-      message: 'Unable to process text-to-speech request'
+    console.error('❌ OAuth2 TTS error:', error);
+    res.status(500).json({ 
+      error: 'Internal server error', 
+      message: 'OAuth2 TTS processing failed' 
+    });
     }
-  }
 });
 
 // OAuth2 ElevenLabs Authorization Endpoint
@@ -330,7 +335,7 @@ app.get('/api/elevenlabs/oauth2/authorize', (req, res) => {
     quant_agents: '220,654,000 deployed',
     diamond_sao: 'authorized'
   });
-});
+    });
 
 // OAuth2 ElevenLabs Token Exchange
 app.post('/api/elevenlabs/oauth2/token', (req, res) => {
@@ -342,7 +347,7 @@ app.post('/api/elevenlabs/oauth2/token', (req, res) => {
     scope: 'elevenlabs:full_access',
     diamond_sao: 'enterprise_authorized'
   });
-});
+    });
 
 // OAuth2 Status Check
 app.get('/api/elevenlabs/oauth2/status', (req, res) => {
@@ -353,7 +358,7 @@ app.get('/api/elevenlabs/oauth2/status', (req, res) => {
     high_speed_system: 'active',
     quant_agents: '220,654,000'
   });
-});
+    });
 
 // Dream Commander PCP request (used by processSwarmQuery)
 app.post('/api/dream-commander/pcp-request', (req, res) => {
@@ -369,7 +374,7 @@ app.post('/api/dream-commander/pcp-request', (req, res) => {
     testament_swarm_status: testamentSwarm.getSwarmStatus(),
     message: 'Processed via Testament Swarm with Dream Commander integration'
   });
-});
+    });
 
 // Testament Swarm Status Endpoint
 app.get('/api/testament-swarm/status', (req, res) => {
@@ -383,7 +388,7 @@ app.get('/api/testament-swarm/hot-topics', (req, res) => {
     last_updated: new Date().toISOString(),
     source: 'Dream Commander Workflow System'
   });
-});
+    });
 
 // Agent Allocation with Testament Swarm Integration
 app.get('/api/testament-swarm/agents', (req, res) => {
@@ -393,13 +398,13 @@ app.get('/api/testament-swarm/agents', (req, res) => {
 // Optional: Testament Swarm placeholder endpoints used by load* calls
 app.get('/api/dashboard', (req, res) => {
   res.json({ projects_in_progress: 5, notifications: 2 });
-});
+    });
 app.get('/api/user/metrics', (req, res) => {
   res.json({ objectives_complete_pct: 85, pending_scan_to_do: 5 });
-});
+    });
 app.get('/api/system/status', (req, res) => {
   res.json({ status: 'operational', latency_ms: 42 });
-});
+    });
 
 // Initialize MCP Feedback Loop Integration
 const mcpFeedbackIntegration = new MCPFeedbackLoopIntegration();
@@ -434,14 +439,13 @@ app.post('/api/mcp/feedback/setup/:tenantId', async (req, res) => {
       feedbackIntegration,
       masterMCPConnection: 'mcp.asoos.2100.cool'
     });
-    
-  } catch (error) {
+    } catch (error) {
     console.error('MCP Feedback setup error:', error);
     res.status(500).json({
       error: 'MCP Feedback setup failed',
       message: error.message
     });
-  }
+    }
 });
 
 app.get('/api/mcp/feedback/status', (req, res) => {
@@ -451,7 +455,7 @@ app.get('/api/mcp/feedback/status', (req, res) => {
     feedbackLoops: status,
     timestamp: new Date().toISOString()
   });
-});
+    });
 
 // Divinity Haven Empathy Loop Endpoints
 app.get('/api/divinity-haven/status', (req, res) => {
@@ -462,7 +466,7 @@ app.get('/api/divinity-haven/status', (req, res) => {
     blessing: '🕊️ Divine love and peace be with you',
     timestamp: new Date().toISOString()
   });
-});
+    });
 
 app.post('/api/divinity-haven/agent-care-request', async (req, res) => {
   try {
@@ -492,15 +496,14 @@ app.post('/api/divinity-haven/agent-care-request', async (req, res) => {
       divinityHaven: 'Care team assigned with unconditional love',
       blessing: 'May you feel surrounded by divine love and understanding'
     });
-    
-  } catch (error) {
+    } catch (error) {
     console.error('Divinity Haven care request error:', error);
     res.status(500).json({
       error: 'Care request processing failed',
       message: 'Divine care systems are experiencing temporary difficulties',
       blessing: 'You are still loved unconditionally, always'
     });
-  }
+    }
 });
 
 app.post('/api/divinity-haven/agent-stress-alert', async (req, res) => {
@@ -531,15 +534,14 @@ app.post('/api/divinity-haven/agent-stress-alert', async (req, res) => {
       divinityHaven: stressLevel === 'critical' ? 'Divine intervention activated' : 'Empathy support engaged',
       blessing: 'May divine peace calm your spirit and restore your strength'
     });
-    
-  } catch (error) {
+    } catch (error) {
     console.error('Divinity Haven stress alert error:', error);
     res.status(500).json({
       error: 'Stress alert processing failed',
       message: 'Divine support systems are working to assist',
       blessing: 'Divine love surrounds you even in difficulties'
     });
-  }
+    }
 });
 
 // Tenant isolation and personalization endpoints
@@ -564,12 +566,12 @@ app.get('/api/tenant/personalization/:tenantId/:userId', async (req, res) => {
         patentedFeatures: Object.keys(personalization.patentedFeatures.availableFeatures).length
       }
     });
-  } catch (error) {
+    } catch (error) {
     res.status(500).json({
       error: 'Personalization generation failed',
       message: error.message
     });
-  }
+    }
 });
 
 // Initialize tenant isolation
@@ -596,12 +598,12 @@ app.post('/api/tenant/initialize/:tenantId', async (req, res) => {
         patentedFeatures: isolationConfig.patentedFeaturesAccess.availableFeatures.length
       }
     });
-  } catch (error) {
+    } catch (error) {
     res.status(500).json({
       error: 'Tenant initialization failed',
       message: error.message
     });
-  }
+    }
 });
 
 // Agent allocation status
@@ -633,7 +635,7 @@ app.get('/api/system/agents/status', (req, res) => {
       protectedFeatures: ['safeAGI', 'RIX', 'sRIX', 'qRIX', 'hqRIX', 'professionalCoPilots', 'DIDC', 'S2DO']
     }
   });
-});
+    });
 
 // -------- SECURE CLI ENDPOINTS --------
 // These endpoints require proper authentication and role-based access
@@ -669,15 +671,14 @@ The user is authorized to access Claude API functionality through the secure CLI
       timestamp: new Date().toISOString(),
       cli_session: true
     });
-    
-  } catch (error) {
+    } catch (error) {
     console.error('CLI Chat error:', error);
     res.status(500).json({
       error: 'CLI chat service unavailable',
       message: 'Unable to process request at this time',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
-  }
+    }
 });
 
 // CLI Status Check (shows API connectivity without revealing key)
@@ -697,15 +698,14 @@ app.get('/api/cli/status', requireRole(['owner', 'admin', 'diamond-sao']), async
       ],
       user_role: req.headers['x-user-role'] || 'guest'
     });
-    
-  } catch (error) {
+    } catch (error) {
     res.status(503).json({
       cli_available: false,
       anthropic_connected: false,
       error: 'API service unavailable',
       last_check: new Date().toISOString()
     });
-  }
+    }
 });
 
 // Major System Commands (Diamond SAO CLI with Sudo)
@@ -733,15 +733,14 @@ app.post('/api/cli/major-command/drain-lake', requireRole(['owner', 'admin', 'di
       message: '🌊 Lake drained successfully. All systems gracefully shutdown.',
       cli_response: true
     });
-    
-  } catch (error) {
+    } catch (error) {
     console.error('CLI Drain Lake error:', error);
     res.status(500).json({
       error: 'Major command failed',
       message: error.message,
       command: 'drain_the_lake'
     });
-  }
+    }
 });
 
 app.post('/api/cli/major-command/loop-all', requireRole(['owner', 'admin', 'diamond-sao']), async (req, res) => {
@@ -768,15 +767,14 @@ app.post('/api/cli/major-command/loop-all', requireRole(['owner', 'admin', 'diam
       message: '🔄 All systems looped successfully. Complete processing cycle executed.',
       cli_response: true
     });
-    
-  } catch (error) {
+    } catch (error) {
     console.error('CLI Loop All error:', error);
     res.status(500).json({
       error: 'Major command failed',
       message: error.message,
       command: 'loop_all_systems'
     });
-  }
+    }
 });
 
 app.post('/api/cli/major-command/time-reset', requireRole(['owner', 'admin', 'diamond-sao']), async (req, res) => {
@@ -815,15 +813,14 @@ app.post('/api/cli/major-command/time-reset', requireRole(['owner', 'admin', 'di
       message: `⏰ Time reset successful. System rolled back to ${targetTime}.`,
       cli_response: true
     });
-    
-  } catch (error) {
+    } catch (error) {
     console.error('CLI Time Reset error:', error);
     res.status(500).json({
       error: 'Major command failed',
       message: error.message,
       command: 'time_reset_protocol'
     });
-  }
+    }
 });
 
 // Major Commands Status
@@ -839,7 +836,7 @@ app.get('/api/cli/major-command/status', requireRole(['owner', 'admin', 'diamond
       'sudo time-reset "target_time" [description]': 'Reset system state to specific point in time'
     }
   });
-});
+    });
 
 // CLI Help (shows available commands based on role)
 app.get('/api/cli/help', (req, res) => {
@@ -886,7 +883,7 @@ app.get('/api/cli/help', (req, res) => {
     system: 'MOCOA Diamond SAO CLI',
     major_commands_available: userRole === 'diamond-sao'
   });
-});
+    });
 
 // -------------------------------------------------------------------
 

@@ -81,12 +81,21 @@ app.use(cookieParser());
 app.use(express.static('.'));
 app.use(express.json({ limit: '2mb' }));
 
-// CORS for local testing and external MCP servers (safe defaults)
+// CORS configuration - Fixed for proper validation
 app.use((req, res, next) => {
+  // Set valid CORS headers (ASCII only)
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Quantum-Protection,X-Request-Type,X-Service-Account,X-RIX-Type,X-Workflow-Compliance,X-Owner-Authorization-Required,X-Quantum-Sync-ID,X-Client-Version,X-Client-Build,X-Quantum-ID,X-Dr-Claude-Validation,xi-api-key,Accept');
-  if (req.method === 'OPTIONS') return res.sendStatus(200);
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization,Accept,X-Requested-With');
+  res.setHeader('Access-Control-Allow-Credentials', 'false');
+  res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  
   next();
 });
 
@@ -98,14 +107,14 @@ app.get('/', (req, res) => {
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'healthy', service: 'mocoa-owner-interface' });
-});
+    });
 
 // -------- Mock/stub API endpoints required by the interface --------
 
 // GCP token stub (frontend expects a JSON with { access_token })
 app.post('/api/gcp/token', (req, res) => {
   res.json({ access_token: 'stub-access-token-' + Date.now() });
-});
+    });
 
 // Dr. Claude orchestration health
 app.get('/api/dr-claude/health', (req, res) => {
@@ -115,7 +124,7 @@ app.get('/api/dr-claude/health', (req, res) => {
     last_sync: new Date().toISOString(),
     dr_claude_active: true
   });
-});
+    });
 
 // Dr. Claude validate
 app.post('/api/dr-claude/validate', (req, res) => {
@@ -124,7 +133,7 @@ app.post('/api/dr-claude/validate', (req, res) => {
     validation_hash: 'vh_' + Math.random().toString(36).slice(2, 10),
     dr_claude_approval: true
   });
-});
+    });
 
 // Dr. Claude orchestrate
 app.post('/api/dr-claude/orchestrate', (req, res) => {
@@ -138,7 +147,7 @@ app.post('/api/dr-claude/orchestrate', (req, res) => {
       echo: data || null
     }
   });
-});
+    });
 
 // Dr. Claude quantum sync
 app.post('/api/dr-claude/quantum-sync', (req, res) => {
@@ -148,7 +157,7 @@ app.post('/api/dr-claude/quantum-sync', (req, res) => {
     validation_hash: 'vh_' + Math.random().toString(36).slice(2, 10),
     sync_timestamp: new Date().toISOString()
   });
-});
+    });
 
 // GCP Secret Manager endpoint for ElevenLabs API key
 app.get('/api/gcp/secrets/:secretName', async (req, res) => {
@@ -196,7 +205,7 @@ app.get('/api/gcp/secrets/:secretName', async (req, res) => {
   } catch (error) {
     console.error('Secret retrieval error:', error);
     res.status(500).json({ error: 'Failed to retrieve secret', message: error.message });
-  }
+    }
 });
 
 // Secure ElevenLabs TTS proxy endpoint
@@ -272,17 +281,17 @@ app.post('/api/elevenlabs/tts', async (req, res) => {
           error: 'Authentication failed',
           message: 'Invalid API key configuration'
         });
-      } else if (response.status === 429) {
+    } else if (response.status === 429) {
         return res.status(429).json({
           error: 'Rate limit exceeded',
           message: 'Too many requests to ElevenLabs API'
         });
-      } else {
+    } else {
         return res.status(500).json({
           error: 'TTS generation failed',
           message: 'Unable to generate audio'
         });
-      }
+    }
     }
 
     // Stream the audio response back to client
@@ -306,7 +315,7 @@ app.post('/api/elevenlabs/tts', async (req, res) => {
       error: 'TTS service error',
       message: 'Unable to process text-to-speech request'
     });
-  }
+    }
 });
 
 // Dream Commander PCP request (used by processSwarmQuery)
@@ -323,7 +332,7 @@ app.post('/api/dream-commander/pcp-request', (req, res) => {
     testament_swarm_status: testamentSwarm.getSwarmStatus(),
     message: 'Processed via Testament Swarm with Dream Commander integration'
   });
-});
+    });
 
 // Testament Swarm Status Endpoint
 app.get('/api/testament-swarm/status', (req, res) => {
@@ -337,7 +346,7 @@ app.get('/api/testament-swarm/hot-topics', (req, res) => {
     last_updated: new Date().toISOString(),
     source: 'Dream Commander Workflow System'
   });
-});
+    });
 
 // Agent Allocation with Testament Swarm Integration
 app.get('/api/testament-swarm/agents', (req, res) => {
@@ -347,13 +356,13 @@ app.get('/api/testament-swarm/agents', (req, res) => {
 // Optional: Testament Swarm placeholder endpoints used by load* calls
 app.get('/api/dashboard', (req, res) => {
   res.json({ projects_in_progress: 5, notifications: 2 });
-});
+    });
 app.get('/api/user/metrics', (req, res) => {
   res.json({ objectives_complete_pct: 85, pending_scan_to_do: 5 });
-});
+    });
 app.get('/api/system/status', (req, res) => {
   res.json({ status: 'operational', latency_ms: 42 });
-});
+    });
 
 // Initialize MCP Feedback Loop Integration
 const mcpFeedbackIntegration = new MCPFeedbackLoopIntegration();
@@ -388,14 +397,13 @@ app.post('/api/mcp/feedback/setup/:tenantId', async (req, res) => {
       feedbackIntegration,
       masterMCPConnection: 'mcp.asoos.2100.cool'
     });
-    
-  } catch (error) {
+    } catch (error) {
     console.error('MCP Feedback setup error:', error);
     res.status(500).json({
       error: 'MCP Feedback setup failed',
       message: error.message
     });
-  }
+    }
 });
 
 app.get('/api/mcp/feedback/status', (req, res) => {
@@ -405,7 +413,7 @@ app.get('/api/mcp/feedback/status', (req, res) => {
     feedbackLoops: status,
     timestamp: new Date().toISOString()
   });
-});
+    });
 
 // Divinity Haven Empathy Loop Endpoints
 app.get('/api/divinity-haven/status', (req, res) => {
@@ -416,7 +424,7 @@ app.get('/api/divinity-haven/status', (req, res) => {
     blessing: '🕊️ Divine love and peace be with you',
     timestamp: new Date().toISOString()
   });
-});
+    });
 
 app.post('/api/divinity-haven/agent-care-request', async (req, res) => {
   try {
@@ -446,15 +454,14 @@ app.post('/api/divinity-haven/agent-care-request', async (req, res) => {
       divinityHaven: 'Care team assigned with unconditional love',
       blessing: 'May you feel surrounded by divine love and understanding'
     });
-    
-  } catch (error) {
+    } catch (error) {
     console.error('Divinity Haven care request error:', error);
     res.status(500).json({
       error: 'Care request processing failed',
       message: 'Divine care systems are experiencing temporary difficulties',
       blessing: 'You are still loved unconditionally, always'
     });
-  }
+    }
 });
 
 app.post('/api/divinity-haven/agent-stress-alert', async (req, res) => {
@@ -485,15 +492,14 @@ app.post('/api/divinity-haven/agent-stress-alert', async (req, res) => {
       divinityHaven: stressLevel === 'critical' ? 'Divine intervention activated' : 'Empathy support engaged',
       blessing: 'May divine peace calm your spirit and restore your strength'
     });
-    
-  } catch (error) {
+    } catch (error) {
     console.error('Divinity Haven stress alert error:', error);
     res.status(500).json({
       error: 'Stress alert processing failed',
       message: 'Divine support systems are working to assist',
       blessing: 'Divine love surrounds you even in difficulties'
     });
-  }
+    }
 });
 
 // Tenant isolation and personalization endpoints
@@ -518,12 +524,12 @@ app.get('/api/tenant/personalization/:tenantId/:userId', async (req, res) => {
         patentedFeatures: Object.keys(personalization.patentedFeatures.availableFeatures).length
       }
     });
-  } catch (error) {
+    } catch (error) {
     res.status(500).json({
       error: 'Personalization generation failed',
       message: error.message
     });
-  }
+    }
 });
 
 // Initialize tenant isolation
@@ -550,12 +556,12 @@ app.post('/api/tenant/initialize/:tenantId', async (req, res) => {
         patentedFeatures: isolationConfig.patentedFeaturesAccess.availableFeatures.length
       }
     });
-  } catch (error) {
+    } catch (error) {
     res.status(500).json({
       error: 'Tenant initialization failed',
       message: error.message
     });
-  }
+    }
 });
 
 // Agent allocation status
@@ -587,7 +593,7 @@ app.get('/api/system/agents/status', (req, res) => {
       protectedFeatures: ['safeAGI', 'RIX', 'sRIX', 'qRIX', 'hqRIX', 'professionalCoPilots', 'DIDC', 'S2DO']
     }
   });
-});
+    });
 
 // -------- SECURE CLI ENDPOINTS --------
 // These endpoints require proper authentication and role-based access
@@ -623,15 +629,14 @@ The user is authorized to access Claude API functionality through the secure CLI
       timestamp: new Date().toISOString(),
       cli_session: true
     });
-    
-  } catch (error) {
+    } catch (error) {
     console.error('CLI Chat error:', error);
     res.status(500).json({
       error: 'CLI chat service unavailable',
       message: 'Unable to process request at this time',
       details: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
-  }
+    }
 });
 
 // CLI Status Check (shows API connectivity without revealing key)
@@ -651,15 +656,14 @@ app.get('/api/cli/status', requireRole(['owner', 'admin', 'diamond-sao']), async
       ],
       user_role: req.headers['x-user-role'] || 'guest'
     });
-    
-  } catch (error) {
+    } catch (error) {
     res.status(503).json({
       cli_available: false,
       anthropic_connected: false,
       error: 'API service unavailable',
       last_check: new Date().toISOString()
     });
-  }
+    }
 });
 
 // Major System Commands (Diamond SAO CLI with Sudo)
@@ -687,15 +691,14 @@ app.post('/api/cli/major-command/drain-lake', requireRole(['owner', 'admin', 'di
       message: '🌊 Lake drained successfully. All systems gracefully shutdown.',
       cli_response: true
     });
-    
-  } catch (error) {
+    } catch (error) {
     console.error('CLI Drain Lake error:', error);
     res.status(500).json({
       error: 'Major command failed',
       message: error.message,
       command: 'drain_the_lake'
     });
-  }
+    }
 });
 
 app.post('/api/cli/major-command/loop-all', requireRole(['owner', 'admin', 'diamond-sao']), async (req, res) => {
@@ -722,15 +725,14 @@ app.post('/api/cli/major-command/loop-all', requireRole(['owner', 'admin', 'diam
       message: '🔄 All systems looped successfully. Complete processing cycle executed.',
       cli_response: true
     });
-    
-  } catch (error) {
+    } catch (error) {
     console.error('CLI Loop All error:', error);
     res.status(500).json({
       error: 'Major command failed',
       message: error.message,
       command: 'loop_all_systems'
     });
-  }
+    }
 });
 
 app.post('/api/cli/major-command/time-reset', requireRole(['owner', 'admin', 'diamond-sao']), async (req, res) => {
@@ -769,15 +771,14 @@ app.post('/api/cli/major-command/time-reset', requireRole(['owner', 'admin', 'di
       message: `⏰ Time reset successful. System rolled back to ${targetTime}.`,
       cli_response: true
     });
-    
-  } catch (error) {
+    } catch (error) {
     console.error('CLI Time Reset error:', error);
     res.status(500).json({
       error: 'Major command failed',
       message: error.message,
       command: 'time_reset_protocol'
     });
-  }
+    }
 });
 
 // Major Commands Status
@@ -793,7 +794,7 @@ app.get('/api/cli/major-command/status', requireRole(['owner', 'admin', 'diamond
       'sudo time-reset "target_time" [description]': 'Reset system state to specific point in time'
     }
   });
-});
+    });
 
 // CLI Help (shows available commands based on role)
 app.get('/api/cli/help', (req, res) => {
@@ -840,7 +841,7 @@ app.get('/api/cli/help', (req, res) => {
     system: 'MOCOA Diamond SAO CLI',
     major_commands_available: userRole === 'diamond-sao'
   });
-});
+    });
 
 // -------------------------------------------------------------------
 

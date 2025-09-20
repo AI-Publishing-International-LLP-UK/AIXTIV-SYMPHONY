@@ -74,17 +74,17 @@ class OAuth2SallyPortIntegration {
      * Ensure OAuth2 server is deployed and healthy
      */
     async ensureOAuth2ServerRunning() {
-        console.log(`   🔍 Checking OAuth2 server status...`);
+        console.log('   🔍 Checking OAuth2 server status...');
         
         try {
             // Check if service exists
             const serviceExists = await this.checkServiceExists(this.oauthServiceName);
             
             if (!serviceExists) {
-                console.log(`   🚀 Deploying OAuth2 server...`);
+                console.log('   🚀 Deploying OAuth2 server...');
                 await this.deployOAuth2Service();
             } else {
-                console.log(`   ✅ OAuth2 server already running`);
+                console.log('   ✅ OAuth2 server already running');
             }
             
             // Health check
@@ -158,7 +158,7 @@ echo "✅ OAuth2 server deployed successfully"
      * Health check OAuth2 server
      */
     async healthCheckOAuth2Server() {
-        console.log(`   🩺 Health checking OAuth2 server...`);
+        console.log('   🩺 Health checking OAuth2 server...');
         
         try {
             // Get service URL
@@ -273,7 +273,7 @@ echo "✅ OAuth2 server deployed successfully"
      * Create OAuth2 client credentials for company
      */
     async createOAuth2Client(companyName, tenantConfig) {
-        console.log(`   🔑 Creating OAuth2 client credentials...`);
+        console.log('   🔑 Creating OAuth2 client credentials...');
         
         const clientId = `sallyport-${tenantConfig.tenant_id}-${Date.now().toString(36)}`;
         const clientSecret = this.generateSecureSecret();
@@ -293,7 +293,7 @@ echo "✅ OAuth2 server deployed successfully"
             ],
             redirect_uris: [
                 `https://${tenantConfig.domain}/auth/callback`,
-                `https://sallyport.2100.cool/auth/callback`
+                'https://sallyport.2100.cool/auth/callback'
             ],
             created_at: new Date().toISOString()
         };
@@ -319,7 +319,7 @@ echo "✅ OAuth2 server deployed successfully"
      * Enhance MCP config with OAuth2 endpoints
      */
     async enhanceConfigWithOAuth2(mcpConfig, tenantConfig, clientCredentials) {
-        console.log(`   🔧 Enhancing MCP config with OAuth2...`);
+        console.log('   🔧 Enhancing MCP config with OAuth2...');
         
         const enhancedConfig = {
             ...mcpConfig,
@@ -345,10 +345,10 @@ echo "✅ OAuth2 server deployed successfully"
         };
         
         // Update the saved MCP config
-        const configPath = path.join(__dirname, `mcp-configs`, `${tenantConfig.tenant_id}.json`);
+        const configPath = path.join(__dirname, 'mcp-configs', `${tenantConfig.tenant_id}.json`);
         fs.writeFileSync(configPath, JSON.stringify(enhancedConfig, null, 2));
         
-        console.log(`   ✅ MCP config enhanced with OAuth2 integration`);
+        console.log('   ✅ MCP config enhanced with OAuth2 integration');
         return enhancedConfig;
     }
 
@@ -356,7 +356,7 @@ echo "✅ OAuth2 server deployed successfully"
      * Deploy OAuth2-enabled MCP service
      */
     async deployOAuth2EnabledMCP(companyName, enhancedMcpConfig) {
-        console.log(`   🚀 Deploying OAuth2-enabled MCP service...`);
+        console.log('   🚀 Deploying OAuth2-enabled MCP service...');
         
         const tenantId = companyName.toLowerCase().replace(/[^a-z0-9]/g, '');
         const serviceName = `mcp-${tenantId}-2100-cool`;
@@ -388,12 +388,12 @@ echo "✅ OAuth2 server deployed successfully"
             `MCP_DOMAIN=${enhancedMcpConfig.domain}`,
             `MCP_COMPANY=${enhancedMcpConfig.company}`,
             `MCP_INSTANCE=${enhancedMcpConfig.instanceId}`,
-            `OAUTH2_ENABLED=true`,
+            'OAUTH2_ENABLED=true',
             `OAUTH2_SERVER_URL=${enhancedMcpConfig.oauth2.server_url}`,
             `OAUTH2_CLIENT_ID=${enhancedMcpConfig.oauth2.client_id}`,
             `TENANT_ID=${enhancedMcpConfig.oauth2.tenant_id}`,
             `SALLYPORT_URL=${enhancedMcpConfig.sallyPort.url}`,
-            `NODE_ENV=production`
+            'NODE_ENV=production'
         ].join(',');
 
         return `#!/bin/bash

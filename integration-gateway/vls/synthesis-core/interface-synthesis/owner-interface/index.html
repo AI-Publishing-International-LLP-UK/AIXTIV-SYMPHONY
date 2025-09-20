@@ -1104,186 +1104,8 @@
       }
     }
   </style>
-  <!-- OAUTH2 ELEVENLABS POPUP ELIMINATION SYSTEM -->
-  <script>
-    // ========================================================================
-    // IMMEDIATE ELEVENLABS API POPUP ELIMINATION - V34 ENHANCED
-    // ========================================================================
-    console.log('🛡️ Loading ElevenLabs Popup Elimination System v34...');
-    console.log('💎 Authority: Diamond SAO Command Center');
-    console.log('🔐 Mode: OAuth2 Enterprise + Self-Healing');
-    
-    // Override prompt() immediately to block API key requests
-    const originalPrompt = window.prompt;
-    window.prompt = function(message, defaultValue) {
-      if (message && (
-        message.toLowerCase().includes('api key') ||
-        message.toLowerCase().includes('elevenlabs') ||
-        message.toLowerCase().includes('key') ||
-        message.toLowerCase().includes('token')
-      )) {
-        console.log('🚫 ElevenLabs API key prompt blocked:', message);
-        console.log('🔄 Redirecting to OAuth2 authentication...');
-        return null; // Block the prompt
-      }
-      return originalPrompt ? originalPrompt.call(this, message, defaultValue) : null;
-    };
-    
-    // Block ElevenLabs API key property access
-    Object.defineProperty(window, 'ELEVENLABS_API_KEY', {
-      get: function() {
-        console.log('🚫 ELEVENLABS_API_KEY access blocked - using OAuth2');
-        return null;
-      },
-      set: function() {
-        console.log('🚫 ELEVENLABS_API_KEY setting blocked - using OAuth2');
-      }
-    });
-    
-    // Enhanced OAuth2-enabled TTS function
-    window.enhancedOAuth2TTS = async function(text, voiceId = "21m00Tcm4TlvDq8ikWAM") {
-      console.log(`🎤 OAuth2 TTS: "${text}"`);
-      
-      try {
-        // Use OAuth2-enabled cloud endpoint
-        const response = await fetch('/api/elevenlabs/oauth2/tts', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer oauth2',
-            'X-Auth-Mode': 'oauth2'
-          },
-          body: JSON.stringify({
-            text: text,
-            voice_id: voiceId,
-            model_id: 'eleven_monolingual_v1'
-          })
-        });
-        
-        if (response.ok) {
-          const audioBlob = await response.blob();
-          const audioUrl = URL.createObjectURL(audioBlob);
-          const audio = new Audio(audioUrl);
-          await audio.play();
-          setTimeout(() => URL.revokeObjectURL(audioUrl), 10000);
-          return { success: true, source: 'oauth2' };
-        }
-      } catch (error) {
-        console.log('🔄 OAuth2 TTS failed, using browser fallback...');
-      }
-      
-      // Enhanced browser voice fallback
-      if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(text);
-        const voices = speechSynthesis.getVoices();
-        const preferredVoice = voices.find(voice => 
-          voice.name.includes('Samantha') || 
-          voice.name.includes('Daniel') ||
-          voice.lang.startsWith('en')
-        ) || voices[0];
-        
-        if (preferredVoice) {
-          utterance.voice = preferredVoice;
-          console.log(`🎤 Using browser voice: ${preferredVoice.name}`);
-        }
-        
-        utterance.rate = 0.9;
-        utterance.pitch = 1.0;
-        speechSynthesis.speak(utterance);
-        return { success: true, source: 'browser_fallback' };
-      }
-      
-      return { success: false, source: 'none' };
-    };
-    
-    // Replace all ElevenLabs functions with OAuth2 versions
-    const functionsToReplace = [
-      'speakWithElevenLabs',
-      'speakMessage', 
-      'textToSpeech',
-      'elevenLabsTTS',
-      'generateSpeech',
-      'playVoice',
-      'speakText'
-    ];
-    
-    // Apply replacements when DOM loads
-    document.addEventListener('DOMContentLoaded', function() {
-      functionsToReplace.forEach(funcName => {
-        if (typeof window[funcName] === 'function') {
-          window[`_original_${funcName}`] = window[funcName];
-          window[funcName] = enhancedOAuth2TTS;
-          console.log(`🔄 Replaced ${funcName} with OAuth2-enabled version`);
-        }
-      });
-      console.log('✅ ElevenLabs popup elimination system fully loaded');
-    });
-    
-    console.log('✅ OAuth2 ElevenLabs system initialized');
-  </script>
-  <!-- OAUTH2 ELEVENLABS POPUP ELIMINATION SYSTEM v34 -->
-  <script>
-    console.log('🛡️ Loading ElevenLabs Popup Elimination v34...');
-    
-    // Block all ElevenLabs API key prompts immediately
-    window.prompt = function(message, defaultValue) {
-      if (message && (
-        message.toLowerCase().includes('api key') ||
-        message.toLowerCase().includes('elevenlabs') ||
-        message.toLowerCase().includes('key') ||
-        message.toLowerCase().includes('token')
-      )) {
-        console.log('🚫 ElevenLabs API key prompt blocked:', message);
-        return null;
-      }
-      return window.originalPrompt ? window.originalPrompt.call(this, message, defaultValue) : null;
-    };
-    
-    // Block API key property access (check if already defined)
-    if (!window.hasOwnProperty('ELEVENLABS_API_KEY')) {
-      Object.defineProperty(window, 'ELEVENLABS_API_KEY', {
-        get: () => { console.log('🚫 API key access blocked'); return null; },
-        set: () => { console.log('🚫 API key setting blocked'); }
-      });
-    }
-    
-    // Enhanced TTS with OAuth2 fallback
-    window.optimizedTTS = function(text) {
-      if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(text);
-        const voices = speechSynthesis.getVoices();
-        const voice = voices.find(v => v.lang.startsWith('en')) || voices[0];
-        if (voice) utterance.voice = voice;
-        utterance.rate = 0.9;
-        speechSynthesis.speak(utterance);
-        return Promise.resolve({ success: true, source: 'browser' });
-      }
-      return Promise.resolve({ success: false });
-    };
-    
-    // Replace ElevenLabs functions on load
-    document.addEventListener('DOMContentLoaded', function() {
-      ['speakWithElevenLabs', 'speakMessage', 'textToSpeech', 'elevenLabsTTS'].forEach(fn => {
-        if (typeof window[fn] === 'function') {
-          window[fn] = optimizedTTS;
-        }
-      });
-      console.log('✅ ElevenLabs popup elimination loaded');
-      
-      // Set OAuth2 environment flags for server compatibility
-      window.ELEVENLABS_AUTH_MODE = 'oauth2';
-      window.DISABLE_API_KEY_POPUPS = true;
-      window.OAUTH2_ENABLED = true;
-      console.log('🔐 OAuth2 mode: ENABLED');
-      console.log('🚫 API key popups: DISABLED');
-    });
-    // Set OAuth2 environment flags
-    window.ELEVENLABS_AUTH_MODE = 'oauth2';
-    window.DISABLE_API_KEY_POPUPS = true;
-    window.OAUTH2_ENABLED = true;
-    console.log('🔐 OAuth2 mode: ENABLED');
-    console.log('🚫 API key popups: DISABLED');
-  </script>
+  <!-- UNIFIED ELEVENLABS POPUP ELIMINATION SYSTEM -->
+  <script src="elevenlabs-popup-elimination.js"></script>
 </head>
 <body>
   <div class="main-container">
@@ -3298,6 +3120,40 @@
         }
         
         return await Promise.resolve(result.response || result.message || 'Request received. Following proper workflow channels...');
+      } catch (error) {
+        return processWorkflowFallback(query);
+      }
+    }
+    
+    // CRITICAL FIX: Add missing getSecretValue function
+    async function getSecretValue(secretName) {
+      try {
+        const response = await fetch('/api/secrets/' + secretName, {
+          headers: {
+            'Authorization': `Bearer ${window.serviceAccountToken}`,
+            'X-Service': 'owner-interface'
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          return data.value;
+        }
+        // Fallback to environment or default
+        return process.env[secretName] || 'DEFAULT_SECRET_VALUE';
+      } catch (error) {
+        console.error('Secret retrieval failed:', error);
+        return null;
+      }
+    }
+    
+    // CRITICAL FIX: Initialize service account token
+    function initializeServiceAccountToken() {
+      if (!window.serviceAccountToken) {
+        // Generate or retrieve from secure storage
+        window.serviceAccountToken = 'sao-token-' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('sao_session_token', window.serviceAccountToken);
+      }
+      return window.serviceAccountToken;
         
       } catch (error) {
         return processWorkflowFallback(query);

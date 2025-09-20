@@ -215,7 +215,7 @@ function sendPCPMessage() {
   const input = document.getElementById('pcp-input');
   const message = input.value.trim();
   
-  if (!message) return;
+  if (!message) {return;}
   
   console.log(`💬 Sending message to QB: ${message}`);
   

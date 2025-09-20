@@ -19,7 +19,13 @@
     "docker:run": "docker run -p 8080:8080 mcp-universal-template:latest",
     "logs": "gcloud logging read 'resource.type=\"cloud_run_revision\" AND resource.labels.service_name=\"mcp-universal-template\"' --limit 50 --format json",
     "metrics": "gcloud monitoring metrics list --filter='metric.type:\"run.googleapis.com/container/*\"'",
-    "secrets:sync": "gcloud secrets versions access latest --secret='mcp-config' > .env"
+    "secrets:sync": "gcloud secrets versions access latest --secret='mcp-config' > .env",
+    "audit": "npm audit",
+    "audit-fix": "npm audit fix",
+    "security-check": "npm audit && npm run lint",
+    "update-deps": "npm update && npm audit",
+    "security-scan": "retire --js --path ./",
+    "env-check": "dotenv-linter || echo \"dotenv-linter not installed\""
   },
   "keywords": [
     "mcp",
@@ -53,8 +59,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "express-rate-limit": "^7.1.5",
-    "helmet": "^7.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
     "ioredis": "^5.3.2",
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
@@ -71,6 +77,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.10.4",
+    "dotenv-linter": "^0.2.0",
     "eslint": "^8.55.0",
     "eslint-config-node": "^4.1.0",
     "jest": "^29.7.0",
@@ -78,7 +85,9 @@
     "newman-reporter-htmlextra": "^1.23.1",
     "newman-reporter-json-summary": "^1.0.0",
     "nodemon": "^3.0.2",
+    "npm-audit-resolver": "^3.0.0-RC.0",
     "prettier": "^3.1.0",
+    "retire": "^5.3.0",
     "supertest": "^6.3.3"
   },
   "repository": {

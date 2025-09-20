@@ -1,0 +1,37 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files first for better caching
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --production
+
+# Copy promise handler and utilities
+COPY utils/ ./utils/
+
+# Copy computationalist agents system
+COPY owner-interface/vls-computationalist-agents.js ./owner-interface/
+
+# Copy VLS voice synthesis interface
+COPY vls-voice-synthesis-interface.html ./
+
+# Copy owner interface components
+COPY owner-interface/ ./owner-interface/
+
+# Copy all other source files
+COPY . .
+
+# Set environment variables for VLS system
+ENV NODE_ENV=production
+ENV NODE_OPTIONS="--require ./utils/promiseHandler.js"
+ENV VLS_SYSTEM_ENABLED=true
+ENV COMPUTATIONALIST_AGENTS_ENABLED=true
+ENV CONVERSATIONAL_TTS_STT_ENABLED=true
+ENV DIAMOND_SAO_AUTHORITY=true
+
+EXPOSE 8080
+
+# Start with promise error prevention
+CMD ["node", "-r", "./utils/promiseHandler.js", "index.js"]

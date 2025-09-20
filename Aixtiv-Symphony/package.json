@@ -20,7 +20,13 @@
     "lint:heal": "node scripts/lint-self-healing.js",
     "lint:heal:basic": "node scripts/lint-self-healing.js --basic",
     "lint:report": "node scripts/lint-self-healing.js --report",
-    "deploy": "node diamond-cli/bin/diamond deploy wfa swarm"
+    "deploy": "node diamond-cli/bin/diamond deploy wfa swarm",
+    "audit": "npm audit",
+    "audit-fix": "npm audit fix",
+    "security-check": "npm audit && npm run lint",
+    "update-deps": "npm update && npm audit",
+    "security-scan": "retire --js --path ./",
+    "env-check": "dotenv-linter || echo \"dotenv-linter not installed\""
   },
   "keywords": [
     "mcp",
@@ -69,8 +75,9 @@
     "dotenv": "^16.3.1",
     "elevenlabs": "^1.59.0",
     "express": "^4.21.2",
+    "express-rate-limit": "^8.1.0",
     "google-auth-library": "^10.3.0",
-    "helmet": "^7.1.0",
+    "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.3.0",
     "multer": "^2.0.2",
@@ -83,11 +90,14 @@
     "@eslint/js": "^9.34.0",
     "@typescript-eslint/parser": "^8.0.0",
     "chai": "^6.0.1",
+    "dotenv-linter": "^0.2.0",
     "eslint": "^9.34.0",
     "globals": "^15.0.0",
     "mocha": "^11.7.2",
     "newman": "^6.2.0",
-    "postman-collection": "^5.1.0"
+    "npm-audit-resolver": "^3.0.0-RC.0",
+    "postman-collection": "^5.1.0",
+    "retire": "^5.3.0"
   },
   "repository": {
     "type": "git",

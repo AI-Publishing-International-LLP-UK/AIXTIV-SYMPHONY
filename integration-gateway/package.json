@@ -14,7 +14,13 @@
     "fix-promises": "node utils/promiseHandler.js",
     "init-agents": "node owner-interface/vls-computationalist-agents.js",
     "monitor-promises": "node scripts/monitor-promise-errors.js",
-    "vls-deploy": "bash deploy-vls-complete-system.sh"
+    "vls-deploy": "bash deploy-vls-complete-system.sh",
+    "audit": "npm audit",
+    "audit-fix": "npm audit fix",
+    "security-check": "npm audit && npm run lint",
+    "update-deps": "npm update && npm audit",
+    "security-scan": "retire --js --path ./",
+    "env-check": "dotenv-linter || echo \"dotenv-linter not installed\""
   },
   "repository": {
     "type": "git",
@@ -34,7 +40,7 @@
   "private": true,
   "dependencies": {
     "@google-cloud/firestore": "^7.11.4",
-    "@google-cloud/secret-manager": "^5.8.0",
+    "@google-cloud/secret-manager": "^5.5.0",
     "@pinecone-database/pinecone": "^6.1.2",
     "axios": "^1.12.2",
     "compression": "^1.8.1",
@@ -42,6 +48,7 @@
     "dotenv": "^17.2.2",
     "elevenlabs": "^0.8.2",
     "express": "^4.21.2",
+    "express-rate-limit": "^8.1.0",
     "googleapis": "^159.0.0",
     "helmet": "^8.1.0",
     "mongodb": "^6.19.0",
@@ -53,5 +60,10 @@
   "engines": {
     "node": ">=22.0.0",
     "npm": ">=10.0.0"
+  },
+  "devDependencies": {
+    "dotenv-linter": "^0.2.0",
+    "npm-audit-resolver": "^3.0.0-RC.0",
+    "retire": "^5.3.0"
   }
 }

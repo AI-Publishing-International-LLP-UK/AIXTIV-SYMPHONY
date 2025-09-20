@@ -1,0 +1,15 @@
+{
+  "name": "mocoa-owner-interface-fixed",
+  "version": "1.0.1",
+  "description": "MOCOA Owner Interface - JavaScript Fix Deployment",
+  "main": "server-simple.js",
+  "scripts": {
+    "start": "node server-simple.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}

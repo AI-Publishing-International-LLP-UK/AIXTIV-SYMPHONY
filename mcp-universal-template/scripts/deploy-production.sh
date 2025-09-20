@@ -264,6 +264,7 @@ setup_service_account() {
         gcloud projects add-iam-policy-binding $PROJECT_ID \
             --member="serviceAccount:$service_account_email" \
             --role="$role" \
+            --condition=None \
             --quiet
     done
     

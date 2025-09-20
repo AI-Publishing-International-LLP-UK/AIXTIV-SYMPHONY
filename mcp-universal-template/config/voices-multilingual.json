@@ -1,0 +1,97 @@
+{
+  "ai_trinity_voices": {
+    "dr_lucy": {
+      "voice_id": "EXAVITQu4vr4xnSDxMaL",
+      "name": "Dr. Lucy",
+      "description": "Bella - Professional California educated voice",
+      "profile": "California educated professional, sophisticated and clear",
+      "agent_type": "QB",
+      "primary_languages": ["en-US", "en-CA", "es-MX", "es-ES", "fr-CA"],
+      "settings": {
+        "stability": 0.75,
+        "similarity_boost": 0.85,
+        "style": 0.90,
+        "use_speaker_boost": true
+      }
+    },
+    "dr_claude": {
+      "voice_id": "21m00Tcm4TlvDq8ikWAM",
+      "name": "Dr. Claude", 
+      "description": "Rachel - Mature gentleman from Southeast England",
+      "profile": "Mature male, age 55, Southeast English accent, sophisticated and authoritative",
+      "agent_type": "SH",
+      "primary_languages": ["en-GB", "en-US", "fr-FR", "de-DE", "it-IT"],
+      "settings": {
+        "stability": 0.75,
+        "similarity_boost": 0.80,
+        "style": 0.45,
+        "use_speaker_boost": true
+      }
+    },
+    "victory36": {
+      "voice_id": "XrExE9yKIg1WjnnlVkGX",
+      "name": "Victory36",
+      "description": "Matilda - French woman speaking English with beautiful accent",
+      "profile": "French woman, age 45, speaking English with elegant French accent",
+      "agent_type": "Q", 
+      "primary_languages": ["fr-FR", "en-US", "en-GB", "es-ES", "it-IT"],
+      "settings": {
+        "stability": 0.80,
+        "similarity_boost": 0.75,
+        "style": 0.55,
+        "use_speaker_boost": true
+      }
+    }
+  },
+  "multilingual_support": {
+    "model": "eleven_multilingual_v2",
+    "supported_languages": [
+      "en-US", "en-GB", "en-CA", "en-AU", "en-IN",
+      "es-ES", "es-MX", "es-AR", "es-CO", "es-CL",
+      "fr-FR", "fr-CA", "fr-CH", "fr-BE",
+      "de-DE", "de-AT", "de-CH",
+      "it-IT", "it-CH",
+      "pt-BR", "pt-PT",
+      "nl-NL", "nl-BE",
+      "sv-SE", "da-DK", "no-NO", "fi-FI",
+      "pl-PL", "cs-CZ", "sk-SK", "hu-HU",
+      "ru-RU", "uk-UA", "bg-BG", "ro-RO",
+      "hr-HR", "sr-RS", "sl-SI", "et-EE", "lv-LV", "lt-LT",
+      "el-GR", "tr-TR", "ar-SA", "ar-EG", "ar-AE",
+      "he-IL", "fa-IR", "ur-PK", "hi-IN", "bn-BD",
+      "th-TH", "vi-VN", "id-ID", "ms-MY",
+      "zh-CN", "zh-TW", "zh-HK", "ja-JP", "ko-KR"
+    ],
+    "fallback_voice": "dr_lucy",
+    "language_detection": true,
+    "auto_switch_voices": true
+  },
+  "deployment_configuration": {
+    "api_endpoint": "https://api.elevenlabs.io/v1",
+    "model_id": "eleven_multilingual_v2",
+    "timeout": 30000,
+    "retry_attempts": 3,
+    "retry_delay": 1000,
+    "secret_manager": {
+      "project": "api-for-warp-drive",
+      "secret_name": "elevenlabs-api-key"
+    }
+  },
+  "agent_context": {
+    "dr_lucy": {
+      "specialties": ["ML Deep Mind", "ChatGPT Integration", "Quantum Business Analysis"],
+      "personality": "Professional, analytical, innovative",
+      "response_style": "Clear, data-driven, supportive"
+    },
+    "dr_claude": {
+      "specialties": ["Anthropic CLI", "Strategic Reasoning", "Diamond SAO Integration"],
+      "personality": "Wise, authoritative, strategic",
+      "response_style": "Thoughtful, sophisticated, comprehensive"
+    },
+    "victory36": {
+      "specialties": ["Prediction Engine", "Security Intelligence", "Strategic Coordination"],
+      "personality": "Elegant, precise, internationally-minded",
+      "response_style": "Strategic, refined, globally-aware"
+    }
+  }
+}

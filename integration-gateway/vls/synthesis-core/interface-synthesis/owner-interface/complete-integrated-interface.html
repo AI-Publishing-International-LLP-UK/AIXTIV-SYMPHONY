@@ -1,0 +1,1628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Integrated Interface - Mocoa Owner Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f23;
+            color: #e6e6e6;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Main layout container */
+        .interface-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            transition: all 0.3s ease;
+        }
+
+        /* Left Panel - Chat & CLI */
+        .left-panel {
+            flex: 1;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(124, 58, 237, 0.3);
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+        }
+
+        /* Right Panel - Live Environment View */
+        .right-panel {
+            width: 0;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-left: 1px solid rgba(124, 58, 237, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Right panel states */
+        .right-panel.collapsed {
+            width: 48px;
+        }
+
+        .right-panel.normal {
+            width: 400px;
+        }
+
+        .right-panel.expanded {
+            width: 600px;
+        }
+
+        .right-panel.fullwidth {
+            width: 50vw;
+        }
+
+        /* Top control bar */
+        .control-bar {
+            height: 32px;
+            background: rgba(124, 58, 237, 0.1);
+            border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+            font-size: 10px;
+        }
+
+        .view-controls {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .view-btn {
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: rgba(124, 58, 237, 0.2);
+            border-radius: 3px;
+            color: #a855f7;
+            cursor: pointer;
+            font-size: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .view-btn:hover {
+            background: rgba(124, 58, 237, 0.4);
+        }
+
+        .view-btn.active {
+            background: rgba(124, 58, 237, 0.5);
+            color: white;
+        }
+
+        /* Mode indicator */
+        .mode-indicator {
+            background: rgba(124, 58, 237, 0.1);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .mode-badge {
+            background: rgba(124, 58, 237, 0.3);
+            color: #a855f7;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        /* Chat area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 8px;
+            overflow: hidden;
+        }
+
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        /* Message styling */
+        .message {
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            max-width: 90%;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message.pilot {
+            align-self: flex-start;
+        }
+
+        .progress-bar {
+            width: 2px;
+            height: 100%;
+            border-radius: 1px;
+            background: #374151;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar.active {
+            background: linear-gradient(180deg, #10b981 0%, #059669 100%);
+            animation: pulse-progress 2s ease-in-out infinite;
+        }
+
+        .progress-bar.thinking {
+            background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+            animation: thinking-progress 1s ease-in-out infinite;
+        }
+
+        @keyframes pulse-progress {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes thinking-progress {
+            0%, 100% { transform: scaleY(0.8); }
+            50% { transform: scaleY(1); }
+        }
+
+        .speaker-indicator {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .speaker-indicator.user {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: white;
+        }
+
+        .speaker-indicator.pilot {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            font-family: 'Georgia', serif;
+            font-style: italic;
+        }
+
+        .message-content {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 6px 10px;
+            max-width: 100%;
+            line-height: 1.3;
+            font-size: 11px;
+        }
+
+        .message.user .message-content {
+            background: rgba(124, 58, 237, 0.2);
+            border-color: rgba(124, 58, 237, 0.3);
+        }
+
+        .message.pilot .message-content {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .message.cli .message-content {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 10px;
+        }
+
+        /* Input bar */
+        .input-bar {
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            border-top: 1px solid rgba(124, 58, 237, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .input-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 4px 10px;
+            gap: 6px;
+        }
+
+        .input-container:focus-within {
+            border-color: rgba(124, 58, 237, 0.5);
+            box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.1);
+        }
+
+        .chat-input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: white;
+            font-size: 11px;
+            font-family: inherit;
+        }
+
+        .cli-toggle {
+            background: rgba(124, 58, 237, 0.2);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: #a855f7;
+            border-radius: 12px;
+            padding: 2px 6px;
+            font-size: 9px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cli-toggle.active {
+            background: rgba(124, 58, 237, 0.4);
+            border-color: rgba(124, 58, 237, 0.6);
+        }
+
+        .send-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        /* Live Environment View */
+        .environment-view {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .environment-view.active {
+            display: flex;
+        }
+
+        /* Web Studio View */
+        .web-studio-view {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .studio-toolbar {
+            height: 30px;
+            background: rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 8px;
+            font-size: 9px;
+        }
+
+        .studio-btn {
+            padding: 2px 6px;
+            background: rgba(124, 58, 237, 0.2);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 3px;
+            color: #a855f7;
+            cursor: pointer;
+            font-size: 8px;
+        }
+
+        .studio-content {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .live-preview {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        /* System Status View */
+        .system-status-view {
+            padding: 8px;
+            font-size: 10px;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 6px;
+        }
+
+        .status-item {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            border-radius: 4px;
+            padding: 6px;
+        }
+
+        .status-item.healthy {
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        .status-item.warning {
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .status-header {
+            font-weight: 600;
+            color: #a855f7;
+            margin-bottom: 2px;
+        }
+
+        /* Green Screen View */
+        .green-screen-view {
+            background: #00ff00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #000;
+            position: relative;
+        }
+
+        .green-screen-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+        }
+
+        /* Logs View */
+        .logs-view {
+            padding: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 9px;
+            line-height: 1.2;
+            overflow-y: auto;
+        }
+
+        .log-line {
+            margin: 1px 0;
+            padding: 2px 4px;
+        }
+
+        .log-line.info {
+            color: #10b981;
+        }
+
+        .log-line.warning {
+            color: #f59e0b;
+        }
+
+        .log-line.error {
+            color: #ef4444;
+        }
+
+        /* Command Shortcuts Overlay */
+        .shortcuts-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .shortcuts-modal {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            border: 2px solid rgba(124, 58, 237, 0.3);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .shortcuts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        .shortcuts-title {
+            color: #a855f7;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .shortcuts-close {
+            background: none;
+            border: none;
+            color: #6b7280;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .shortcuts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 16px;
+        }
+
+        .shortcuts-section {
+            background: rgba(124, 58, 237, 0.05);
+            border: 1px solid rgba(124, 58, 237, 0.15);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .shortcuts-section-title {
+            color: #a855f7;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 12px;
+        }
+
+        .shortcut-desc {
+            color: #e6e6e6;
+        }
+
+        .shortcut-keys {
+            display: flex;
+            gap: 2px;
+        }
+
+        .shortcut-key {
+            background: rgba(124, 58, 237, 0.2);
+            color: #a855f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 500;
+            font-family: Monaco, monospace;
+        }
+
+        /* Command Palette Modal */
+        .command-palette-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            z-index: 2000;
+            padding-top: 10vh;
+            animation: fadeIn 0.15s ease;
+        }
+
+        .command-palette-modal {
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            border: 2px solid rgba(124, 58, 237, 0.4);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            animation: slideDown 0.15s ease;
+        }
+
+        .command-palette-input {
+            width: 100%;
+            background: rgba(124, 58, 237, 0.05);
+            border: none;
+            border-bottom: 1px solid rgba(124, 58, 237, 0.2);
+            color: #e6e6e6;
+            font-size: 16px;
+            padding: 16px 20px;
+            border-radius: 12px 12px 0 0;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .command-palette-input::placeholder {
+            color: #6b7280;
+        }
+
+        .command-palette-results {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+
+        .command-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            transition: all 0.1s ease;
+        }
+
+        .command-item:hover,
+        .command-item.selected {
+            background: rgba(124, 58, 237, 0.1);
+            border-left-color: #a855f7;
+        }
+
+        .command-item-icon {
+            font-size: 14px;
+            margin-right: 12px;
+            width: 16px;
+            text-align: center;
+        }
+
+        .command-item-content {
+            flex: 1;
+        }
+
+        .command-item-title {
+            color: #e6e6e6;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .command-item-desc {
+            color: #9ca3af;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .command-item-shortcut {
+            color: #6b7280;
+            font-size: 11px;
+            font-family: Monaco, monospace;
+            background: rgba(124, 58, 237, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* History Indicator */
+        .history-indicator {
+            position: absolute;
+            right: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            font-size: 11px;
+            font-family: Monaco, monospace;
+            display: none;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .interface-container {
+                flex-direction: column;
+            }
+            
+            .left-panel {
+                border-right: none;
+                border-bottom: 1px solid rgba(124, 58, 237, 0.3);
+            }
+            
+            .right-panel {
+                width: 100% !important;
+                height: 40vh;
+                border-left: none;
+                border-top: 1px solid rgba(124, 58, 237, 0.3);
+            }
+
+            .shortcuts-modal {
+                padding: 16px;
+            }
+
+            .shortcuts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .command-palette-modal {
+                margin: 0 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="interface-container">
+        <!-- Left Panel - Chat & CLI -->
+        <div class="left-panel">
+            <!-- Control Bar -->
+            <div class="control-bar">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="color: #a855f7; font-weight: 600;">Mocoa Interface</span>
+                    <span style="color: #6b7280;">v34.1</span>
+                </div>
+                
+                <div class="view-controls">
+                    <span style="color: #6b7280; margin-right: 4px;">View:</span>
+                    <button class="view-btn" onclick="toggleRightPanel('collapsed')" title="Collapse">‹</button>
+                    <button class="view-btn active" onclick="toggleRightPanel('normal')" title="Side by Side">⚍</button>
+                    <button class="view-btn" onclick="toggleRightPanel('fullwidth')" title="Split Screen">⚏</button>
+                    <button class="view-btn" onclick="toggleRightPanel('closed')" title="Close">×</button>
+                </div>
+            </div>
+
+            <!-- Mode Indicator -->
+            <div class="mode-indicator">
+                <span class="mode-badge" id="currentMode">PILOT</span>
+                <span>Live Environment Integration</span>
+                <div style="margin-left: auto; display: flex; gap: 3px; align-items: center;">
+                    <span style="color: #10b981; font-size: 8px;" id="connectionDot">●</span>
+                    <span style="font-size: 8px;" id="connectionStatus">Live</span>
+                </div>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="chat-area">
+                <div class="messages-area" id="messagesArea">
+                    <div class="message pilot">
+                        <div class="progress-bar active"></div>
+                        <div class="speaker-indicator pilot">P</div>
+                        <div class="message-content">
+                            Welcome to the complete integrated interface! I can help with integration gateway commands, web studio development, green screen setup, and live environment monitoring. Watch the right panel for real-time updates as we work together!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Bar with Integration Gateway Commands -->
+                <div class="input-bar">
+                    <div class="input-container">
+                        <button class="cli-toggle" id="cliToggle" onclick="toggleCLI()">💎</button>
+                        <input 
+                            type="text" 
+                            class="chat-input" 
+                            id="chatInput"
+                            placeholder="Natural language command or chat..."
+                            onkeypress="handleKeyPress(event)"
+                            autocomplete="off"
+                        >
+                        <div class="history-indicator" id="historyIndicator">↕ History</div>
+                    </div>
+                    <button class="send-btn" onclick="sendMessage()">➤</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel - Live Environment View -->
+        <div class="right-panel normal" id="rightPanel">
+            <!-- Environment Control Bar -->
+            <div class="control-bar">
+                <div style="display: flex; gap: 4px;">
+                    <button class="view-btn active" id="statusBtn" onclick="switchEnvironmentView('status')">📊</button>
+                    <button class="view-btn" id="studioBtn" onclick="switchEnvironmentView('studio')">🎨</button>
+                    <button class="view-btn" id="logsBtn" onclick="switchEnvironmentView('logs')">📋</button>
+                    <button class="view-btn" id="greenBtn" onclick="switchEnvironmentView('green')">🟢</button>
+                </div>
+                <div style="color: #6b7280; font-size: 9px;" id="viewTitle">System Status</div>
+            </div>
+
+            <!-- System Status View -->
+            <div class="environment-view active" id="statusView">
+                <div class="system-status-view">
+                    <div class="status-grid" id="statusGrid">
+                        <div class="status-item healthy">
+                            <div class="status-header">💎 Diamond SAO</div>
+                            <div style="color: #10b981;">OPERATIONAL - v34.1</div>
+                            <div style="color: #6b7280; font-size: 9px;">Launch Ready: 96.7%</div>
+                        </div>
+                        
+                        <div class="status-item healthy">
+                            <div class="status-header">🌌 WFA Swarm</div>
+                            <div style="color: #10b981;">QUANTUM_ENTANGLED</div>
+                            <div style="color: #6b7280; font-size: 9px;">30,000,000 agents active</div>
+                        </div>
+                        
+                        <div class="status-item healthy">
+                            <div class="status-header">🛡️ Victory36</div>
+                            <div style="color: #10b981;">MAXIMUM_SECURITY</div>
+                            <div style="color: #6b7280; font-size: 9px;">0 threats detected</div>
+                        </div>
+                        
+                        <div class="status-item healthy">
+                            <div class="status-header">🚪 Integration Gateway</div>
+                            <div style="color: #10b981;">UAO_ALIGNED</div>
+                            <div style="color: #6b7280; font-size: 9px;">All services online</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Web Studio View -->
+            <div class="environment-view" id="studioView">
+                <div class="web-studio-view">
+                    <div class="studio-toolbar">
+                        <button class="studio-btn" onclick="studioAction('save')">💾 Save</button>
+                        <button class="studio-btn" onclick="studioAction('deploy')">🚀 Deploy</button>
+                        <button class="studio-btn" onclick="studioAction('preview')">👁️ Preview</button>
+                        <div style="margin-left: auto; color: #6b7280;">Live Preview</div>
+                    </div>
+                    <div class="studio-content">
+                        <iframe class="live-preview" id="livePreview" src="about:blank"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logs View -->
+            <div class="environment-view" id="logsView">
+                <div class="logs-view" id="logsContainer">
+                    <div class="log-line info">[16:14:35] ✅ Diamond SAO systems initialized</div>
+                    <div class="log-line info">[16:14:36] 🌌 WFA Swarm quantum entanglement established</div>
+                    <div class="log-line info">[16:14:37] 🛡️ Victory36 protection activated</div>
+                    <div class="log-line info">[16:14:38] 🚪 Integration gateway services online</div>
+                    <div class="log-line info">[16:14:39] 💎 CLI interface ready for commands</div>
+                </div>
+            </div>
+
+            <!-- Green Screen View -->
+            <div class="environment-view" id="greenView">
+                <div class="green-screen-view">
+                    <div class="green-screen-overlay">Green Screen Active</div>
+                    GREEN SCREEN
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Command Shortcuts Overlay -->
+    <div class="shortcuts-overlay" id="shortcutsOverlay">
+        <div class="shortcuts-modal">
+            <div class="shortcuts-header">
+                <div class="shortcuts-title">💎 Keyboard Shortcuts</div>
+                <button class="shortcuts-close" onclick="hideShortcuts()">×</button>
+            </div>
+            <div class="shortcuts-grid">
+                <div class="shortcuts-section">
+                    <div class="shortcuts-section-title">Navigation</div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Command Palette</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">Cmd</span>
+                            <span class="shortcut-key">K</span>
+                        </div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Toggle CLI Mode</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">Cmd</span>
+                            <span class="shortcut-key">Enter</span>
+                        </div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Previous Command</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">↑</span>
+                        </div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Next Command</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">↓</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="shortcuts-section">
+                    <div class="shortcuts-section-title">Panel Controls</div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Collapse Panel</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">Cmd</span>
+                            <span class="shortcut-key">1</span>
+                        </div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Normal Panel</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">Cmd</span>
+                            <span class="shortcut-key">2</span>
+                        </div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Split Screen</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">Cmd</span>
+                            <span class="shortcut-key">3</span>
+                        </div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Close Panel</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">Cmd</span>
+                            <span class="shortcut-key">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="shortcuts-section">
+                    <div class="shortcuts-section-title">Environment Views</div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">System Status</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">Cmd</span>
+                            <span class="shortcut-key">S</span>
+                        </div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Web Studio</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">Cmd</span>
+                            <span class="shortcut-key">W</span>
+                        </div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">System Logs</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">Cmd</span>
+                            <span class="shortcut-key">L</span>
+                        </div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Green Screen</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">Cmd</span>
+                            <span class="shortcut-key">G</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="shortcuts-section">
+                    <div class="shortcuts-section-title">Quick Actions</div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Send Message</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">Enter</span>
+                        </div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Focus Input</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">/</span>
+                        </div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Show Shortcuts</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">?</span>
+                        </div>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-desc">Escape/Cancel</span>
+                        <div class="shortcut-keys">
+                            <span class="shortcut-key">Esc</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Command Palette Overlay -->
+    <div class="command-palette-overlay" id="commandPaletteOverlay">
+        <div class="command-palette-modal">
+            <input 
+                type="text" 
+                class="command-palette-input" 
+                id="commandPaletteInput"
+                placeholder="Type to search commands..."
+                autocomplete="off"
+            >
+            <div class="command-palette-results" id="commandPaletteResults">
+                <!-- Commands will be dynamically populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class CompleteIntegratedInterface {
+            constructor() {
+                this.currentMode = 'PILOT';
+                this.cliMode = false;
+                this.rightPanelState = 'normal';
+                this.currentEnvironmentView = 'status';
+                this.userInitial = 'A';
+                this.isLiveMode = true;
+                
+                // Command history
+                this.commandHistory = JSON.parse(localStorage.getItem('asoos-command-history') || '[]');
+                this.historyIndex = -1;
+                this.currentInput = '';
+                
+                // Command palette
+                this.paletteVisible = false;
+                this.paletteSelectedIndex = 0;
+                this.paletteCommands = [];
+                
+                this.integrationCommands = {
+                    // Natural language integration gateway commands
+                    'deploy': 'deploy_system',
+                    'status': 'system_status',
+                    'restart': 'restart_services',
+                    'logs': 'show_logs',
+                    'monitor': 'start_monitoring',
+                    'green screen': 'activate_green_screen',
+                    'web studio': 'open_web_studio',
+                    'build': 'build_project',
+                    'test': 'run_tests'
+                };
+                
+                // Available commands for palette
+                this.availableCommands = [
+                    { id: 'status', icon: '📊', title: 'System Status', desc: 'View system health and status', action: () => switchEnvironmentView('status'), shortcut: 'Cmd+S' },
+                    { id: 'studio', icon: '🎨', title: 'Web Studio', desc: 'Open web development studio', action: () => switchEnvironmentView('studio'), shortcut: 'Cmd+W' },
+                    { id: 'logs', icon: '📋', title: 'System Logs', desc: 'View real-time system logs', action: () => switchEnvironmentView('logs'), shortcut: 'Cmd+L' },
+                    { id: 'green', icon: '🟢', title: 'Green Screen', desc: 'Activate green screen mode', action: () => switchEnvironmentView('green'), shortcut: 'Cmd+G' },
+                    { id: 'collapse', icon: '◀', title: 'Collapse Panel', desc: 'Collapse right panel', action: () => toggleRightPanel('collapsed'), shortcut: 'Cmd+1' },
+                    { id: 'normal', icon: '⚍', title: 'Normal Panel', desc: 'Show normal panel view', action: () => toggleRightPanel('normal'), shortcut: 'Cmd+2' },
+                    { id: 'fullwidth', icon: '⚏', title: 'Split Screen', desc: 'Full width split screen', action: () => toggleRightPanel('fullwidth'), shortcut: 'Cmd+3' },
+                    { id: 'close', icon: '×', title: 'Close Panel', desc: 'Close right panel', action: () => toggleRightPanel('closed'), shortcut: 'Cmd+0' },
+                    { id: 'toggle-cli', icon: '💎', title: 'Toggle CLI', desc: 'Switch between chat and CLI mode', action: () => this.toggleCLI(), shortcut: 'Cmd+Enter' },
+                    { id: 'save-studio', icon: '💾', title: 'Save Studio', desc: 'Save current studio work', action: () => studioAction('save') },
+                    { id: 'deploy-studio', icon: '🚀', title: 'Deploy Studio', desc: 'Deploy studio project', action: () => studioAction('deploy') },
+                    { id: 'preview-studio', icon: '👁️', title: 'Preview Studio', desc: 'Preview studio work', action: () => studioAction('preview') }
+                ];
+                
+                this.init();
+            }
+            
+            init() {
+                this.startLiveUpdates();
+                this.scrollToBottom();
+                this.setupKeyboardShortcuts();
+                this.setupCommandPalette();
+            }
+            
+            scrollToBottom() {
+                const messagesArea = document.getElementById('messagesArea');
+                messagesArea.scrollTop = messagesArea.scrollHeight;
+            }
+            
+            toggleCLI() {
+                const toggle = document.getElementById('cliToggle');
+                const input = document.getElementById('chatInput');
+                
+                this.cliMode = !this.cliMode;
+                
+                if (this.cliMode) {
+                    toggle.classList.add('active');
+                    toggle.textContent = '⚡';
+                    input.placeholder = 'Natural language command...';
+                    input.style.fontFamily = 'Monaco, Menlo, monospace';
+                } else {
+                    toggle.classList.remove('active');
+                    toggle.textContent = '💎';
+                    input.placeholder = 'Natural language command or chat...';
+                    input.style.fontFamily = 'inherit';
+                }
+            }
+            
+            addMessage(content, sender = 'user', type = 'normal') {
+                const messagesArea = document.getElementById('messagesArea');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                
+                if (type === 'cli') {
+                    messageDiv.classList.add('cli');
+                }
+                
+                const progressBar = document.createElement('div');
+                progressBar.className = 'progress-bar';
+                if (sender === 'pilot' && type !== 'cli') {
+                    progressBar.classList.add('active');
+                }
+                if (type === 'cli') {
+                    progressBar.classList.add('thinking');
+                }
+                
+                const speakerDiv = document.createElement('div');
+                speakerDiv.className = `speaker-indicator ${sender}`;
+                speakerDiv.textContent = sender === 'pilot' ? (type === 'cli' ? '💎' : 'P') : this.userInitial;
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                
+                if (type === 'cli') {
+                    contentDiv.innerHTML = `<div style="color: #10b981;">diamond@mocoa:~$</div><div style="margin-top: 2px;">${content}</div>`;
+                } else {
+                    contentDiv.innerHTML = content;
+                }
+                
+                messageDiv.appendChild(progressBar);
+                messageDiv.appendChild(speakerDiv);
+                messageDiv.appendChild(contentDiv);
+                
+                messagesArea.appendChild(messageDiv);
+                this.scrollToBottom();
+                
+                // Update live environment if this was an action
+                if (type === 'cli' || sender === 'pilot') {
+                    this.updateLiveEnvironment(content);
+                }
+            }
+            
+            sendMessage() {
+                const input = document.getElementById('chatInput');
+                const content = input.value.trim();
+                
+                if (!content) return;
+                
+                // Add to command history
+                this.addToHistory(content);
+                
+                // Add user message
+                this.addMessage(content, 'user');
+                
+                // Clear input and hide history indicator
+                input.value = '';
+                document.getElementById('historyIndicator').style.display = 'none';
+                
+                // Process the command/message
+                this.processMessage(content);
+            }
+            
+            processMessage(message) {
+                // Check if it's a natural language command
+                const lowerMessage = message.toLowerCase();
+                let isCommand = false;
+                
+                for (const [keyword, command] of Object.entries(this.integrationCommands)) {
+                    if (lowerMessage.includes(keyword)) {
+                        isCommand = true;
+                        setTimeout(() => {
+                            this.executeIntegrationCommand(command, message);
+                        }, 500);
+                        break;
+                    }
+                }
+                
+                if (!isCommand) {
+                    // Regular chat response
+                    setTimeout(() => {
+                        this.handleChatMessage(message);
+                    }, 500);
+                }
+            }
+            
+            executeIntegrationCommand(command, originalMessage) {
+                let response = '';
+                let updateView = null;
+                
+                switch (command) {
+                    case 'system_status':
+                        response = '✅ All systems operational<br>🌌 WFA Swarm: QUANTUM_ENTANGLED<br>🛡️ Victory36: MAXIMUM_SECURITY<br>🚪 Gateway: UAO_ALIGNED';
+                        updateView = 'status';
+                        break;
+                    case 'deploy_system':
+                        response = '🚀 Deployment initiated<br>📦 Building containers...<br>☁️ Pushing to Cloud Run...<br>✅ Deployment successful';
+                        this.addLogEntry('info', 'Deployment started');
+                        break;
+                    case 'activate_green_screen':
+                        response = '🟢 Green screen activated<br>📹 Ready for video recording<br>🎬 Background removed';
+                        updateView = 'green';
+                        break;
+                    case 'open_web_studio':
+                        response = '🎨 Web Studio opened<br>💻 Live preview active<br>✏️ Ready for development';
+                        updateView = 'studio';
+                        break;
+                    case 'show_logs':
+                        response = '📋 Opening system logs<br>📊 Real-time monitoring active';
+                        updateView = 'logs';
+                        break;
+                    default:
+                        response = `⚡ Command executed: ${originalMessage}<br>📊 Check the live view for updates`;
+                }
+                
+                this.addMessage(response, 'pilot', 'cli');
+                
+                if (updateView) {
+                    setTimeout(() => {
+                        this.switchEnvironmentView(updateView);
+                    }, 1000);
+                }
+            }
+            
+            handleChatMessage(message) {
+                const responses = [
+                    "I can see the live environment updating. Let me help you with that.",
+                    "Great! I'm monitoring the changes in real-time. Here's what I observe...",
+                    "Perfect timing! I can see the system responding. Let me break this down:",
+                    "Excellent question! Watch the right panel as I demonstrate this..."
+                ];
+                
+                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                this.addMessage(randomResponse, 'pilot');
+            }
+            
+            updateLiveEnvironment(content) {
+                // Simulate live environment updates
+                if (this.currentEnvironmentView === 'status') {
+                    this.updateSystemStatus();
+                } else if (this.currentEnvironmentView === 'logs') {
+                    this.addLogEntry('info', `Action: ${content.substring(0, 50)}...`);
+                }
+            }
+            
+            updateSystemStatus() {
+                // Simulate real-time status updates
+                const statusItems = document.querySelectorAll('.status-item');
+                statusItems.forEach(item => {
+                    item.style.borderColor = 'rgba(16, 185, 129, 0.5)';
+                    setTimeout(() => {
+                        item.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+                    }, 1000);
+                });
+            }
+            
+            addLogEntry(type, message) {
+                const logsContainer = document.getElementById('logsContainer');
+                const logLine = document.createElement('div');
+                logLine.className = `log-line ${type}`;
+                
+                const timestamp = new Date().toLocaleTimeString();
+                logLine.textContent = `[${timestamp}] ${message}`;
+                
+                logsContainer.appendChild(logLine);
+                logsContainer.scrollTop = logsContainer.scrollHeight;
+            }
+            
+            startLiveUpdates() {
+                // Simulate live updates every 30 seconds
+                setInterval(() => {
+                    if (this.isLiveMode) {
+                        this.addLogEntry('info', '💓 System heartbeat - all services healthy');
+                        
+                        // Update connection indicator
+                        const dot = document.getElementById('connectionDot');
+                        dot.style.opacity = '0.5';
+                        setTimeout(() => {
+                            dot.style.opacity = '1';
+                        }, 200);
+                    }
+                }, 30000);
+            }
+            
+            handleKeyPress(event) {
+                // Command history navigation
+                if (event.key === 'ArrowUp') {
+                    event.preventDefault();
+                    this.navigateHistory('up');
+                    return;
+                }
+                
+                if (event.key === 'ArrowDown') {
+                    event.preventDefault();
+                    this.navigateHistory('down');
+                    return;
+                }
+                
+                if (event.key === 'Enter') {
+                    this.sendMessage();
+                }
+            }
+            
+            // Command History Methods
+            addToHistory(command) {
+                if (!command.trim()) return;
+                
+                // Remove duplicates and add to end
+                this.commandHistory = this.commandHistory.filter(cmd => cmd !== command);
+                this.commandHistory.push(command);
+                
+                // Keep only last 50 commands
+                if (this.commandHistory.length > 50) {
+                    this.commandHistory = this.commandHistory.slice(-50);
+                }
+                
+                // Save to localStorage
+                localStorage.setItem('asoos-command-history', JSON.stringify(this.commandHistory));
+                
+                // Reset history navigation
+                this.historyIndex = -1;
+                this.currentInput = '';
+            }
+            
+            navigateHistory(direction) {
+                const input = document.getElementById('chatInput');
+                const indicator = document.getElementById('historyIndicator');
+                
+                if (this.commandHistory.length === 0) return;
+                
+                // Save current input when starting navigation
+                if (this.historyIndex === -1) {
+                    this.currentInput = input.value;
+                }
+                
+                if (direction === 'up') {
+                    if (this.historyIndex < this.commandHistory.length - 1) {
+                        this.historyIndex++;
+                    }
+                } else if (direction === 'down') {
+                    if (this.historyIndex > -1) {
+                        this.historyIndex--;
+                    }
+                }
+                
+                // Update input
+                if (this.historyIndex === -1) {
+                    input.value = this.currentInput;
+                    indicator.style.display = 'none';
+                } else {
+                    input.value = this.commandHistory[this.commandHistory.length - 1 - this.historyIndex];
+                    indicator.style.display = 'block';
+                    indicator.textContent = `↕ ${this.historyIndex + 1}/${this.commandHistory.length}`;
+                }
+                
+                // Move cursor to end
+                setTimeout(() => input.setSelectionRange(input.value.length, input.value.length), 0);
+            }
+            
+            // Keyboard Shortcuts Setup
+            setupKeyboardShortcuts() {
+                document.addEventListener('keydown', (event) => {
+                    // Ignore if typing in an input field (except our main input)
+                    if (event.target.tagName === 'INPUT' && event.target.id !== 'chatInput') {
+                        return;
+                    }
+                    
+                    const cmd = event.metaKey || event.ctrlKey;
+                    const shift = event.shiftKey;
+                    const alt = event.altKey;
+                    
+                    // Command Palette: Cmd+K
+                    if (cmd && event.key === 'k') {
+                        event.preventDefault();
+                        this.showCommandPalette();
+                        return;
+                    }
+                    
+                    // Shortcuts overlay: ? or Cmd+/
+                    if ((event.key === '?' && !cmd) || (cmd && event.key === '/')) {
+                        event.preventDefault();
+                        this.showShortcuts();
+                        return;
+                    }
+                    
+                    // Escape: Close any overlay
+                    if (event.key === 'Escape') {
+                        this.hideShortcuts();
+                        this.hideCommandPalette();
+                        return;
+                    }
+                    
+                    // Focus input: /
+                    if (event.key === '/' && !cmd && event.target.tagName !== 'INPUT') {
+                        event.preventDefault();
+                        document.getElementById('chatInput').focus();
+                        return;
+                    }
+                    
+                    // Panel shortcuts
+                    if (cmd) {
+                        switch (event.key) {
+                            case '1':
+                                event.preventDefault();
+                                toggleRightPanel('collapsed');
+                                break;
+                            case '2':
+                                event.preventDefault();
+                                toggleRightPanel('normal');
+                                break;
+                            case '3':
+                                event.preventDefault();
+                                toggleRightPanel('fullwidth');
+                                break;
+                            case '0':
+                                event.preventDefault();
+                                toggleRightPanel('closed');
+                                break;
+                            case 's':
+                                event.preventDefault();
+                                switchEnvironmentView('status');
+                                break;
+                            case 'w':
+                                event.preventDefault();
+                                switchEnvironmentView('studio');
+                                break;
+                            case 'l':
+                                event.preventDefault();
+                                switchEnvironmentView('logs');
+                                break;
+                            case 'g':
+                                event.preventDefault();
+                                switchEnvironmentView('green');
+                                break;
+                            case 'Enter':
+                                event.preventDefault();
+                                this.toggleCLI();
+                                break;
+                        }
+                    }
+                });
+            }
+            
+            // Shortcuts Overlay Methods
+            showShortcuts() {
+                document.getElementById('shortcutsOverlay').style.display = 'flex';
+            }
+            
+            hideShortcuts() {
+                document.getElementById('shortcutsOverlay').style.display = 'none';
+            }
+            
+            // Command Palette Methods
+            setupCommandPalette() {
+                const input = document.getElementById('commandPaletteInput');
+                const results = document.getElementById('commandPaletteResults');
+                
+                input.addEventListener('input', (e) => {
+                    this.filterCommands(e.target.value);
+                });
+                
+                input.addEventListener('keydown', (e) => {
+                    switch (e.key) {
+                        case 'Escape':
+                            e.preventDefault();
+                            this.hideCommandPalette();
+                            break;
+                        case 'ArrowDown':
+                            e.preventDefault();
+                            this.selectNextCommand();
+                            break;
+                        case 'ArrowUp':
+                            e.preventDefault();
+                            this.selectPrevCommand();
+                            break;
+                        case 'Enter':
+                            e.preventDefault();
+                            this.executeSelectedCommand();
+                            break;
+                    }
+                });
+                
+                // Click outside to close
+                document.getElementById('commandPaletteOverlay').addEventListener('click', (e) => {
+                    if (e.target === document.getElementById('commandPaletteOverlay')) {
+                        this.hideCommandPalette();
+                    }
+                });
+            }
+            
+            showCommandPalette() {
+                this.paletteVisible = true;
+                this.paletteSelectedIndex = 0;
+                
+                const overlay = document.getElementById('commandPaletteOverlay');
+                const input = document.getElementById('commandPaletteInput');
+                
+                overlay.style.display = 'flex';
+                input.value = '';
+                input.focus();
+                
+                this.filterCommands('');
+            }
+            
+            hideCommandPalette() {
+                this.paletteVisible = false;
+                document.getElementById('commandPaletteOverlay').style.display = 'none';
+                document.getElementById('chatInput').focus();
+            }
+            
+            filterCommands(query) {
+                const filtered = this.availableCommands.filter(cmd => 
+                    cmd.title.toLowerCase().includes(query.toLowerCase()) ||
+                    cmd.desc.toLowerCase().includes(query.toLowerCase()) ||
+                    cmd.id.toLowerCase().includes(query.toLowerCase())
+                );
+                
+                this.paletteCommands = filtered;
+                this.paletteSelectedIndex = 0;
+                this.renderCommandResults();
+            }
+            
+            renderCommandResults() {
+                const results = document.getElementById('commandPaletteResults');
+                
+                if (this.paletteCommands.length === 0) {
+                    results.innerHTML = '<div style="padding: 20px; text-align: center; color: #6b7280;">No commands found</div>';
+                    return;
+                }
+                
+                results.innerHTML = this.paletteCommands.map((cmd, index) => `
+                    <div class="command-item ${
+                        index === this.paletteSelectedIndex ? 'selected' : ''
+                    }" onclick="window.interface.executeCommand('${cmd.id}')">
+                        <div class="command-item-icon">${cmd.icon}</div>
+                        <div class="command-item-content">
+                            <div class="command-item-title">${cmd.title}</div>
+                            <div class="command-item-desc">${cmd.desc}</div>
+                        </div>
+                        ${cmd.shortcut ? `<div class="command-item-shortcut">${cmd.shortcut}</div>` : ''}
+                    </div>
+                `).join('');
+            }
+            
+            selectNextCommand() {
+                if (this.paletteSelectedIndex < this.paletteCommands.length - 1) {
+                    this.paletteSelectedIndex++;
+                    this.renderCommandResults();
+                }
+            }
+            
+            selectPrevCommand() {
+                if (this.paletteSelectedIndex > 0) {
+                    this.paletteSelectedIndex--;
+                    this.renderCommandResults();
+                }
+            }
+            
+            executeSelectedCommand() {
+                if (this.paletteCommands[this.paletteSelectedIndex]) {
+                    this.executeCommand(this.paletteCommands[this.paletteSelectedIndex].id);
+                }
+            }
+            
+            executeCommand(commandId) {
+                const command = this.availableCommands.find(cmd => cmd.id === commandId);
+                if (command && command.action) {
+                    command.action();
+                    this.addLogEntry('info', `Command executed: ${command.title}`);
+                }
+                this.hideCommandPalette();
+            }
+        }
+        
+        // Global functions
+        function toggleRightPanel(state) {
+            const panel = document.getElementById('rightPanel');
+            const buttons = document.querySelectorAll('.view-controls .view-btn');
+            
+            // Remove all state classes
+            panel.classList.remove('closed', 'collapsed', 'normal', 'expanded', 'fullwidth');
+            
+            // Remove active class from all buttons
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add new state
+            panel.classList.add(state);
+            
+            // Activate corresponding button
+            const buttonIndex = {'collapsed': 0, 'normal': 1, 'fullwidth': 2, 'closed': 3}[state];
+            if (buttons[buttonIndex]) {
+                buttons[buttonIndex].classList.add('active');
+            }
+        }
+        
+        function switchEnvironmentView(viewType) {
+            // Hide all views
+            document.querySelectorAll('.environment-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('#rightPanel .view-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected view
+            document.getElementById(viewType + 'View').classList.add('active');
+            document.getElementById(viewType + 'Btn').classList.add('active');
+            
+            // Update title
+            const titles = {
+                'status': 'System Status',
+                'studio': 'Web Studio',
+                'logs': 'System Logs',
+                'green': 'Green Screen'
+            };
+            document.getElementById('viewTitle').textContent = titles[viewType];
+            
+            window.interface.currentEnvironmentView = viewType;
+        }
+        
+        function studioAction(action) {
+            window.interface.addLogEntry('info', `Web Studio: ${action} executed`);
+            
+            if (action === 'preview') {
+                const preview = document.getElementById('livePreview');
+                preview.src = 'data:text/html,<html><body style="background: linear-gradient(45deg, #7c3aed, #a855f7); color: white; display: flex; align-items: center; justify-content: center; height: 100vh; font-family: Arial;">Live Preview Active!</body></html>';
+            }
+        }
+        
+        function toggleCLI() {
+            window.interface.toggleCLI();
+        }
+        
+        function sendMessage() {
+            window.interface.sendMessage();
+        }
+        
+        function handleKeyPress(event) {
+            window.interface.handleKeyPress(event);
+        }
+        
+        function hideShortcuts() {
+            window.interface.hideShortcuts();
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            window.interface = new CompleteIntegratedInterface();
+        });
+    </script>
+</body>
+</html>

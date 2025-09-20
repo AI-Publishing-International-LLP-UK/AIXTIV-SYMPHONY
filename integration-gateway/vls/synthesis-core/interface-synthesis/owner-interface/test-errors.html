@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MOCOA Debug Test</title>
+    <script>
+        // Capture all JavaScript errors
+        window.addEventListener('error', function(e) {
+            console.error('JavaScript Error:', e.error, e.filename, e.lineno, e.colno);
+            document.getElementById('errors').innerHTML += '<p style="color: red;">ERROR: ' + e.message + ' at line ' + e.lineno + '</p>';
+        });
+
+        // Test loading the MOCOA interface
+        function testInterface() {
+            const iframe = document.createElement('iframe');
+            iframe.src = 'https://mocoa-owner-interface-859242575175.us-west1.run.app/';
+            iframe.style.width = '100%';
+            iframe.style.height = '600px';
+            iframe.style.border = '1px solid #ccc';
+            
+            iframe.onload = function() {
+                setTimeout(() => {
+                    const doc = iframe.contentDocument || iframe.contentWindow.document;
+                    const results = document.getElementById('results');
+                    
+                    // Check if functions exist
+                    const win = iframe.contentWindow;
+                    const functions = ['startVoiceInput', 'sendCopilotMessage', 'togglePanel', 'activateRIX'];
+                    
+                    functions.forEach(func => {
+                        const exists = typeof win[func] === 'function';
+                        results.innerHTML += '<p>' + func + ': ' + (exists ? '✅ Function exists' : '❌ Missing') + '</p>';
+                    });
+                    
+                    // Check for console errors in iframe
+                    const originalConsoleError = win.console.error;
+                    let errorCount = 0;
+                    win.console.error = function(...args) {
+                        errorCount++;
+                        document.getElementById('errors').innerHTML += '<p style="color: red;">IFRAME ERROR ' + errorCount + ': ' + args.join(' ') + '</p>';
+                        originalConsoleError.apply(win.console, args);
+                    };
+                    
+                    // Try to click a button
+                    const voiceButton = doc.querySelector('[onclick*="startVoiceInput"]');
+                    if (voiceButton) {
+                        results.innerHTML += '<p>Voice button found: ✅</p>';
+                        try {
+                            voiceButton.click();
+                            results.innerHTML += '<p>Voice button click: ✅ No immediate error</p>';
+                        } catch (e) {
+                            results.innerHTML += '<p style="color: red;">Voice button click failed: ' + e.message + '</p>';
+                        }
+                    } else {
+                        results.innerHTML += '<p style="color: red;">Voice button not found</p>';
+                    }
+                    
+                }, 3000);
+            };
+            
+            iframe.onerror = function(e) {
+                document.getElementById('errors').innerHTML += '<p style="color: red;">IFRAME LOAD ERROR: ' + e + '</p>';
+            };
+            
+            document.getElementById('iframe-container').appendChild(iframe);
+        }
+    </script>
+</head>
+<body>
+    <h1>MOCOA Interface Debug Test</h1>
+    <button onclick="testInterface()">Load and Test Interface</button>
+    
+    <h2>Results:</h2>
+    <div id="results"></div>
+    
+    <h2>Errors:</h2>
+    <div id="errors"></div>
+    
+    <h2>Interface:</h2>
+    <div id="iframe-container"></div>
+</body>
+</html>

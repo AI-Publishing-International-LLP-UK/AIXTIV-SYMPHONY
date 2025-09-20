@@ -4,12 +4,17 @@
   "description": "Integration Gateway Backend Server - Production Ready",
   "main": "server.js",
   "scripts": {
-    "build": "echo 'Building integration gateway server'",
-    "deploy": "gcloud run deploy integration-gateway-server --source . --platform managed --region us-west1 --project api-for-warp-drive",
+    "build": "echo 'Building VLS Complete System'",
+    "deploy": "bash deploy-vls-complete-system.sh",
+    "deploy-local": "./scripts/deploy-local.sh",
     "test": "echo 'No tests specified' && exit 0",
-    "start": "node server.js",
+    "start": "node -r ./utils/promiseHandler.js server.js",
+    "start-safe": "node -r ./utils/promiseHandler.js index.js",
     "security": "node security-framework.js",
-    "local-deploy": "./scripts/deploy-local.sh"
+    "fix-promises": "node utils/promiseHandler.js",
+    "init-agents": "node owner-interface/vls-computationalist-agents.js",
+    "monitor-promises": "node scripts/monitor-promise-errors.js",
+    "vls-deploy": "bash deploy-vls-complete-system.sh"
   },
   "repository": {
     "type": "git",
@@ -29,11 +34,13 @@
   "private": true,
   "dependencies": {
     "@google-cloud/firestore": "^7.11.4",
+    "@google-cloud/secret-manager": "^5.8.0",
     "@pinecone-database/pinecone": "^6.1.2",
     "axios": "^1.12.2",
     "compression": "^1.8.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
+    "elevenlabs": "^0.8.2",
     "express": "^4.21.2",
     "googleapis": "^159.0.0",
     "helmet": "^8.1.0",

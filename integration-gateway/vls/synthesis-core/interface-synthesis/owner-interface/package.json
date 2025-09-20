@@ -1,0 +1,56 @@
+{
+  "name": "mocoa-owner-interface-fixed",
+  "version": "1.0.2",
+  "description": "MOCOA Owner Interface with GCP Secret Manager integration",
+  "main": "server-minimal.js",
+  "scripts": {
+    "start": "node server-minimal.js",
+    "dev": "nodemon server.js",
+    "oauth2-server": "node oauth2-elevenlabs-server.js",
+    "oauth2-dev": "NODE_ENV=development nodemon oauth2-elevenlabs-server.js",
+    "oauth2-prod": "NODE_ENV=production node oauth2-elevenlabs-server.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test-oauth2": "node test/oauth2-client-test.js",
+    "test-auth-flow": "node test/auth-flow-test.js",
+    "build": "echo \"No build step required\"",
+    "deploy": "gcloud builds submit --config=cloudbuild.yaml .",
+    "deploy-local": "docker build -t mocoa-owner-interface . && docker run -p 3000:3000 mocoa-owner-interface",
+    "init-agents": "node elevenlabs-conversational-agents.js",
+    "test-agents": "node test-agents.js"
+  },
+  "dependencies": {
+    "@elevenlabs/elevenlabs-js": "^2.13.0",
+    "@google-cloud/pubsub": "^5.2.0",
+    "@google-cloud/secret-manager": "^5.0.1",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "elevenlabs": "^1.59.0",
+    "express": "^4.18.2",
+    "googleapis": "^159.0.0",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^2.7.0",
+    "uuid": "^9.0.1",
+    "ws": "^8.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "mocoa",
+    "ai",
+    "interface",
+    "gcp",
+    "secret-manager",
+    "elevenlabs",
+    "tts"
+  ],
+  "author": "ASOOS",
+  "license": "MIT"
+}

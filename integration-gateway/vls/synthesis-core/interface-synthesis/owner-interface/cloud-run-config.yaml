@@ -1,0 +1,76 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: mocoa-owner-interface
+  annotations:
+    run.googleapis.com/ingress: all
+spec:
+  template:
+    metadata:
+      annotations:
+        # Enable CPU allocation during request processing only
+        run.googleapis.com/cpu-throttling: "true"
+        # Set resource limits
+        run.googleapis.com/memory: "2Gi"
+        run.googleapis.com/cpu: "2"
+        # Maximum number of concurrent requests per instance
+        run.googleapis.com/execution-environment: gen2
+    spec:
+      serviceAccountName: mocoa-cloud-run-sa@api-for-warp-drive.iam.gserviceaccount.com
+      containerConcurrency: 100
+      timeoutSeconds: 300
+      containers:
+      - image: gcr.io/api-for-warp-drive/mocoa-owner-interface:latest
+        name: mocoa-container
+        ports:
+        - containerPort: 8080
+        resources:
+          limits:
+            cpu: "2"
+            memory: "2Gi"
+          requests:
+            cpu: "1"
+            memory: "1Gi"
+        env:
+        # Mount secrets from Secret Manager as environment variables
+        - name: ELEVENLABS_API_KEY
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: 11_labs
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: openai-api-key
+        - name: ANTHROPIC_API_KEY
+          valueFrom:
+            secretKeyRef:
+              key: latest
+              name: anthropic-api-key
+        - name: GCP_PROJECT_ID
+          value: "api-for-warp-drive"
+        - name: NODE_ENV
+          value: "production"
+        # Security headers
+        - name: SECURITY_HEADERS_ENABLED
+          value: "true"
+        # CORS configuration
+        - name: CORS_ORIGIN
+          value: "https://mocoa.asoos.com,https://asoos.com"
+        # Rate limiting
+        - name: RATE_LIMIT_ENABLED
+          value: "true"
+        - name: RATE_LIMIT_MAX_REQUESTS
+          value: "100"
+        - name: RATE_LIMIT_WINDOW_MS
+          value: "900000"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+  traffic:
+  - percent: 100
+    latestRevision: true

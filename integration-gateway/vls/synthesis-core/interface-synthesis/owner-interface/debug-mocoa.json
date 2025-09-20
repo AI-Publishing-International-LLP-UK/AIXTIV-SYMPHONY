@@ -1,0 +1,96 @@
+{
+  "info": {
+    "name": "MOCOA Interface Debug",
+    "description": "Test collection to debug MOCOA interface functionality",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Check Main Interface Load",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://mocoa-owner-interface-859242575175.us-west1.run.app/",
+          "protocol": "https",
+          "host": ["mocoa-owner-interface-859242575175", "us-west1", "run", "app"],
+          "path": [""]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response contains HTML', function () {",
+              "    pm.expect(pm.response.text()).to.include('<!DOCTYPE html>');",
+              "});",
+              "",
+              "pm.test('JavaScript functions are present', function () {",
+              "    const responseText = pm.response.text();",
+              "    pm.expect(responseText).to.include('function startVoiceInput');",
+              "    pm.expect(responseText).to.include('function togglePanel');",
+              "    pm.expect(responseText).to.include('function activateRIX');",
+              "});",
+              "",
+              "pm.test('Window assignments are present', function () {",
+              "    const responseText = pm.response.text();",
+              "    pm.expect(responseText).to.include('window.startVoiceInput = startVoiceInput');",
+              "    pm.expect(responseText).to.include('window.togglePanel = togglePanel');",
+              "});",
+              "",
+              "pm.test('Button onclick handlers exist', function () {",
+              "    const responseText = pm.response.text();",
+              "    pm.expect(responseText).to.include('onclick=\"startVoiceInput()\"');",
+              "    pm.expect(responseText).to.include('onclick=\"togglePanel');",
+              "    pm.expect(responseText).to.include('onclick=\"activateRIX');",
+              "});",
+              "",
+              "console.log('Response length:', pm.response.text().length);",
+              "console.log('Content-Type:', pm.response.headers.get('Content-Type'));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Check Health Endpoint",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://mocoa-owner-interface-859242575175.us-west1.run.app/health",
+          "protocol": "https",
+          "host": ["mocoa-owner-interface-859242575175", "us-west1", "run", "app"],
+          "path": ["health"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Health check returns 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Health check returns JSON', function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test('Service is healthy', function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.status).to.eql('healthy');",
+              "    pm.expect(jsonData.service).to.eql('mocoa-owner-interface');",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

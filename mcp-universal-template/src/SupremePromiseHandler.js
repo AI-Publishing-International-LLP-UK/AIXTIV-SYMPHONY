@@ -555,6 +555,99 @@ class SupremePromiseHandler extends EventEmitter {
         return `promise_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     }
     
+    /**
+     * Critical serialization method to prevent [object Promise] errors
+     * This is the core fix for Promise display issues across all agents
+     */
+    serializeForAgent(data) {
+        try {
+            // Handle null/undefined
+            if (data === null || data === undefined) {
+                return data;
+            }
+            
+            // Handle Promises - this is the key fix!
+            if (data && typeof data.then === 'function') {
+                this.logger.warn('Unresolved Promise detected during serialization', {
+                    type: typeof data,
+                    constructor: data.constructor?.name
+                });
+                return {
+                    __promiseError: true,
+                    message: 'Promise was not properly awaited',
+                    type: 'UnresolvedPromise',
+                    timestamp: new Date().toISOString()
+                };
+            }
+            
+            // Handle primitive types
+            if (typeof data !== 'object') {
+                return data;
+            }
+            
+            // Handle arrays
+            if (Array.isArray(data)) {
+                return data.map(item => this.serializeForAgent(item));
+            }
+            
+            // Handle Date objects
+            if (data instanceof Date) {
+                return data.toISOString();
+            }
+            
+            // Handle Error objects
+            if (data instanceof Error) {
+                return {
+                    __error: true,
+                    name: data.name,
+                    message: data.message,
+                    stack: data.stack
+                };
+            }
+            
+            // Handle Functions
+            if (typeof data === 'function') {
+                return {
+                    __function: true,
+                    name: data.name || 'anonymous',
+                    type: 'Function'
+                };
+            }
+            
+            // Handle regular objects
+            const serialized = {};
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    try {
+                        serialized[key] = this.serializeForAgent(data[key]);
+                    } catch (error) {
+                        this.logger.warn('Failed to serialize property', {
+                            key,
+                            error: error.message
+                        });
+                        serialized[key] = `[Serialization Error: ${error.message}]`;
+                    }
+                }
+            }
+            
+            return serialized;
+            
+        } catch (error) {
+            this.logger.error('Critical serialization error', {
+                error: error.message,
+                dataType: typeof data,
+                constructor: data?.constructor?.name
+            });
+            
+            return {
+                __serializationError: true,
+                message: error.message,
+                type: typeof data,
+                timestamp: new Date().toISOString()
+            };
+        }
+    }
+    
     async retryPromise(promise, context, originalPromiseId) {
         const retryContext = {
             ...context,

@@ -1,0 +1,25 @@
+# Simple Dockerfile for MOCOA JavaScript Fix Deployment
+FROM node:24-slim
+
+# Set working directory
+WORKDIR /app
+
+# Copy package file for simple deployment
+COPY package-simple.json package.json
+
+# Install only express dependency
+RUN npm install
+
+# Copy the fixed HTML file and simple server
+COPY mocoa-current.html .
+COPY server-simple.js .
+
+# Expose port
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD curl -f http://localhost:8080/health || exit 1
+
+# Start the application
+CMD ["node", "server-simple.js"]

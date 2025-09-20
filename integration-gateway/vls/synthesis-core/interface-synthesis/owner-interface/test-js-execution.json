@@ -1,0 +1,92 @@
+{
+  "info": {
+    "name": "MOCOA JavaScript Execution Test",
+    "description": "Test to verify JavaScript functions execute properly in MOCOA interface",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Test JavaScript Function Integrity",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://mocoa-owner-interface-859242575175.us-west1.run.app/",
+          "protocol": "https",
+          "host": ["mocoa-owner-interface-859242575175", "us-west1", "run", "app"],
+          "path": [""]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('No duplicate sendCopilotMessage functions', function () {",
+              "    const responseText = pm.response.text();",
+              "    const matches = responseText.match(/function sendCopilotMessage/g);",
+              "    pm.expect(matches, 'Should have exactly one sendCopilotMessage function').to.have.lengthOf(1);",
+              "});",
+              "",
+              "pm.test('No JavaScript syntax errors in key functions', function () {",
+              "    const responseText = pm.response.text();",
+              "    ",
+              "    // Check for common syntax errors",
+              "    pm.expect(responseText).to.not.include('function function');",
+              "    pm.expect(responseText).to.not.include('}}}}');",
+              "    pm.expect(responseText).to.not.include('undefined undefined');",
+              "});",
+              "",
+              "pm.test('Global function assignments present', function () {",
+              "    const responseText = pm.response.text();",
+              "    ",
+              "    // Check critical global assignments at end of script",
+              "    pm.expect(responseText).to.include('window.sendCopilotMessage = sendCopilotMessage');",
+              "    pm.expect(responseText).to.include('window.handleCopilotKeyPress = handleCopilotKeyPress');",
+              "    pm.expect(responseText).to.include('window.activateRIX = activateRIX');",
+              "});",
+              "",
+              "pm.test('Event handlers properly formatted', function () {",
+              "    const responseText = pm.response.text();",
+              "    ",
+              "    // Check for proper onclick syntax",
+              "    pm.expect(responseText).to.include('onkeypress=\"handleCopilotKeyPress(event)\"');",
+              "    pm.expect(responseText).to.include('onclick=\"sendCopilotMessage()\"');",
+              "});",
+              "",
+              "pm.test('No missing function references', function () {",
+              "    const responseText = pm.response.text();",
+              "    ",
+              "    // Check that referenced functions are defined",
+              "    if (responseText.includes('onclick=\"togglePanel')) {",
+              "        pm.expect(responseText).to.include('function togglePanel');",
+              "    }",
+              "    ",
+              "    if (responseText.includes('onclick=\"activateRIX')) {",
+              "        pm.expect(responseText).to.include('function activateRIX');",
+              "    }",
+              "});",
+              "",
+              "console.log('🔍 Function Analysis:');",
+              "const responseText = pm.response.text();",
+              "const sendCopilotCount = (responseText.match(/function sendCopilotMessage/g) || []).length;",
+              "console.log('sendCopilotMessage functions found:', sendCopilotCount);",
+              "",
+              "const globalAssignments = (responseText.match(/window\\.[a-zA-Z]+ = [a-zA-Z]+/g) || []).length;",
+              "console.log('Global function assignments found:', globalAssignments);",
+              "",
+              "// Check for common error patterns",
+              "if (responseText.includes('Uncaught')) {",
+              "    console.log('⚠️ Potential JavaScript errors detected');",
+              "}",
+              "",
+              "if (!responseText.includes('console.log(\\'✅ All MOCOA functions available globally\\')')) {",
+              "    console.log('⚠️ Global function initialization may be incomplete');",
+              "}"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

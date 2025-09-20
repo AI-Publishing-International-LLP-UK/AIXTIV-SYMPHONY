@@ -1,0 +1,85 @@
+steps:
+# Build the container image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/api-for-warp-drive/mocoa-owner-interface:${BUILD_ID}', '.']
+
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/api-for-warp-drive/mocoa-owner-interface:${BUILD_ID}']
+
+# Tag as latest
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['tag', 'gcr.io/api-for-warp-drive/mocoa-owner-interface:${BUILD_ID}', 'gcr.io/api-for-warp-drive/mocoa-owner-interface:latest']
+
+# Push latest tag
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/api-for-warp-drive/mocoa-owner-interface:latest']
+
+# Deploy to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    # Replace image tag in config
+    sed -i "s|gcr.io/api-for-warp-drive/mocoa-owner-interface:latest|gcr.io/api-for-warp-drive/mocoa-owner-interface:${BUILD_ID}|g" cloud-run-config.yaml
+    
+    # Deploy to Cloud Run using the configuration
+    gcloud run services replace cloud-run-config.yaml \
+      --region=us-central1 \
+      --platform=managed \
+      --project=api-for-warp-drive
+
+# Update traffic to new revision
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
+  args:
+  - 'run'
+  - 'services'
+  - 'update-traffic'
+  - 'mocoa-owner-interface'
+  - '--to-latest'
+  - '--region=us-central1'
+  - '--platform=managed'
+  - '--project=api-for-warp-drive'
+
+# Create service account if it doesn't exist (one-time setup)
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    # Check if service account exists, create if not
+    if ! gcloud iam service-accounts describe mocoa-cloud-run-sa@api-for-warp-drive.iam.gserviceaccount.com --project=api-for-warp-drive; then
+      gcloud iam service-accounts create mocoa-cloud-run-sa \
+        --display-name="MOCOA Cloud Run Service Account" \
+        --description="Service account for MOCOA application with Secret Manager access" \
+        --project=api-for-warp-drive
+        
+      # Grant necessary permissions
+      gcloud projects add-iam-policy-binding api-for-warp-drive \
+        --member="serviceAccount:mocoa-cloud-run-sa@api-for-warp-drive.iam.gserviceaccount.com" \
+        --role="roles/secretmanager.secretAccessor"
+        
+      gcloud projects add-iam-policy-binding api-for-warp-drive \
+        --member="serviceAccount:mocoa-cloud-run-sa@api-for-warp-drive.iam.gserviceaccount.com" \
+        --role="roles/logging.logWriter"
+        
+      gcloud projects add-iam-policy-binding api-for-warp-drive \
+        --member="serviceAccount:mocoa-cloud-run-sa@api-for-warp-drive.iam.gserviceaccount.com" \
+        --role="roles/monitoring.metricWriter"
+        
+      gcloud projects add-iam-policy-binding api-for-warp-drive \
+        --member="serviceAccount:mocoa-cloud-run-sa@api-for-warp-drive.iam.gserviceaccount.com" \
+        --role="roles/trace.agent"
+    fi
+
+substitutions:
+  _REGION: us-central1
+  _SERVICE_NAME: mocoa-owner-interface
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  substitution_option: ALLOW_LOOSE
+
+timeout: '1200s'

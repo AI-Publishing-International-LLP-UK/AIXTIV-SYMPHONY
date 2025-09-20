@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "version": "2.0.0-uao-aligned",
+    "authority": "Mr. Phillip Corey Roark",
+    "integrationGateway": "https://integration-gateway-js-staging-123456789.us-west1.run.app",
+    "created": "2025-09-17T15:15:54.023Z",
+    "totalCompanies": 1,
+    "uaoAlignment": true,
+    "cigStandards": true,
+    "oauth2Enabled": true,
+    "minimizedAPIs": true,
+    "environment": {
+      "staging": "us-west1-b",
+      "production": "us-west1-a"
+    },
+    "lastUpdated": "2025-09-17T15:15:54.027Z",
+    "totalAgents": 0
+  },
+  "companies": {
+    "2d993636e9d138ac": {
+      "id": "2d993636e9d138ac",
+      "name": "Zaxon Construction",
+      "domain": "mcp.zaxonconstruction.2100.cool",
+      "created": "2025-09-17T15:15:54.027Z",
+      "authority": "Mr. Phillip Corey Roark",
+      "status": "uao-active",
+      "uaoAligned": true,
+      "cigCompliant": true,
+      "services": {
+        "sallyPortAuth": true,
+        "voiceServices": true,
+        "integrationGateway": true,
+        "oauth2": true,
+        "uaoCoordination": true
+      },
+      "infrastructure": {
+        "gcpProject": "api-for-warp-drive",
+        "integrationGateway": "https://integration-gateway-js-staging-123456789.us-west1.run.app"
+      }
+    }
+  },
+  "agents": {},
+  "integrationPoints": []
+}

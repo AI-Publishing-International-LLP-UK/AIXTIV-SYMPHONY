@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MOCOA Interface Test</title>
+</head>
+<body>
+    <h1>Testing MOCOA Interface Functions</h1>
+    <div id="results"></div>
+    
+    <script>
+        // Test by loading the MOCOA interface in iframe and checking functions
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://mocoa-owner-interface-859242575175.us-west1.run.app/';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        
+        iframe.onload = function() {
+            const resultsDiv = document.getElementById('results');
+            const iframeWindow = iframe.contentWindow;
+            
+            let testResults = [];
+            
+            // Test function availability
+            const functionsToTest = [
+                'startVoiceInput',
+                'togglePanel', 
+                'activateRIX',
+                'showNotification',
+                'enhancedWFAOrchestrator',
+                'ufoMCPClient'
+            ];
+            
+            functionsToTest.forEach(func => {
+                try {
+                    const exists = typeof iframeWindow[func] !== 'undefined';
+                    testResults.push(`${func}: ${exists ? '✅ Available' : '❌ Missing'}`);
+                } catch (error) {
+                    testResults.push(`${func}: ❌ Error checking - ${error.message}`);
+                }
+            });
+            
+            // Test if JavaScript files loaded
+            const scriptTags = iframe.contentDocument.querySelectorAll('script[src]');
+            testResults.push(`Script tags found: ${scriptTags.length}`);
+            
+            // Test if enhanced integration files are referenced
+            let enhancedFound = false;
+            let ufoFound = false;
+            
+            scriptTags.forEach(script => {
+                if (script.src.includes('enhanced-wfa-mcp-integration.js')) enhancedFound = true;
+                if (script.src.includes('ufo-mcp-integration.js')) ufoFound = true;
+            });
+            
+            testResults.push(`Enhanced WFA-MCP Integration referenced: ${enhancedFound ? '✅' : '❌'}`);
+            testResults.push(`UFO MCP Integration referenced: ${ufoFound ? '✅' : '❌'}`);
+            
+            resultsDiv.innerHTML = '<h2>Test Results:</h2>' + 
+                testResults.map(result => `<p>${result}</p>`).join('');
+        };
+        
+        iframe.onerror = function() {
+            document.getElementById('results').innerHTML = '<p>❌ Failed to load MOCOA interface</p>';
+        };
+    </script>
+</body>
+</html>

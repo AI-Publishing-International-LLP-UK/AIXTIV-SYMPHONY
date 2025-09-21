@@ -1,0 +1,88 @@
+{
+  "mcpServers": {
+    "hf-mcp-server": {
+      "name": "Hugging Face MCP Server",
+      "url": "https://huggingface.co/mcp",
+      "headers": {
+        "Authorization": "Bearer <YOUR_HF_TOKEN>"
+      },
+      "description": "Hugging Face model access for enhanced AI capabilities"
+    },
+    "lucy-speech-server": {
+      "name": "Dr. Lucy Expressive Speech MCP Server",
+      "url": "http://localhost:3001/mcp",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_LUCY_MCP_TOKEN"
+      },
+      "description": "Dr. Lucy's expressive speech and emotional intelligence server"
+    },
+    "pinecone-memory-server": {
+      "name": "Pinecone Memory MCP Server", 
+      "url": "http://localhost:3002/mcp",
+      "headers": {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_PINECONE_MCP_TOKEN"
+      },
+      "description": "Unified memory and conversation storage for all agents"
+    }
+  },
+  "agentProfiles": {
+    "dr-lucy-crx-001": {
+      "name": "Dr. Lucy CRX",
+      "classification": "QUANTUM_INTELLIGENCE_ENHANCED",
+      "specialization": "ML Deep Mind + Executive Coaching",
+      "voiceProfile": "dr-lucy-executive",
+      "mcpServers": ["lucy-speech-server", "pinecone-memory-server", "hf-mcp-server"],
+      "capabilities": [
+        "expressive_speech",
+        "emotional_intelligence", 
+        "conversation_memory",
+        "strategic_guidance",
+        "empathetic_support"
+      ]
+    },
+    "dr-memoria": {
+      "name": "Dr. Memoria",
+      "classification": "ANTHOLOGY_POWERHOUSE",
+      "specialization": "Memory Management + Historical Analysis",
+      "voiceProfile": "dr-memoria-analytical",
+      "mcpServers": ["pinecone-memory-server", "hf-mcp-server"],
+      "capabilities": [
+        "memory_synthesis",
+        "historical_analysis",
+        "pattern_recognition",
+        "knowledge_integration"
+      ]
+    }
+  },
+  "voiceSettings": {
+    "elevenLabsApiUrl": "https://api.elevenlabs.io/v1",
+    "defaultStability": 0.75,
+    "defaultSimilarityBoost": 0.85,
+    "defaultStyle": 0.2,
+    "voiceProfiles": {
+      "dr-lucy-executive": {
+        "voiceId": "${LUCY_EXECUTIVE_VOICE_ID}",
+        "stability": 0.75,
+        "similarityBoost": 0.85,
+        "style": 0.2,
+        "description": "Professional, warm, executive presence"
+      },
+      "dr-lucy-empathetic": {
+        "voiceId": "${LUCY_EMPATHY_VOICE_ID}",
+        "stability": 0.6,
+        "similarityBoost": 0.9,
+        "style": 0.4,
+        "description": "Gentle, caring, therapeutic presence"
+      },
+      "dr-memoria-analytical": {
+        "voiceId": "${MEMORIA_VOICE_ID}",
+        "stability": 0.8,
+        "similarityBoost": 0.75,
+        "style": 0.1,
+        "description": "Analytical, precise, knowledge-focused"
+      }
+    }
+  }
+}

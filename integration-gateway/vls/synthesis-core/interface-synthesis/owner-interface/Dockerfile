@@ -1,39 +1,25 @@
-# MOCOA Owner Interface with GCP Secret Manager Integration
-FROM node:24-slim
+FROM nginx:alpine
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    curl \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+# Copy the owner interface HTML
+COPY index.html /usr/share/nginx/html/index.html
 
-# Set working directory
-WORKDIR /usr/src/app
+# Create nginx startup script that uses PORT env var
+RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
+    echo 'PORT=${PORT:-8080}' >> /docker-entrypoint.sh && \
+    echo 'cat > /etc/nginx/conf.d/default.conf <<EOF' >> /docker-entrypoint.sh && \
+    echo 'server {' >> /docker-entrypoint.sh && \
+    echo '    listen $PORT;' >> /docker-entrypoint.sh && \
+    echo '    server_name localhost;' >> /docker-entrypoint.sh && \
+    echo '    location / {' >> /docker-entrypoint.sh && \
+    echo '        root /usr/share/nginx/html;' >> /docker-entrypoint.sh && \
+    echo '        index index.html;' >> /docker-entrypoint.sh && \
+    echo '        try_files \$uri \$uri/ /index.html;' >> /docker-entrypoint.sh && \
+    echo '    }' >> /docker-entrypoint.sh && \
+    echo '}' >> /docker-entrypoint.sh && \
+    echo 'EOF' >> /docker-entrypoint.sh && \
+    echo 'exec nginx -g "daemon off;"' >> /docker-entrypoint.sh && \
+    chmod +x /docker-entrypoint.sh
 
-# Copy package files
-COPY package*.json ./
+EXPOSE 80
 
-# Install Node.js dependencies
-RUN npm ci --only=production && npm cache clean --force
-
-# Copy application files
-COPY . .
-
-# Create non-root user
-RUN groupadd -r mocoa && useradd -r -g mocoa mocoa
-RUN chown -R mocoa:mocoa /usr/src/app
-USER mocoa
-
-# Expose port (Cloud Run will set PORT env var)
-EXPOSE 8080
-
-# Environment variables
-ENV NODE_ENV=production
-ENV GCP_PROJECT_ID=api-for-warp-drive
-
-# Health check (use PORT env var set by Cloud Run)
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:${PORT:-8080}/health || exit 1
-
-# Start the application
-CMD ["node", "server-minimal.js"]
+CMD ["/docker-entrypoint.sh"]

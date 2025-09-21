@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coach.2100.cool - Your Personal AI Executive Coach</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Animated gradient background */
+        .gradient-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(11, 177, 187, 0.03) 0%, 
+                rgba(11, 177, 187, 0) 25%,
+                rgba(11, 177, 187, 0) 75%,
+                rgba(11, 177, 187, 0.03) 100%);
+            pointer-events: none;
+            animation: gradientShift 20s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            33% { transform: translateX(-5%) translateY(5%); }
+            66% { transform: translateX(5%) translateY(-5%); }
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+
+        .logo .coaching {
+            color: #0bb1bb;
+            font-weight: 400;
+        }
+
+        .logo .number {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #0bb1bb;
+        }
+
+        .tier-badge {
+            background: linear-gradient(135deg, #0bb1bb, #0998a3);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        .hero-section {
+            margin-bottom: 6rem;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 200;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0bb1bb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: #666;
+            font-weight: 300;
+            margin-bottom: 1rem;
+        }
+
+        .pcp-highlight {
+            font-size: 1.2rem;
+            color: #0bb1bb;
+            font-weight: 500;
+            margin-bottom: 3rem;
+            padding: 1rem 2rem;
+            background: rgba(11, 177, 187, 0.1);
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        /* Voice Interface */
+        .voice-interface {
+            position: relative;
+            margin: 0 auto 4rem;
+            width: 300px;
+            height: 300px;
+        }
+
+        .voice-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, #0bb1bb, #0998a3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(11, 177, 187, 0.2);
+        }
+
+        .voice-circle:hover {
+            transform: translate(-50%, -50%) scale(1.05);
+            box-shadow: 0 15px 50px rgba(11, 177, 187, 0.3);
+        }
+
+        .voice-circle.active {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .voice-icon {
+            width: 60px;
+            height: 60px;
+            fill: white;
+        }
+
+        .voice-waves {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            pointer-events: none;
+        }
+
+        .wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border: 2px solid rgba(11, 177, 187, 0.2);
+            border-radius: 50%;
+            animation: wave 3s ease-out infinite;
+            opacity: 0;
+        }
+
+        .wave:nth-child(2) {
+            animation-delay: 1s;
+        }
+
+        .wave:nth-child(3) {
+            animation-delay: 2s;
+        }
+
+        @keyframes wave {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .voice-status {
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .voice-status.active {
+            color: #0bb1bb;
+            font-weight: 500;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            margin: 6rem 0;
+            padding: 4rem;
+            background: linear-gradient(135deg, rgba(11, 177, 187, 0.05), rgba(11, 177, 187, 0));
+            border-radius: 30px;
+        }
+
+        .pricing-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            color: #1a1a1a;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 2px solid rgba(11, 177, 187, 0.1);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(11, 177, 187, 0.15);
+            border-color: #0bb1bb;
+        }
+
+        .pricing-card.featured {
+            border-color: #0bb1bb;
+            background: linear-gradient(135deg, rgba(11, 177, 187, 0.05), white);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0bb1bb;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .pricing-plan {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-amount {
+            font-size: 3rem;
+            font-weight: 200;
+            color: #0bb1bb;
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-period {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 3rem;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            color: #666;
+            display: flex;
+            align-items: center;
+        }
+
+        .pricing-features li:before {
+            content: "✓";
+            color: #0bb1bb;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .pricing-button {
+            width: 100%;
+            background: linear-gradient(135deg, #0bb1bb, #0998a3);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(11, 177, 187, 0.3);
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            margin: 6rem 0;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(11, 177, 187, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(11, 177, 187, 0.1);
+            border-color: rgba(11, 177, 187, 0.3);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 1rem;
+            background: linear-gradient(135deg, #0bb1bb, #0998a3);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .feature-description {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: linear-gradient(135deg, rgba(11, 177, 187, 0.05), rgba(11, 177, 187, 0));
+            border-radius: 30px;
+            padding: 4rem;
+            margin: 6rem 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 200;
+            color: #0bb1bb;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            margin: 6rem 0;
+            padding: 4rem;
+            background: linear-gradient(135deg, #0bb1bb, #0998a3);
+            border-radius: 30px;
+            color: white;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+        }
+
+        .cta-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            background: white;
+            color: #0bb1bb;
+            padding: 1rem 3rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+            font-size: 0.9rem;
+        }
+
+        .footer-badge {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(11, 177, 187, 0.1);
+            border-radius: 20px;
+            color: #0bb1bb;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 1.5rem 2rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .voice-interface {
+                width: 250px;
+                height: 250px;
+            }
+
+            .voice-circle {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="gradient-overlay"></div>
+    
+    <header>
+        <div class="logo">
+            <h1><span class="coaching">COACHING</span><span class="number">2100</span></h1>
+        </div>
+        <nav class="nav-links">
+            <a href="#pricing">Pricing</a>
+            <a href="#features">Features</a>
+            <a href="#about">About</a>
+            <span class="tier-badge">TIER 1 PLATFORM</span>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <section class="hero-section">
+            <h2 class="hero-title">Your Personal AI Executive Coach</h2>
+            <p class="hero-subtitle">320,000 role configurations. 50 sectors. 30+ lifecycles. Zero touch.</p>
+            <div class="pcp-highlight">
+                🤖 One Professional Co-Pilot (PCP) • Pay by the Minute or Subscribe
+            </div>
+        </section>
+
+        <div class="voice-interface">
+            <div class="voice-circle" id="voiceButton">
+                <svg class="voice-icon" viewBox="0 0 24 24">
+                    <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                </svg>
+            </div>
+            <div class="voice-waves">
+                <div class="wave"></div>
+                <div class="wave"></div>
+                <div class="wave"></div>
+            </div>
+            <div class="voice-status" id="voiceStatus">Tap to begin your coaching session</div>
+        </div>
+
+        <section class="pricing-section" id="pricing">
+            <h2 class="pricing-title">Simple, Transparent Pricing</h2>
+            <p style="color: #666; font-size: 1.2rem; margin-bottom: 2rem;">
+                One PCP (Professional Co-Pilot) dedicated to your success
+            </p>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3 class="pricing-plan">Pay Per Minute</h3>
+                    <div class="pricing-amount">$2.99</div>
+                    <div class="pricing-period">per minute</div>
+                    <ul class="pricing-features">
+                        <li>Your dedicated PCP available instantly</li>
+                        <li>No commitment, pay as you use</li>
+                        <li>All 320K role configurations</li>
+                        <li>Zero setup, zero contracts</li>
+                        <li>Perfect for occasional coaching</li>
+                    </ul>
+                    <button class="pricing-button" onclick="startPayPerMinute()">Start Now - Pay Per Minute</button>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">MOST POPULAR</div>
+                    <h3 class="pricing-plan">Monthly Subscription</h3>
+                    <div class="pricing-amount">$299</div>
+                    <div class="pricing-period">per month</div>
+                    <ul class="pricing-features">
+                        <li>Unlimited coaching sessions</li>
+                        <li>Your dedicated PCP learns your patterns</li>
+                        <li>Priority access & faster responses</li>
+                        <li>Session history & progress tracking</li>
+                        <li>Custom role configurations</li>
+                        <li>Best value for regular users</li>
+                    </ul>
+                    <button class="pricing-button" onclick="startSubscription()">Subscribe Monthly - Save 50%</button>
+                </div>
+
+                <div class="pricing-card">
+                    <h3 class="pricing-plan">Enterprise Annual</h3>
+                    <div class="pricing-amount">$2,999</div>
+                    <div class="pricing-period">per year</div>
+                    <ul class="pricing-features">
+                        <li>Everything in Monthly plan</li>
+                        <li>Multi-user team coaching</li>
+                        <li>Custom integrations</li>
+                        <li>Dedicated support channel</li>
+                        <li>Advanced analytics & reporting</li>
+                        <li>2 months free</li>
+                    </ul>
+                    <button class="pricing-button" onclick="startEnterprise()">Go Enterprise - Save 17%</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gift Shop Section -->
+        <section class="gift-shop-section" id="upgrades">
+            <h2 class="gift-shop-title">🎁 Upgrade Your Coaching Experience</h2>
+            <p class="gift-shop-subtitle">Activate premium tools to enhance your PCP's capabilities</p>
+            
+            <div class="upgrade-grid">
+                <div class="upgrade-card basic">
+                    <div class="upgrade-icon">📊</div>
+                    <h3 class="upgrade-title">Dream Commander</h3>
+                    <div class="upgrade-price">+$99/month</div>
+                    <p class="upgrade-description">AI-powered insights and strategic planning with 12-partition data analysis</p>
+                    <div class="upgrade-features">
+                        <span class="feature-tag">Strategic Planning</span>
+                        <span class="feature-tag">Data Analysis</span>
+                        <span class="feature-tag">Trend Insights</span>
+                    </div>
+                    <button class="upgrade-btn" onclick="activateUpgrade('dream-commander')">Activate Tool</button>
+                </div>
+                
+                <div class="upgrade-card">
+                    <div class="upgrade-icon">🎯</div>
+                    <h3 class="upgrade-title">Project Management Suite</h3>
+                    <div class="upgrade-price">+$49/month</div>
+                    <p class="upgrade-description">JIRA integration, timeline management, and automated workflow tools</p>
+                    <div class="upgrade-features">
+                        <span class="feature-tag">JIRA Integration</span>
+                        <span class="feature-tag">Timeline Tools</span>
+                        <span class="feature-tag">Automation</span>
+                    </div>
+                    <button class="upgrade-btn" onclick="activateUpgrade('project-mgmt')">Activate Tool</button>
+                </div>
+                
+                <div class="upgrade-card">
+                    <div class="upgrade-icon">📈</div>
+                    <h3 class="upgrade-title">Analytics Dashboard</h3>
+                    <div class="upgrade-price">+$39/month</div>
+                    <p class="upgrade-description">Advanced metrics, ROI tracking, and business analysis tools</p>
+                    <div class="upgrade-features">
+                        <span class="feature-tag">ROI Analysis</span>
+                        <span class="feature-tag">Metrics</span>
+                        <span class="feature-tag">Reporting</span>
+                    </div>
+                    <button class="upgrade-btn" onclick="activateUpgrade('analytics')">Activate Tool</button>
+                </div>
+                
+                <div class="upgrade-card">
+                    <div class="upgrade-icon">🔧</div>
+                    <h3 class="upgrade-title">Integration Hub</h3>
+                    <div class="upgrade-price">+$79/month</div>
+                    <p class="upgrade-description">Connect with 50+ business tools and platforms seamlessly</p>
+                    <div class="upgrade-features">
+                        <span class="feature-tag">50+ Integrations</span>
+                        <span class="feature-tag">API Access</span>
+                        <span class="feature-tag">Automation</span>
+                    </div>
+                    <button class="upgrade-btn" onclick="activateUpgrade('integrations')">Activate Tool</button>
+                </div>
+                
+                <div class="upgrade-card premium">
+                    <div class="upgrade-badge">PREMIUM</div>
+                    <div class="upgrade-icon">💎</div>
+                    <h3 class="upgrade-title">Advanced AI Tools</h3>
+                    <div class="upgrade-price">+$199/month</div>
+                    <p class="upgrade-description">Previously Diamond SAO features: advanced automation, custom workflows, enterprise tools</p>
+                    <div class="upgrade-features">
+                        <span class="feature-tag">Custom Workflows</span>
+                        <span class="feature-tag">Advanced AI</span>
+                        <span class="feature-tag">Enterprise Tools</span>
+                    </div>
+                    <button class="upgrade-btn" onclick="activateUpgrade('advanced-ai')">Activate Tool</button>
+                </div>
+                
+                <div class="upgrade-card">
+                    <div class="upgrade-icon">📚</div>
+                    <h3 class="upgrade-title">Knowledge Base</h3>
+                    <div class="upgrade-price">+$29/month</div>
+                    <p class="upgrade-description">Access to curated business resources, templates, and best practices</p>
+                    <div class="upgrade-features">
+                        <span class="feature-tag">Templates</span>
+                        <span class="feature-tag">Resources</span>
+                        <span class="feature-tag">Best Practices</span>
+                    </div>
+                    <button class="upgrade-btn" onclick="activateUpgrade('knowledge-base')">Activate Tool</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="features-grid" id="features">
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Zero Setup Required</h3>
+                <p class="feature-description">Just speak. No forms, no passwords, no complexity. Your personalized AI coach is ready instantly.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3 class="feature-title">Your Dedicated PCP</h3>
+                <p class="feature-description">One Professional Co-Pilot learns your style, goals, and preferences. Consistent coaching that evolves with you.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3 class="feature-title">Zero Trust Security</h3>
+                <p class="feature-description">5-level authentication with blockchain verification. Your sessions are completely private and secure.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌍</div>
+                <h3 class="feature-title">24/7 Global Access</h3>
+                <p class="feature-description">Available anywhere, anytime. Your coach travels with you across time zones and continents.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎭</div>
+                <h3 class="feature-title">Every Role Covered</h3>
+                <p class="feature-description">320,000 unique role configurations across 50 sectors. From CEO to specialist, we've mapped every journey.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Pay by the Minute</h3>
+                <p class="feature-description">No monthly fees unless you want them. Pay only for the coaching time you actually use.</p>
+            </div>
+        </section>
+
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">320K</div>
+                    <div class="stat-label">Unique Role Configurations</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50</div>
+                    <div class="stat-label">Industry Sectors</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">30+</div>
+                    <div class="stat-label">Adapted Lifecycles</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">Dedicated PCP Per User</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2 class="cta-title">Ready to Transform Your Leadership?</h2>
+            <p class="cta-subtitle">Join executives worldwide who've discovered the power of AI-driven coaching with their dedicated PCP</p>
+            <button class="cta-button" onclick="activateVoice()">Start Your First Session</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 AI Publishing International LLP. All rights reserved.</p>
+        <p>Part of the Vision Lake Global Ecosystem</p>
+        <span class="footer-badge">Powered by AIXTIV SYMPHONY</span>
+    </footer>
+
+    <script>
+        const voiceButton = document.getElementById('voiceButton');
+        const voiceStatus = document.getElementById('voiceStatus');
+        let isActive = false;
+
+        voiceButton.addEventListener('click', toggleVoice);
+
+        function toggleVoice() {
+            isActive = !isActive;
+            
+            if (isActive) {
+                voiceButton.classList.add('active');
+                voiceStatus.textContent = 'Listening... Speak your coaching question';
+                voiceStatus.classList.add('active');
+                
+                // Simulate voice recognition
+                setTimeout(() => {
+                    if (isActive) {
+                        voiceStatus.textContent = 'Processing your request...';
+                    }
+                }, 3000);
+                
+                setTimeout(() => {
+                    if (isActive) {
+                        voiceStatus.textContent = 'Your PCP is ready to respond...';
+                    }
+                }, 5000);
+            } else {
+                voiceButton.classList.remove('active');
+                voiceStatus.textContent = 'Tap to begin your coaching session';
+                voiceStatus.classList.remove('active');
+            }
+        }
+
+        function activateVoice() {
+            if (!isActive) {
+                toggleVoice();
+            }
+        }
+
+        function startPayPerMinute() {
+            alert('Starting Pay-Per-Minute coaching session...\nYour dedicated PCP will be assigned and ready in seconds.');
+        }
+
+        function startSubscription() {
+            alert('Starting Monthly Subscription setup...\nUnlimited coaching with your dedicated PCP.');
+        }
+
+        function startEnterprise() {
+            alert('Contacting Enterprise team...\nTeam coaching and custom integrations available.');
+        }
+    </script>
+</body>
+</html>

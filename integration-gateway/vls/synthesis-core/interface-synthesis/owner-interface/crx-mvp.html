@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRX - Your Professional Co-Pilot</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(11, 177, 187, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+
+        .logo .coaching {
+            color: #0bb1bb;
+            font-weight: 400;
+        }
+
+        .logo .number {
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-welcome {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .user-name {
+            color: #0bb1bb;
+            font-weight: 500;
+        }
+
+        .gift-shop-btn {
+            background: linear-gradient(135deg, #0bb1bb, #0998a3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gift-shop-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(11, 177, 187, 0.3);
+        }
+
+        /* Main Container */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem;
+            gap: 2rem;
+        }
+
+        /* CRX Voice Interface */
+        .crx-interface {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .crx-title {
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .crx-subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .voice-interface {
+            position: relative;
+            margin: 0 auto 2rem;
+            width: 200px;
+            height: 200px;
+        }
+
+        .voice-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, #0bb1bb, #0998a3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(11, 177, 187, 0.3);
+        }
+
+        .voice-circle:hover {
+            transform: translate(-50%, -50%) scale(1.05);
+            box-shadow: 0 15px 40px rgba(11, 177, 187, 0.4);
+        }
+
+        .voice-circle.active {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .voice-icon {
+            width: 60px;
+            height: 60px;
+            fill: white;
+        }
+
+        .voice-status {
+            font-size: 1.1rem;
+            color: #0bb1bb;
+            font-weight: 500;
+            margin-top: 1rem;
+        }
+
+        .voice-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .voice-btn {
+            background: rgba(11, 177, 187, 0.1);
+            color: #0bb1bb;
+            border: 1px solid rgba(11, 177, 187, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .voice-btn:hover {
+            background: rgba(11, 177, 187, 0.2);
+        }
+
+        .voice-btn.active {
+            background: #0bb1bb;
+            color: white;
+        }
+
+        /* 6 Data Boxes */
+        .data-boxes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        .data-box {
+            background: white;
+            border: 1px solid rgba(11, 177, 187, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            min-height: 250px;
+        }
+
+        .data-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(11, 177, 187, 0.1);
+            border-color: rgba(11, 177, 187, 0.3);
+        }
+
+        .box-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .box-icon {
+            width: 24px;
+            height: 24px;
+            color: #0bb1bb;
+        }
+
+        .box-title {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #1a1a1a;
+        }
+
+        .box-content {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .box-metric {
+            font-size: 2rem;
+            font-weight: 200;
+            color: #0bb1bb;
+            margin: 0.5rem 0;
+        }
+
+        .box-insight {
+            background: rgba(11, 177, 187, 0.05);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #0bb1bb;
+            font-weight: 500;
+        }
+
+        /* OAuth Status */
+        .auth-status {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(11, 177, 187, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #0bb1bb;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .auth-indicator {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #10b981;
+        }
+
+        /* ElevenLabs Status */
+        .elevenlabs-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(11, 177, 187, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #0bb1bb;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .data-boxes {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .voice-interface {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .voice-circle {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <span class="coaching">CRX</span><span class="number">2100</span>
+        </div>
+        <div class="user-info">
+            <div class="user-welcome">
+                Welcome back, <span class="user-name" id="userName">Executive Leader</span>
+            </div>
+            <button class="gift-shop-btn" onclick="openGiftShop()">🎁 Upgrades</button>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="crx-interface">
+            <h1 class="crx-title">Your Professional Co-Pilot</h1>
+            <p class="crx-subtitle">Dr. Lucy CRX is ready to provide executive coaching and strategic insights</p>
+            
+            <div class="voice-interface">
+                <div class="voice-circle" id="voiceButton">
+                    <svg class="voice-icon" viewBox="0 0 24 24">
+                        <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="voice-status" id="voiceStatus">Tap to speak with Dr. Lucy CRX</div>
+            
+            <div class="voice-controls">
+                <button class="voice-btn active" id="femaleVoice" onclick="selectVoice('female')">👩 Female Voice</button>
+                <button class="voice-btn" id="maleVoice" onclick="selectVoice('male')">👨 Male Voice</button>
+            </div>
+        </div>
+
+        <div class="data-boxes">
+            <div class="data-box">
+                <div class="box-header">
+                    <div class="box-icon">📊</div>
+                    <div class="box-title">Executive Insights</div>
+                </div>
+                <div class="box-content">
+                    <div class="box-metric">92%</div>
+                    <p>Leadership effectiveness score based on your communication patterns and decision-making style.</p>
+                    <div class="box-insight">
+                        💡 Your strategic thinking shows strong analytical depth. Consider delegating more tactical decisions to focus on vision.
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-box">
+                <div class="box-header">
+                    <div class="box-icon">🎯</div>
+                    <div class="box-title">Coaching Metrics</div>
+                </div>
+                <div class="box-content">
+                    <div class="box-metric">7.2hrs</div>
+                    <p>Total coaching time this month. Average session: 18 minutes.</p>
+                    <div class="box-insight">
+                        📈 Your consistency is paying off. Leaders who maintain regular coaching see 34% better team performance.
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-box">
+                <div class="box-header">
+                    <div class="box-icon">✅</div>
+                    <div class="box-title">Action Items</div>
+                </div>
+                <div class="box-content">
+                    <p><strong>This Week:</strong></p>
+                    <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                        <li>Schedule one-on-ones with direct reports</li>
+                        <li>Review Q4 strategic initiatives</li>
+                        <li>Prepare board presentation outline</li>
+                    </ul>
+                    <div class="box-insight">
+                        🎯 Focus on the board presentation first - your stakeholder communication needs attention.
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-box">
+                <div class="box-header">
+                    <div class="box-icon">📈</div>
+                    <div class="box-title">Progress Tracking</div>
+                </div>
+                <div class="box-content">
+                    <div class="box-metric">+15%</div>
+                    <p>Team engagement improvement since starting coaching program.</p>
+                    <div class="box-insight">
+                        🚀 Excellent progress! Your team reports feeling more supported and clear on priorities.
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-box">
+                <div class="box-header">
+                    <div class="box-icon">🧠</div>
+                    <div class="box-title">Strategic Planning</div>
+                </div>
+                <div class="box-content">
+                    <p><strong>Next Quarter Focus:</strong></p>
+                    <p style="margin-top: 0.5rem;">Market expansion strategy, team scaling, and operational efficiency improvements.</p>
+                    <div class="box-insight">
+                        💎 Your expansion timing aligns perfectly with market conditions. Dream Commander suggests moving fast.
+                    </div>
+                </div>
+            </div>
+
+            <div class="data-box">
+                <div class="box-header">
+                    <div class="box-icon">⚡</div>
+                    <div class="box-title">Performance Data</div>
+                </div>
+                <div class="box-content">
+                    <div class="box-metric">8.4/10</div>
+                    <p>Overall leadership performance based on 360° feedback and results delivery.</p>
+                    <div class="box-insight">
+                        🏆 Top 10% of executives in your sector. Your coaching investment is showing strong ROI.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="auth-status">
+        <div class="auth-indicator"></div>
+        OAuth2 Authenticated
+    </div>
+
+    <div class="elevenlabs-status">
+        🎙️ ElevenLabs Voice Ready
+    </div>
+
+    <script>
+        // User recognition - we already know about them
+        const userData = {
+            name: "Sarah Chen", // This would come from OAuth/database
+            role: "Chief Technology Officer",
+            company: "TechVision Corp",
+            coachingTime: "7.2",
+            effectiveness: "92"
+        };
+
+        // Initialize with user data
+        document.getElementById('userName').textContent = userData.name;
+
+        // Voice interface
+        const voiceButton = document.getElementById('voiceButton');
+        const voiceStatus = document.getElementById('voiceStatus');
+        let isActive = false;
+        let selectedVoice = 'female';
+
+        voiceButton.addEventListener('click', toggleVoice);
+
+        function toggleVoice() {
+            isActive = !isActive;
+            
+            if (isActive) {
+                voiceButton.classList.add('active');
+                voiceStatus.textContent = 'Dr. Lucy CRX is listening...';
+                
+                // Simulate ElevenLabs processing
+                setTimeout(() => {
+                    if (isActive) {
+                        voiceStatus.textContent = `Hello ${userData.name}! I see you're making excellent progress. What leadership challenge can I help you with today?`;
+                        // Here you would call actual ElevenLabs API with selected voice
+                        playElevenLabsVoice("Hello " + userData.name + "! I see you're making excellent progress as a " + userData.role + ". What leadership challenge can I help you with today?");
+                    }
+                }, 2000);
+                
+            } else {
+                voiceButton.classList.remove('active');
+                voiceStatus.textContent = 'Tap to speak with Dr. Lucy CRX';
+            }
+        }
+
+        function selectVoice(gender) {
+            selectedVoice = gender;
+            document.getElementById('femaleVoice').classList.remove('active');
+            document.getElementById('maleVoice').classList.remove('active');
+            document.getElementById(gender + 'Voice').classList.add('active');
+            
+            voiceStatus.textContent = `Voice changed to ${gender}. Tap to speak with Dr. Lucy CRX.`;
+        }
+
+        function playElevenLabsVoice(text) {
+            // ElevenLabs integration goes here
+            console.log(`Playing with ${selectedVoice} voice:`, text);
+            
+            // Simulate voice response
+            setTimeout(() => {
+                if (isActive) {
+                    voiceStatus.textContent = "I'm ready for your next question...";
+                }
+            }, 4000);
+        }
+
+        function openGiftShop() {
+            // Open gift shop modal or redirect
+            alert('🎁 Gift Shop\n\nUpgrade your CRX experience:\n\n📊 Dream Commander - $99/mo\n🎯 Project Management Suite - $49/mo\n📈 Analytics Dashboard - $39/mo\n🔧 Integration Hub - $79/mo\n💎 Advanced AI Tools - $199/mo\n📚 Knowledge Base - $29/mo\n\nWhich upgrade interests you?');
+        }
+
+        // Auto-update data boxes with real-time insights
+        setInterval(() => {
+            // This would fetch real data from your backend
+            console.log('Refreshing coaching data...');
+        }, 30000);
+
+        // Initialize OAuth2 status
+        console.log('OAuth2 initialized for:', userData.name);
+        console.log('ElevenLabs voice engine ready');
+    </script>
+</body>
+</html>

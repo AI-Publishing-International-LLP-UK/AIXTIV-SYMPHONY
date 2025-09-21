@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASOOS Interface Selection Menu</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      color: #ffffff;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .header h1 {
+      color: #0bb1bb;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+    
+    .header p {
+      color: #888;
+      font-size: 1.2em;
+    }
+    
+    .interface-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    .interface-card {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border: 2px solid #0bb1bb;
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .interface-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(11, 177, 187, 0.3);
+      border-color: #ffa500;
+    }
+    
+    .interface-name {
+      font-size: 1.4em;
+      font-weight: bold;
+      color: #0bb1bb;
+      margin-bottom: 8px;
+    }
+    
+    .interface-size {
+      color: #ffa500;
+      font-size: 0.9em;
+      margin-bottom: 10px;
+    }
+    
+    .interface-description {
+      color: #ccc;
+      font-size: 0.95em;
+      line-height: 1.4;
+      margin-bottom: 15px;
+    }
+    
+    .interface-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+    
+    .tag {
+      background: rgba(11, 177, 187, 0.2);
+      color: #0bb1bb;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8em;
+    }
+    
+    .tag.heavy {
+      background: rgba(255, 165, 0, 0.2);
+      color: #ffa500;
+    }
+    
+    .tag.recommended {
+      background: rgba(34, 197, 94, 0.2);
+      color: #22c55e;
+    }
+    
+    .open-button {
+      background: linear-gradient(135deg, #0bb1bb 0%, #0891b2 100%);
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      width: 100%;
+      transition: all 0.2s ease;
+    }
+    
+    .open-button:hover {
+      background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🎯 ASOOS Interface Selection</h1>
+    <p>Click any interface to open it in a new tab</p>
+  </div>
+  
+  <div class="interface-grid">
+    <!-- Current Heavy Interface -->
+    <div class="interface-card" onclick="openInterface('index.html')">
+      <div class="interface-name">Current Owner Interface</div>
+      <div class="interface-size">274KB - Heavy</div>
+      <div class="interface-description">
+        Full-featured owner console with 47 units, Dream Commander, Testament Swarm integration, and complete automation suite.
+      </div>
+      <div class="interface-tags">
+        <span class="tag heavy">Heavy Side</span>
+        <span class="tag">Full Featured</span>
+        <span class="tag">Current</span>
+      </div>
+      <button class="open-button">Open Current Interface</button>
+    </div>
+    
+    <!-- Complete Integrated -->
+    <div class="interface-card" onclick="openInterface('complete-integrated-interface.html')">
+      <div class="interface-name">Complete Integrated Interface</div>
+      <div class="interface-size">61KB - Optimized</div>
+      <div class="interface-description">
+        Streamlined version with core integrations and essential features. Good balance of functionality and performance.
+      </div>
+      <div class="interface-tags">
+        <span class="tag recommended">Recommended</span>
+        <span class="tag">MCP Ready</span>
+        <span class="tag">Balanced</span>
+      </div>
+      <button class="open-button">Open Integrated Interface</button>
+    </div>
+    
+    <!-- Diamond Enhanced -->
+    <div class="interface-card" onclick="openInterface('diamond-enhanced.html')">
+      <div class="interface-name">Diamond Enhanced Interface</div>
+      <div class="interface-size">96KB - Premium</div>
+      <div class="interface-description">
+        Diamond SAO focused interface with premium features and enhanced capabilities for high-tier operations.
+      </div>
+      <div class="interface-tags">
+        <span class="tag">Diamond SAO</span>
+        <span class="tag">Premium</span>
+        <span class="tag">Enhanced</span>
+      </div>
+      <button class="open-button">Open Diamond Interface</button>
+    </div>
+    
+    <!-- DSAO Specific -->
+    <div class="interface-card" onclick="openInterface('dsao.html')">
+      <div class="interface-name">DSAO Interface</div>
+      <div class="interface-size">49KB - Focused</div>
+      <div class="interface-description">
+        Dedicated SAO operations interface with focused controls and streamlined workflow management.
+      </div>
+      <div class="interface-tags">
+        <span class="tag">SAO Focused</span>
+        <span class="tag">Lightweight</span>
+        <span class="tag">Operations</span>
+      </div>
+      <button class="open-button">Open DSAO Interface</button>
+    </div>
+    
+    <!-- Coach Simple -->
+    <div class="interface-card" onclick="openInterface('coach-simple-page.html')">
+      <div class="interface-name">Coach Simple Page</div>
+      <div class="interface-size">9KB - Ultra Light</div>
+      <div class="interface-description">
+        Minimal coaching interface perfect for customer PCP static deployments. Clean and efficient.
+      </div>
+      <div class="interface-tags">
+        <span class="tag recommended">Customer Ready</span>
+        <span class="tag">Ultra Light</span>
+        <span class="tag">PCP Static</span>
+      </div>
+      <button class="open-button">Open Coach Interface</button>
+    </div>
+    
+    <!-- Enhanced Right Panel -->
+    <div class="interface-card" onclick="openInterface('enhanced-right-panel.html')">
+      <div class="interface-name">Enhanced Right Panel</div>
+      <div class="interface-size">28KB - Focused</div>
+      <div class="interface-description">
+        Innovation lab focused interface with enhanced command line and development tools.
+      </div>
+      <div class="interface-tags">
+        <span class="tag">Innovation Lab</span>
+        <span class="tag">Command Line</span>
+        <span class="tag">Dev Tools</span>
+      </div>
+      <button class="open-button">Open Enhanced Panel</button>
+    </div>
+    
+    <!-- Live Interface -->
+    <div class="interface-card" onclick="openInterface('live-interface.html')">
+      <div class="interface-name">Live Interface</div>
+      <div class="interface-size">228KB - Dynamic</div>
+      <div class="interface-description">
+        Real-time interface with live data feeds and dynamic content updates.
+      </div>
+      <div class="interface-tags">
+        <span class="tag">Live Data</span>
+        <span class="tag">Real-time</span>
+        <span class="tag">Dynamic</span>
+      </div>
+      <button class="open-button">Open Live Interface</button>
+    </div>
+    
+    <!-- Light Version -->
+    <div class="interface-card" onclick="openInterface('light.html')">
+      <div class="interface-name">Light Interface</div>
+      <div class="interface-size">98KB - Standard</div>
+      <div class="interface-description">
+        Lighter version with essential features and good performance balance.
+      </div>
+      <div class="interface-tags">
+        <span class="tag">Light Version</span>
+        <span class="tag">Essential</span>
+        <span class="tag">Performance</span>
+      </div>
+      <button class="open-button">Open Light Interface</button>
+    </div>
+  </div>
+  
+  <script>
+    function openInterface(filename) {
+      // Open in new tab
+      window.open(filename, '_blank');
+    }
+    
+    // Add some dynamic effects
+    document.querySelectorAll('.interface-card').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-8px) scale(1.02)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+      });
+    });
+  </script>
+</body>
+</html>

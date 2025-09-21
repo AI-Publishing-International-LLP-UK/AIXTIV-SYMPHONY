@@ -1,0 +1,14 @@
+{
+  "drLucyProfile": {
+    "id": "dr-lucy-crx-001",
+    "name": "Dr. Lucy CRX",
+    "classification": "QUANTUM_INTELLIGENCE_ENHANCED",
+    "totalMemories": 0
+  },
+  "exportedAt": "2025-09-21T00:23:40.910Z",
+  "accountSummary": {
+    "openai": 10,
+    "claude": 3
+  },
+  "memories": []
+}

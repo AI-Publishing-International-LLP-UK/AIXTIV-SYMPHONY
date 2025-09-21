@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRX - Your Professional Co-Pilot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header with Official Branding */
+        .header {
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(11, 177, 187, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+        }
+
+        .logo .coaching {
+            color: #0bb1bb;
+            font-weight: 500;
+            letter-spacing: -0.02em;
+        }
+
+        .logo .number {
+            color: #1a1a1a;
+            font-weight: 600;
+            position: relative;
+        }
+
+        .logo .target-icon {
+            width: 24px;
+            height: 24px;
+            margin-left: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-welcome {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .user-name {
+            color: #0bb1bb;
+            font-weight: 500;
+        }
+
+        .gift-shop-btn {
+            background: linear-gradient(135deg, #0bb1bb, #0998a3);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .gift-shop-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(11, 177, 187, 0.3);
+        }
+
+        /* Main Layout */
+        .main-layout {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 200px 1fr 300px;
+            gap: 1px;
+            background: rgba(11, 177, 187, 0.1);
+        }
+
+        /* Left Icons */
+        .left-icons {
+            background: white;
+            padding: 1rem;
+            border-right: 1px solid rgba(11, 177, 187, 0.1);
+        }
+
+        .icon-section {
+            margin-bottom: 2rem;
+        }
+
+        .icon-section h3 {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .upgrade-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 0.5rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+            border: 1px solid transparent;
+        }
+
+        .upgrade-icon:hover {
+            background: rgba(11, 177, 187, 0.05);
+            border-color: rgba(11, 177, 187, 0.2);
+        }
+
+        .upgrade-icon.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .upgrade-icon.locked:hover {
+            background: rgba(255, 165, 0, 0.05);
+            border-color: rgba(255, 165, 0, 0.2);
+        }
+
+        .icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .icon-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.7rem;
+            color: #666;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .upgrade-price {
+            font-size: 0.6rem;
+            color: #0bb1bb;
+            font-weight: 600;
+        }
+
+        /* Center Area */
+        .center-area {
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .crx-interface {
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(11, 177, 187, 0.1);
+        }
+
+        .crx-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        .crx-subtitle {
+            font-family: 'DM Sans', sans-serif;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .voice-interface {
+            position: relative;
+            margin: 0 auto 1.5rem;
+            width: 120px;
+            height: 120px;
+        }
+
+        .voice-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #0bb1bb, #0998a3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(11, 177, 187, 0.3);
+        }
+
+        .voice-circle:hover {
+            transform: translate(-50%, -50%) scale(1.05);
+            box-shadow: 0 8px 25px rgba(11, 177, 187, 0.4);
+        }
+
+        .voice-circle.active {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .voice-icon {
+            width: 40px;
+            height: 40px;
+            fill: white;
+        }
+
+        .voice-status {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            color: #0bb1bb;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .voice-controls {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .voice-btn {
+            background: rgba(11, 177, 187, 0.1);
+            color: #0bb1bb;
+            border: 1px solid rgba(11, 177, 187, 0.3);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .voice-btn:hover {
+            background: rgba(11, 177, 187, 0.2);
+        }
+
+        .voice-btn.active {
+            background: #0bb1bb;
+            color: white;
+        }
+
+        /* Right Chat */
+        .right-chat {
+            background: white;
+            padding: 1rem;
+            border-left: 1px solid rgba(11, 177, 187, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-header {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(11, 177, 187, 0.1);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 0;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 12px;
+            max-width: 90%;
+        }
+
+        .message.user {
+            background: rgba(11, 177, 187, 0.1);
+            color: #0bb1bb;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .message.crx {
+            background: rgba(241, 241, 241, 1);
+            color: #1a1a1a;
+        }
+
+        /* Data Boxes */
+        .data-boxes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            padding: 1.5rem;
+            background: rgba(241, 241, 241, 0.3);
+        }
+
+        .data-box {
+            background: white;
+            border: 1px solid rgba(11, 177, 187, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            min-height: 200px;
+        }
+
+        .data-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(11, 177, 187, 0.1);
+            border-color: rgba(11, 177, 187, 0.3);
+        }
+
+        .box-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .box-icon {
+            font-size: 1.2rem;
+            color: #0bb1bb;
+        }
+
+        .box-title {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .box-content {
+            font-family: 'DM Sans', sans-serif;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .box-metric {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            font-weight: 300;
+            color: #0bb1bb;
+            margin: 0.5rem 0;
+        }
+
+        .box-insight {
+            background: rgba(11, 177, 187, 0.05);
+            padding: 0.8rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #0bb1bb;
+            font-weight: 500;
+            border-left: 3px solid #0bb1bb;
+        }
+
+        /* Status Indicators */
+        .auth-status, .elevenlabs-status {
+            position: fixed;
+            bottom: 20px;
+            background: rgba(11, 177, 187, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            color: #0bb1bb;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .auth-status {
+            left: 20px;
+        }
+
+        .elevenlabs-status {
+            right: 20px;
+        }
+
+        .auth-indicator {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #10b981;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto;
+            }
+            
+            .right-chat {
+                border-left: none;
+                border-top: 1px solid rgba(11, 177, 187, 0.1);
+            }
+            
+            .data-boxes {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .data-boxes {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <span class="coaching">COACHING</span>
+            <span class="number">21</span>
+            <div class="target-icon">
+                <svg viewBox="0 0 24 24" width="24" height="24">
+                    <circle cx="12" cy="12" r="10" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+                    <circle cx="12" cy="12" r="6" stroke="#1a1a1a" stroke-width="2" fill="none"/>
+                    <circle cx="12" cy="12" r="2" fill="#1a1a1a"/>
+                </svg>
+            </div>
+            <span class="number">0</span>
+        </div>
+        <div class="user-info">
+            <div class="user-welcome">
+                Welcome back, <span class="user-name" id="userName">Sarah Chen</span>
+            </div>
+            <button class="gift-shop-btn" onclick="openGiftShop()">🎁 Upgrades</button>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <div class="left-icons">
+            <div class="icon-section">
+                <h3>Core Tools</h3>
+                <div class="upgrade-icon locked" onclick="showUpgrade('wish-vision')">
+                    <div class="icon">🔮</div>
+                    <div class="icon-label">Wish Vision</div>
+                    <div class="upgrade-price">$99/mo</div>
+                </div>
+                <div class="upgrade-icon locked" onclick="showUpgrade('analytics')">
+                    <div class="icon">📊</div>
+                    <div class="icon-label">Analytics</div>
+                    <div class="upgrade-price">$49/mo</div>
+                </div>
+                <div class="upgrade-icon locked" onclick="showUpgrade('project-mgmt')">
+                    <div class="icon">🎯</div>
+                    <div class="icon-label">Projects</div>
+                    <div class="upgrade-price">$39/mo</div>
+                </div>
+            </div>
+            
+            <div class="icon-section">
+                <h3>Premium</h3>
+                <div class="upgrade-icon locked" onclick="showUpgrade('dream-commander')">
+                    <div class="icon">💎</div>
+                    <div class="icon-label">Dream Commander</div>
+                    <div class="upgrade-price">$199/mo</div>
+                </div>
+                <div class="upgrade-icon locked" onclick="showUpgrade('integrations')">
+                    <div class="icon">🔧</div>
+                    <div class="icon-label">Integrations</div>
+                    <div class="upgrade-price">$79/mo</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="center-area">
+            <div class="crx-interface">
+                <h1 class="crx-title">Your Professional Co-Pilot</h1>
+                <p class="crx-subtitle">Dr. Lucy CRX is ready to provide executive coaching and strategic insights</p>
+                
+                <div class="voice-interface">
+                    <div class="voice-circle" id="voiceButton">
+                        <svg class="voice-icon" viewBox="0 0 24 24">
+                            <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                        </svg>
+                    </div>
+                </div>
+                
+                <div class="voice-status" id="voiceStatus">Tap to speak with Dr. Lucy CRX</div>
+                
+                <div class="voice-controls">
+                    <button class="voice-btn active" id="femaleVoice" onclick="selectVoice('female')">👩 Female</button>
+                    <button class="voice-btn" id="maleVoice" onclick="selectVoice('male')">👨 Male</button>
+                </div>
+            </div>
+
+            <div class="data-boxes">
+                <div class="data-box">
+                    <div class="box-header">
+                        <div class="box-icon">📊</div>
+                        <div class="box-title">Executive Insights</div>
+                    </div>
+                    <div class="box-content">
+                        <div class="box-metric">92%</div>
+                        <p>Leadership effectiveness score based on communication patterns and decision-making.</p>
+                        <div class="box-insight">
+                            💡 Your strategic thinking shows strong analytical depth. Consider delegating tactical decisions.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-box">
+                    <div class="box-header">
+                        <div class="box-icon">🎯</div>
+                        <div class="box-title">Coaching Metrics</div>
+                    </div>
+                    <div class="box-content">
+                        <div class="box-metric">7.2hrs</div>
+                        <p>Total coaching time this month. Average session: 18 minutes.</p>
+                        <div class="box-insight">
+                            📈 Consistent coaching leads to 34% better team performance.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-box">
+                    <div class="box-header">
+                        <div class="box-icon">✅</div>
+                        <div class="box-title">Action Items</div>
+                    </div>
+                    <div class="box-content">
+                        <p><strong>This Week:</strong></p>
+                        <ul style="margin-left: 1rem; margin-top: 0.5rem;">
+                            <li>Schedule one-on-ones with team</li>
+                            <li>Review Q4 strategic initiatives</li>
+                            <li>Prepare board presentation</li>
+                        </ul>
+                        <div class="box-insight">
+                            🎯 Focus on board presentation - stakeholder communication needs attention.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-box">
+                    <div class="box-header">
+                        <div class="box-icon">📈</div>
+                        <div class="box-title">Progress Tracking</div>
+                    </div>
+                    <div class="box-content">
+                        <div class="box-metric">+15%</div>
+                        <p>Team engagement improvement since starting coaching.</p>
+                        <div class="box-insight">
+                            🚀 Your team reports feeling more supported and clear on priorities.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-box">
+                    <div class="box-header">
+                        <div class="box-icon">🧠</div>
+                        <div class="box-title">Strategic Planning</div>
+                    </div>
+                    <div class="box-content">
+                        <p><strong>Next Quarter:</strong></p>
+                        <p>Market expansion, team scaling, operational efficiency.</p>
+                        <div class="box-insight">
+                            💎 Expansion timing aligns with market conditions. Move fast.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-box">
+                    <div class="box-header">
+                        <div class="box-icon">⚡</div>
+                        <div class="box-title">Performance Data</div>
+                    </div>
+                    <div class="box-content">
+                        <div class="box-metric">8.4/10</div>
+                        <p>Overall leadership performance based on 360° feedback.</p>
+                        <div class="box-insight">
+                            🏆 Top 10% of executives. Strong coaching ROI.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-chat">
+            <div class="chat-header">💬 Talk</div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="message crx">
+                    Hello Sarah! I see you're making excellent progress as CTO. What leadership challenge can I help you with today?
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="auth-status">
+        <div class="auth-indicator"></div>
+        OAuth2 Authenticated
+    </div>
+
+    <div class="elevenlabs-status">
+        🎙️ ElevenLabs Ready
+    </div>
+
+    <script>
+        // User data
+        const userData = {
+            name: "Sarah Chen",
+            role: "Chief Technology Officer", 
+            company: "TechVision Corp"
+        };
+
+        // Voice interface
+        const voiceButton = document.getElementById('voiceButton');
+        const voiceStatus = document.getElementById('voiceStatus');
+        let isActive = false;
+        let selectedVoice = 'female';
+
+        voiceButton.addEventListener('click', toggleVoice);
+
+        function toggleVoice() {
+            isActive = !isActive;
+            
+            if (isActive) {
+                voiceButton.classList.add('active');
+                voiceStatus.textContent = 'Dr. Lucy CRX is listening...';
+                addMessage('system', 'Listening...');
+                
+                setTimeout(() => {
+                    if (isActive) {
+                        voiceStatus.textContent = `Hello ${userData.name}! Ready to help with your leadership challenges.`;
+                        addMessage('crx', `Hello ${userData.name}! I see you're making excellent progress as a ${userData.role}. What leadership challenge can I help you with today?`);
+                    }
+                }, 2000);
+                
+            } else {
+                voiceButton.classList.remove('active');
+                voiceStatus.textContent = 'Tap to speak with Dr. Lucy CRX';
+            }
+        }
+
+        function selectVoice(gender) {
+            selectedVoice = gender;
+            document.getElementById('femaleVoice').classList.remove('active');
+            document.getElementById('maleVoice').classList.remove('active');
+            document.getElementById(gender + 'Voice').classList.add('active');
+            
+            voiceStatus.textContent = `Voice changed to ${gender}. Tap to speak with Dr. Lucy CRX.`;
+        }
+
+        function addMessage(sender, text) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showUpgrade(upgrade) {
+            alert(`🎁 ${upgrade.replace('-', ' ')} Upgrade\n\nThis premium feature is available with a subscription. Would you like to activate it?`);
+        }
+
+        function openGiftShop() {
+            alert('🎁 Gift Shop\n\nUpgrade your CRX experience:\n\n🔮 Wish Vision - $99/mo\n📊 Analytics Dashboard - $49/mo\n🎯 Project Management - $39/mo\n💎 Dream Commander - $199/mo\n🔧 Integration Hub - $79/mo\n\nWhich upgrade interests you?');
+        }
+
+        // Initialize
+        document.getElementById('userName').textContent = userData.name;
+        console.log('CRX initialized for:', userData.name);
+        console.log('OAuth2 authenticated, ElevenLabs ready');
+    </script>
+</body>
+</html>

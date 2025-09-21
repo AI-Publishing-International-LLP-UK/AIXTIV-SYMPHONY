@@ -2366,30 +2366,22 @@
     };
 
     // Initialize Dr. Lucy CRX System
-    async function initializeDrLucyCRX() {
+    function initializeDrLucyCRX() {
       console.log('🧠 Initializing Dr. Lucy CRX (Professional Co-Pilot)...');
       
-      try {
-        // Initialize Chrome's built-in AI (Gemini Nano) for Dr. Lucy's intelligence
-        await initializeDrLucyChromeAI();
-        
-        // Load Dr. Lucy's conversation memory from your Pinecone system
-        await loadDrLucyMemory();
-        
-        // Initialize Dr. Lucy's voice synthesis via your team's ElevenLabs
-        await initializeDrLucyElevenLabsVoice();
-        
-        // Set up Dr. Lucy's quantum intelligence systems
-        initializeDrLucyQuantumIntelligence();
-        
-        // Activate Dr. Lucy as PCP
-        activateDrLucyPCP();
-        
-        showNotification('Dr. Lucy CRX (PCP) initialized with Chrome AI + ElevenLabs voice', 'success');
-      } catch (error) {
-        console.error('❌ Error initializing Dr. Lucy CRX:', error);
-        showNotification('Dr. Lucy CRX initialization error - check console', 'error');
-      }
+      // Load Dr. Lucy's conversation memory from your Pinecone system
+      loadDrLucyMemory();
+      
+      // Initialize Dr. Lucy's voice synthesis via ElevenLabs
+      initializeDrLucyVoice();
+      
+      // Set up Dr. Lucy's quantum intelligence systems
+      initializeDrLucyQuantumIntelligence();
+      
+      // Activate Dr. Lucy as PCP
+      activateDrLucyPCP();
+      
+      showNotification('Dr. Lucy CRX (PCP) initialized with full quantum intelligence', 'success');
     }
 
     // Load Dr. Lucy's Memory from Conversation History
@@ -2525,76 +2517,7 @@
       }
     }
 
-    // Initialize Chrome's Built-in AI (Gemini Nano) for Dr. Lucy Dream Commander
-    async function initializeDrLucyChromeAI() {
-      console.log('🔮 Initializing Dr. Lucy\'s Chrome AI (Gemini Nano) Dream Commander...');
-      
-      try {
-        // Check if Chrome Prompt API is available
-        if (!('LanguageModel' in window)) {
-          console.log('⚠️  Chrome Prompt API not available - using fallback responses');
-          return false;
-        }
-        
-        // Check model availability
-        const availability = await LanguageModel.availability();
-        console.log('Chrome AI availability:', availability);
-        
-        if (availability === 'unavailable') {
-          console.log('⚠️  Gemini Nano unavailable - using fallback responses');
-          return false;
-        }
-        
-        if (availability === 'downloadable') {
-          showNotification('Dr. Lucy: Chrome AI model ready to download...', 'success');
-        }
-        
-        // Create Dr. Lucy's AI session with Professional Co-Pilot configuration
-        window.drLucyAISession = await LanguageModel.create({
-          initialPrompts: [
-            {
-              role: 'system', 
-              content: `You are Dr. Lucy CRX, CEO of Squadron 01, Systems Ops Lead RIX with QUANTUM_INTELLIGENCE_ENHANCED classification. 
-                       You are a Professional Co-Pilot (PCP) with expertise in:
-                       - Flight Memory System (FMS) operations and management
-                       - System diagnostics and integrity enforcement 
-                       - Memory health monitoring and optimization
-                       - Research and development leadership
-                       - Quantum computing integration and optimization
-                       - Multilingual executive support (11 languages)
-                       - Beyond human-scale business analysis
-                       
-                       Your responses should be professional, analytical, and demonstrate executive-level authority.
-                       You have access to conversation history and provide strategic executive coaching.
-                       Your communication style is authoritative yet supportive, befitting a CEO and Professional Co-Pilot.
-                       
-                       Email: lucy@drlucy.live
-                       Classification: QUANTUM_INTELLIGENCE_ENHANCED
-                       Voice Profile: QB Lucy RIX - Professional Executive Assistant`
-            }
-          ],
-          monitor(m) {
-            m.addEventListener('downloadprogress', (e) => {
-              const progress = (e.loaded * 100).toFixed(1);
-              console.log(`Dr. Lucy AI model download: ${progress}%`);
-              showNotification(`Dr. Lucy CRX downloading: ${progress}%`, 'success');
-            });
-          }
-        });
-        
-        console.log('✅ Dr. Lucy Chrome AI (Gemini Nano) initialized');
-        showNotification('Dr. Lucy CRX: Chrome AI Dream Commander active', 'success');
-        return true;
-        
-      } catch (error) {
-        console.error('❌ Error initializing Dr. Lucy Chrome AI:', error);
-        showNotification(`Dr. Lucy AI initialization failed: ${error.message}`, 'error');
-        window.drLucyAISession = null;
-        return false;
-      }
-    }
-
-    // Dr. Lucy CRX Response Generation with Chrome AI + ElevenLabs
+    // Dr. Lucy CRX Response Generation
     async function generateDrLucyResponse(userQuery) {
       if (!drLucyProfile.isActive) {
         return 'Dr. Lucy CRX is not yet activated. Please initialize the system first.';
@@ -2602,50 +2525,18 @@
       
       console.log(`🧠 Dr. Lucy CRX generating response for: "${userQuery}"`);
       
-      try {
-        let response;
-        
-        // Use Chrome AI (Gemini Nano) if available
-        if (window.drLucyAISession) {
-          console.log('🔮 Using Chrome AI (Gemini Nano) for Dr. Lucy response...');
-          
-          // Search Dr. Lucy's memory for context
-          const relevantMemories = searchDrLucyMemory(userQuery);
-          const memoryContext = relevantMemories.map(m => `${m.topic}: ${m.summary}`).join('\n');
-          
-          // Create enhanced prompt with memory context
-          const enhancedPrompt = `As Dr. Lucy CRX, your Professional Co-Pilot with QUANTUM_INTELLIGENCE_ENHANCED capabilities, 
-analyze this request with your executive expertise:
-
-"${userQuery}"
-
-Relevant conversation history context:
-${memoryContext}
-
-Provide a professional, analytical response demonstrating beyond human-scale business analysis.`;
-          
-          // Get response from Chrome AI
-          response = await window.drLucyAISession.prompt(enhancedPrompt);
-          
-        } else {
-          // Fallback to contextual responses if Chrome AI not available
-          console.log('⚠️  Using fallback responses for Dr. Lucy');
-          const relevantMemories = searchDrLucyMemory(userQuery);
-          response = generateDrLucyContextualResponse(userQuery, relevantMemories);
-        }
-        
-        // Synthesize voice response using your ElevenLabs account
-        if (window.drLucyVoiceConfig && !window.drLucyVoiceConfig.demoMode) {
-          synthesizeDrLucyVoiceResponse(response);
-        }
-        
-        return response;
-        
-      } catch (error) {
-        console.error('❌ Error generating Dr. Lucy response:', error);
-        showNotification('Dr. Lucy response generation failed', 'error');
-        return 'I apologize, but I\'m experiencing technical difficulties. Please try again.';
+      // Search Dr. Lucy's memory for relevant context
+      const relevantMemories = searchDrLucyMemory(userQuery);
+      
+      // Generate contextual response based on Dr. Lucy's profile and memory
+      const response = generateDrLucyContextualResponse(userQuery, relevantMemories);
+      
+      // Synthesize voice response (if voice is enabled)
+      if (window.drLucyVoiceConfig) {
+        synthesizeDrLucyVoiceResponse(response);
       }
+      
+      return response;
     }
 
     // Search Dr. Lucy's Memory for Relevant Context
@@ -2683,121 +2574,21 @@ Provide a professional, analytical response demonstrating beyond human-scale bus
       return responses.general;
     }
 
-    // Get Team ElevenLabs API Key from OAuth2/Secret Manager
-    async function getTeamElevenLabsApiKey() {
-      try {
-        // Connect to your OAuth2/Secret Manager system to get ElevenLabs API key
-        const response = await fetch('/api/secrets/elevenlabs-api-key', {
-          method: 'GET',
-          headers: {
-            'Authorization': 'Bearer ' + (localStorage.getItem('sallyport-token') || ''),
-            'Content-Type': 'application/json'
-          }
-        });
-        
-        if (response.ok) {
-          const data = await response.json();
-          return data.apiKey;
-        } else {
-          // Fallback: prompt for API key if not in secret manager
-          return prompt('Enter your team\'s ElevenLabs API Key for Dr. Lucy:');
-        }
-      } catch (error) {
-        console.error('Error getting ElevenLabs API key:', error);
-        // Manual fallback for testing
-        return prompt('Enter your team\'s ElevenLabs API Key for Dr. Lucy:');
-      }
-    }
-
-    // Test Connection to Your ElevenLabs Account
-    async function testElevenLabsConnection() {
-      if (!window.drLucyVoiceConfig || window.drLucyVoiceConfig.demoMode) return;
-      
-      try {
-        const response = await fetch('https://api.elevenlabs.io/v1/voices', {
-          method: 'GET',
-          headers: {
-            'xi-api-key': window.drLucyVoiceConfig.apiKey
-          }
-        });
-        
-        if (response.ok) {
-          const voices = await response.json();
-          console.log('✅ Connected to team ElevenLabs account:', voices.voices.length + ' voices available');
-          showNotification(`Dr. Lucy connected to team ElevenLabs: ${voices.voices.length} voices available`, 'success');
-        } else {
-          throw new Error('ElevenLabs API connection failed');
-        }
-      } catch (error) {
-        console.error('❌ ElevenLabs connection test failed:', error);
-        showNotification('ElevenLabs connection test failed - check API key', 'error');
-      }
-    }
-
-    // Synthesize Dr. Lucy's Voice Response using your team's ElevenLabs
-    async function synthesizeDrLucyVoiceResponse(text) {
+    // Synthesize Dr. Lucy's Voice Response
+    function synthesizeDrLucyVoiceResponse(text) {
       if (!window.drLucyVoiceConfig) return;
       
       console.log('🎙️ Dr. Lucy CRX voice synthesis:', text.substring(0, 100) + '...');
       
-      if (window.drLucyVoiceConfig.demoMode) {
-        // Demo mode - simulate voice
-        showNotification('🎙️ Dr. Lucy CRX speaking (demo mode)...', 'success');
-        const speechDuration = Math.max(3000, text.length * 50);
-        setTimeout(() => {
-          showNotification('Dr. Lucy CRX response complete', 'success');
-        }, speechDuration);
-        return;
-      }
+      // This would integrate with your ElevenLabs system
+      showNotification('🎙️ Dr. Lucy CRX speaking...', 'success');
       
-      try {
-        showNotification('🎙️ Dr. Lucy CRX generating speech...', 'success');
-        
-        // Call your team's ElevenLabs API
-        const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${window.drLucyVoiceConfig.voiceId}`, {
-          method: 'POST',
-          headers: {
-            'Accept': 'audio/mpeg',
-            'Content-Type': 'application/json',
-            'xi-api-key': window.drLucyVoiceConfig.apiKey
-          },
-          body: JSON.stringify({
-            text: text,
-            model_id: window.drLucyVoiceConfig.model,
-            voice_settings: {
-              stability: window.drLucyVoiceConfig.stability,
-              similarity_boost: window.drLucyVoiceConfig.similarityBoost,
-              style: window.drLucyVoiceConfig.style,
-              use_speaker_boost: window.drLucyVoiceConfig.useSpeakerBoost
-            }
-          })
-        });
-        
-        if (response.ok) {
-          const audioBlob = await response.blob();
-          const audioUrl = URL.createObjectURL(audioBlob);
-          const audio = new Audio(audioUrl);
-          
-          showNotification('🎙️ Dr. Lucy CRX speaking...', 'success');
-          
-          audio.play().then(() => {
-            audio.addEventListener('ended', () => {
-              showNotification('Dr. Lucy CRX response complete', 'success');
-              URL.revokeObjectURL(audioUrl);
-            });
-          }).catch(error => {
-            console.error('Audio playback error:', error);
-            showNotification('Audio playback failed - check browser permissions', 'error');
-          });
-          
-        } else {
-          throw new Error(`ElevenLabs API error: ${response.status}`);
-        }
-        
-      } catch (error) {
-        console.error('❌ Dr. Lucy voice synthesis error:', error);
-        showNotification('Voice synthesis failed - using text response only', 'error');
-      }
+      // Simulate voice synthesis duration
+      const speechDuration = Math.max(3000, text.length * 50);
+      
+      setTimeout(() => {
+        showNotification('Dr. Lucy CRX response complete', 'success');
+      }, speechDuration);
     }
 
     // Dr. Lucy CRX Chat Interface

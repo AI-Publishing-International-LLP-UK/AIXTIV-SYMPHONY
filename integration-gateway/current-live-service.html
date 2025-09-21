@@ -1544,16 +1544,16 @@
             <div id="cliInterface" style="display: none; flex: 1; flex-direction: column; background: #0a0a0a; border: 1px solid #333;">
               <!-- Welcome Message at Top -->
               <div style="background: rgba(11, 177, 187, 0.1); border: 1px solid rgba(11, 177, 187, 0.3); padding: 12px; border-radius: 10px; margin: 12px;">
-                <div style="font-size: 12px; font-weight: 600; color: #0bb1bb; margin-bottom: 6px;">Welcome to Active Symphony OOS</div>
+                <div style="font-size: 12px; font-weight: 600; color: #0bb1bb; margin-bottom: 6px;">MyDiamond CLI - Unified Natural Language Interface</div>
                 <div style="color: #aaa; font-size: 10px; line-height: 1.4;">
-                  Speak naturally with your AI copilots. They understand context, can pull data from any squadron, 
-                  and bring visual insights directly into this space. Just ask!
+                  Ask anything naturally - from coding tasks to system operations. MyDiamond understands and executes 
+                  both technical commands and conversational requests in one unified interface.
                 </div>
               </div>
               <div style="background: #1a1a1a; padding: 6px 10px; border-bottom: 1px solid #333; display: flex; align-items: center; justify-content: space-between;">
                 <div style="display: flex; align-items: center; gap: 8px;">
-                  <span style="color: #0bb1bb; font-family: monospace; font-size: 11px; font-weight: 600;">AIXTIV CLI</span>
-                  <span style="color: #666; font-size: 9px; font-family: monospace;">v2.1.0</span>
+                  <span style="color: #0bb1bb; font-family: monospace; font-size: 11px; font-weight: 600;">MyDiamond CLI</span>
+                  <span style="color: #666; font-size: 9px; font-family: monospace;">v3.0.0</span>
                   <select id="modelSelector" style="background: #2a2a2a; color: #0bb1bb; border: 1px solid #444; padding: 2px 4px; font-family: monospace; font-size: 9px; border-radius: 3px; margin-left: 6px;" onchange="switchModel(this.value)">
                     <option value="claude-code">Claude Code (Default)</option>
                     <option value="claude-3-opus">Claude 3 Opus</option>
@@ -1577,76 +1577,58 @@
                 </div>
               </div>
             
-            <!-- Mode Toggle -->
+            <!-- Unified Mode Indicator -->
             <div style="background: #1a1a1a; padding: 4px 10px; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 8px;">
-              <button id="terminalModeBtn" class="mode-btn active" onclick="setMode('terminal')" style="background: #2a2a2a; border: 1px solid #0bb1bb; color: #0bb1bb; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 9px; cursor: pointer;">
-                <svg class="enterprise-icon" style="width: 9px; height: 9px;"><use href="#icon-terminal"></use></svg> Terminal
-              </button>
-              <button id="codeModeBtn" class="mode-btn" onclick="setMode('code')" style="background: transparent; border: 1px solid #444; color: #666; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 9px; cursor: pointer;">
-                <svg class="enterprise-icon" style="width: 9px; height: 9px;"><use href="#icon-code"></use></svg> Claude Code
-              </button>
-              <button id="chatModeBtn" class="mode-btn" onclick="setMode('chat')" style="background: transparent; border: 1px solid #444; color: #666; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 9px; cursor: pointer;">
-                <svg class="enterprise-icon" style="width: 9px; height: 9px;"><use href="#icon-comments"></use></svg> Chat
-              </button>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <div style="width: 6px; height: 6px; background: #10b981; border-radius: 50%;"></div>
+                <span style="color: #10b981; font-family: monospace; font-size: 9px; font-weight: 600;">Natural Language Processing Active</span>
+              </div>
               <span style="color: #666; font-size: 8px; margin-left: auto;">
-                <svg class="enterprise-icon" style="width: 8px; height: 8px;"><use href="#icon-keyboard"></use></svg> Ctrl+K for quick commands
+                <svg class="enterprise-icon" style="width: 8px; height: 8px;"><use href="#icon-keyboard"></use></svg> Ask anything - coding or conversation | Cmd+I for direct commands
               </span>
             </div>
             
             <div class="terminal-output" id="terminalOutput" style="flex: 1; overflow-y: auto; padding: 10px; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; font-size: 11px; line-height: 1.4; color: #e6e6e6; background: #0d0d0d; display: block;">
               <div class="terminal-line">
-                <span style="color: #50C878;">asoos@aixtiv</span><span style="color: #0bb1bb;">:</span><span style="color: #4ECDC4;">~</span><span style="color: #e6e6e6;">$ </span><span style="color: #fff;">_</span>
+                <span style="color: #0bb1bb;">🔷 MyDiamond</span><span style="color: #666;"> ready:</span> <span style="color: #fff;">_</span>
               </div>
             </div>
             
-            <!-- Code Editor (Hidden by default) -->
-            <div id="codeEditor" style="display: none; flex: 1; background: #1e1e1e; position: relative;">
-              <div style="background: #2d2d2d; padding: 10px; border-bottom: 1px solid #444;">
-                <input type="text" id="codeFileName" placeholder="untitled.js" style="background: transparent; border: none; color: #ccc; font-family: monospace; font-size: 13px; outline: none;">
-                <select id="codeLanguage" style="background: #3a3a3a; color: #0bb1bb; border: 1px solid #555; padding: 2px 6px; font-size: 12px; margin-left: 10px;">
-                  <option value="javascript">JavaScript</option>
-                  <option value="python">Python</option>
-                  <option value="typescript">TypeScript</option>
-                  <option value="html">HTML</option>
-                  <option value="css">CSS</option>
-                  <option value="java">Java</option>
-                  <option value="cpp">C++</option>
-                  <option value="go">Go</option>
-                  <option value="rust">Rust</option>
-                </select>
-              </div>
-              <textarea id="codeArea" style="width: 100%; height: calc(100% - 40px); background: #1e1e1e; color: #d4d4d4; border: none; outline: none; padding: 15px; font-family: 'Monaco', 'Menlo', monospace; font-size: 13px; line-height: 1.5; resize: none;" placeholder="// Start coding here or ask Claude to generate code..."></textarea>
-            </div>
+            <!-- Hidden interfaces - unified CLI handles all functionality -->
+            <div id="codeEditor" style="display: none;"></div>
+            <div id="chatInterface" style="display: none;"></div>
             
-            <!-- Chat Interface (Hidden by default) -->
-            <div id="chatInterface" style="display: none; flex: 1; overflow-y: auto; padding: 20px; background: #0d0d0d;">
-              <div id="chatMessages" style="display: flex; flex-direction: column; gap: 15px;">
-                <div style="background: rgba(11, 177, 187, 0.1); border: 1px solid rgba(11, 177, 187, 0.3); padding: 15px; border-radius: 12px;">
-                  <div style="color: #0bb1bb; font-weight: 600; margin-bottom: 5px;">Claude Multi-Model Chat</div>
-                  <div style="color: #aaa; font-size: 12px;">Chat with Claude using your selected model or blend multiple models for enhanced responses.</div>
+            <div class="cli-input-area" style="background: #1a1a1a; padding: 8px 12px; display: flex; align-items: center; gap: 8px; position: relative;">
+              <!-- Diamond indicator on far left -->
+              <span style="color: #0bb1bb; font-size: 14px;">🔷</span>
+              
+              <!-- Clean input field -->
+              <input type="text" class="cli-input" id="cliInput" placeholder="Hey Dr. Lucy... (or @pay @office @team for context search)" style="flex: 1; background: transparent; border: none; outline: none; color: #fff; font-family: 'Monaco', 'Menlo', monospace; font-size: 11px; padding: 6px 8px;" onkeypress="handleMyDiamondInput(event)" onkeydown="handleSpecialKeys(event)">
+              
+              <!-- Button group on far right -->
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <!-- Dr. Lucy hexagon indicator -->
+                <div id="lucyHexagon" style="width: 12px; height: 12px; background: #10b981; clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%); position: relative; animation: pulse 2s infinite;" title="Dr. Lucy is listening">
+                  <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 6px; color: white; font-weight: bold;">L</div>
                 </div>
+                
+                <button id="contextBtn" onclick="insertContextSearch()" style="background: transparent; border: none; color: #0bb1bb; padding: 4px 6px; border-radius: 4px; font-size: 12px; cursor: pointer; font-weight: 600; transition: background 0.2s;" title="Context Search (@pay, @office, @team, etc.)" onmouseover="this.style.background='rgba(11,177,187,0.1)'" onmouseout="this.style.background='transparent'">
+                  @
+                </button>
+                
+                <button id="conversationBtn" onclick="toggleConversationMode()" style="background: transparent; border: none; color: #8b5cf6; padding: 4px 6px; border-radius: 4px; font-size: 10px; cursor: pointer; transition: background 0.2s;" title="Conversation Mode - Keep context" onmouseover="this.style.background='rgba(139,92,246,0.1)'" onmouseout="this.style.background='transparent'">
+                  <svg class="enterprise-icon" style="width: 10px; height: 10px; fill: currentColor;"><use href="#icon-comments"></use></svg>
+                </button>
+                
+                <button id="voiceBtn" onclick="startVoiceInput()" style="background: transparent; border: none; color: #666; padding: 4px 6px; border-radius: 4px; font-size: 10px; cursor: pointer; transition: all 0.2s;" title="Voice Input (or hold Fn key)" onmouseover="this.style.background='rgba(102,102,102,0.1)'; this.style.color='#999'" onmouseout="this.style.background='transparent'; this.style.color='#666'">
+                  <svg class="enterprise-icon" style="width: 10px; height: 10px; fill: currentColor;"><use href="#icon-microphone"></use></svg>
+                </button>
               </div>
-            </div>
-            
-            <div class="cli-input-area" style="border-top: 1px solid #333; background: #1a1a1a; padding: 6px; display: flex; align-items: center; gap: 6px;">
-              <span style="color: #50C878; font-family: monospace; font-size: 11px;">$</span>
               
-              <!-- Single Mode Toggle - Left Side -->
-              <button id="cliModeToggleBtn" onclick="toggleCopilotMode()" style="background: rgba(11, 177, 187, 0.2); border: 1px solid rgba(11, 177, 187, 0.4); color: #0bb1bb; padding: 2px 6px; border-radius: 6px; font-size: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 2px;" title="Switch to Chat Mode">
-                <svg class="enterprise-icon" style="width: 8px; height: 8px; fill: #0bb1bb;">
-                  <use href="#icon-comments"></use>
-                </svg>
-                CHAT
-              </button>
-              
-              <input type="text" class="cli-input" id="cliInput" placeholder="Enter command..." style="flex: 1; background: transparent; border: none; outline: none; color: #fff; font-family: 'Monaco', 'Menlo', monospace; font-size: 11px;" onkeypress="handleCLIKeyPress(event)">
-              
-              <button id="executeBtn" class="cli-btn" onclick="executeCLICommand()" style="background: #0bb1bb; border: none; color: #000; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 10px; cursor: pointer; font-weight: 600;">
-                EXECUTE
-              </button>
-              <button class="cli-btn" onclick="toggleClaudeCodeMode()" style="background: #8b5cf6; border: none; color: #fff; padding: 4px 8px; border-radius: 4px; font-family: monospace; font-size: 10px; cursor: pointer; font-weight: 600; margin-left: 3px;" title="Quick toggle Claude Code mode">
-                <svg class="enterprise-icon" style="width: 8px; height: 8px; fill: #ffffff;"><use href="#icon-bolt"></use></svg> CODE
-              </button>
+              <!-- Mode indicator in bottom right corner -->
+              <div id="modeIndicator" style="position: absolute; bottom: 2px; right: 12px; font-size: 8px; color: #10b981; transition: color 0.3s;">
+                🔷
+              </div>
             </div>
           </div>
         </div>
@@ -1939,11 +1921,18 @@
                   <div style="font-size: 11px; font-weight: 600; color: #fff; margin-bottom: 2px;">Career Advancement</div>
                   <div style="font-size: 9px; color: #aaa; line-height: 1.2; margin-bottom: 2px;">Next role: Chief Technology Officer</div>
                   <div style="font-size: 9px; color: #aaa; line-height: 1.2;">Target timeline: Q4 2025</div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
+      </div>
+      
+      <!-- Subtle notification ticker at bottom -->
+      <div id="notificationTicker" style="position: fixed; bottom: 0; left: 0; right: 0; height: 20px; background: transparent; overflow: hidden; z-index: 1000; pointer-events: none;">
+        <div id="tickerContent" style="position: absolute; white-space: nowrap; color: #666; font-size: 11px; font-family: 'Monaco', 'Menlo', monospace; line-height: 20px; transform: translateX(100%); animation: scroll 30s linear infinite;">
+          <!-- Ticker messages will be inserted here -->
+        </div>
+      </div>
+    </div>
         
         <!-- V99 Enhanced Bottom Bar -->
         <div class="bottom-bar">
@@ -3716,5 +3705,25 @@
     window.speakMessage = speakMessage;
     window.toggleConversationMode = toggleConversationMode;
   </script>
-</body>
+  
+  <!-- Subtle notification ticker at bottom -->
+  <div id="notificationTicker" style="position: fixed; bottom: 0; left: 0; right: 0; height: 18px; background: transparent; overflow: hidden; z-index: 1000; pointer-events: none;">
+    <div id="tickerContent" style="position: absolute; white-space: nowrap; color: #666; font-size: 10px; font-family: 'Monaco', 'Menlo', monospace; line-height: 18px; transform: translateX(100%); animation: scroll 25s linear infinite;">
+      System ready • Dr. Lucy listening • MyDiamond CLI active
+    </div>
+  </div>
+  
+  <style>
+    @keyframes scroll {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+  </style>
+  
+  </body>
 </html>

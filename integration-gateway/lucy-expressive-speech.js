@@ -49,32 +49,32 @@ class LucyExpressiveSpeech {
     this.lucyisms = {
       empathy: [
         "I'm here with you.",
-        "Take your time.",
+        'Take your time.',
         "Let's breathe together for a moment.",
         "That's a lot to carry.",
-        "I feel that deeply."
+        'I feel that deeply.'
       ],
       celebration: [
-        "Wow! Look at you!",
+        'Wow! Look at you!',
         "That's amazing progress!",
-        "You did something brave today.",
+        'You did something brave today.',
         "I'm so proud of you.",
         "Let's celebrate this!"
       ],
       reflection: [
         "Sometimes just naming it helps, doesn't it?",
         "You've come a long way, truly.",
-        "I notice the strength in that.",
-        "That takes real courage."
+        'I notice the strength in that.',
+        'That takes real courage.'
       ],
       encouragement: [
         "You're not alone in this.",
         "Mistakes are just data. You're learning.",
-        "I believe in you.",
-        "One step at a time is enough."
+        'I believe in you.',
+        'One step at a time is enough.'
       ],
       presence: [
-        "mm-hmm",
+        'mm-hmm',
         "I'm listening",
         "I'm right here with you"
       ]
@@ -218,15 +218,15 @@ class LucyExpressiveSpeech {
       case 'empathy':
         emotionalText = "I'm here. " + emotionalText;
         if (Math.random() < 0.4) {
-          emotionalText += " Take your time.";
+          emotionalText += ' Take your time.';
         }
         break;
 
       case 'celebrate':
       case 'celebration':
-        emotionalText = "🎉 " + emotionalText;
+        emotionalText = '🎉 ' + emotionalText;
         if (Math.random() < 0.3) {
-          emotionalText += " This is wonderful!";
+          emotionalText += ' This is wonderful!';
         }
         break;
 
@@ -239,7 +239,7 @@ class LucyExpressiveSpeech {
       case 'thoughtful':
         emotionalText = "Let's just take a breath. " + emotionalText;
         if (Math.random() < 0.5) {
-          emotionalText += " mm-hmm.";
+          emotionalText += ' mm-hmm.';
         }
         break;
 
@@ -253,14 +253,14 @@ class LucyExpressiveSpeech {
   }
 
   applyConversationalMode(text, mode, modeConfig) {
-    if (!modeConfig) return text;
+    if (!modeConfig) {return text;}
 
     let modeText = text;
 
     switch (mode) {
       case 'listener':
         if (Math.random() < modeConfig.pauseFrequency) {
-          modeText += " Take your time.";
+          modeText += ' Take your time.';
         }
         if (modeConfig.silentSupport && Math.random() < 0.3) {
           modeText += " I'm right here.";
@@ -270,9 +270,9 @@ class LucyExpressiveSpeech {
       case 'guide':
         if (modeConfig.followUpPrompts && Math.random() < 0.4) {
           const prompts = [
-            " What would you like to explore next?",
-            " How does that feel to you?",
-            " Where do you want to go from here?"
+            ' What would you like to explore next?',
+            ' How does that feel to you?',
+            ' Where do you want to go from here?'
           ];
           modeText += prompts[Math.floor(Math.random() * prompts.length)];
         }
@@ -287,9 +287,9 @@ class LucyExpressiveSpeech {
       case 'strategist':
         if (modeConfig.analytical && Math.random() < 0.3) {
           const analytical = [
-            "Based on the data, ",
-            "From a strategic perspective, ",
-            "Looking at this systematically, "
+            'Based on the data, ',
+            'From a strategic perspective, ',
+            'Looking at this systematically, '
           ];
           modeText = analytical[Math.floor(Math.random() * analytical.length)] + modeText.toLowerCase();
         }
@@ -312,9 +312,9 @@ class LucyExpressiveSpeech {
       const selectedLucyism = emotionLucyisms[Math.floor(Math.random() * emotionLucyisms.length)];
       
       if (Math.random() < 0.5) {
-        lucyText = selectedLucyism + " " + lucyText;
+        lucyText = selectedLucyism + ' ' + lucyText;
       } else {
-        lucyText = lucyText + " " + selectedLucyism;
+        lucyText = lucyText + ' ' + selectedLucyism;
       }
     }
 
@@ -322,7 +322,7 @@ class LucyExpressiveSpeech {
     if (Math.random() < this.config.humanismChance) {
       const presenceMarkers = this.lucyisms.presence;
       const marker = presenceMarkers[Math.floor(Math.random() * presenceMarkers.length)];
-      lucyText += " " + marker;
+      lucyText += ' ' + marker;
     }
 
     return lucyText;
@@ -340,7 +340,7 @@ class LucyExpressiveSpeech {
     return {
       mode: 'silent',
       presence: true,
-      message: "Lucy is here with you in quiet support",
+      message: 'Lucy is here with you in quiet support',
       success: true
     };
   }
@@ -434,10 +434,10 @@ if (require.main === module) {
 
     // Test different emotional modes
     const tests = [
-      { text: "I understand this has been really challenging for you.", emotion: 'empathy' },
-      { text: "You launched your project today!", emotion: 'celebrate' },
+      { text: 'I understand this has been really challenging for you.', emotion: 'empathy' },
+      { text: 'You launched your project today!', emotion: 'celebrate' },
       { text: "Let's think about the next steps for your Symphony.", mode: 'guide' },
-      { text: "Take all the time you need.", mode: 'listener' },
+      { text: 'Take all the time you need.', mode: 'listener' },
       { text: "Based on our analysis, here's what I recommend.", mode: 'strategist' }
     ];
 

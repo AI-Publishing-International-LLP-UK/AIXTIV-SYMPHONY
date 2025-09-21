@@ -195,7 +195,7 @@ class LucySystemTest {
         
         console.log(`  ✅ ${test.name}`);
         if (result.mode === 'silent') {
-          console.log(`     Result: Silent presence mode activated`);
+          console.log('     Result: Silent presence mode activated');
         } else {
           console.log(`     Enhanced: "${result.expressiveText}"`);
         }

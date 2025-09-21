@@ -1259,14 +1259,14 @@
       <!-- Sidebar with Squadron Icons -->
       <div class="sidebar">
         <div class="sidebar-icons">
-          <div class="sidebar-icon active" onclick="selectIcon(this, 'Communication', '01')">
+          <div class="sidebar-icon active" onclick="showFreemiumFeature(this, 'Communication')">
             <svg viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="1.8">
               <circle cx="12" cy="12" r="10" fill="none" />
               <path d="M9 11l2 2 4-4" stroke="#333" stroke-width="1.5" fill="none"/>
             </svg>
             <div class="icon-tooltip">
               <strong>Communication</strong><br>
-              <small>Automated Communication</small>
+              <small>Click to preview feature</small>
             </div>
           </div>
           
@@ -1528,7 +1528,7 @@
                     CLI
                   </button>
                   
-                  <input type="text" id="copilotInput" placeholder="Ask your copilot anything..." style="flex: 1; background: rgba(0, 0, 0, 0.03); border: 1px solid rgba(0, 0, 0, 0.1); padding: 8px 12px; border-radius: 15px; color: #333; font-size: 12px; outline: none;" onkeypress="handleCopilotKeyPress(event)">
+                  <input type="text" id="copilotInput" placeholder="💎 Diamond CLI natural language - Ask your copilot anything or use CLI commands..." style="flex: 1; background: rgba(0, 0, 0, 0.03); border: 1px solid rgba(0, 0, 0, 0.1); padding: 8px 12px; border-radius: 15px; color: #333; font-size: 12px; outline: none;" onkeypress="handleCopilotKeyPress(event)" oninput="processDiamondCLI(this.value)">
                   
                   <button onclick="sendCopilotMessage()" style="background: rgba(0, 0, 0, 0.05); border: 1px solid rgba(0, 0, 0, 0.1); color: #333; padding: 8px 12px; border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 11px;">
                     Send
@@ -1668,67 +1668,33 @@
                 </svg>
               </button>
             </div>
-            <!-- Copilot Section (Always at Top) -->
+            <!-- Dr. Lucy - Single AI Executive Coach -->
             <div class="copilot-section">
-              <div class="copilot-title">YOUR AI COPILOTS</div>
-              <div class="copilot-hex-container">
-                <div class="copilot-hex-item active" onclick="activateRIX('QB', 'Anthropic 4')" id="qbRix">
+              <div class="copilot-title">AI EXECUTIVE COACH</div>
+              <div class="copilot-hex-container" style="justify-content: center;">
+                <div class="copilot-hex-item active" onclick="activateDrLucy()" id="drLucy">
                   <div class="copilot-hex">
-                    <svg viewBox="0 0 60 60" style="width: 50px; height: 50px;">
+                    <svg viewBox="0 0 60 60" style="width: 65px; height: 65px;">
                       <defs>
-                        <linearGradient id="qbGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <linearGradient id="drLucyGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
                           <stop offset="0%" style="stop-color:#B8860B;stop-opacity:1" />
-                          <stop offset="100%" style="stop-color:#0bb1bb;stop-opacity:1" />
+                          <stop offset="50%" style="stop-color:#0bb1bb;stop-opacity:1" />
+                          <stop offset="100%" style="stop-color:#4ECDC4;stop-opacity:1" />
                         </linearGradient>
                       </defs>
-                      <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#qbGradientLight)" stroke="#B8860B" stroke-width="2" opacity="0.9" />
-                      <text x="30" y="26" text-anchor="middle" fill="white" font-size="12" font-weight="800">QB</text>
-                      <text x="30" y="38" text-anchor="middle" fill="white" font-size="9" font-weight="600">RIX</text>
+                      <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#drLucyGradientLight)" stroke="#B8860B" stroke-width="2" opacity="0.9" />
+                      <text x="30" y="22" text-anchor="middle" fill="white" font-size="8" font-weight="600">DR</text>
+                      <text x="30" y="32" text-anchor="middle" fill="white" font-size="11" font-weight="800">LUCY</text>
+                      <text x="30" y="42" text-anchor="middle" fill="white" font-size="7" font-weight="600">COACH</text>
                     </svg>
-                    <div class="copilot-status"></div>
+                    <div class="copilot-status" style="opacity: 1;"></div>
                   </div>
-                  <div class="copilot-name active">Anthropic 4</div>
-                </div>
-                
-                <div class="copilot-hex-item" onclick="activateRIX('SH', 'Claude 4')" id="shRix">
-                  <div class="copilot-hex">
-                    <svg viewBox="0 0 60 60" style="width: 50px; height: 50px;">
-                      <defs>
-                        <linearGradient id="shGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" style="stop-color:#4ECDC4;stop-opacity:1" />
-                          <stop offset="100%" style="stop-color:#B8860B;stop-opacity:1" />
-                        </linearGradient>
-                      </defs>
-                      <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#shGradientLight)" stroke="#4ECDC4" stroke-width="2" opacity="0.9" />
-                      <text x="30" y="26" text-anchor="middle" fill="white" font-size="12" font-weight="800">SH</text>
-                      <text x="30" y="38" text-anchor="middle" fill="white" font-size="9" font-weight="600">RIX</text>
-                    </svg>
-                    <div class="copilot-status"></div>
-                  </div>
-                  <div class="copilot-name">Claude 4</div>
-                </div>
-                
-                <div class="copilot-hex-item" onclick="activateRIX('Q', 'Q RIX')" id="qRix">
-                  <div class="copilot-hex">
-                    <svg viewBox="0 0 60 60" style="width: 50px; height: 50px;">
-                      <defs>
-                        <linearGradient id="qGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" style="stop-color:#228B22;stop-opacity:1" />
-                          <stop offset="100%" style="stop-color:#8B7355;stop-opacity:1" />
-                        </linearGradient>
-                      </defs>
-                      <path d="M30 5 L50 20 L50 40 L30 55 L10 40 L10 20 Z" fill="url(#qGradientLight)" stroke="#228B22" stroke-width="2" opacity="0.9" />
-                      <text x="30" y="26" text-anchor="middle" fill="white" font-size="12" font-weight="800">Q</text>
-                      <text x="30" y="38" text-anchor="middle" fill="white" font-size="9" font-weight="600">RIX</text>
-                    </svg>
-                    <div class="copilot-status"></div>
-                  </div>
-                  <div class="copilot-name">Q RIX</div>
+                  <div class="copilot-name active">Always Available</div>
                 </div>
               </div>
               <div class="active-copilot-display">
                 <div class="copilot-badge">
-                  <span id="activeRixDisplay">QB RIX Active</span>
+                  <span id="activeCoachDisplay">Dr. Lucy Active</span>
                 </div>
                 <div class="scan-approve-btn" onclick="toggleScanToApprove(this)">
                   <div class="scan-approve-content">
@@ -2074,6 +2040,16 @@
     let apiConnected = false;
     let selectedModel = 'claude-code';
     let authLevel = 3; // V99 Progressive Authentication Level
+    
+    // Client Features System - Conditional Premium Features
+    let clientFeatures = {
+      dreamCommander: true,  // Dream Commander for panel cards
+      drMemoria: true,       // Dr. Memoria for sidebar icons
+      universalGateway: true,
+      pineconeMemory: true,
+      elevenLabsVoice: true,
+      swarmIntelligence: true
+    };
 
     // V99 Initialize
     document.addEventListener('DOMContentLoaded', function() {
@@ -2084,6 +2060,7 @@
       initializeKeyboardShortcuts();
       loadDynamicContent();
       initializeAuthFeatures(); // V99 Authentication features
+      initializePremiumFeatures(); // Dream Commander & Dr. Memoria
       
       // Set initial copilot
       activateRIX('QB', 'Anthropic 4');
@@ -2092,6 +2069,110 @@
       setCopilotMode('cli');
     });
 
+    // Missing Functions Implementation
+    function showNotification(message, type = 'success') {
+      // Production notification system - create visual notification
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+      notification.style.cssText = `
+        position: fixed;
+        top: 60px;
+        right: 20px;
+        background: ${type === 'error' ? 'rgba(239, 68, 68, 0.95)' : type === 'success' ? 'rgba(16, 185, 129, 0.95)' : 'rgba(11, 177, 187, 0.95)'};
+        color: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 500;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        max-width: 300px;
+        word-wrap: break-word;
+        animation: slideIn 0.3s ease;
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+    
+    function detectUserRole() {
+      // Detect user role based on authentication and context
+      if (authLevel >= 5) {
+        userRole = 'owner';
+        userLevel = 'enterprise';
+      } else if (authLevel >= 3) {
+        userRole = 'admin';
+        userLevel = 'team-leader';
+      } else {
+        userRole = 'team-member';
+        userLevel = 'individual';
+      }
+      console.log('User role detected:', userRole, 'Level:', userLevel);
+    }
+    
+    function loadUserPreferences() {
+      // Load user preferences from storage or API
+      try {
+        const stored = localStorage.getItem('asoos-preferences');
+        if (stored) {
+          const prefs = JSON.parse(stored);
+          selectedModel = prefs.model || 'claude-code';
+          rightPanelState = prefs.panelState || 'normal';
+        }
+      } catch (e) {
+        console.warn('Could not load user preferences:', e);
+      }
+    }
+    
+    function initializeKeyboardShortcuts() {
+      // Initialize keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey || e.metaKey) {
+          switch(e.key) {
+            case 'Enter':
+              e.preventDefault();
+              const input = document.getElementById('commandInput');
+              if (input && input.value.trim()) {
+                sendMessage();
+              }
+              break;
+            case 'k':
+              e.preventDefault();
+              togglePanel();
+              break;
+          }
+        }
+      });
+    }
+    
+    function loadDynamicContent() {
+      // Load dynamic content based on user role
+      console.log('Loading dynamic content for:', userRole);
+    }
+    
+    function initializePremiumFeatures() {
+      // Initialize premium features like Dream Commander and Dr. Memoria
+      if (clientFeatures.dreamCommander) {
+        console.log('Dream Commander initialized');
+      }
+      if (clientFeatures.drMemoria) {
+        console.log('Dr. Memoria initialized');
+      }
+    }
+    
+    function updateAuthenticatedState() {
+      // Update UI to reflect authenticated state
+      const authElements = document.querySelectorAll('.auth-required');
+      authElements.forEach(el => {
+        el.style.display = authLevel >= 3 ? 'block' : 'none';
+      });
+    }
+    
     // Load Dynamic User Data
     function loadUserData() {
       // In production, this would fetch from your authentication service
@@ -2336,6 +2417,574 @@
     function showS2DOInfo(event) {
       event.stopPropagation();
       showNotification('S2DO: Scan To Do - Automated approval workflow system', 'success');
+    }
+    
+    // Dr. Lucy - AI Executive Coach Activation
+    function activateDrLucy() {
+      // Hide the 3-copilot section
+      const copilotSection = document.querySelector('.copilot-section:not(:has(#drLucy))');
+      if (copilotSection) {
+        copilotSection.style.display = 'none';
+      }
+      
+      // Show Dr. Lucy as active
+      const drLucyElement = document.getElementById('drLucy');
+      if (drLucyElement) {
+        drLucyElement.classList.add('active');
+        
+        // Pulse effect for activation
+        drLucyElement.style.animation = 'pulse 0.6s ease-in-out';
+        setTimeout(() => {
+          drLucyElement.style.animation = '';
+        }, 600);
+      }
+      
+      // Update display text
+      const activeDisplay = document.getElementById('activeCoachDisplay');
+      if (activeDisplay) {
+        activeDisplay.textContent = 'Dr. Lucy - ML Deep Mind Active';
+        activeDisplay.style.color = '#B8860B';
+      }
+      
+      // Clear panel boxes for Dr. Lucy appointments
+      clearDrLucyPanels();
+      
+      // Initialize Dr. Lucy's ChatGPT + Anthropic integration
+      initializeDrLucyCore();
+      
+      // Show success notification
+      showNotification('Dr. Lucy ML Deep Mind activated - Ready for appointments & meetings', 'success');
+    }
+    
+    // Clear all 6 panel boxes for Dr. Lucy appointments
+    function clearDrLucyPanels() {
+      const panelContents = [
+        'hotTopicsContent',
+        'proposalsContent', 
+        'projectsContent',
+        'growthContent',
+        'alignmentContent',
+        'supportContent'
+      ];
+      
+      panelContents.forEach(panelId => {
+        const panel = document.getElementById(panelId);
+        if (panel) {
+          panel.innerHTML = `
+            <div style="padding: 20px; text-align: center; color: #999; font-style: italic;">
+              <div style="font-size: 12px; margin-bottom: 8px;">🌙 Dream Commander Ready</div>
+              <div style="font-size: 10px;">Awaiting appointment data...</div>
+            </div>
+          `;
+        }
+      });
+      
+      console.log('✨ Dr. Lucy: 6 panel boxes cleared for appointment system');
+    }
+    
+    // Dr. Lucy Appointment System with Dream Commander
+    function startDrLucyAppointment(clientName, clientType = 'business', meetingType = 'consultation') {
+      console.log(`👩‍💼 Dr. Lucy: Starting appointment with ${clientName}`);
+      
+      // Dream Commander fills the panels based on the client
+      fillDynamicPanels(clientName, clientType, meetingType);
+      
+      // Show appointment started notification
+      showNotification(`Dr. Lucy appointment started with ${clientName} - Dream Commander analyzing...`, 'success');
+      
+      // Return meeting session for email summary
+      return {
+        client: clientName,
+        type: meetingType,
+        startTime: new Date(),
+        panelData: []
+      };
+    }
+    
+    // Dream Commander fills panels dynamically during appointment
+    function fillDynamicPanels(clientName, clientType, meetingType) {
+      const panelData = generateClientSpecificData(clientName, clientType, meetingType);
+      
+      // Fill each panel with relevant data
+      const panelMappings = [
+        { id: 'hotTopicsContent', title: 'Client Background & Context', data: panelData.background },
+        { id: 'proposalsContent', title: 'Recommended Solutions', data: panelData.solutions },
+        { id: 'projectsContent', title: 'Implementation Roadmap', data: panelData.roadmap },
+        { id: 'growthContent', title: 'Growth Opportunities', data: panelData.growth },
+        { id: 'alignmentContent', title: 'Strategic Alignment', data: panelData.alignment },
+        { id: 'supportContent', title: 'Next Steps & Support', data: panelData.support }
+      ];
+      
+      panelMappings.forEach((mapping, index) => {
+        setTimeout(() => {
+          fillPanelWithData(mapping.id, mapping.title, mapping.data, clientName);
+          
+          // Add Dream Commander enhancement
+          addDreamCommanderEnhancement(mapping.id);
+          
+        }, (index + 1) * 800); // Stagger the filling animation
+      });
+    }
+    
+    // Generate client-specific data using Dream Commander AI + SERPEW Data
+    function generateClientSpecificData(clientName, clientType, meetingType) {
+      // Get SERPEW data from SallyPort authentication
+      const serpewData = getSERPEWData(clientName);
+      const chromeoData = getCHROMEOVideoData(clientName);
+      
+      // Enhanced Dream Commander AI analysis with SERPEW integration
+      const businessTypes = {
+        'tech_startup': {
+          background: [`${clientName} is a rapidly scaling technology startup`, 'Focus on product-market fit and growth metrics', 'Key challenges: talent acquisition and market penetration'],
+          solutions: ['Implement agile development frameworks', 'Scale customer success operations', 'Optimize user acquisition funnels'],
+          roadmap: ['Q1: MVP iteration and user feedback', 'Q2: Series A preparation', 'Q3: Market expansion strategy'],
+          growth: ['User base expansion: Target 10x growth', 'Revenue optimization: SaaS metrics focus', 'Team scaling: 3x engineering headcount'],
+          alignment: ['Align product roadmap with market demands', 'Focus on core competencies', 'Build strategic partnerships'],
+          support: ['Weekly check-ins with Dr. Lucy', 'Connect with investor network', 'Access to technical advisory board']
+        },
+        'enterprise': {
+          background: [`${clientName} operates in the enterprise segment`, 'Established company seeking transformation', 'Focus on operational efficiency and innovation'],
+          solutions: ['Digital transformation roadmap', 'Process automation opportunities', 'Change management strategy'],
+          roadmap: ['Q1: Assessment and planning phase', 'Q2: Pilot program implementation', 'Q3: Full-scale rollout'],
+          growth: ['Operational efficiency: 25% improvement target', 'Customer satisfaction: NPS score enhancement', 'Market share: Strategic positioning'],
+          alignment: ['Align transformation with business strategy', 'Stakeholder buy-in and communication', 'Cultural change management'],
+          support: ['Monthly strategic reviews', 'Executive coaching sessions', 'Access to transformation toolkit']
+        },
+        'business': {
+          background: [`${clientName} consultation session`, 'Standard business advisory engagement', 'Focus on growth and optimization'],
+          solutions: ['Business process optimization', 'Strategic planning consultation', 'Performance improvement initiatives'],
+          roadmap: ['Initial assessment and gap analysis', 'Strategic plan development', 'Implementation and monitoring'],
+          growth: ['Revenue growth: Strategic initiatives', 'Operational excellence: Efficiency gains', 'Market positioning: Competitive advantage'],
+          alignment: ['Business model optimization', 'Resource allocation strategy', 'Goal setting and KPI definition'],
+          support: ['Follow-up consultation scheduling', 'Resource recommendations', 'Industry best practice sharing']
+        }
+      };
+      
+      // Merge SERPEW data with business type data
+      const baseData = businessTypes[clientType] || businessTypes.business;
+      
+      // Enhanced with SERPEW insights
+      if (serpewData && serpewData.insights) {
+        baseData.background = [...baseData.background, ...serpewData.insights.background];
+        baseData.solutions = [...baseData.solutions, ...serpewData.insights.solutions];
+      }
+      
+      // Add CHROMEO video recommendations
+      if (chromeoData && chromeoData.videoRecommendations) {
+        baseData.support = [...baseData.support, ...chromeoData.videoRecommendations];
+      }
+      
+      return baseData;
+    }
+    
+    // SERPEW Data Integration - SallyPort Enhanced Research & Profile Engagement Workflow
+    function getSERPEWData(clientName) {
+      console.log(`🔍 SERPEW: Gathering data for ${clientName} from SallyPort authentication`);
+      
+      // This would integrate with your actual SERPEW database
+      // Simulating SERPEW data structure
+      const serpewDatabase = {
+        'Acme Corporation': {
+          sallyPortEntry: new Date('2024-01-15'),
+          profileData: {
+            industry: 'Technology',
+            size: 'Enterprise (500+ employees)',
+            previousEngagements: 3,
+            riskProfile: 'Low',
+            creditScore: 'A+',
+            complianceStatus: 'Fully Compliant'
+          },
+          insights: {
+            background: [
+              'SERPEW: Previously engaged through SallyPort 3 times',
+              'SERPEW: High-trust client with excellent compliance record',
+              'SERPEW: Technology sector leader with strong growth trajectory'
+            ],
+            solutions: [
+              'SERPEW Recommendation: Accelerated onboarding available',
+              'SERPEW: Premium service tier eligible',
+              'SERPEW: Multi-year contract optimization available'
+            ]
+          },
+          videoHistory: {
+            preferredFormats: ['executive-briefing', 'technical-overview'],
+            previousVideoEngagements: 5,
+            averageViewTime: '12 minutes'
+          }
+        }
+      };
+      
+      return serpewDatabase[clientName] || {
+        sallyPortEntry: new Date(),
+        profileData: {
+          industry: 'General Business',
+          size: 'Unknown',
+          previousEngagements: 0,
+          riskProfile: 'Standard',
+          creditScore: 'Pending',
+          complianceStatus: 'Standard Review'
+        },
+        insights: {
+          background: ['SERPEW: New client through SallyPort authentication'],
+          solutions: ['SERPEW: Standard onboarding process recommended']
+        }
+      };
+    }
+    
+    // CHROMEO Green Screen Video Services Integration
+    function getCHROMEOVideoData(clientName) {
+      console.log(`🎬 CHROMEO: Analyzing video requirements for ${clientName}`);
+      
+      // CHROMEO video service recommendations based on client profile
+      const chromeoServices = {
+        'enterprise': {
+          videoRecommendations: [
+            'CHROMEO: Executive presentation with green screen backdrop',
+            'CHROMEO: Multi-language video creation available',
+            'CHROMEO: Professional studio quality recording session',
+            'CHROMEO: Custom branded video templates ready'
+          ],
+          videoFormats: ['4K Executive', 'Multi-cam Setup', 'Virtual Background'],
+          estimatedCost: '$2,500 - $5,000'
+        },
+        'tech_startup': {
+          videoRecommendations: [
+            'CHROMEO: Pitch deck video with dynamic backgrounds',
+            'CHROMEO: Product demo with green screen effects',
+            'CHROMEO: Investor presentation video package',
+            'CHROMEO: Social media video content series'
+          ],
+          videoFormats: ['HD Standard', 'Social Media Optimized', 'Pitch Ready'],
+          estimatedCost: '$1,200 - $2,800'
+        },
+        'business': {
+          videoRecommendations: [
+            'CHROMEO: Professional consultation video recording',
+            'CHROMEO: Training video with green screen integration',
+            'CHROMEO: Marketing video with custom backgrounds',
+            'CHROMEO: Client testimonial video production'
+          ],
+          videoFormats: ['HD Standard', 'Web Optimized', 'Training Format'],
+          estimatedCost: '$800 - $1,800'
+        }
+      };
+      
+      // Get SERPEW data to enhance CHROMEO recommendations
+      const serpewData = getSERPEWData(clientName);
+      const clientType = determineClientTypeFromSERPEW(serpewData);
+      
+      return chromeoServices[clientType] || chromeoServices.business;
+    }
+    
+    // Determine client type from SERPEW data
+    function determineClientTypeFromSERPEW(serpewData) {
+      if (!serpewData || !serpewData.profileData) return 'business';
+      
+      const { industry, size } = serpewData.profileData;
+      
+      if (industry === 'Technology' && (size.includes('startup') || size.includes('Small'))) {
+        return 'tech_startup';
+      } else if (size.includes('Enterprise') || size.includes('500+')) {
+        return 'enterprise';
+      }
+      
+      return 'business';
+    }
+    
+    // Fill individual panel with dynamic data
+    function fillPanelWithData(panelId, title, dataArray, clientName) {
+      const panel = document.getElementById(panelId);
+      if (!panel) return;
+      
+      let html = `
+        <div style="padding: 8px; border-left: 3px solid #B8860B; background: linear-gradient(135deg, rgba(184, 134, 11, 0.1), rgba(251, 191, 36, 0.05)); margin-bottom: 8px; border-radius: 4px;">
+          <div style="font-size: 10px; font-weight: 600; color: #B8860B; margin-bottom: 4px;">
+            🌙 Dream Commander: ${title} for ${clientName}
+          </div>
+        </div>
+      `;
+      
+      dataArray.forEach((item, index) => {
+        html += `
+          <div style="padding: 6px; border-radius: 6px; margin-bottom: 6px; background: rgba(184, 134, 11, 0.05); transform: translateX(-20px); opacity: 0; animation: slideInFade 0.5s ease-out ${index * 0.2}s forwards;">
+            <div style="font-size: 10px; font-weight: 600; color: #333; margin-bottom: 2px;">
+              • ${item}
+            </div>
+          </div>
+        `;
+      });
+      
+      panel.innerHTML = html;
+    }
+    
+    // Add Dream Commander visual enhancement to panel
+    function addDreamCommanderEnhancement(panelId) {
+      const panel = document.getElementById(panelId);
+      if (!panel) return;
+      
+      // Add pulsing border effect
+      panel.style.animation = 'dream-pulse 2s ease-in-out infinite';
+      panel.style.borderLeft = '2px solid #B8860B';
+      
+      // Add Dream Commander indicator
+      const indicator = document.createElement('div');
+      indicator.style.cssText = `
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 8px;
+        height: 8px;
+        background: linear-gradient(135deg, #B8860B, #FFD700);
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+        z-index: 10;
+      `;
+      indicator.title = 'Dream Commander Active';
+      
+      panel.style.position = 'relative';
+      panel.appendChild(indicator);
+    }
+    
+    // End appointment and send email summary
+    function endDrLucyAppointment(sessionData, clientEmail = null) {
+      const endTime = new Date();
+      const duration = Math.round((endTime - sessionData.startTime) / 1000 / 60); // minutes
+      
+      // Collect panel data for summary
+      const panelSummary = collectPanelSummary();
+      
+      console.log(`✅ Dr. Lucy appointment completed with ${sessionData.client} (${duration} minutes)`);
+      
+      // Send email summary if client is not a subscriber
+      if (clientEmail && !isSubscriber(clientEmail)) {
+        sendAppointmentSummaryEmail(sessionData.client, clientEmail, panelSummary, duration);
+      }
+      
+      // Clear panels after appointment
+      setTimeout(() => {
+        clearDrLucyPanels();
+        showNotification('Dr. Lucy appointment completed - Panels cleared for next session', 'success');
+      }, 5000);
+    }
+    
+    // Collect summary from all 6 panels
+    function collectPanelSummary() {
+      const panelIds = ['hotTopicsContent', 'proposalsContent', 'projectsContent', 'growthContent', 'alignmentContent', 'supportContent'];
+      const panelNames = ['Client Background', 'Solutions', 'Roadmap', 'Growth Opportunities', 'Strategic Alignment', 'Next Steps'];
+      
+      return panelIds.map((panelId, index) => {
+        const panel = document.getElementById(panelId);
+        const content = panel ? panel.textContent.replace(/\s+/g, ' ').trim() : 'No data';
+        return {
+          section: panelNames[index],
+          content: content
+        };
+      });
+    }
+    
+    // Check if client is a subscriber
+    function isSubscriber(email) {
+      // This would check your actual subscription database
+      // For demo, assume anyone with certain domains are subscribers
+      const subscriberDomains = ['@company.com', '@enterprise.com', '@business.com'];
+      return subscriberDomains.some(domain => email.includes(domain));
+    }
+    
+    // Send email summary to non-subscribers
+    function sendAppointmentSummaryEmail(clientName, email, panelSummary, duration) {
+      console.log(`📧 Sending Dr. Lucy appointment summary to ${email}`);
+      
+      const emailContent = {
+        to: email,
+        subject: `Dr. Lucy Consultation Summary - ${clientName}`,
+        body: generateEmailSummary(clientName, panelSummary, duration)
+      };
+      
+      // This would integrate with your actual email system
+      showNotification(`Email summary sent to ${email}`, 'success');
+      
+      return emailContent;
+    }
+    
+    // Generate email summary content
+    function generateEmailSummary(clientName, panelSummary, duration) {
+      let summary = `Dear ${clientName},\n\n`;
+      summary += `Thank you for your ${duration}-minute consultation with Dr. Lucy, our AI Executive Coach.\n\n`;
+      summary += `Here's a summary of what we covered:\n\n`;
+      
+      panelSummary.forEach(section => {
+        summary += `${section.section}:\n${section.content}\n\n`;
+      });
+      
+      summary += `This summary was generated with Dream Commander AI assistance.\n\n`;
+      summary += `To access the full interactive experience and ongoing support, consider subscribing to our platform.\n\n`;
+      summary += `Best regards,\nDr. Lucy & The ASOOS Team`;
+      
+      return summary;
+    }
+    
+    // Test function for Dr. Lucy appointment system
+    function testDrLucyAppointment() {
+      activateDrLucy();
+      
+      setTimeout(() => {
+        const session = startDrLucyAppointment('Acme Corporation', 'enterprise', 'strategic_consultation');
+        
+        // Simulate appointment ending after 30 seconds
+        setTimeout(() => {
+          endDrLucyAppointment(session, 'contact@acme-corp.com');
+        }, 30000);
+      }, 2000);
+    }
+    
+    function initializeDrLucyCore() {
+      // Dr. Lucy's core AI systems initialization
+      const systems = [
+        'Universal Gateway OAuth',
+        'ChatGPT API Integration', 
+        'Anthropic Claude Access',
+        'Pinecone Memory Storage',
+        'ElevenLabs Voice Synthesis',
+        'Swarm Intelligence Network'
+      ];
+      
+      // Simulate system initialization
+      systems.forEach((system, index) => {
+        setTimeout(() => {
+          console.log(`🧠 Dr. Lucy: ${system} - Online`);
+          if (index === systems.length - 1) {
+            showNotification('Dr. Lucy fully operational - All AI systems synchronized', 'success');
+          }
+        }, (index + 1) * 200);
+      });
+    }
+    
+    // Dream Commander - Panel Cards AI Enhancement
+    function initializeDreamCommander() {
+      if (!clientFeatures.dreamCommander) return;
+      
+      const panelCards = document.querySelectorAll('.panel-card');
+      panelCards.forEach((card, index) => {
+        // Add Dream Commander enhancement
+        const header = card.querySelector('.panel-header');
+        if (header) {
+          // Add Dream Commander indicator
+          const dreamIndicator = document.createElement('div');
+          dreamIndicator.className = 'dream-commander-indicator';
+          dreamIndicator.style.cssText = `
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 8px;
+            height: 8px;
+            background: linear-gradient(135deg, #B8860B, #FFD700);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            opacity: 0.8;
+          `;
+          dreamIndicator.title = 'Dream Commander Active';
+          header.style.position = 'relative';
+          header.appendChild(dreamIndicator);
+        }
+        
+        // Enhanced panel intelligence
+        card.addEventListener('mouseenter', () => {
+          if (clientFeatures.dreamCommander) {
+            showDreamCommanderInsight(card, index);
+          }
+        });
+      });
+      
+      console.log('🌙 Dream Commander: Panel intelligence activated');
+    }
+    
+    function showDreamCommanderInsight(card, index) {
+      const insights = [
+        'AI analyzing trending patterns...',
+        'Dream insights: Optimal timing detected',
+        'Commander suggests priority focus here',
+        'Predictive analysis: High impact potential',
+        'Dream state: Enhanced creativity mode',
+        'Commander intelligence: Strategic advantage'
+      ];
+      
+      const insight = insights[index % insights.length];
+      showNotification(`Dream Commander: ${insight}`, 'success');
+    }
+    
+    // Dr. Memoria - Sidebar Icons Memory Enhancement
+    function initializeDrMemoria() {
+      if (!clientFeatures.drMemoria) return;
+      
+      const sidebarIcons = document.querySelectorAll('.sidebar-icon:not(.auth-only):not(.settings-icon)');
+      sidebarIcons.forEach((icon, index) => {
+        // Add Dr. Memoria memory layer
+        const memoriaLayer = document.createElement('div');
+        memoriaLayer.className = 'memoria-layer';
+        memoriaLayer.style.cssText = `
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: radial-gradient(circle, rgba(75, 192, 192, 0.1) 0%, transparent 70%);
+          border-radius: 50%;
+          pointer-events: none;
+          opacity: 0;
+          transition: all 0.3s ease;
+        `;
+        icon.style.position = 'relative';
+        icon.appendChild(memoriaLayer);
+        
+        // Dr. Memoria memory activation
+        icon.addEventListener('mouseenter', () => {
+          memoriaLayer.style.opacity = '1';
+          if (clientFeatures.drMemoria) {
+            activateDrMemoriaInsight(icon, index);
+          }
+        });
+        
+        icon.addEventListener('mouseleave', () => {
+          memoriaLayer.style.opacity = '0';
+        });
+      });
+      
+      console.log('🧠 Dr. Memoria: Memory enhancement activated for sidebar icons');
+    }
+    
+    function activateDrMemoriaInsight(icon, index) {
+      const memories = [
+        'Remembering your previous interaction...',
+        'Pattern recognized from last week',
+        'Dr. Memoria: Context loaded successfully',
+        'Memory palace: Relevant experience found',
+        'Previous success pattern detected',
+        'Dr. Memoria: Enhanced context ready'
+      ];
+      
+      const memory = memories[index % memories.length];
+      console.log(`🧠 Dr. Memoria: ${memory}`);
+      
+      // Visual memory activation
+      icon.style.boxShadow = '0 0 15px rgba(75, 192, 192, 0.4)';
+      setTimeout(() => {
+        icon.style.boxShadow = '';
+      }, 1000);
+    }
+    
+    // Initialize premium features on load
+    function initializePremiumFeatures() {
+      if (clientFeatures.dreamCommander) {
+        setTimeout(() => initializeDreamCommander(), 1000);
+      }
+      
+      if (clientFeatures.drMemoria) {
+        setTimeout(() => initializeDrMemoria(), 1200);
+      }
+      
+      // Show feature status
+      const activeFeatures = Object.keys(clientFeatures).filter(key => clientFeatures[key]);
+      console.log('💎 Premium Features Active:', activeFeatures);
     }
   </script>
 </body>

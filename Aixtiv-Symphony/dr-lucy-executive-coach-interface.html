@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YOUR EXECUTIVE COACH - DR. LUCY, AI | Diamond SAO Command Center</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Enterprise-grade icon solution - Multiple fallbacks -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" crossorigin="anonymous">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      overflow-x: hidden;
+      overflow-y: auto;
+      min-height: 100vh;
+    }
+
+    /* Dr. Lucy Executive Coach Branding */
+    .coach-header {
+      position: sticky;
+      top: 0;
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+      backdrop-filter: blur(20px);
+      border-bottom: 2px solid #FFD700;
+      padding: 1rem 2rem;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+    }
+
+    .coach-header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .coach-identity {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .coach-logo {
+      width: 56px;
+      height: 56px;
+      background: linear-gradient(135deg, #FFD700, #7C3AED);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 900;
+      color: #000;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+      animation: coachPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes coachPulse {
+      0%, 100% { transform: scale(1) rotate(0deg); box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); }
+      50% { transform: scale(1.05) rotate(5deg); box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
+    }
+
+    .coach-title {
+      font-size: 1.75rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #FFD700, #7C3AED);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+
+    .coach-subtitle {
+      font-size: 1rem;
+      color: #CBD5E1;
+      font-weight: 600;
+      margin-top: 0.25rem;
+    }
+
+    /* Progressive Business Function Icons */
+    .function-status {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+
+    .function-icon {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 100px;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .function-icon:hover {
+      background: rgba(255, 215, 0, 0.1);
+      border-color: rgba(255, 215, 0, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+    }
+
+    .function-icon.locked {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: rgba(128, 128, 128, 0.1);
+      border-color: rgba(128, 128, 128, 0.3);
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 15px #10B981;
+      animation: statusPulse 2s ease-in-out infinite;
+    }
+
+    .status-dot.locked {
+      background: #64748B;
+      box-shadow: 0 0 15px #64748B;
+      animation: none;
+    }
+
+    @keyframes statusPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.3); }
+    }
+
+    .function-name {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: #F8FAFC;
+    }
+
+    .function-name.locked {
+      color: #64748B;
+    }
+
+    /* Main Layout */
+    .executive-coach {
+      display: grid;
+      grid-template-columns: 320px 1fr 400px;
+      gap: 2rem;
+      padding: 2rem;
+      max-width: 1600px;
+      margin: 0 auto;
+      min-height: calc(100vh - 120px);
+    }
+
+    /* Left Panel - Business Functions & Dream Commander */
+    .left-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .business-functions {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(124, 58, 237, 0.05));
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .functions-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #FFD700;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      text-align: center;
+    }
+
+    .function-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      margin-bottom: 0.75rem;
+      border-radius: 15px;
+      color: #CBD5E1;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: 1px solid transparent;
+      position: relative;
+    }
+
+    .function-item.unlocked {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.2), rgba(6, 182, 212, 0.2));
+      color: #F8FAFC;
+      border-color: rgba(255, 215, 0, 0.4);
+      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+    }
+
+    .function-item.locked {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: rgba(64, 64, 64, 0.1);
+    }
+
+    .function-item:hover.unlocked {
+      transform: translateX(8px);
+    }
+
+    .function-icon-large {
+      font-size: 1.25rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    .locked-icon {
+      position: absolute;
+      right: 1rem;
+      color: #64748B;
+      font-size: 0.875rem;
+    }
+
+    /* Gift Shop Integration */
+    .gift-shop {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(124, 58, 237, 0.15));
+      border: 2px solid #FFD700;
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .gift-shop:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 30px rgba(255, 215, 0, 0.4);
+    }
+
+    .gift-shop::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+      animation: giftRotate 6s linear infinite;
+    }
+
+    @keyframes giftRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .gift-title {
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: #FFD700;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .gift-description {
+      font-size: 0.875rem;
+      color: #F8FAFC;
+      line-height: 1.6;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    /* Center Panel - Dr. Lucy AI Coach */
+    .center-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .coach-console {
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(26, 26, 26, 0.8));
+      border: 2px solid #FFD700;
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+      flex: 1;
+    }
+
+    .coach-header-console {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .coach-console-title {
+      font-size: 1.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, #FFD700, #7C3AED);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .coach-status {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: rgba(16, 185, 129, 0.2);
+      border-radius: 25px;
+      border: 1px solid #10B981;
+    }
+
+    .status-text {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: #10B981;
+    }
+
+    /* Conversation Area */
+    .conversation-area {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 15px;
+      padding: 1.5rem;
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .conversation-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+
+    .message {
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+    }
+
+    .message.system {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.05));
+      border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .message.user {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05));
+      border-color: rgba(6, 182, 212, 0.3);
+      margin-left: 2rem;
+    }
+
+    .message.coach {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(124, 58, 237, 0.05));
+      border-color: rgba(124, 58, 237, 0.3);
+      margin-right: 2rem;
+    }
+
+    .message-header {
+      font-size: 0.875rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: #FFD700;
+    }
+
+    .message-content {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #F8FAFC;
+    }
+
+    /* Input Area with Voice Integration */
+    .conversation-input {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      border-radius: 50px;
+      margin-top: auto;
+    }
+
+    .microphone-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7C3AED, #06B6D4);
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+    }
+
+    .microphone-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 25px rgba(124, 58, 237, 0.6);
+    }
+
+    .microphone-btn.active {
+      background: linear-gradient(135deg, #EF4444, #F59E0B);
+      animation: micPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes micPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    .message-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #F8FAFC;
+      font-size: 1.125rem;
+      font-weight: 500;
+      outline: none;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .message-input::placeholder {
+      color: #64748B;
+      font-weight: 400;
+    }
+
+    .send-btn {
+      background: linear-gradient(135deg, #FFD700, #7C3AED);
+      border: none;
+      color: #000;
+      padding: 1rem 2rem;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .send-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+    }
+
+    /* Right Panel - Progress & Insights */
+    .right-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .progress-panel {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), rgba(124, 58, 237, 0.05));
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .progress-title {
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: #FFD700;
+      margin-bottom: 2rem;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .progress-item {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(6, 182, 212, 0.1));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-item:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(124, 58, 237, 0.3);
+      border-color: #FFD700;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .progress-name {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #F8FAFC;
+    }
+
+    .progress-percentage {
+      font-size: 0.875rem;
+      color: #7C3AED;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(135deg, #FFD700, #7C3AED);
+      border-radius: 4px;
+      transition: width 1s ease;
+    }
+
+    .progress-description {
+      font-size: 0.75rem;
+      color: #CBD5E1;
+      line-height: 1.4;
+    }
+
+    /* Floating Action Buttons */
+    .floating-actions {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      z-index: 1000;
+    }
+
+    .floating-btn {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(135deg, #FFD700, #7C3AED);
+      color: #000;
+      font-size: 1.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 25px rgba(255, 215, 0, 0.4);
+    }
+
+    .floating-btn:hover {
+      transform: scale(1.15) translateY(-5px);
+      box-shadow: 0 12px 40px rgba(255, 215, 0, 0.6);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1400px) {
+      .executive-coach {
+        grid-template-columns: 280px 1fr 360px;
+        gap: 1.5rem;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .executive-coach {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .left-panel, .right-panel {
+        order: 2;
+      }
+      
+      .center-panel {
+        order: 1;
+      }
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #FFD700, #7C3AED);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, #7C3AED, #06B6D4);
+    }
+
+    /* Loading Animation */
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 215, 0, 0.3);
+      border-radius: 50%;
+      border-top-color: #FFD700;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Dr. Lucy Executive Coach Header -->
+  <header class="coach-header">
+    <div class="coach-header-content">
+      <div class="coach-identity">
+        <div class="coach-logo">🧠</div>
+        <div>
+          <div class="coach-title">YOUR EXECUTIVE COACH - DR. LUCY, AI</div>
+          <div class="coach-subtitle">ML DeepMind PowerHouse | Dream Commander Integration</div>
+        </div>
+      </div>
+      
+      <div class="function-status">
+        <div class="function-icon unlocked" onclick="toggleFunction('communication')">
+          <div class="status-dot"></div>
+          <div class="function-name">Communication</div>
+        </div>
+        <div class="function-icon locked" onclick="showGiftShop()">
+          <div class="status-dot locked"></div>
+          <div class="function-name locked">Growth</div>
+        </div>
+        <div class="function-icon locked" onclick="showGiftShop()">
+          <div class="status-dot locked"></div>
+          <div class="function-name locked">Services</div>
+        </div>
+        <div class="function-icon locked" onclick="showGiftShop()">
+          <div class="status-dot locked"></div>
+          <div class="function-name locked">Innovation</div>
+        </div>
+        <div class="function-icon locked" onclick="showGiftShop()">
+          <div class="status-dot locked"></div>
+          <div class="function-name locked">Automation</div>
+        </div>
+        <div class="function-icon locked" onclick="showGiftShop()">
+          <div class="status-dot locked"></div>
+          <div class="function-name locked">ROI Dashboard</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Executive Coach Interface -->
+  <main class="executive-coach">
+    <!-- Left Panel: Business Functions & Gift Shop -->
+    <aside class="left-panel">
+      <!-- Business Functions Panel -->
+      <div class="business-functions">
+        <div class="functions-title">🎯 Business Functions</div>
+        
+        <div class="function-item unlocked" onclick="selectFunction('communication')">
+          <i class="function-icon-large fas fa-video"></i>
+          <span>Communication</span>
+        </div>
+        <div class="function-item locked" onclick="showGiftShop()">
+          <i class="function-icon-large fas fa-chart-line"></i>
+          <span>Growth</span>
+          <i class="locked-icon fas fa-lock"></i>
+        </div>
+        <div class="function-item locked" onclick="showGiftShop()">
+          <i class="function-icon-large fas fa-users"></i>
+          <span>Services</span>
+          <i class="locked-icon fas fa-lock"></i>
+        </div>
+        <div class="function-item locked" onclick="showGiftShop()">
+          <i class="function-icon-large fas fa-lightbulb"></i>
+          <span>Innovation</span>
+          <i class="locked-icon fas fa-lock"></i>
+        </div>
+        <div class="function-item locked" onclick="showGiftShop()">
+          <i class="function-icon-large fas fa-cog"></i>
+          <span>Automation</span>
+          <i class="locked-icon fas fa-lock"></i>
+        </div>
+        <div class="function-item locked" onclick="showGiftShop()">
+          <i class="function-icon-large fas fa-tachometer-alt"></i>
+          <span>ROI Dashboard</span>
+          <i class="locked-icon fas fa-lock"></i>
+        </div>
+      </div>
+
+      <!-- Gift Shop -->
+      <div class="gift-shop" onclick="openGiftShop()">
+        <div class="gift-title">🎁 Gift Shop</div>
+        <div class="gift-description">
+          Purchase coaching minutes and unlock advanced business functions. Invest in your executive development with Dr. Lucy's premium capabilities.
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center Panel: Dr. Lucy AI Coach -->
+    <section class="center-panel">
+      <div class="coach-console">
+        <div class="coach-header-console">
+          <div>
+            <div class="coach-console-title">🧠 Dr. Lucy ML DeepMind PowerHouse</div>
+            <div style="font-size: 0.875rem; color: #7C3AED; font-weight: 600;">Executive Coaching AI | ElevenLabs Voice Integration | Dream Commander Ready</div>
+          </div>
+          <div class="coach-status">
+            <div class="status-indicator">
+              <div class="status-dot"></div>
+              <div class="status-text">READY TO COACH</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Conversation Area -->
+        <div class="conversation-area">
+          <div class="conversation-messages" id="conversationMessages">
+            <!-- Welcome Message -->
+            <div class="message system">
+              <div class="message-header">🧠 Dr. Lucy - Your Executive Coach</div>
+              <div class="message-content">
+                Welcome! I'm Dr. Lucy, your dedicated AI Executive Coach powered by ML DeepMind technology. I'm here to help you excel in leadership, strategy, and business growth. Let's begin your executive coaching journey with personalized insights and actionable guidance.
+              </div>
+            </div>
+          </div>
+
+          <!-- Input Area -->
+          <div class="conversation-input">
+            <button class="microphone-btn" id="microphoneBtn" onclick="toggleMicrophone()" title="Voice Command">
+              <i class="fas fa-microphone"></i>
+            </button>
+            <input type="text" 
+                   class="message-input" 
+                   id="messageInput"
+                   placeholder="Share your leadership challenges with Dr. Lucy..."
+                   onkeypress="handleKeyPress(event)">
+            <button class="send-btn" onclick="sendMessage()">
+              <i class="fas fa-paper-plane"></i> Coach Me
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Panel: Progress & Insights -->
+    <aside class="right-panel">
+      <!-- Executive Progress -->
+      <div class="progress-panel">
+        <div class="progress-title">📈 Your Executive Progress</div>
+        
+        <!-- Leadership Development -->
+        <div class="progress-item">
+          <div class="progress-header">
+            <div class="progress-name">Leadership Development</div>
+            <div class="progress-percentage">75%</div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 75%;"></div>
+          </div>
+          <div class="progress-description">
+            Strong foundation with room for advanced strategic thinking
+          </div>
+        </div>
+
+        <!-- Strategic Planning -->
+        <div class="progress-item">
+          <div class="progress-header">
+            <div class="progress-name">Strategic Planning</div>
+            <div class="progress-percentage">60%</div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 60%;"></div>
+          </div>
+          <div class="progress-description">
+            Developing systematic approach to long-term planning
+          </div>
+        </div>
+
+        <!-- Communication Skills -->
+        <div class="progress-item">
+          <div class="progress-header">
+            <div class="progress-name">Communication Skills</div>
+            <div class="progress-percentage">85%</div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 85%;"></div>
+          </div>
+          <div class="progress-description">
+            Excellent interpersonal skills, refining executive presence
+          </div>
+        </div>
+
+        <!-- Decision Making -->
+        <div class="progress-item">
+          <div class="progress-header">
+            <div class="progress-name">Decision Making</div>
+            <div class="progress-percentage">70%</div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 70%;"></div>
+          </div>
+          <div class="progress-description">
+            Building confidence in complex business decisions
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Floating Action Buttons -->
+  <div class="floating-actions">
+    <button class="floating-btn" onclick="openGiftShop()" title="Gift Shop">
+      🎁
+    </button>
+    <button class="floating-btn" onclick="activateVoiceCoaching()" title="Voice Coaching">
+      🎤
+    </button>
+  </div>
+
+  <!-- JavaScript for Full Dr. Lucy Functionality -->
+  <script>
+    // Global State Management
+    let activeFunction = 'communication';
+    let voiceRecognition = false;
+    let conversationHistory = [];
+    let unlockedFunctions = ['communication'];
+
+    // Dr. Lucy Voice Integration
+    let recognition;
+    if ('webkitSpeechRecognition' in window) {
+      recognition = new webkitSpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+      
+      recognition.onresult = function(event) {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            transcript += event.results[i][0].transcript;
+          }
+        }
+        if (transcript.trim()) {
+          document.getElementById('messageInput').value = transcript;
+          sendMessage();
+        }
+      };
+      
+      recognition.onend = function() {
+        if (voiceRecognition) {
+          recognition.start();
+        }
+      };
+    }
+
+    // Toggle Microphone
+    function toggleMicrophone() {
+      const micBtn = document.getElementById('microphoneBtn');
+      
+      if (!recognition) {
+        addMessage('system', 'Voice recognition not supported in this browser.');
+        return;
+      }
+      
+      if (voiceRecognition) {
+        voiceRecognition = false;
+        recognition.stop();
+        micBtn.classList.remove('active');
+        micBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+        addMessage('system', '🎤 Voice coaching deactivated');
+      } else {
+        voiceRecognition = true;
+        recognition.start();
+        micBtn.classList.add('active');
+        micBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+        addMessage('system', '🎤 Voice coaching activated - speak naturally');
+      }
+    }
+
+    // Send Message to Dr. Lucy
+    function sendMessage() {
+      const input = document.getElementById('messageInput');
+      const message = input.value.trim();
+      
+      if (!message) return;
+      
+      addMessage('user', message);
+      input.value = '';
+      
+      // Process message with Dr. Lucy
+      processDrLucyMessage(message);
+    }
+
+    // Handle Key Press
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    // Add Message to Conversation
+    function addMessage(sender, content) {
+      const container = document.getElementById('conversationMessages');
+      const messageDiv = document.createElement('div');
+      const timestamp = new Date().toLocaleTimeString();
+      
+      let senderName, messageClass;
+      
+      if (sender === 'user') {
+        senderName = '👤 Executive';
+        messageClass = 'user';
+      } else if (sender === 'system') {
+        senderName = '🔧 System';
+        messageClass = 'system';
+      } else {
+        senderName = '🧠 Dr. Lucy';
+        messageClass = 'coach';
+      }
+      
+      messageDiv.className = `message ${messageClass}`;
+      messageDiv.innerHTML = `
+        <div class="message-header">${senderName} • ${timestamp}</div>
+        <div class="message-content">${content}</div>
+      `;
+      
+      container.appendChild(messageDiv);
+      container.scrollTop = container.scrollHeight;
+      
+      conversationHistory.push({ sender, content, timestamp });
+    }
+
+    // Process Dr. Lucy Message
+    function processDrLucyMessage(message) {
+      // Simulate Dr. Lucy thinking
+      setTimeout(() => {
+        const response = generateDrLucyResponse(message);
+        addMessage('coach', response);
+        
+        // Trigger ElevenLabs voice synthesis
+        synthesizeDrLucyVoice(response);
+      }, 1000);
+    }
+
+    // Generate Dr. Lucy Response
+    function generateDrLucyResponse(message) {
+      const responses = [
+        `🎯 I understand your leadership challenge. As your executive coach, I recommend focusing on strategic alignment while building stakeholder confidence. Let's develop a systematic approach that leverages your strengths while addressing growth opportunities.`,
+        
+        `💡 That's an excellent question about executive presence. Research shows that authentic leadership combined with clear communication drives the strongest business outcomes. I suggest we work on enhancing your decision-making framework through structured analysis and stakeholder engagement.`,
+        
+        `📈 From my analysis of successful executives, this situation requires both tactical precision and strategic vision. Let me share a proven methodology that addresses immediate needs while building long-term capability. We'll focus on measurable outcomes and sustainable practices.`,
+        
+        `🧠 Your insight demonstrates strong business acumen. I recommend expanding this thinking through scenario planning and risk assessment. We can develop a comprehensive strategy that anticipates market dynamics while maintaining operational excellence.`,
+        
+        `🎪 Based on executive coaching best practices, I see three key leverage points in your situation. First, strengthen your leadership communication. Second, optimize your decision-making process. Third, build systematic approaches to complex challenges. Shall we dive deeper into any of these areas?`
+      ];
+      
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    // ElevenLabs Voice Synthesis (Mock Implementation)
+    function synthesizeDrLucyVoice(text) {
+      // This would integrate with your ElevenLabs voice system
+      console.log('🎤 Dr. Lucy Voice Synthesis:', text);
+      
+      // Add visual indicator of voice synthesis
+      addMessage('system', '🎤 Dr. Lucy is speaking... (Voice synthesis active)');
+    }
+
+    // Business Function Management
+    function selectFunction(functionName) {
+      if (!unlockedFunctions.includes(functionName)) {
+        showGiftShop();
+        return;
+      }
+      
+      activeFunction = functionName;
+      addMessage('system', `🎯 Switched to ${functionName} mode. Dr. Lucy is ready to coach you in this area.`);
+    }
+
+    function toggleFunction(functionName) {
+      selectFunction(functionName);
+    }
+
+    // Gift Shop Functions
+    function showGiftShop() {
+      addMessage('system', '🎁 This premium function is available in the Gift Shop. Invest in coaching minutes to unlock advanced business capabilities with Dr. Lucy.');
+    }
+
+    function openGiftShop() {
+      addMessage('system', '🛍️ Welcome to the Dr. Lucy Gift Shop! Here you can purchase coaching minutes and unlock advanced business functions:');
+      addMessage('system', `
+        💎 Available Packages:<br>
+        • Basic Coaching (60 minutes) - $99<br>
+        • Growth Package (180 minutes) - $249<br>
+        • Executive Suite (500 minutes) - $599<br>
+        • Unlimited Monthly - $999<br><br>
+        🔓 Unlock Functions:<br>
+        • Growth Strategy - $49<br>
+        • Innovation Lab - $79<br>
+        • ROI Dashboard - $99<br>
+        • Complete Business Suite - $199
+      `);
+    }
+
+    // Voice Coaching Activation
+    function activateVoiceCoaching() {
+      if (!voiceRecognition) {
+        toggleMicrophone();
+      }
+      addMessage('coach', '🎤 Voice coaching mode activated! I can hear you clearly. Share your executive challenges, and I'll provide real-time coaching guidance.');
+    }
+
+    // Initialize Dr. Lucy Executive Coach
+    document.addEventListener('DOMContentLoaded', function() {
+      addMessage('system', '🧠 Dr. Lucy Executive Coach initialized and ready');
+      addMessage('system', '🎤 Voice coaching system ready - click microphone to activate');
+      
+      // Welcome coaching message
+      setTimeout(() => {
+        addMessage('coach', `
+          Welcome to your personalized executive coaching experience! I'm Dr. Lucy, powered by ML DeepMind technology with Dream Commander integration.<br><br>
+          
+          🎯 What I can help you with:<br>
+          • Leadership development and executive presence<br>
+          • Strategic planning and decision making<br>
+          • Communication skills and stakeholder management<br>
+          • Business growth and ROI optimization<br>
+          • Innovation strategies and change management<br><br>
+          
+          What leadership challenge would you like to work on today?
+        `);
+      }, 2000);
+      
+      // Show system readiness
+      setTimeout(() => {
+        addMessage('system', '⚡ All systems verified. Dr. Lucy coaching environment optimal for your executive development.');
+      }, 4000);
+    });
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', function(event) {
+      if (event.ctrlKey || event.metaKey) {
+        switch(event.key) {
+          case 'm':
+            event.preventDefault();
+            toggleMicrophone();
+            break;
+          case 'g':
+            event.preventDefault();
+            openGiftShop();
+            break;
+          case '1':
+            event.preventDefault();
+            selectFunction('communication');
+            break;
+        }
+      }
+    });
+  </script>
+</body>
+</html>

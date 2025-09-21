@@ -15,7 +15,7 @@ const { v4: uuidv4 } = require('uuid');
 
 // Configuration for Pinecone
 const PINECONE_API_KEY = process.env.PINECONE_API_KEY || '';
-const PINECONE_ENVIRONMENT = process.env.PINECONE_ENVIRONMENT || 'us-west1-gcp';
+const PINECONE_ENVIRONMENT = process.env.PINECONE_ENVIRONMENT || 'gcp-starter';
 const EMBEDDING_MODEL = 'text-embedding-ada-002';
 const DIMENSION = 1536; // Dimension for OpenAI ada-002 embeddings
 
@@ -29,7 +29,7 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 function initPinecone() {
   // This is a simplified implementation that uses Axios for API calls
   // In a production environment, use the official Pinecone SDK
-  const pineconeBaseUrl = `https://${PINECONE_ENVIRONMENT}.pinecone.io/v1`;
+  const pineconeBaseUrl = 'https://api.pinecone.io';
   
   return {
     createIndex: async (indexName, dimension = DIMENSION, metric = 'cosine') => {
@@ -39,7 +39,13 @@ function initPinecone() {
           {
             name: indexName,
             dimension,
-            metric
+            metric,
+            spec: {
+              serverless: {
+                cloud: 'gcp',
+                region: 'us-central1'
+              }
+            }
           },
           {
             headers: {

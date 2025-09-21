@@ -327,7 +327,7 @@ class ConversationMigrationSystem {
       
       // Combine conversation messages into chunks
       let currentChunk = '';
-      let currentMetadata = {
+      const currentMetadata = {
         conversation_id: conversation.id,
         source: source,
         timestamp: conversation.timestamp,

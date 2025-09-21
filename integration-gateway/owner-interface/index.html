@@ -123,6 +123,174 @@
       0% { background-position: -200% 0; }
       100% { background-position: 200% 0; }
     }
+    
+    /* Enhanced Multi-Color Glow Animations */
+    @keyframes multiGlow {
+      0%, 100% { 
+        box-shadow: 0 0 8px rgba(11, 177, 187, 0.6), 0 0 20px rgba(11, 177, 187, 0.3);
+      }
+      25% { 
+        box-shadow: 0 0 12px rgba(255, 215, 0, 0.8), 0 0 25px rgba(255, 215, 0, 0.4);
+      }
+      50% { 
+        box-shadow: 0 0 10px rgba(236, 72, 153, 0.7), 0 0 22px rgba(236, 72, 153, 0.35);
+      }
+      75% { 
+        box-shadow: 0 0 15px rgba(80, 200, 120, 0.7), 0 0 28px rgba(80, 200, 120, 0.3);
+      }
+    }
+    
+    @keyframes edgeShimmer {
+      0% {
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.6), transparent);
+        transform: translateX(-100%);
+      }
+      100% {
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.6), transparent);
+        transform: translateX(100%);
+      }
+    }
+    
+    @keyframes cornerShimmer {
+      0% {
+        background: linear-gradient(45deg, transparent, rgba(11, 177, 187, 0.8), transparent);
+        transform: rotate(0deg) scale(0);
+      }
+      50% {
+        background: linear-gradient(45deg, transparent, rgba(236, 72, 153, 0.8), transparent);
+        transform: rotate(180deg) scale(1);
+      }
+      100% {
+        background: linear-gradient(45deg, transparent, rgba(80, 200, 120, 0.8), transparent);
+        transform: rotate(360deg) scale(0);
+      }
+    }
+    
+    /* Random Shimmer Effects */
+    .shimmer-active {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .shimmer-active::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.8), transparent);
+      animation: edgeShimmer 2s ease-in-out;
+      z-index: 1;
+    }
+    
+    .shimmer-corner {
+      position: relative;
+    }
+    
+    .shimmer-corner::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 0 12px 0 0;
+      background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.9), transparent);
+      animation: cornerShimmer 3s ease-in-out;
+      z-index: 1;
+    }
+    
+    /* Race Track Animations - Counter-clockwise */
+    @keyframes raceTrackMain {
+      0% {
+        transform: translateX(-100%) translateY(0);
+        opacity: 0;
+      }
+      25% {
+        transform: translateX(0) translateY(-100%);
+        opacity: 1;
+      }
+      50% {
+        transform: translateX(100%) translateY(0);
+        opacity: 1;
+      }
+      75% {
+        transform: translateX(0) translateY(100%);
+        opacity: 1;
+      }
+      100% {
+        transform: translateX(-100%) translateY(0);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes raceTrackPanel {
+      0% {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.8), transparent);
+      }
+      25% {
+        top: 0;
+        right: 0;
+        width: 2px;
+        height: 100%;
+        background: linear-gradient(180deg, transparent, rgba(11, 177, 187, 0.8), transparent);
+      }
+      50% {
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(-90deg, transparent, rgba(236, 72, 153, 0.8), transparent);
+      }
+      75% {
+        bottom: 0;
+        left: 0;
+        width: 2px;
+        height: 100%;
+        background: linear-gradient(0deg, transparent, rgba(80, 200, 120, 0.8), transparent);
+      }
+      100% {
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.8), transparent);
+      }
+    }
+    
+    /* Race Track Elements */
+    .race-track-main {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 4px;
+      background: radial-gradient(circle, rgba(255, 215, 0, 1), rgba(255, 215, 0, 0.6), transparent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.8);
+      z-index: 9998;
+      animation: raceTrackMain 8s linear infinite;
+      opacity: 0;
+    }
+    
+    .race-track-panel {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    
+    .race-track-panel::after {
+      content: '';
+      position: absolute;
+      animation: raceTrackPanel 6s linear infinite;
+    }
 
     @keyframes scan {
       0% { transform: translateY(0); opacity: 1; }
@@ -612,17 +780,138 @@
       transform: scale(1.1);
     }
 
-    /* Copilot Section */
+    /* Copilot Section - Translucent White PCP Overlay */
     .copilot-section {
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       border-radius: 12px;
       padding: 10px;
       margin-bottom: 6px;
       position: sticky;
       top: 0;
       z-index: 5;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1),
+                  inset 0 0 10px rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+    
+    /* Kaleidoscope effect when content moves beneath */
+    .copilot-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      border-radius: 12px;
+      background: linear-gradient(45deg, 
+        rgba(255, 215, 0, 0.08), 
+        rgba(11, 177, 187, 0.08), 
+        rgba(236, 72, 153, 0.08),
+        rgba(80, 200, 120, 0.08));
+      mix-blend-mode: soft-light;
+      opacity: 0.6;
+      transition: opacity 0.5s ease;
+    }
+    
+    .copilot-section:hover::before {
+      opacity: 0.9;
+      animation: kaleidoscope 4s ease-in-out infinite;
+    }
+    
+    @keyframes kaleidoscope {
+      0%, 100% {
+        background: linear-gradient(45deg, 
+          rgba(255, 215, 0, 0.1), 
+          rgba(11, 177, 187, 0.1), 
+          rgba(236, 72, 153, 0.1),
+          rgba(80, 200, 120, 0.1));
+      }
+      25% {
+        background: linear-gradient(135deg, 
+          rgba(11, 177, 187, 0.12), 
+          rgba(236, 72, 153, 0.12), 
+          rgba(80, 200, 120, 0.12),
+          rgba(255, 215, 0, 0.12));
+      }
+      50% {
+        background: linear-gradient(225deg, 
+          rgba(236, 72, 153, 0.1), 
+          rgba(80, 200, 120, 0.1), 
+          rgba(255, 215, 0, 0.1),
+          rgba(11, 177, 187, 0.1));
+      }
+      75% {
+        background: linear-gradient(315deg, 
+          rgba(80, 200, 120, 0.12), 
+          rgba(255, 215, 0, 0.12), 
+          rgba(11, 177, 187, 0.12),
+          rgba(236, 72, 153, 0.12));
+      }
+    }
+    
+    /* Dr. Lucy Premium 3D Shimmer Gold Effect */
+    @keyframes drLucyPulse {
+      0%, 100% {
+        filter: brightness(1) contrast(1) saturate(1) drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+        transform: scale(1) perspective(100px) rotateX(0deg);
+      }
+      25% {
+        filter: brightness(1.3) contrast(1.2) saturate(1.4) drop-shadow(0 0 15px rgba(255, 215, 0, 0.9));
+        transform: scale(1.05) perspective(100px) rotateX(5deg);
+      }
+      50% {
+        filter: brightness(1.6) contrast(1.4) saturate(1.8) drop-shadow(0 0 20px rgba(255, 215, 0, 1));
+        transform: scale(1.1) perspective(100px) rotateX(0deg);
+      }
+      75% {
+        filter: brightness(1.3) contrast(1.2) saturate(1.4) drop-shadow(0 0 15px rgba(255, 215, 0, 0.9));
+        transform: scale(1.05) perspective(100px) rotateX(-5deg);
+      }
+    }
+    
+    @keyframes drLucyShimmer {
+      0% {
+        background: linear-gradient(45deg, 
+          #FFD700 0%, #FFA500 25%, #FFD700 50%, #FFEF94 75%, #FFD700 100%);
+      }
+      25% {
+        background: linear-gradient(135deg, 
+          #FFEF94 0%, #FFD700 25%, #FFA500 50%, #FFD700 75%, #FFEF94 100%);
+      }
+      50% {
+        background: linear-gradient(225deg, 
+          #FFA500 0%, #FFEF94 25%, #FFD700 50%, #FFA500 75%, #FFEF94 100%);
+      }
+      75% {
+        background: linear-gradient(315deg, 
+          #FFD700 0%, #FFEF94 25%, #FFA500 50%, #FFEF94 75%, #FFD700 100%);
+      }
+      100% {
+        background: linear-gradient(45deg, 
+          #FFD700 0%, #FFA500 25%, #FFD700 50%, #FFEF94 75%, #FFD700 100%);
+      }
+    }
+    
+    /* Dr. Lucy Active State */
+    .copilot-hex-item.active .copilot-hex svg,
+    .copilot-hex-item:hover .copilot-hex svg {
+      animation: drLucyPulse 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.8));
+    }
+    
+    .copilot-hex-item.active #srixGradient,
+    .copilot-hex-item:hover #srixGradient {
+      animation: drLucyShimmer 4s ease-in-out infinite;
+    }
+    
+    /* Enhanced 3D positioning for Dr. Lucy */
+    .copilot-hex-item.active .copilot-hex,
+    .copilot-hex-item:hover .copilot-hex {
+      transform-style: preserve-3d;
+      perspective: 200px;
     }
 
     .copilot-title {
@@ -685,14 +974,39 @@
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 12px;
       padding: 12px;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
       margin-bottom: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Subtle corner accent glows */
+    .panel-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      border-radius: 12px;
+      box-shadow: inset 0 0 1px rgba(255, 215, 0, 0.3), 
+                  inset 0 0 1px rgba(11, 177, 187, 0.3), 
+                  inset 0 0 1px rgba(236, 72, 153, 0.3),
+                  inset 0 0 1px rgba(80, 200, 120, 0.3);
+      opacity: 0.4;
+      transition: opacity 0.5s ease;
     }
 
     .panel-card:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(11, 177, 187, 0.2);
-      border-color: rgba(11, 177, 187, 0.3);
+      box-shadow: 0 10px 30px rgba(11, 177, 187, 0.3);
+      border-color: rgba(11, 177, 187, 0.4);
+      animation: multiGlow 6s infinite ease-in-out;
+    }
+    
+    .panel-card:hover::before {
+      opacity: 0.8;
     }
 
     .panel-header {
@@ -1558,6 +1872,39 @@
             </div>
           </div>
           
+          <!-- Integration Gateway Icon - Fluorescent Blue Eye -->
+          <div class="sidebar-icon" onclick="openIntegrationGateway()" style="display: flex;" title="Integration Gateway (IG)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="url(#eyeGradient)" stroke-width="1.8">
+              <defs>
+                <linearGradient id="eyeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#0bb1bb" />
+                  <stop offset="50%" stop-color="#00BFFF" />
+                  <stop offset="100%" stop-color="#1E90FF" />
+                </linearGradient>
+                <filter id="fluorescentGlow">
+                  <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <!-- Eye outline -->
+              <ellipse cx="12" cy="12" rx="8" ry="5" fill="url(#eyeGradient)" fill-opacity="0.15" stroke="url(#eyeGradient)" filter="url(#fluorescentGlow)"/>
+              <!-- Pupil -->
+              <circle cx="12" cy="12" r="3" fill="none" stroke="#00BFFF" stroke-width="2" filter="url(#fluorescentGlow)"/>
+              <!-- Inner pupil -->
+              <circle cx="12" cy="12" r="1.5" fill="#00BFFF" filter="url(#fluorescentGlow)"/>
+              <!-- Cutout effect lines -->
+              <path d="M4 12 Q12 8 20 12" stroke="white" stroke-width="0.5" fill="none" opacity="0.6"/>
+              <path d="M4 12 Q12 16 20 12" stroke="white" stroke-width="0.5" fill="none" opacity="0.6"/>
+            </svg>
+            <div class="icon-tooltip">
+              <strong>Integration Gateway</strong><br>
+              <small>IG • Testament Swarm</small>
+            </div>
+          </div>
+          
           <!-- Gift Shop Icon - More Commercial Design -->
           <div class="sidebar-icon" onclick="openGiftShop()" style="display: flex;">
             <svg viewBox="0 0 24 24" fill="none" stroke="url(#giftGradient)" stroke-width="1.6">
@@ -2210,12 +2557,10 @@
               </svg>
             </div>
           </div>
-          <button class="gateway-btn" onclick="openIntegrationGateway()">
-            <svg class="enterprise-icon" style="fill: #000; width: 9px; height: 9px;">
-              <use href="#icon-plus"></use>
-            </svg>
-            Integration Gateway
-          </button>
+          <!-- Integration Gateway moved to left sidebar as fluorescent blue eye icon -->
+          <div style="color: #555; font-size: 8px; text-align: center; padding: 5px;">
+            IG moved to sidebar •
+          </div>
         </div>
       </div>
       
@@ -6649,6 +6994,131 @@ ${planItems.join('\n')}
     window.drClaudeOrchestrator = drClaudeOrchestrator;
     window.quantumFetch = quantumFetch;
     window.initializeDrClaudeOrchestration = initializeDrClaudeOrchestration;
+    
+    // ✨ SHIMMER & RACE TRACK SYSTEM
+    class ShimmerRaceTrackSystem {
+      constructor() {
+        this.isActive = false;
+        this.shimmerTimer = null;
+        this.raceTrackElements = [];
+        console.log('✨ Shimmer Race Track System initialized');
+      }
+      
+      start() {
+        this.isActive = true;
+        this.createRaceTrackElements();
+        this.scheduleRandomShimmer();
+        console.log('🏁 Race track system activated - shimmers every 2 minutes');
+      }
+      
+      createRaceTrackElements() {
+        // Create main area race track element
+        const mainRaceTrack = document.createElement('div');
+        mainRaceTrack.className = 'race-track-main';
+        document.body.appendChild(mainRaceTrack);
+        this.raceTrackElements.push(mainRaceTrack);
+        
+        // Add race track to right panel
+        const rightPanel = document.querySelector('.right-panel');
+        if (rightPanel) {
+          const panelRaceTrack = document.createElement('div');
+          panelRaceTrack.className = 'race-track-panel';
+          rightPanel.appendChild(panelRaceTrack);
+          this.raceTrackElements.push(panelRaceTrack);
+        }
+      }
+      
+      scheduleRandomShimmer() {
+        if (!this.isActive) return;
+        
+        // Schedule next shimmer in 2 minutes (120000ms) with some randomness
+        const delay = 120000 + (Math.random() * 30000); // 2-2.5 minutes
+        
+        this.shimmerTimer = setTimeout(() => {
+          this.triggerRandomShimmer();
+          this.scheduleRandomShimmer(); // Schedule next one
+        }, delay);
+      }
+      
+      triggerRandomShimmer() {
+        const shimmerTypes = ['edge', 'corner', 'racetrack-main', 'racetrack-panel'];
+        const randomType = shimmerTypes[Math.floor(Math.random() * shimmerTypes.length)];
+        
+        console.log(`✨ Triggering ${randomType} shimmer effect`);
+        
+        if (randomType === 'racetrack-main') {
+          this.activateMainRaceTrack();
+        } else if (randomType === 'racetrack-panel') {
+          this.activatePanelRaceTrack();
+        } else {
+          this.addRandomShimmerToElements(randomType);
+        }
+      }
+      
+      activateMainRaceTrack() {
+        const mainRaceTrack = document.querySelector('.race-track-main');
+        if (mainRaceTrack) {
+          mainRaceTrack.style.opacity = '1';
+          mainRaceTrack.style.animation = 'none';
+          setTimeout(() => {
+            mainRaceTrack.style.animation = 'raceTrackMain 8s linear';
+          }, 10);
+          
+          setTimeout(() => {
+            mainRaceTrack.style.opacity = '0';
+          }, 8000);
+        }
+      }
+      
+      activatePanelRaceTrack() {
+        const panelRaceTrack = document.querySelector('.race-track-panel');
+        if (panelRaceTrack) {
+          panelRaceTrack.style.animation = 'none';
+          setTimeout(() => {
+            panelRaceTrack.style.animation = 'raceTrackPanel 6s linear';
+          }, 10);
+        }
+      }
+      
+      addRandomShimmerToElements(type) {
+        const panels = document.querySelectorAll('.panel-card');
+        if (panels.length === 0) return;
+        
+        // Pick 1-3 random panels
+        const numPanels = Math.min(Math.floor(Math.random() * 3) + 1, panels.length);
+        const selectedPanels = [];
+        
+        for (let i = 0; i < numPanels; i++) {
+          const randomPanel = panels[Math.floor(Math.random() * panels.length)];
+          if (!selectedPanels.includes(randomPanel)) {
+            selectedPanels.push(randomPanel);
+          }
+        }
+        
+        selectedPanels.forEach(panel => {
+          const className = type === 'edge' ? 'shimmer-active' : 'shimmer-corner';
+          panel.classList.add(className);
+          
+          // Remove the class after animation completes
+          setTimeout(() => {
+            panel.classList.remove(className);
+          }, type === 'edge' ? 2000 : 3000);
+        });
+      }
+      
+      stop() {
+        this.isActive = false;
+        if (this.shimmerTimer) {
+          clearTimeout(this.shimmerTimer);
+        }
+        this.raceTrackElements.forEach(el => el.remove());
+        this.raceTrackElements = [];
+      }
+    }
+    
+    // Initialize shimmer system
+    const shimmerSystem = new ShimmerRaceTrackSystem();
+    window.shimmerSystem = shimmerSystem;
     
     // 🎼 VLS SYNTHESIS OPTIMIZATION - FULL CAPABILITIES
     console.log('🎼 Initializing VLS Master Synthesis...');

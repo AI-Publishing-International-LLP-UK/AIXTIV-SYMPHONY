@@ -39,6 +39,8 @@
   "license": "PROPRIETARY",
   "private": true,
   "dependencies": {
+    "@11labs/client": "^0.2.0",
+    "@elevenlabs/client": "^0.6.2",
     "@google-cloud/firestore": "^7.11.4",
     "@google-cloud/secret-manager": "^5.5.0",
     "@pinecone-database/pinecone": "^6.1.2",
